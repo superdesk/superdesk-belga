@@ -9,18 +9,14 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import logging
-from settings import WS_HOST, WS_PORT, LOG_CONFIG_FILE, BROKER_URL
+from app import get_app
 from superdesk.ws import create_server
-from superdesk.logging import configure_logging
-
-logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
+    app = get_app()
     config = {
-        'WS_HOST': WS_HOST,
-        'WS_PORT': WS_PORT,
-        'BROKER_URL': BROKER_URL
+        'WS_HOST': app.config['WS_HOST'],
+        'WS_PORT': app.config['WS_PORT'],
+        'BROKER_URL': app.config['BROKER_URL'],
     }
-    configure_logging(LOG_CONFIG_FILE)
     create_server(config)

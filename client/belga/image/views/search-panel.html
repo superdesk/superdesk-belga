@@ -1,0 +1,26 @@
+<fieldset ng-controller="BelgaSearchPanel as searchPanel">
+    <div class="field">
+        <label class="search-label">Subject</label>
+
+        <label class="search-label" ng-repeat="subject in searchPanel.subjects">
+            <input type="checkbox" ng-model="params.subject[subject.id]" />
+            {{ subject.name }}
+        </label>
+    </div>
+
+    <div class="field">
+        <label class="search-label">Source</label>
+
+        <label class="search-label" ng-repeat="source in searchPanel.sources">
+            <input type="checkbox" ng-model="params.source[source.id]" />
+            {{ source.name }}
+        </label>
+    </div>
+
+    <div class="field">
+        <label class="search-label" translate>Period</label>
+        <select ng-model="params.datefrom">
+            <option ng-repeat="period in searchPanel.periods" value="{{ period.id }}">{{ period.name }}</option>
+        </select>
+    </div>
+</fieldset>

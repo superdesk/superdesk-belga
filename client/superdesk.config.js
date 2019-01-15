@@ -8,20 +8,15 @@ module.exports = function(grunt) {
     return {
         apps: [
             'superdesk.analytics',
-            'superdesk-planning'
+            'superdesk-planning',
+            'belga',
         ],
         importApps: [
             'superdesk-analytics',
-            'superdesk-planning'
+            'superdesk-planning',
+            '../belga',
         ],
         defaultRoute: '/workspace/personal',
-
-        publisher: {
-            protocol: 'https',
-            tenant: process.env.PUBLISHER_API_SUBDOMAIN || '',
-            domain: process.env.PUBLISHER_API_DOMAIN || 'localhost',
-            base: 'api/v1'
-        },
 
         langOverride: {
             'en': {
@@ -41,7 +36,9 @@ module.exports = function(grunt) {
             editor3: true,
             validatePointOfInterestForImages: false,
             editorHighlights: true,
-            planning: true
+            planning: true,
+            searchShortcut: true,
+            editFeaturedImage: true,
         },
         workspace: {
             analytics: true,
