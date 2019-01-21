@@ -8,6 +8,9 @@
         "type": "manageable",
         "display_name": "Countries",
         "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
         "items": [
             {
                 "qcode": "AFG",
@@ -1885,5 +1888,128 @@
                 "is_active": true
             }
         ]
+    },
+    {
+        "_id": "urgency",
+        "display_name": "Urgency",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "name": "1",
+                "qcode": 1
+            },
+            {
+                "is_active": true,
+                "name": "2",
+                "qcode": 2
+            },
+            {
+                "is_active": true,
+                "name": "3",
+                "qcode": 3
+            },
+            {
+                "is_active": true,
+                "name": "4",
+                "qcode": 4
+            },
+            {
+                "is_active": true,
+                "name": "5",
+                "qcode": 5
+            }
+        ],
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "color": {
+                "type": "color",
+                "label": "Сolour"
+            },
+            "short": {
+                "type": "short",
+                "label": "List Name",
+                "maxlength": 2
+            }
+        }
+    },
+    {
+        "_id": "belga_related_articles",
+        "display_name": "Belga related articles",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [],
+        "field_type": "related_content",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "description": "Belga related items",
+        "field_options": {
+            "allowed_types": {
+                "video": true,
+                "audio": true,
+                "text": true
+            },
+            "multiple_items": {
+                "enabled": true,
+                "max_items": 99
+            }
+        },
+        "helper_text": "Text, Video, Audio"
+    },
+    {
+        "_id": "belga_related_images",
+        "display_name": "Belga related images",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [],
+        "field_type": "related_content",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "description": "Belga related images",
+        "field_options": {
+            "allowed_types": {
+                "picture": true
+            },
+            "multiple_items": {
+                "enabled": true,
+                "max_items": 99
+            }
+        },
+        "helper_text": "Image"
+    },
+    {
+        "_id": "city",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "City",
+        "description": "",
+        "helper_text": "Free text",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
     }
 ]
