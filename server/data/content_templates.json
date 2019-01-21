@@ -1,0 +1,19 @@
+[
+    {
+        "template_name": "Belga text",
+        "is_public": true,
+        "data": {
+            "profile": "belga_text",
+            "type": "text",
+            "pubstatus": "usable",
+            "flags": {
+                "marked_for_not_publication": false,
+                "marked_for_legal": false,
+                "marked_archived_only": false,
+                "marked_for_sms": false
+            },
+            "format": "HTML"
+        },
+        "template_type": "create"
+    }
+]
