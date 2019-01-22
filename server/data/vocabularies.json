@@ -1888,7 +1888,10 @@
                 "is_active": true
             }
         ],
-        "selection_type": "single selection"
+        "selection_type": "single selection",
+        "field_options": {
+            "single": true
+        }
     },
     {
         "_id": "urgency",
