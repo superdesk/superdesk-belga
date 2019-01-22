@@ -27,3 +27,23 @@ INSTALLED_APPS.extend([
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
+
+DEFAULT_TIMEZONE = "Europe/Brussels"
+
+DEFAULT_LANGUAGE = 'nl'
+LANGUAGES = [
+    {'language': 'nl', 'label': 'Dutch', 'source': True, 'destination': True},
+    {'language': 'fr', 'label': 'French', 'source': True, 'destination': True},
+    {'language': 'en', 'label': 'English', 'source': False, 'destination': False},
+    {'language': 'de', 'label': 'German', 'source': False, 'destination': False},
+    {'language': 'ja', 'label': 'Japanese', 'source': False, 'destination': False},
+    {'language': 'es', 'label': 'Spanish', 'source': False, 'destination': False},
+    {'language': 'ru', 'label': 'Russian', 'source': False, 'destination': False}
+]
+
+# This value gets injected into NewsML 1.2 and G2 output documents.
+NEWSML_PROVIDER_ID = 'belga.be'
+ORGANIZATION_NAME = env('ORGANIZATION_NAME', 'Belga')
+ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
+
+PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 30  # 30d

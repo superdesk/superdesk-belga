@@ -16,18 +16,26 @@ module.exports = function(grunt) {
             'superdesk-planning',
             '../belga',
         ],
-        defaultRoute: '/workspace/personal',
+        defaultRoute: '/workspace/monitoring',
 
-        langOverride: {
-            'en': {
-                'ANPA Category': 'Category',
-                'ANPA CATEGORY': 'CATEGORY'
-            }
-        },
+        defaultTimezone: 'Europe/Brussels',
+        shortTimeFormat: 'HH:mm, DD.MM.YYYY',
+        shortDateFormat: 'HH:mm, DD.MM.YYYY',
+        shortWeekFormat: 'HH:mm, DD.MM.YYYY',
+
+        startingDay: '1',
 
         view: {
             timeformat: 'HH:mm',
             dateformat: 'DD.MM.YYYY',
+        },
+
+        item_profile: {
+            change_profile: 1
+        },
+
+        editor: {
+            imageDragging: true
         },
 
         features: {
