@@ -1887,7 +1887,8 @@
                 "qcode": "bilingual",
                 "is_active": true
             }
-        ]
+        ],
+        "selection_type": "single selection"
     },
     {
         "_id": "urgency",

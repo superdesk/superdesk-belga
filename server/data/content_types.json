@@ -8,33 +8,62 @@
         "editor": {
             "slugline": {
                 "order": 1,
-                "sdWidth": "full"
+                "sdWidth": "half"
             },
             "language": {
-                "order": 4,
+                "order": 2,
+                "sdWidth": "half"
+            },
+            "distribution": {
+                "order": 3,
                 "sdWidth": "half"
             },
             "urgency": {
-                "order": 2,
-                "sdWidth": "quarter"
+                "order": 4,
+                "sdWidth": "half"
             },
             "authors": {
-                "order": 3,
+                "order": 5,
+                "sdWidth": "half"
+            },
+            "label": {
+                "order": 6,
+                "sdWidth": "half"
+            },
+            "news_services": {
+                "order": 7,
+                "sdWidth": "half"
+            },
+            "news_products": {
+                "order": 8,
+                "sdWidth": "half"
+            },
+            "countries": {
+                "order": 9,
+                "sdWidth": "half"
+            },
+            "genre": {
+                "order": 10,
+                "sdWidth": "half"
+            },
+            "ednote": {
+                "order": 11,
                 "sdWidth": "full"
             },
+            "city": {
+                "order": 12,
+                "sdWidth": "half"
+            },
             "headline": {
-                "order": 2,
+                "order": 13,
                 "formatOptions": [
                     "underline",
                     "link",
                     "bold"
                 ]
             },
-            "byline": {
-                "order": 5
-            },
             "body_html": {
-                "order": 3,
+                "order": 14,
                 "formatOptions": [
                     "h2",
                     "bold",
@@ -49,36 +78,16 @@
                 "editor3": true
             },
             "sign_off": {
-                "order": 4
+                "order": 15
+            },
+            "byline": {
+                "order": 16
             },
             "belga_related_articles": {
-                "order": 6
+                "order": 17
             },
             "belga_related_images": {
-                "order": 7
-            },
-            "city": {
-                "order": 1
-            },
-            "news_products": {
-                "order": 7
-            },
-            "news_services": {
-                "order": 6
-            },
-            "label": {
-                "order": 8
-            },
-            "genre": {
-                "order": 9,
-                "sdWidth": "half"
-            },
-            "ednote": {
-                "order": 10,
-                "sdWidth": "full"
-            },
-            "countries": {
-                "order": 5
+                "order": 18
             },
             "keywords": null,
             "usageterms": null,
@@ -98,8 +107,7 @@
             "author_roles": null,
             "credits": null,
             "languages": null,
-            "news_item_types": null,
-            "distribution": null
+            "news_item_types": null
         },
         "schema": {
             "authors": {
