@@ -2015,5 +2015,23 @@
             "single": true
         },
         "unique_field": "qcode"
+    },
+    {
+        "_id": "desk_types",
+        "display_name": "Desk Types",
+        "type": "unmanageable",
+        "selection_type": "do not show",
+        "items": [
+            {
+                "is_active": true,
+                "name": "authoring",
+                "qcode": "authoring"
+            },
+            {
+                "is_active": true,
+                "name": "production",
+                "qcode": "production"
+            }
+        ]
     }
 ]
