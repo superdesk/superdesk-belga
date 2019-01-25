@@ -15,7 +15,6 @@ import requests
 from calendar import timegm
 from collections import namedtuple
 from datetime import datetime
-from superdesk.io.registry import registered_feed_parsers
 from superdesk.errors import IngestApiError, ParserError
 from superdesk.io.registry import register_feeding_service
 from superdesk.io.feeding_services import FeedingService
@@ -37,14 +36,14 @@ class RSSFeedingService(FeedingService):
     the underlying parser supports them, but for our needs RSS 2.0 is assumed)
     """
 
-    NAME = 'rss'
+    NAME = 'rss-anp'
 
     ERRORS = [IngestApiError.apiAuthError().get_error_description(),
               IngestApiError.apiNotFoundError().get_error_description(),
               IngestApiError.apiGeneralError().get_error_description(),
               ParserError.parseMessageError().get_error_description()]
 
-    label = 'RSS'
+    label = 'RSS ATOM ANP'
 
     fields = [
         {
@@ -340,9 +339,9 @@ class RSSFeedingService(FeedingService):
             # found in its default data field and is not aliased, try to
             # populate it using the aforementioned content field as a fallback.
             if (
-                    field.name == 'body_html' and
-                    not field_value and
-                    field.name_in_data not in field_aliases
+                                field.name == 'body_html' and
+                            not field_value and
+                            field.name_in_data not in field_aliases
             ):
                 try:
                     item['body_html'] = data.content[0].value

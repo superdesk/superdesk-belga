@@ -18,15 +18,19 @@ from superdesk.io.registry import register_feed_parser
 
 
 class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
-    """
-    Feed Parser which can parse if the feed is in NewsML format, specific AFP, ANP, .. Belga xml.
-    """
+    """Feed Parser which can parse if the feed is in NewsML format, specific AFP, ANP, .. Belga xml."""
 
     NAME = 'belganewsml12'
 
     label = 'Belga News ML 1.2 Parser'
 
     def can_parse(self, xml):
+        """
+        Check NewsML type for file.
+
+        :param xml:
+        :return:
+        """
         return xml.tag == 'NewsML'
 
     def parse(self, xml, provider=None):
@@ -60,7 +64,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param provider:
         :return:
         """
-
         try:
             l_item = []
             self.root = xml
@@ -81,7 +84,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_newsenvelop(self, envelop_el):
         """
-        Function parser Identification element
+        Function parser Identification element.
 
         Example:
 
@@ -97,7 +100,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param envelop_el:
         :return:
         """
-
         if envelop_el is None:
             return {}
         item = {}
@@ -141,7 +143,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_newsitem(self, item, newsitem_el):
         """
-        Function parser Newsitem element
+        Function parser Newsitem element.
 
         Example:
 
@@ -161,7 +163,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param newsitem_el:
         :return:
         """
-
         if newsitem_el.attrib.get('Duid', '') != '':
             item['duid'] = newsitem_el.attrib.get('Duid', '')
 
@@ -203,7 +204,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_identification(self, item, indent_el):
         """
-        Function parse Identification in NewsItem element
+        Function parse Identification in NewsItem element.
 
         Example:
 
@@ -217,8 +218,11 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
           </NewsIdentifier>
           <NameLabel>musique-rock-célébrités-religion-France</NameLabel>
         </Identification>
-        """
 
+        :param item:
+        :param indent_el:
+        :return:
+        """
         if indent_el is None:
             return
 
@@ -242,7 +246,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
             element = newsident_el.find('PublicIdentifier')
             if element is not None:
-                    item['guid'] = element.text
+                item['guid'] = element.text
 
         element = indent_el.find('NameLabel')
         if element is not None:
@@ -257,7 +261,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_newsmanagement(self, item, manage_el):
         """
-        Function parser NewsManagement in NewsItem element
+        Function parser NewsManagement in NewsItem element.
 
         Example:
 
@@ -277,7 +281,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param manage_el:
         :return:
         """
-
         if manage_el is None:
             return
 
@@ -317,7 +320,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_newscomponent(self, item, component_el):
         """
-            Function parser NewsComponent in NewsItem element
+            Function parser NewsComponent in NewsItem element.
 
             Example:
 
@@ -347,7 +350,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param component_el:
         :return:
         """
-
         if component_el is None:
             return
 
@@ -411,7 +413,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             element = newslines_el.find('KeywordLine')
             if element is not None:
                 item['keyword_line'] = element.text
-            # ANP
+                # ANP
 
         admin_el = component_el.find('AdministrativeMetadata')
         if admin_el is not None:
@@ -446,7 +448,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_descriptivemetadata(self, item, descript_el):
         """
-        Function parser DescriptiveMetadata in NewsComponent element
+        Function parser DescriptiveMetadata in NewsComponent element.
 
         Example:
 
@@ -477,7 +479,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param descript_el:
         :return:
         """
-
         if descript_el is None:
             return
 
@@ -560,7 +561,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def parser_contentitem(self, item, content_el):
         """
-        Function parser DescriptiveMetadata in NewsComponent element
+        Function parser DescriptiveMetadata in NewsComponent element.
 
         Example:
         <ContentItem>
@@ -589,7 +590,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :param content_el:
         :return:
         """
-
         if content_el is None:
             return
 
@@ -644,17 +644,17 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
     def valid_datetime(self, string, format_datetime):
         try:
             return datetime.datetime.strptime(string, format_datetime)
-        except:
+        except ValueError:
             return None
 
     def format_subjects(self, subjects):
         """Map the ingested Subject Codes to their corresponding names as per IPTC Specification.
+
         :param subjects: list of dicts where each dict gives the category the article is mapped to.
         :type subjects: list
         :returns [{"qcode": "01001000", "name": "archaeology"}, {"qcode": "01002000", "name": "architecture"}]
         :rtype list
         """
-
         formatted_subjects = []
 
         def is_not_formatted(qcode):
@@ -672,5 +672,6 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''), 'scheme': scheme})
 
         return formatted_subjects
+
 
 register_feed_parser(BelgaNewsMLOneFeedParser.NAME, BelgaNewsMLOneFeedParser())
