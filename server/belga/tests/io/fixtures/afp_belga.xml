@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NewsML Version="1.2">
+<!--AFP NewsML text-photo profile evolution2-->
+<!--Processed by Xafp1-4ToNewsML1-2 rev21-->
+<Catalog Href="http://www.afp.com/dtd/AFPCatalog.xml"/>
+<NewsEnvelope>
+<TransmissionId>0579</TransmissionId>
+<DateAndTime>20190121T104233Z</DateAndTime>
+<NewsService FormalName="DGTE"/>
+<NewsProduct FormalName="DAB"/>
+<NewsProduct FormalName="AMW"/>
+<NewsProduct FormalName="ELU"/>
+<NewsProduct FormalName="EUA"/>
+<NewsProduct FormalName="MOA"/>
+<NewsProduct FormalName="FEUA"/>
+<Priority FormalName="4"/>
+</NewsEnvelope>
+<NewsItem xml:lang="fr">
+<Identification>
+<NewsIdentifier>
+<ProviderId>afp.com</ProviderId>
+<DateId>20190121T104233Z</DateId>
+<NewsItemId>TX-PAR-RHO61</NewsItemId>
+<RevisionId PreviousRevision="0" Update="N">1</RevisionId>
+<PublicIdentifier>urn:newsml:afp.com:20190121T104233Z:TX-PAR-RHO61:1</PublicIdentifier>
+</NewsIdentifier>
+<NameLabel>France-procès-assises-drogues-police</NameLabel>
+</Identification>
+<NewsManagement>
+<NewsItemType FormalName="News"/>
+<FirstCreated>20190121T104233+0000</FirstCreated>
+<ThisRevisionCreated>20190121T104233+0000</ThisRevisionCreated>
+<Status FormalName="Usable"/>
+<Urgency FormalName="4"/>
+<AssociatedWith NewsItem="urn:newsml:afp.com:20190121T104233Z:doc-1cg0j2"/>
+<AssociatedWith FormalName="Sketch"/>
+<AssociatedWith FormalName="Photo"/>
+<AssociatedWith FormalName="Video"/>
+</NewsManagement>
+<NewsComponent>
+<NewsLines>
+<DateLine xml:lang="fr">Paris, 21 jan 2019 (AFP) -</DateLine>
+<HeadLine xml:lang="fr">France: deux ex-policiers aux frontières devant la justice pour trafic de cocaïne</HeadLine>
+<NewsLine>
+<NewsLineType FormalName="ProductLine"/>
+<NewsLineText xml:lang="fr">(Croquis d'audience+Photo+Video)</NewsLineText>
+</NewsLine>
+</NewsLines>
+<AdministrativeMetadata>
+<Provider>
+<Party FormalName="AFP"/>
+</Provider>
+</AdministrativeMetadata>
+<DescriptiveMetadata>
+<Language FormalName="fr"/>
+<SubjectCode>
+<SubjectMatter FormalName="02008000" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectDetail FormalName="02001004" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectMatter FormalName="02003000" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectMatter FormalName="02001000" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<Subject FormalName="02000000" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectMatter FormalName="02007000" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectDetail FormalName="02003001" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectMatter FormalName="02001000" cat="CLJ"/>
+</SubjectCode>
+<SubjectCode>
+<SubjectMatter FormalName="02007000" cat="CLJ"/>
+</SubjectCode>
+<OfInterestTo FormalName="DAB-TFG-1=DAB"/>
+<OfInterestTo FormalName="AMN-TFG-1=AMW"/>
+<OfInterestTo FormalName="ARC-TFG-1=ELU"/>
+<OfInterestTo FormalName="EUA-TFG-1=EUA"/>
+<OfInterestTo FormalName="MOA-TFG-1=MOA"/>
+<DateLineDate>20190121T104233+0000</DateLineDate>
+<Location HowPresent="Origin">
+<Property FormalName="Country" Value="FRA"/>
+<Property FormalName="City" Value="Paris"/>
+</Location>
+<Property FormalName="GeneratorSoftware" Value="libg2"/>
+<Property FormalName="Keyword" Value="France"/>
+<Property FormalName="Keyword" Value="procès"/>
+<Property FormalName="Keyword" Value="assises"/>
+<Property FormalName="Keyword" Value="drogues"/>
+<Property FormalName="Keyword" Value="police"/>
+</DescriptiveMetadata>
+<ContentItem>
+<MediaType FormalName="Text"/>
+<Format FormalName="NITF3.1"/>
+<Characteristics>
+<SizeInBytes>1620</SizeInBytes>
+<Property FormalName="Words" Value="269"/>
+</Characteristics>
+<DataContent>
+<nitf>
+<body>
+<body.content>
+<p>Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisien Roissy-Charles de Gaulle, accusés d'avoir facilité l'importation de cocaïne de retour de République dominicaine, s'est ouvert lundi devant un tribunal à Paris. </p>
+<p>Clément Geisse, 42 ans, et Christophe Peignelin, 56 ans, comparaissent notamment pour importation de stupéfiants en bande organisée - un crime passible de trente ans de réclusion - et corruption passive, devant la cour d'assises spéciale, composée de magistrats professionnels, sans jury. </p>
+<p>Les deux hommes aux cheveux bruns coupés courts, l'un la mâchoire carrée, l'autre le visage émacié, ont pénétré dans le box des accusés, déclinant d'un ton grave leur identité et leur ancienne profession.</p>
+<p>Ils ont reconnu avoir permis sept à neuf passages de "mules" aux valises chargées de cocaïne en les aidant à contourner les contrôles de l'aéroport de Roissy, entre 2010 et le 25 janvier 2015, date de leur interpellation. Ils venaient de tenter de faire sortir deux valises contenant chacune 20 kilos de drogue. </p>
+<p>A l'autre extrémité du box, figure Kamel Berkaoui, 43 ans, patron présumé du réseau démantelé à la suite d'une enquête dénommée "Excédent bagage", menée par l'Office central pour la répression du trafic illicite des stupéfiants (Ocrtis). </p>
+<p>Neuf membres présumés de son organisation sont également jugés par la cour. </p>
+<p>Les enquêteurs n'ont pas réussi à déterminer quelle quantité de drogue avait pu être importée depuis Punta Cana en République dominicaine. </p>
+<p>Les ex-policiers auraient empoché au total entre 540.000 et 620.000 euros, à raison de 40.000 euros par "mule" récupérée, selon une estimation fournie en interrogatoire par Clément Geisse. </p>
+<p>Le verdict est attendu le 7 février. </p>
+<p>asl/tib/pid/cac</p>
+</body.content>
+</body>
+</nitf>
+</DataContent>
+</ContentItem>
+</NewsComponent>
+</NewsItem>
+</NewsML>
