@@ -1,1 +1,1 @@
-from . import rss
+from . import rss_belga
