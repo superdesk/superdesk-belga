@@ -1,1 +1,1 @@
-from . import rss_belga
+from . import rss_belga  # noqa

@@ -10,7 +10,6 @@
 
 
 from superdesk.tests import TestCase
-import unittest
 from lxml import etree
 import os
 from belga.io.feed_parsers.belga_newsml_1_2 import BelgaNewsMLOneFeedParser

@@ -1,5 +1,4 @@
 from superdesk.tests import TestCase
-import unittest
 import time
 
 dataset = {
@@ -77,7 +76,8 @@ dataset = {
     ],
     'anp_priority': '3',
     'anp_keywords': '',
-    'anp_copyright': '© 2019 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and database rights reserved.',
+    'anp_copyright': '© 2019 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights '
+                     'and database rights reserved.',
     'anp_provider': 'ANP',
     'anp_version': '1',
     'anp_country': 'NEDERLAND(NL)',
