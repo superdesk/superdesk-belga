@@ -11,5 +11,3 @@
 
 from . import feed_parsers  # noqa
 from . import feeding_services  # noqa
-
-
