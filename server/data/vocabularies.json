@@ -2392,5 +2392,230 @@
                 "qcode": "BRU"
             }
         ]
+    },
+    {
+        "_id": "subscriber_types",
+        "display_name": "Subscriber Types",
+        "type": "unmanageable",
+        "selection_type": "do not show",
+        "items": [
+            {
+                "is_active": true,
+                "name": "All",
+                "qcode": "all",
+                "formats": [
+                    {
+                        "name": "NINJS",
+                        "qcode": "ninjs"
+                    },
+                    {
+                        "name": "Newsroom NINJS",
+                        "qcode": "newsroom ninjs"
+                    },
+                    {
+                        "name": "NewsML G2",
+                        "qcode": "newsmlg2"
+                    },
+                    {
+                        "name": "Email",
+                        "qcode": "email"
+                    },
+                    {
+                        "name": "NTB Event",
+                        "qcode": "ntb_event"
+                    },
+                    {
+                        "name": "JSON Event",
+                        "qcode": "json_event"
+                    },
+                    {
+                        "name": "JSON Planning",
+                        "qcode": "json_planning"
+                    },
+                    {
+                        "name": "JSON Planning Featured",
+                        "qcode": "json_planning_featured"
+                    }
+                ]
+            },
+            {
+                "is_active": true,
+                "name": "Digital/Internet",
+                "qcode": "digital",
+                "formats": [
+                    {
+                        "name": "NINJS",
+                        "qcode": "ninjs"
+                    },
+                    {
+                        "name": "Newsroom NINJS",
+                        "qcode": "newsroom ninjs"
+                    },
+                    {
+                        "name": "NewsML G2",
+                        "qcode": "newsmlg2"
+                    },
+                    {
+                        "name": "Email",
+                        "qcode": "email"
+                    },
+                    {
+                        "name": "NTB Event",
+                        "qcode": "ntb_event"
+                    },
+                    {
+                        "name": "JSON Event",
+                        "qcode": "json_event"
+                    },
+                    {
+                        "name": "JSON Planning",
+                        "qcode": "json_planning"
+                    },
+                    {
+                        "name": "JSON Planning Featured",
+                        "qcode": "json_planning_featured"
+                    }
+                ]
+            },
+            {
+                "is_active": true,
+                "name": "Wire/Paper",
+                "qcode": "wire",
+                "formats": [
+                    {
+                        "name": "NITF",
+                        "qcode": "nitf"
+                    },
+                    {
+                        "name": "Newsroom NINJS",
+                        "qcode": "newsroom ninjs"
+                    },
+                    {
+                        "name": "Email",
+                        "qcode": "email"
+                    },
+                    {
+                        "name": "NTB Event",
+                        "qcode": "ntb_event"
+                    },
+                    {
+                        "name": "JSON Event",
+                        "qcode": "json_event"
+                    },
+                    {
+                        "name": "JSON Planning",
+                        "qcode": "json_planning"
+                    },
+                    {
+                        "name": "JSON Planning Featured",
+                        "qcode": "json_planning_featured"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "categories",
+        "display_name": "Categories",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "items": [
+            {
+                "name": "BIN",
+                "qcode": "BIN",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "BRF",
+                "qcode": "BRF",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "BRN",
+                "qcode": "BRN",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "BTL",
+                "qcode": "BTL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CALLCENTER",
+                "qcode": "CALLCENTER",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "EXT",
+                "qcode": "EXT",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "FOCUS",
+                "qcode": "FOCUS",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "HERMES",
+                "qcode": "HERMES",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "ICT",
+                "qcode": "ICT",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "INT",
+                "qcode": "INT",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "NEWS",
+                "qcode": "NEWS",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "PR",
+                "qcode": "PR",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "RESULTS",
+                "qcode": "RESULTS",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPECIAL",
+                "qcode": "SPECIAL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPF",
+                "qcode": "SPF",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPN",
+                "qcode": "SPN",
+                "is_active": true,
+                "language": "fr-BE"
+            }
+        ]
     }
 ]
