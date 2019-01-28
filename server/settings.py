@@ -24,7 +24,8 @@ INSTALLED_APPS.extend([
     'apps.languages',
     'planning',
     'belga.image',
-])
+    'belga.io'
+])  
 
 SECRET_KEY = env('SECRET_KEY', '')
 
