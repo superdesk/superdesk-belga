@@ -37,18 +37,42 @@ dataset = {
         'name': 'Marijn Wellink (wki)'
     },
     'author': 'Marijn Wellink (wki)',
-    'summary': 'LONDEN (ANP) - Supermarktketen Tesco zet het mes in 15.000 banen in Groot-Brittannië. Dat schrijft Mail on Sunday op basis van ingewijden. Het zou daarmee een veel grotere ingreep zijn dan waar andere Britse media de afgelopen dagen op speculeerden, van mogelijk honderden tot wat meer dan duizend banen.',
+    'summary': 'LONDEN (ANP) - Supermarktketen Tesco zet het mes in 15.000 banen in Groot-Britta'
+               'nnië. Dat schrijft Mail on Sunday op basis van ingewijden. Het zou daarmee een v'
+               'eel grotere ingreep zijn dan waar andere Britse media de afgelopen dagen op spec'
+               'uleerden, van mogelijk honderden tot wat meer dan duizend banen.',
+
     'summary_detail': {
         'type': 'text/plain',
         'language': 'NL',
         'base': '',
-        'value': 'LONDEN (ANP) - Supermarktketen Tesco zet het mes in 15.000 banen in Groot-Brittannië. Dat schrijft Mail on Sunday op basis van ingewijden. Het zou daarmee een veel grotere ingreep zijn dan waar andere Britse media de afgelopen dagen op speculeerden, van mogelijk honderden tot wat meer dan duizend banen.'
+        'value': 'LONDEN (ANP) - Supermarktketen Tesco zet het mes in 15.000 banen in Groot-Britta'
+                 'nnië. Dat schrijft Mail on Sunday op basis van ingewijden. Het zou daarmee een v'
+                 'eel grotere ingreep zijn dan waar andere Britse media de afgelopen dagen op spec'
+                 'uleerden, van mogelijk honderden tot wat meer dan duizend banen.',
+
     },
     'content': [{
         'type': 'application/xhtml+xml',
         'language': 'NL',
         'base': '',
-        'value': "<p>LONDEN (ANP) - Supermarktketen Tesco zet het mes in 15.000 banen in Groot-Brittannië. Dat schrijft Mail on Sunday op basis van ingewijden. Het zou daarmee een veel grotere ingreep zijn dan waar andere Britse media de afgelopen dagen op speculeerden, van mogelijk honderden tot wat meer dan duizend banen.</p><p>De reorganisatie is onderdeel van een plan om in 2020 zo'n 1,5 miljard pond, ruim 1,7 miljard euro, te besparen. Onder meer de vlees-, vis- en delicatessenafdelingen zullen niet meer standaard bezet worden met specialisten en ook de bemande personeelskantines en -restaurants gaan dicht. Tesco is de grootste supermarktketen van het Verenigd Koninkrijk met 732 filialen en heeft verder veel ondersteunende- en klantenservice-afdelingen.</p><p>Tesco is opgericht in 1919 en heeft wereldwijd 3400 filialen. Het bedrijf heeft een personeelsbestand van circa 460.000 waarvan zo'n 300.000 medewerkers actief zijn in Groot-Brittannië. Tesco is verder aanwezig in landen als India, Polen, Tsjechië en Hongarije. Een woordvoerder van Tesco wilde het bericht tegenover de krant niet bevestigen. ,,We zijn altijd op zoek naar manieren om ons bedrijf eenvoudiger en efficiënter te runnen. Wanneer we veranderingen aanbrengen in ons bedrijf, zijn collega's altijd de eersten die het weten'', aldus de zegsman.</p>"
+        'value': '<p>LONDEN (ANP) - Supermarktketen Tesco zet het mes in 15.000 banen in Groot-Bri'
+                 'ttannië. Dat schrijft Mail on Sunday op basis van ingewijden. Het zou daarmee ee'
+                 'n veel grotere ingreep zijn dan waar andere Britse media de afgelopen dagen op s'
+                 'peculeerden, van mogelijk honderden tot wat meer dan duizend banen.</p><p>De reo'
+                 "rganisatie is onderdeel van een plan om in 2020 zo'n 1,5 miljard pond, ruim 1,7 "
+                 'miljard euro, te besparen. Onder meer de vlees-, vis- en delicatessenafdelingen '
+                 'zullen niet meer standaard bezet worden met specialisten en ook de bemande perso'
+                 'neelskantines en -restaurants gaan dicht. Tesco is de grootste supermarktketen v'
+                 'an het Verenigd Koninkrijk met 732 filialen en heeft verder veel ondersteunende-'
+                 ' en klantenservice-afdelingen.</p><p>Tesco is opgericht in 1919 en heeft wereldw'
+                 'ijd 3400 filialen. Het bedrijf heeft een personeelsbestand van circa 460.000 waa'
+                 "rvan zo'n 300.000 medewerkers actief zijn in Groot-Brittannië. Tesco is verder a"
+                 'anwezig in landen als India, Polen, Tsjechië en Hongarije. Een woordvoerder van '
+                 'Tesco wilde het bericht tegenover de krant niet bevestigen. ,,We zijn altijd op '
+                 'zoek naar manieren om ons bedrijf eenvoudiger en efficiënter te runnen. Wanneer '
+                 "we veranderingen aanbrengen in ons bedrijf, zijn collega's altijd de eersten die"
+                 " het weten'', aldus de zegsman.</p>",
     }
     ],
     'anp_priority': '3',
@@ -102,7 +126,3 @@ class RSSBelgaTestCase(RssBelgaIngestServiceTest):
         self.assertEqual(item["word_count"], "197")
         self.assertEqual(item["authors"], [
             {'uri': None, 'parent': None, 'name': 'Marijn Wellink (wki)', 'role': None, 'jobtitle': None}])
-
-
-suite = unittest.TestLoader().loadTestsFromTestCase(RSSBelgaTestCase)
-unittest.TextTestRunner(verbosity=2).run(suite)
