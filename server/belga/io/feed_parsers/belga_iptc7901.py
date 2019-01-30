@@ -32,8 +32,8 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
     label = 'Belga IPTC 7901 Parser'
 
     types = [
-        ('dpa', b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', ' =\n \n'),
-        ('ats', b'\x7f\x7f', ' = \r\n \r\n')
+        ('dpa', b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', [' =\n \n']),
+        ('ats', b'(\x7f\x7f|\x7f)', [' = \r\n \r\n', ' = \r\n\r\n'])
     ]
     txt_type = None
 
@@ -48,7 +48,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                         BelgaIPTC7901FeedParser.txt_type = item
                         return check_type
 
-        except Exception as ex:
+        except Exception:
             return False
 
     def parse(self, file_path, provider=None):
@@ -180,7 +180,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         :return:
         """
         item['headline'] = ''
-        headers, divider, the_rest = item.get('body_html', '').partition(BelgaIPTC7901FeedParser.txt_type[2])
+        headers, divider, the_rest = self.mpartition(item.get('body_html', ''), BelgaIPTC7901FeedParser.txt_type[2])
         # If no divider then there was only one line and that is the headline so clean up the stray '='
         if not divider:
             item['headline'] = item.get('headline').replace(' =', '')
@@ -189,7 +189,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         headerlines = headers.split('\n')
 
         for line in headerlines:
-            if line == str.upper(line):
+            if str.isupper(line):
                 if 'anpa_take_key' in item:
                     item['anpa_take_key'] += " " + line
                 else:
@@ -207,6 +207,12 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     continue
             item['headline'] += line + "\n"
         item['body_html'] = the_rest
+
+    def mpartition(self, string, substrings):
+        for substring in substrings:
+            if substring in string:
+                return string.partition(substring)
+        return string.partition(substring)
 
 
 register_feed_parser(BelgaIPTC7901FeedParser.NAME, BelgaIPTC7901FeedParser())

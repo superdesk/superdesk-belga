@@ -80,7 +80,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             return l_item
 
         except Exception as ex:
-            raise ParserError.BelganewsmlOneParserError(ex, provider)
+            raise ParserError.newsmlOneParserError(ex, provider)
 
     def parser_newsenvelop(self, envelop_el):
         """
