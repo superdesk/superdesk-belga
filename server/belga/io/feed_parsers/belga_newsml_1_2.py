@@ -298,7 +298,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         element = manage_el.find('Status')
         if element is not None:
-            item['status'] = element.get('FormalName', '')
+            item['pubstatus'] = element.get('FormalName', '')
 
         element = manage_el.find('Urgency')
         if element is not None:
@@ -392,7 +392,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
             element = newslines_el.find('ByLine')
             if element is not None:
-                item['by_line'] = element.text
+                item['byline'] = element.text
 
             element = newslines_el.find('ByLineTitle')
             if element is not None:
@@ -595,7 +595,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         element = content_el.find('MediaType')
         if element is not None:
-            item['media_type'] = element.get('FormalName', '')
+            item['type'] = element.get('FormalName', '')
 
         element = content_el.find('MimeType')
         if element is not None:
