@@ -1,5 +1,4 @@
 from superdesk.tests import TestCase
-import unittest
 import os
 from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
 
@@ -8,7 +7,7 @@ class BaseBelgaANPAFeedParserTestCase(TestCase):
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
-        provider = {'name': 'Test'}
+        provider = {'name': 'test'}
         parser = BelgaANPAFeedParser()
         self.item = parser.parse(fixture, provider)
 
@@ -62,7 +61,3 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
                 'd injuries.</p>'
             )
         self.assertEqual(item["body_html"], expected_body)
-
-
-suite = unittest.TestLoader().loadTestsFromTestCase(KyodoBelgaFeedParserTestCase)
-unittest.TextTestRunner(verbosity=2).run(suite)

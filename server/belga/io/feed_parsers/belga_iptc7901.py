@@ -32,8 +32,8 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
     label = 'Belga IPTC 7901 Parser'
 
     types = [
-        ('dpa', b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', [' =\n \n']),
-        ('ats', b'(\x7f\x7f|\x7f)', [' = \r\n \r\n', ' = \r\n\r\n'])
+        ('dpa', b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', [' =\n']),
+        ('ats', b'(\x7f\x7f|\x7f)', [' = \r\n'])
     ]
     txt_type = None
 
@@ -55,14 +55,12 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         if BelgaIPTC7901FeedParser.txt_type[0] == 'dpa':
             item = self.parse_content_dpa(file_path, provider)
             item = self.dpa_derive_dateline(item)
-            self.parse_header(item)
             # Markup the text and set the content type
             item['body_html'] = '<p>' + item['body_html'].replace('\r\n', ' ').replace('\n', '</p><p>') + '</p>'
             item[ITEM_TYPE] = CONTENT_TYPE.TEXT
         if BelgaIPTC7901FeedParser.txt_type[0] == 'ats':
             item = self.parse_content_ats(file_path, provider)
             item = self.dpa_derive_dateline(item)
-            self.parse_header(item)
             # Markup the text and set the content type
             item['body_html'] = '<p>' + item['body_html'].replace('\r\n', ' ').replace('\n', '</p><p>') + '</p>'
             item[ITEM_TYPE] = CONTENT_TYPE.TEXT
@@ -85,38 +83,44 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['anpa_category'] = [{'qcode': self.map_category(m.group(4).decode())}]
                 item['word_count'] = int(m.group(5).decode())
 
-            inHeader = True
-            inText = False
-            inNote = False
-            for line in lines[2:]:
-                # STX starts the body of the story
-                if line[0:1] == b'\x02':
-                    # pick the rest of the line off as the headline
-                    item['body_html'] = line[1:].decode('latin-1', 'replace')
-                    inText = True
-                    inHeader = False
-                    continue
-                if line[0:1] == b'\x03':
-                    break
-                if inText:
-                    if line.decode('latin-1', 'replace') \
-                            .find('The following information is not for publication') != -1 \
-                            or line.decode('latin-1', 'replace').find(
-                            'The following information is not intended for publication') != -1:
-                        inNote = True
-                        inText = False
-                        item['ednote'] = ''
-                        continue
-                    item['body_html'] += line.decode('latin-1', 'replace')
-                if inNote:
-                    item['ednote'] += line.decode('latin-1', 'replace')
-                    continue
-                if inHeader:
-                    if 'slugline' not in item:
-                        item['slugline'] = ''
-                    item['slugline'] += line.decode('latin-1', 'replace').rstrip('/\r\n')
-                    continue
+            inHeader = False
+            inBody = False
+            line_count = 0
+            item['headline'] = ''
+            item['body_html'] = ''
+            # start check each line for get information
+            for bline in lines[1:]:
+                line = bline.decode('latin-1', 'replace')
+                line_count += 1
 
+                # dpa start header when line number is 3
+                if bline[0:1] == b'\x02':
+                    line = line[1:]
+                    inHeader = True
+
+                # dpa end at especially characters
+                if bline[0:1] == b'\x03':
+                    break
+
+                if inHeader is True:
+                    # dpa end header when line end with especially characters (ex '=\r\n')
+                    end_string = self.check_mendwith(line, BelgaIPTC7901FeedParser.txt_type[2])
+                    if end_string:
+                        if line.startswith('By '):
+                            item['byline'] = line.replace('By ', '').rstrip(end_string)
+                        else:
+                            item['headline'] += line.rstrip(end_string)
+                        inHeader = False
+                        # set flag inBody when header is end
+                        inBody = True
+                    else:
+                        item['headline'] += line
+                        inHeader = True
+                    continue
+                # dpa start body when the header is end
+                if inBody:
+                    item['body_html'] += line
+                    continue
             return item
         except Exception as ex:
             raise ParserError.IPTC7901ParserError(exception=ex, provider=provider)
@@ -137,41 +141,73 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['anpa_category'] = [{'qcode': self.map_category(m.group(4).decode())}]
                 item['word_count'] = int(m.group(5).decode())
 
-            inHeader = True
-            inText = False
+            inHeader = False
+            inBody = False
             inNote = False
             line_count = 0
+            item['headline'] = ''
+            item['body_html'] = ''
+            # start check each line for get information
             for line in lines[1:]:
+                line = line.decode('latin-1', 'replace')
                 line_count += 1
-                # STX starts the body of the story
-                if line_count == 3:
-                    # pick the rest of the line off as the headline
-                    item['body_html'] = line.decode('latin-1', 'replace')
-                    inText = True
-                    inHeader = False
-                    continue
-                if inText:
-                    if line.decode('latin-1', 'replace') \
-                            .find('The following information is not for publication') != -1 \
-                            or line.decode('latin-1', 'replace').find(
-                            'The following information is not intended for publication') != -1:
-                        inNote = True
-                        inText = False
-                        item['ednote'] = ''
-                        continue
-                    item['body_html'] += line.decode('latin-1', 'replace')
-                if inNote:
-                    item['ednote'] += line.decode('latin-1', 'replace')
-                    continue
-                if inHeader:
+                # slugline is before the header
+                if line_count < 3:
                     if 'slugline' not in item:
                         item['slugline'] = ''
-                    item['slugline'] += line.decode('latin-1', 'replace').rstrip('/\r\n')
+                    item['slugline'] += line.rstrip('/\r\n')
                     continue
-
+                # dpa start header when line number is 3
+                if line_count == 3:
+                    inHeader = True
+                if inHeader is True:
+                    if str.isupper(line):
+                        if 'anpa_take_key' in item:
+                            item['anpa_take_key'] += " " + line.rstrip('\n')
+                        else:
+                            item['anpa_take_key'] = line.rstrip('\n')
+                        continue
+                    if line.startswith('(') or line.endswith(')'):
+                        if 'anpa_header' in item:
+                            item['anpa_header'] += " " + line
+                        else:
+                            item['anpa_header'] = line
+                        continue
+                    # dpa end header when line end with especially characters (ex '=\r\n')
+                    end_string = self.check_mendwith(line, BelgaIPTC7901FeedParser.txt_type[2])
+                    if end_string:
+                        if line.startswith('By '):
+                            item['byline'] = line.replace('By ', '').rstrip(end_string)
+                        else:
+                            item['headline'] += line.rstrip(end_string)
+                        inHeader = False
+                        # set flag inBody when header is end
+                        inBody = True
+                    else:
+                        item['headline'] += line
+                        inHeader = True
+                    continue
+                # dpa start body when the header is end
+                if inBody:
+                    if line.find('The following information is not for publication') != -1 or \
+                            line.find('The following information is not intended for publication') != -1:
+                        inNote = True
+                        inBody = False
+                        item['ednote'] = ''
+                        continue
+                    item['body_html'] += line
+                if inNote:
+                    item['ednote'] += line
+                    continue
             return item
         except Exception as ex:
             raise ParserError.IPTC7901ParserError(exception=ex, provider=provider)
+
+    def check_mendwith(self, string, end_strings):
+        for end_string in end_strings:
+            if string.endswith(end_string):
+                return end_string
+        return None
 
     def parse_header(self, item):
         """
@@ -212,7 +248,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         for substring in substrings:
             if substring in string:
                 return string.partition(substring)
-        return string.partition(substring)
+        return string, None, None
 
 
 register_feed_parser(BelgaIPTC7901FeedParser.NAME, BelgaIPTC7901FeedParser())

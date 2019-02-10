@@ -10,7 +10,7 @@
 
 
 from superdesk.io.feeding_services import RSSFeedingService
-from superdesk.io.registry import register_feeding_service
+from superdesk.io.registry import register_feeding_service, register_feeding_service_parser
 
 
 class RSSBelgaFeedingService(RSSFeedingService):
@@ -52,3 +52,4 @@ class RSSBelgaFeedingService(RSSFeedingService):
 
 
 register_feeding_service(RSSBelgaFeedingService)
+register_feeding_service_parser(RSSBelgaFeedingService.NAME, None)

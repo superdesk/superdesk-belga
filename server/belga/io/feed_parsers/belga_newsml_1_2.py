@@ -9,7 +9,6 @@
 # at https://www.appendsourcefabric.org/superdesk/license
 
 import datetime
-
 from superdesk.errors import ParserError
 from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser

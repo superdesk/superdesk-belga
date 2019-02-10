@@ -19,7 +19,7 @@ class BaseBelgaNewsMLParserTestCase(TestCase):
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
-        provider = {'name': 'Test'}
+        provider = {'name': 'test'}
         with open(fixture, 'rb') as f:
             parser = BelgaNewsMLOneFeedParser()
             self.xml_root = etree.parse(f).getroot()
@@ -80,11 +80,11 @@ class AFPBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
         self.assertEqual(item["item_type"], "News")
         self.assertEqual(item["line_text"], "(Croquis d'audience+Photo+Video)")
         self.assertEqual(item["line_type"], "ProductLine")
-        self.assertEqual(item["media_type"], "Text")
+        self.assertEqual(item["type"], "text")
         self.assertEqual(item["products"], ["DAB", "AMW", "ELU", "EUA", "MOA", "FEUA"])
         self.assertEqual(item["provide_id"], "afp.com", )
         self.assertEqual(item["service"], "DGTE")
-        self.assertEqual(item["status"], "Usable")
+        self.assertEqual(item["pubstatus"], "Usable")
 
 
 class ANPBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
@@ -98,8 +98,8 @@ class ANPBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
 
         self.assertEqual(item["item_type"], "News")
         self.assertEqual(item["firstcreated"].isoformat(), "2018-12-10T09:35:49+01:00")
-        self.assertEqual(item["status"], "usable")
-        self.assertEqual(item["media_type"], "Text")
+        self.assertEqual(item["pubstatus"], "usable")
+        self.assertEqual(item["type"], "text")
         self.assertEqual(item["versioncreated"].isoformat(), "2018-12-10T12:37:31+01:00")
         self.assertEqual(item["guid"], "urn:newsml:anp.nl:20181210:ANPX-101218-041:2")
         self.assertEqual(item["location"], {'country': 'NL', 'how_present_el': 'Origin', 'city': 'UTRECHT'})
@@ -158,7 +158,7 @@ class EFEBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["location"], {'how_present_el': 'Event', 'country': 'IND'})
-        self.assertEqual(item["status"], "Usable")
+        self.assertEqual(item["pubstatus"], "Usable")
         self.assertEqual(item["efe_regional"], "")
         self.assertEqual(item["administrative"], {'provider': 'Agencia EFE', 'creator': 'daa/mt/msr'})
         self.assertEqual(item["efe_pais"], "IND")
@@ -169,7 +169,7 @@ class EFEBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
         self.assertEqual(item["item_type"], "News")
         self.assertEqual(item["item_id"], "25413502")
         self.assertEqual(item["role"], "Main")
-        self.assertEqual(item["media_type"], "Text")
+        self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF")
         self.assertEqual(item["products"], ['Texto internacional general para España'])
         self.assertEqual(item["news_component_duid"], "text_25413502.text")
@@ -248,9 +248,9 @@ class TASSBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
         self.assertEqual(item["subject"], [])
         self.assertEqual(item["item_keywords"], ['itartassrubric_URGENT', 'URGENT'])
         self.assertEqual(item["mime_type"], "text/vnd.IPTC.NITF")
-        self.assertEqual(item["media_type"], "ComplexData")
+        self.assertEqual(item["type"], "text")
         self.assertEqual(item["urgency"], "")
-        self.assertEqual(item["status"], "Usable")
+        self.assertEqual(item["pubstatus"], "Usable")
         self.assertEqual(item["provide_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(item["versioncreated"].isoformat(), "2019-01-21T10:27:08")
         self.assertEqual(item["firstcreated"].isoformat(), "2019-01-21T10:27:08")
