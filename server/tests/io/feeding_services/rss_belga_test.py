@@ -112,7 +112,7 @@ class RSSBelgaTestCase(RssBelgaIngestServiceTest):
         item = self.instance._create_item(data, source='source')
         self.assertEqual(item["provider_id"], "ANP")
         self.assertEqual(item["char_count"], "1294")
-        self.assertEqual(item["localion"], {'city': None, 'country': 'NEDERLAND(NL)'})
+        self.assertEqual(item["location"], {'city': None, 'country': 'NEDERLAND(NL)'})
         self.assertEqual(item["codes"], None)
         self.assertEqual(item["copyright"],
                          "© 2019 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights "

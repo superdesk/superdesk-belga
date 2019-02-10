@@ -1,10 +1,15 @@
 from superdesk.tests import TestCase
 import os
 from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
+from superdesk import config
+import settings
 
 
 class BaseBelgaANPAFeedParserTestCase(TestCase):
     def setUp(self):
+        for key in dir(settings):
+            if key.isupper():
+                setattr(config, key, getattr(settings, key))
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}

@@ -10,14 +10,12 @@
 
 
 import re
-
 from datetime import datetime
-
+from eve.utils import config
 from superdesk.errors import ParserError
 from superdesk.io.registry import register_feed_parser
 from superdesk.io.feed_parsers.anpa import ANPAFeedParser
 from superdesk.metadata.item import ITEM_TYPE, CONTENT_TYPE, GUID_FIELD, GUID_TAG, FORMAT, FORMATS
-from belga.io.utils import TIMEZONE
 import pytz
 from superdesk.metadata.utils import generate_guid
 
@@ -67,7 +65,7 @@ class BelgaANPAFeedParser(ANPAFeedParser):
             # parse created date at the end of file
             m = re.search(b'\x03([A-Z]{3})-([0-9]{2}:[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2})', lines[-1], flags=re.I)
             if m:
-                tz = pytz.timezone(TIMEZONE[str.lower(m.group(1).decode())])
+                tz = pytz.timezone(config.TIMEZONE_CODE[str.lower(m.group(1).decode())])
                 date = datetime.strptime(m.group(2).decode(), '%H:%M-%d-%m-%y').replace(tzinfo=tz)
                 item['firstcreated'] = date.astimezone(pytz.utc)
                 item['versioncreated'] = item['firstcreated']

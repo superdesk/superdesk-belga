@@ -25,7 +25,7 @@ class RSSBelgaFeedingService(RSSFeedingService):
         if provider_id == 'ANP':
             item['provider_id'] = provider_id
             item['char_count'] = data.get('anp_charcount')
-            item['localion'] = {
+            item['location'] = {
                 'city': data.get('anp_city'),
                 'country': data.get('anp_country')
             }

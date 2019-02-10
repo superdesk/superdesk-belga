@@ -52,6 +52,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
             return False
 
     def parse(self, file_path, provider=None):
+        item = {}
         if BelgaIPTC7901FeedParser.txt_type[0] == 'dpa':
             item = self.parse_content_dpa(file_path, provider)
             item = self.dpa_derive_dateline(item)

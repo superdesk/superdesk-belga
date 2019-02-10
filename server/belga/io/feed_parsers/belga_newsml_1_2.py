@@ -184,20 +184,20 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         # Parser NewsComponent element
         component_parent = newsitem_el.find('NewsComponent')
-        # if have a child NewsComponent, run the parser for TASS xml file.
         if component_parent is not None:
-            if component_parent.attrib.get('Duid', '') is not None:
-                item['news_component_duid'] = component_parent.attrib.get('Duid', '')
-
-            if component_parent.attrib.get('Essential', '') is not None:
-                item['news_component_essential'] = component_parent.attrib.get('Essential', '')
-
-            if component_parent.attrib.get('EquivalentsList', '') is not None:
-                item['news_component_equivalentslist'] = component_parent.attrib.get('EquivalentsList', '')
-
+            # if have a child NewsComponent, run the parser for TASS xml file.
             component_child = component_parent.find('NewsComponent')
             if component_child is not None:
                 self.parser_newscomponent(item, component_child.find('NewsComponent'))
+                if component_parent.attrib.get('Duid') is not None:
+                    item['guid'] = component_parent.attrib.get('Duid', '')
+
+                if component_parent.attrib.get('Essential') is not None:
+                    item['news_component_essential'] = component_parent.attrib.get('Essential', '')
+
+                if component_parent.attrib.get('EquivalentsList') is not None:
+                    item['news_component_equivalentslist'] = component_parent.attrib.get('EquivalentsList', '')
+
             else:
                 self.parser_newscomponent(item, component_parent)
 
@@ -352,13 +352,13 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if component_el is None:
             return
 
-        if component_el.attrib.get('Duid', '') is not None:
-            item['news_component_duid'] = component_el.attrib.get('Duid', '')
+        if component_el.attrib.get('Duid') is not None:
+            item['guid'] = component_el.attrib.get('Duid', '')
 
-        if component_el.attrib.get('Essential', '') is not None:
+        if component_el.attrib.get('Essential') is not None:
             item['news_component_essential'] = component_el.attrib.get('Essential', '')
 
-        if component_el.attrib.get('EquivalentsList', '') is not None:
+        if component_el.attrib.get('EquivalentsList') is not None:
             item['news_component_equivalentslist'] = component_el.attrib.get('EquivalentsList', '')
 
         role = component_el.find('Role')
@@ -493,10 +493,7 @@ class BelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         element = descript_el.find('guid')
         if element is not None:
-            if 'guid' not in item:
-                item['guid'] = element.text
-            else:
-                item['descriptive_guid'] = element.text
+            item['descriptive_guid'] = element.text
 
         # parser SubjectCode element
         subjects = descript_el.findall('SubjectCode/SubjectDetail')
