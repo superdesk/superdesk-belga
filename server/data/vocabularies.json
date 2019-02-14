@@ -2638,5 +2638,34 @@
                 "language": "fr-BE"
             }
         ]
+    },
+    {
+        "_id": "crop_sizes",
+        "display_name": "Image Crop Sizes",
+        "type": "manageable",
+        "unique_field": "name",
+        "items": [
+            {
+                "is_active": true,
+                "name": "4-3",
+                "width": 800,
+                "height": 600
+            },
+            {
+                "is_active": true,
+                "name": "16-9",
+                "width": 1280,
+                "height": 720
+            }
+        ],
+        "schema": {
+            "name": {},
+            "width": {
+                "type": "int"
+            },
+            "height": {
+                "type": "int"
+            }
+        }
     }
 ]
