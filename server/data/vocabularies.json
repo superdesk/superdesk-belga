@@ -2010,7 +2010,28 @@
         },
         "display_name": "City",
         "description": "",
-        "helper_text": "Free text",
+        "helper_text": "",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
+    },
+    {
+        "_id": "country",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Country",
+        "description": "",
+        "helper_text": "",
         "field_options": {
             "single": true
         },
