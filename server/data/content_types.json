@@ -173,7 +173,6 @@
             "subject": {
                 "mandatory_in_list": {
                     "scheme": {
-                        "countries": null,
                         "author_roles": null,
                         "credits": null,
                         "languages": null,
@@ -194,7 +193,6 @@
                             "required": true,
                             "nullable": true,
                             "allowed": [
-                                "countries",
                                 "genre",
                                 "news_products",
                                 "news_services",
