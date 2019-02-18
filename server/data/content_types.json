@@ -47,10 +47,12 @@
                 "sdWidth": "full"
             },
             "country": {
+                "section": "header",
                 "order": 11,
                 "sdWidth": "half"
             },
             "city": {
+                "section": "header",
                 "order": 12,
                 "sdWidth": "half"
             },
