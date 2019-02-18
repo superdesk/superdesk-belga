@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NewsML>
+<Catalog Href="http://www.feedpartner.net/catalog.MasterCatalog.xml" />
+<NewsEnvelope>
+<DateAndTime>20190121T102721</DateAndTime>
+<NewsProduct FormalName="FILE_MROUTER"/>
+</NewsEnvelope>
+<NewsItem LinkType="normal">
+<Identification><NewsIdentifier><ProviderId>
+www.itar-tass.com
+</ProviderId></NewsIdentifier></Identification>
+<NewsManagement>
+<NewsItemType FormalName="News" />
+<FirstCreated>20190121T102708</FirstCreated>
+<ThisRevisionCreated>20190121T102708</ThisRevisionCreated>
+<Status FormalName="Usable" />
+<Urgency>2</Urgency>
+</NewsManagement>
+<NewsComponent Duid="03AE4325838900396A95" Essential="no" EquivalentsList="no">
+<NewsLines><CopyrightLine>(c) ITAR-TASS 2019</CopyrightLine></NewsLines>
+<NewsComponent Duid="03AE4325838900396A95">
+<Author/>
+<NewsComponent xml:lang="en"><Role FormalName="Main" />
+<NewsLines>
+<DateLine>January 21</DateLine>
+<HeadLine>Kremlin has 'negative reaction' to upcoming EU sanctions</HeadLine>
+<SlugLine>URGENT</SlugLine>
+<MoreLink>http://www.itar-tass.com/</MoreLink></NewsLines>
+<DescriptiveMetada>
+<Language FormalName="en"/>
+<guid>16AAC34CE1C503AE4325838900396A95</guid>
+<Location HowPresent="Origin"><Property FormalName="City" Value="MOSCOW"/></Location></DescriptiveMetada>
+<ContentItem><MediaType FormalName="ComplexData" /><MimeType FormalName="text/vnd.IPTC.NITF" />
+<DataContent><nitf><body><body.head><hedline>
+<hl1>Kremlin has 'negative reaction' to upcoming EU sanctions</hl1>
+</hedline></body.head><body.content>
+<p>MOSCOW, January 21. /TASS/. The Kremlin does not support the EU?s decision to introduce sanctions against Russia, namely due to the Skripal incident. "It is negative," Kremlin Spokesman Dmitry Peskov stated, when asked to describe Russia?s reaction to the decision.</p><p>In response to a question informing that the EU is planning to introduce sanctions against several people, including Alexander Petrov and Ruslan Boshirov, accused of an attempt on the life of Sergei Skripal and his daughter, Russian presidential spokesman stressed that "they are suspected without any basis, there has been no proof so far."</p><p>"We are all familiar with the infamous photographs of these two citizens in the UK. But at the same time, there are many photos of Russian citizens in the UK, and they do not serve as direct proof. We are not aware of any more substantive and specific proof, which is why we have a negative reaction to such decisions," Peskov said.</p>
+</body.content></body></nitf></DataContent></ContentItem>
+<item_keywords>
+<item_keyword>itartassrubric_URGENT</item_keyword>
+<item_keyword>URGENT</item_keyword>
+</item_keywords>
+</NewsComponent>
+</NewsComponent>
+</NewsComponent>
+</NewsItem>
+</NewsML>
