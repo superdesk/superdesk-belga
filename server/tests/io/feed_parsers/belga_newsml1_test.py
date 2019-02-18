@@ -82,7 +82,7 @@ class AFPBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
         self.assertEqual(item["line_type"], "ProductLine")
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["products"], ["DAB", "AMW", "ELU", "EUA", "MOA", "FEUA"])
-        self.assertEqual(item["provide_id"], "afp.com", )
+        self.assertEqual(item["provider_id"], "afp.com", )
         self.assertEqual(item["service"], "DGTE")
         self.assertEqual(item["pubstatus"], "Usable")
 
@@ -119,7 +119,7 @@ class ANPBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
         self.assertEqual(item["genre"], [{'name': 'ECO'}])
         self.assertEqual(item["version"], "2")
         self.assertEqual(item["news_component_essential"], "no")
-        self.assertEqual(item["provide_id"], "ANP")
+        self.assertEqual(item["provider_id"], "ANP")
         self.assertEqual(item["characteristics"],
                          {'characters': '1043', 'word_count': '177', 'creator': 'redsys v4.30'})
         self.assertEqual(item["label"], None)
@@ -184,7 +184,7 @@ class EFEBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
                          [{'qcode': '06002001', 'name': 'endangered species', 'scheme': 'IptcSubjectCodes'},
                           {'qcode': '02001000', 'name': 'crime', 'scheme': 'IptcSubjectCodes'}])
         self.assertEqual(item["mime_type"], "text/vnd.IPTC.NITF")
-        self.assertEqual(item["provide_id"], "texto.efeservicios.com")
+        self.assertEqual(item["provider_id"], "texto.efeservicios.com")
         self.assertEqual(item["urgency"], "5")
         self.assertEqual(item["date_id"], "20190121T103600+0000")
         self.assertEqual(item["genre"], [])
@@ -246,7 +246,7 @@ class TASSBelgaNewsMLTestCase(BaseBelgaNewsMLParserTestCase):
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["urgency"], "")
         self.assertEqual(item["pubstatus"], "Usable")
-        self.assertEqual(item["provide_id"], "\nwww.itar-tass.com\n")
+        self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(item["versioncreated"].isoformat(), "2019-01-21T10:27:08")
         self.assertEqual(item["firstcreated"].isoformat(), "2019-01-21T10:27:08")
         expected_body = \
