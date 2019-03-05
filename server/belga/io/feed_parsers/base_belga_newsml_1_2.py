@@ -111,7 +111,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             item['products'] = []
             for element in elements:
                 if element.get('FormalName'):
-                    item['products'].append(element['FormalName'])
+                    item['products'].append(element.get('FormalName', ''))
 
         element = envelop_el.find('Priority')
         if element is not None:
