@@ -40,7 +40,7 @@ class BelgaImageTestCase(unittest.TestCase):
         provider = BelgaImageSearchProvider(dict())
         with HTTMock(search_mock):
             items = provider.find(query)
-        self.assertEqual(10, len(items))
+        self.assertEqual(83681621, items.count(with_limit_and_skip=False))
 
         item = items[0]
         self.assertEqual('picture', item['type'])

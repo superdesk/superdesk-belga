@@ -4,6 +4,7 @@ import superdesk
 
 from urllib.parse import urljoin
 from superdesk.utc import local_to_utc
+from superdesk.utils import ListCursor
 
 BELGA_TZ = 'Europe/Brussels'
 GUID_PREFIX = 'urn:belga.be:image:'
@@ -55,6 +56,16 @@ def format_list_item(data):
     }
 
 
+class BelgaListCursor(ListCursor):
+
+    def __init__(self, docs, count):
+        super().__init__(docs)
+        self._count = count
+
+    def count(self, **kwargs):
+        return self._count
+
+
 class BelgaImageSearchProvider(superdesk.SearchProvider):
 
     label = 'Belga Image'
@@ -94,7 +105,8 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
             resp.raise_for_status()
 
         data = resp.json()
-        return [format_list_item(item) for item in data['images']]
+        docs = [format_list_item(item) for item in data['images']]
+        return BelgaListCursor(docs, data['nrImages'])
 
     def fetch(self, guid):
         _id = guid.replace(GUID_PREFIX, '')
