@@ -267,8 +267,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         element = manage_el.find('ThisRevisionCreated')
         if element is not None:
-            # firstpublished
-            newsmanagement['firstpublished'] = self.datetime(element.text)
+            # versioncreated
+            newsmanagement['versioncreated'] = self.datetime(element.text)
 
         element = manage_el.find('Status')
         if element is not None and element.get('FormalName'):
@@ -358,7 +358,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                             'Skiping an "{}" item.'.format(formalname, item['guid'])
                         )
                         raise SkipItemException
-                    item[_map[1]] = datacontent.text
+                    if datacontent.text:
+                        item[_map[1]] = datacontent.text.strip()
                 else:
                     logger.warning('Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
                         item['guid']
@@ -385,7 +386,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # headline
         element = newslines_el.find('HeadLine')
         if element is not None and element.text:
-            item['headline'] = element.text
+            item['headline'] = element.text.strip()
 
         # copyrightholder
         element = newslines_el.find('CopyrightLine')
@@ -519,10 +520,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if location_el is not None:
             elements = location_el.findall('Property')
             for element in elements:
-                if element.attrib.get('FormalName', '') == 'Country':
+                if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
                     item['extracountry'] = element.attrib.get('Value')
                     # item['fields_meta']['extracountry'] = element.attrib.get('Value')
-                if element.attrib.get('FormalName', '') == 'City':
+                if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):
                     item['extracity'] = element.attrib.get('Value')
                     # item['fields_meta']['extracity'] = element.attrib.get('Value')
 
