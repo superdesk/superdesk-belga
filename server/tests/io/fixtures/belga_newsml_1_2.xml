@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<NewsML>
+    <Catalog Href="http://www.belga.be/dtd/BelgaCatalog.xml"/>
+    <NewsEnvelope>
+        <DateAndTime>20190129T133356</DateAndTime>
+        <NewsService FormalName=""/>
+        <NewsProduct FormalName=""/>
+    </NewsEnvelope>
+    <NewsItem>
+        <Identification>
+            <NewsIdentifier>
+                <ProviderId>belga.be</ProviderId>
+                <DateId>20190129T133400</DateId>
+                <NewsItemId>98055798</NewsItemId>
+                <RevisionId PreviousRevision="0" Update="N">4</RevisionId>
+                <PublicIdentifier>urn:newsml:www.belga.be</PublicIdentifier>
+            </NewsIdentifier>
+        </Identification>
+        <NewsManagement>
+            <NewsItemType FormalName="NEWS"/>
+            <FirstCreated>20190129T124550</FirstCreated>
+            <ThisRevisionCreated>20190129T133400</ThisRevisionCreated>
+            <Status FormalName="USABLE"/>
+        </NewsManagement>
+        <NewsComponent Duid="98055798" xml:lang="nl">
+            <NewsLines>
+                <HeadLine>Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur</HeadLine>
+            </NewsLines>
+            <AdministrativeMetadata/>
+            <DescriptiveMetadata>
+                <Genre FormalName="CURRENT"/>
+            </DescriptiveMetadata>
+            <NewsComponent Duid="98055801" xml:lang="nl">
+                <Role FormalName="Short"/>
+                <NewsLines>
+                    <DateLine/>
+                    <CreditLine>BELGA</CreditLine>
+                    <HeadLine>Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur</HeadLine>
+                    <CopyrightLine>Belga</CopyrightLine>
+                    <NewsLine>
+                        <NewsLineType FormalName="1"/>
+                        <NewsLineText/>
+                    </NewsLine>
+                    <KeywordLine>ATTENTION USERS</KeywordLine>
+                    <KeywordLine>PRESS</KeywordLine>
+                    <KeywordLine>TV</KeywordLine>
+                    <KeywordLine>MEDIA</KeywordLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName=""/>
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="DWM" Topic="AUTHOR"/>
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA"/>
+                    </Source>
+                    <Contributor>
+                        <Party FormalName=""/>
+                    </Contributor>
+                    <Property FormalName="Validator" Value="dwm"/>
+                    <Property FormalName="ValidationDate" Value="20190129T133356"/>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="BIN"/>
+                        <Property FormalName="NewsProduct" Value="ALG"/>
+                    </Property>
+                    <Property FormalName="NewsObjectId" Value="98055801"/>
+                    <Property FormalName="ForeignId" Value="BIN118"/>
+                    <Property FormalName="Priority" Value="3"/>
+                    <Property FormalName="Topic" Value="BelgaService"/>
+                </AdministrativeMetadata>
+                <DescriptiveMetadata DateAndTime="20190129T124550">
+                    <SubjectCode/>
+                    <Location>
+                        <Property FormalName="City" Value="BRUSSEL"/>
+                        <Property FormalName="Country" Value="België"/>
+                        <Property FormalName="CountryArea"/>
+                        <Property FormalName="SubLocation"/>
+                        <Property FormalName="WorldRegion"/>
+                    </Location>
+                </DescriptiveMetadata>
+                <NewsComponent Duid="98055802" xml:lang="nl">
+                    <Role FormalName="Title"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>51</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="90"/>
+                        </Characteristics>
+                        <DataContent>Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="98055803" xml:lang="nl">
+                    <Role FormalName="Lead"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent/>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="98055804" xml:lang="nl">
+                    <Role FormalName="Body"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>1228</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>Steven Van Geel gaf zich op 31 mei 2014 aan bij de politie van zijn thuisstad Leuven.</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+            <NewsComponent Duid="98056977" xml:lang="fr">
+                <Role FormalName="Short"/>
+                <NewsLines>
+                    <DateLine/>
+                    <CreditLine>BELGA</CreditLine>
+                    <HeadLine>Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur</HeadLine>
+                    <CopyrightLine>Belga</CopyrightLine>
+                    <NewsLine>
+                        <NewsLineType FormalName="1"/>
+                        <NewsLineText/>
+                    </NewsLine>
+                    <KeywordLine>ATTENTION USERS</KeywordLine>
+                    <KeywordLine>PRESS</KeywordLine>
+                    <KeywordLine>TV</KeywordLine>
+                    <KeywordLine>MEDIA</KeywordLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName=""/>
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="DWM" Topic="AUTHOR"/>
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA"/>
+                    </Source>
+                    <Contributor>
+                        <Party FormalName=""/>
+                    </Contributor>
+                    <Property FormalName="Validator" Value="dwm"/>
+                    <Property FormalName="ValidationDate" Value="20190129T133356"/>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="INT"/>
+                        <Property FormalName="NewsProduct" Value="GEN"/>
+                    </Property>
+                    <Property FormalName="NewsObjectId" Value="98056977"/>
+                    <Property FormalName="ForeignId" Value="INT115"/>
+                    <Property FormalName="Priority" Value="3"/>
+                    <Property FormalName="Topic" Value="BelgaService"/>
+                </AdministrativeMetadata>
+                <DescriptiveMetadata DateAndTime="20190129T124550">
+                    <SubjectCode/>
+                    <Location>
+                        <Property FormalName="City" Value="BRUSSEL"/>
+                        <Property FormalName="Country" Value="België"/>
+                        <Property FormalName="CountryArea"/>
+                        <Property FormalName="SubLocation"/>
+                        <Property FormalName="WorldRegion"/>
+                    </Location>
+                </DescriptiveMetadata>
+                <NewsComponent Duid="98056978" xml:lang="fr">
+                    <Role FormalName="Title"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>51</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="90"/>
+                        </Characteristics>
+                        <DataContent>Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="98056979" xml:lang="fr">
+                    <Role FormalName="Lead"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent/>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="98056980" xml:lang="fr">
+                    <Role FormalName="Body"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>1228</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>- drie doden in drugsloods Eksel
+                            Q Dorien Vanderheiden, parket Limburg
+                            Q vox pop
+                            - Mawda: agenten schieten beter niet bij achtervolging (Comité P)
+                            Q Vincent Houssin, VSOA
+                            - GB: vanavond nieuwe stemming in brexitsaga
+                            - cold case: naam Claudy Pierret duikt op in dossier
+                            Q Filip Van Hende, toenmalig advocaat Pierret
+                            Q Sylvie Van Baden, parket Antwerpen
+                            Q Lydia De Decker, mama van Sally
+                            Q Naomi Van Hecke, dochter van Sally
+                            - DNA-staal van Congolese adoptiekinderen gevraagd
+                            - ziekenhuis Zottegem deels geëvacueerd na brandje
+                            - premier Michel wordt in juni opnieuw papa
+                            - nieuwjaarstoespraak koning voor de hoogste gezagsdragers
+                            Q koning Filip
+                            Q premier Charles Michel
+                            - richtlijnen voor gezondere broodjes op school
+                            Q vox pop
+                            Q Loes Neven, Vlaams Instituut Gezond Leven
+                            - Gaia wil kangoeroevlees uit de winkelrekken bannen
+                            Q Michel Vandenbosch, Gaia
+                            - VS dagen Huawei voor rechter en vragen uitlevering topvrouw
+                            - Maduro acht Trump verantwoordelijk voor mogelijk geweld
+                            - drie doden door tornado in Havana
+                            - multinationals halen lege verpakkingen op
+                            - VS: kleuter na drie dagen levend uit bos gehaald
+                            - Ronde San Juan: Evenepoel beste jongere
+                            - Union gaat vol voor de Beker van België
+                            - vanavond docu 30 jaar VTM Nieuws (deel 2)
+                        </DataContent>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+        </NewsComponent>
+    </NewsItem>
+</NewsML>
