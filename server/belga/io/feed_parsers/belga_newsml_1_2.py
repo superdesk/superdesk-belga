@@ -12,6 +12,7 @@ import logging
 from superdesk.errors import ParserError
 from superdesk.io.registry import register_feed_parser
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
+from superdesk.utc import local_to_utc
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser, SkipItemException
 
 
@@ -218,9 +219,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 identification['item_id'] = element.text
 
             element = newsident_el.find('RevisionId')
-            if element is not None:
+            if element is not None and element.text:
                 # version
-                identification['version'] = element.text
+                identification['version'] = int(element.text)
 
             element = newsident_el.find('PublicIdentifier')
             if element is not None:
@@ -247,6 +248,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :return: dict
         """
         newsmanagement = {}
+        tz = 'Europe/Brussels'
 
         if manage_el is None:
             return newsmanagement
@@ -263,17 +265,17 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         element = manage_el.find('FirstCreated')
         if element is not None:
             # firstcreated
-            newsmanagement['firstcreated'] = self.datetime(element.text)
+            newsmanagement['firstcreated'] = local_to_utc(tz, self.datetime(element.text))
 
         element = manage_el.find('ThisRevisionCreated')
         if element is not None:
             # versioncreated
-            newsmanagement['versioncreated'] = self.datetime(element.text)
+            newsmanagement['versioncreated'] = local_to_utc(tz, self.datetime(element.text))
 
         element = manage_el.find('Status')
         if element is not None and element.get('FormalName'):
             # pubstatus
-            newsmanagement['pubstatus'] = element.get('FormalName')
+            newsmanagement['pubstatus'] = element.get('FormalName').lower()
 
         return newsmanagement
 
@@ -313,10 +315,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         role = newscomponent_el.find('Role')
         if role is not None:
             role_name = role.attrib.get('FormalName')
-            if role_name and role_name.upper() in self.SUPPORTED_ASSET_TYPES:
-                # role
-                item['role'] = role_name.upper()
-            else:
+            if not (role_name and role_name.upper() in self.SUPPORTED_ASSET_TYPES):
                 logger.warning('NewsComponent/Role/FormalName is not supported: "{}". '
                                'Skiping an "{}" item.'.format(role_name, item['guid']))
                 raise SkipItemException
@@ -403,10 +402,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.text:
             item['line_text'] = element.text
 
-        # keyword_line
+        # keywords
         for element in newslines_el.findall('KeywordLine'):
             if element is not None and element.text:
-                item.setdefault('keyword_line', []).append(element.text)
+                item.setdefault('keywords', []).append(element.text)
 
     def parser_administrativemetadata(self, item, admin_el):
         """Parse AdministrativeMetadata in 2nd level NewsComponent element."""
@@ -514,18 +513,16 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if descript_el is None:
             return
 
-        # extracountry
-        # extracity
         location_el = descript_el.find('Location')
         if location_el is not None:
             elements = location_el.findall('Property')
             for element in elements:
+                # country
                 if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
-                    item['extracountry'] = element.attrib.get('Value')
-                    # item['fields_meta']['extracountry'] = element.attrib.get('Value')
+                    item.setdefault('extra', {})['country'] = element.attrib.get('Value')
+                # city
                 if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):
-                    item['extracity'] = element.attrib.get('Value')
-                    # item['fields_meta']['extracity'] = element.attrib.get('Value')
+                    item.setdefault('extra', {})['city'] = element.attrib.get('Value')
 
 
 register_feed_parser(BelgaNewsMLOneFeedParser.NAME, BelgaNewsMLOneFeedParser())

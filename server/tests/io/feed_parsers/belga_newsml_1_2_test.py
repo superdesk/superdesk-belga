@@ -10,6 +10,7 @@
 
 
 import os
+import pytz
 import datetime
 from lxml import etree
 from superdesk.tests import TestCase
@@ -54,20 +55,19 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['byline'], 'BELGA')
         self.assertEqual(item['copyrightholder'], 'Belga')
         self.assertEqual(item['date_id'], '20190129T133400')
-        self.assertEqual(item['extracity'], 'BRUSSEL')
-        self.assertEqual(item['extracountry'], 'België')
-        self.assertEqual(item['firstcreated'], datetime.datetime(2019, 1, 29, 12, 45, 50))
+        self.assertEqual(item['extra']['city'], 'BRUSSEL')
+        self.assertEqual(item['extra']['country'], 'België')
+        self.assertEqual(item['firstcreated'], datetime.datetime(2019, 1, 29, 11, 45, 50, tzinfo=pytz.utc))
         self.assertEqual(item["guid"], "98055801")
         self.assertEqual(item["headline"], "Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur")
         self.assertEqual(item["item_id"], "98055798")
-        self.assertEqual(item["keyword_line"], ['ATTENTION USERS', 'PRESS', 'TV', 'MEDIA'])
+        self.assertEqual(item["keywords"], ['ATTENTION USERS', 'PRESS', 'TV', 'MEDIA'])
         self.assertEqual(item['language'], 'nl')
         self.assertEqual(item['priority'], 3)
         self.assertEqual(item['urgency'], 3)
         self.assertEqual(item['provider_id'], 'belga.be')
         self.assertEqual(item['public_identifier'], 'urn:newsml:www.belga.be')
-        self.assertEqual(item['pubstatus'], 'USABLE')
-        self.assertEqual(item['role'], 'SHORT')
+        self.assertEqual(item['pubstatus'], 'usable')
         self.assertEqual(item['slugline'], 'BelgaService')
         self.assertEqual(item['source'], 'BELGA')
         self.assertEqual(item['subject'], [
@@ -79,5 +79,5 @@ class BelgaNewsMLOneTestCase(TestCase):
             {'name': 'GEN', 'qcode': 'GEN', 'scheme': 'news_products'}
         ])
         self.assertEqual(item['type'], 'text')
-        self.assertEqual(item['version'], '4')
-        self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 13, 34))
+        self.assertEqual(item['version'], 4)
+        self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
