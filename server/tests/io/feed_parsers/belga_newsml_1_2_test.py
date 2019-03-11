@@ -50,7 +50,9 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEquals(item['authors'], [{'name': 'DWM', 'role': 'AUTHOR'}])
         self.assertEqual(
             item['body_html'],
-            '''Steven Van Geel gaf zich op 31 mei 2014 aan bij de politie van zijn thuisstad Leuven.'''
+            '<p>Steven &lt;b&gt;Van Geel&lt;/b&gt; gaf zich op 31 mei 2014 aan bij de politie van zijn '
+            'thuisstad Leuven.</p>'
+            '<p> Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p>'
         )
         self.assertEqual(item['byline'], 'BELGA')
         self.assertEqual(item['copyrightholder'], 'Belga')

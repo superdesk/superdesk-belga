@@ -119,7 +119,8 @@
                             <SizeInBytes>1228</SizeInBytes>
                             <Property FormalName="maxCharCount" Value="0"/>
                         </Characteristics>
-                        <DataContent>Steven Van Geel gaf zich op 31 mei 2014 aan bij de politie van zijn thuisstad Leuven.</DataContent>
+                        <DataContent>Steven &lt;b&gt;Van Geel&lt;/b&gt; gaf zich op 31 mei    2014 aan bij de politie van zijn thuisstad Leuven.
+                        Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</DataContent>
                     </ContentItem>
                 </NewsComponent>
             </NewsComponent>
