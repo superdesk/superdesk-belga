@@ -342,8 +342,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
-        for _map in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'abstract')):
-            role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format(_map[0]))
+        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'abstract')):
+            role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format(formalname))
             if role is not None:
                 newscomponent = role.getparent()
                 datacontent = newscomponent.find('ContentItem/DataContent')
@@ -358,7 +358,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         )
                         raise SkipItemException
                     if datacontent.text:
-                        item[_map[1]] = datacontent.text.strip()
+                        item[item_key] = datacontent.text.strip()
+
+                        if item_key == 'body_html':
+                            item[item_key] = self._plain_to_html(item[item_key])
                 else:
                     logger.warning('Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
                         item['guid']

@@ -8,6 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
+import html
 import datetime
 from superdesk.errors import ParserError
 from superdesk.etree import etree
@@ -663,3 +664,14 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''), 'scheme': scheme})
 
         return formatted_subjects
+
+    def _plain_to_html(self, text):
+        # escape characters
+        text = html.escape(text)
+        # handle newline
+        for newline in ('\r\n', '\n', '\r'):
+            text = text.replace(newline, '</p><p>')
+        # remove redundant whitespaces
+        text = ' '.join(text.split())
+
+        return '<p>' + text + '</p>'
