@@ -100,7 +100,7 @@ VALIDATOR_MEDIA_METADATA = {
     "byline": {
         "required": False,
     },
-     "copyrightnotice": {
-     "required": False,
+    "copyrightnotice": {
+        "required": False,
     },
 }
