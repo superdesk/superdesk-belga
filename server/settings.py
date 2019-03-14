@@ -87,23 +87,20 @@ NEWSML_PROVIDER_ID = 'belga.be'
 ORGANIZATION_NAME = env('ORGANIZATION_NAME', 'Belga')
 ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
 
-PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 30  # 30d
+PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 
 # media required fields
 VALIDATOR_MEDIA_METADATA = {
     "headline": {
         "required": False,
     },
-    "archive_description": {
-        "required": False,
-    },
     "description_text": {
         "required": True,
     },
-    "copyrightholder": {
-        "required": False,
-    },
     "byline": {
         "required": False,
+    },
+     "copyrightnotice": {
+     "required": False,
     },
 }
