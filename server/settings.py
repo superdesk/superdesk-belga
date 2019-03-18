@@ -89,21 +89,96 @@ ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
 
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 30  # 30d
 
-# media required fields
+# schema for images
+SCHEMA = {
+    'picture': {
+        'keywords': {'required': False},
+        'ednote': {'required': False},
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'byline': {'required': False},
+        'copyrightnotice': {'required': False},
+        'sign_off': {'required': False},
+    },
+}
+
+# editor for images
+EDITOR = {
+    'picture': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+}
+
+# schema for video
+SCHEMA = {
+    'video': {
+        'keywords': {'required': False},
+        'ednote': {'required': False},
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'byline': {'required': False},
+        'copyrightnotice': {'required': False},
+        'sign_off': {'required': False},
+    },
+}
+
+# editor for video
+EDITOR = {
+    'video': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+}
+
+# schema for audio
+SCHEMA = {
+    'audio': {
+        'keywords': {'required': False},
+        'ednote': {'required': False},
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'byline': {'required': False},
+        'copyrightnotice': {'required': False},
+        'sign_off': {'required': False},
+    },
+}
+
+# editor for audio
+EDITOR = {
+    'audio': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+}
+
+# media required fields for upload
 VALIDATOR_MEDIA_METADATA = {
     "headline": {
-        "required": False,
-    },
-    "archive_description": {
         "required": False,
     },
     "description_text": {
         "required": True,
     },
-    "copyrightholder": {
+    "byline": {
         "required": False,
     },
-    "byline": {
+    "copyrightnotice": {
         "required": False,
     },
 }
