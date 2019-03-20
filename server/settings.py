@@ -89,7 +89,7 @@ ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
 
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 30  # 30d
 
-# schema for images
+# schema for images, video, audio
 SCHEMA = {
     'picture': {
         'keywords': {'required': False},
@@ -100,23 +100,6 @@ SCHEMA = {
         'copyrightnotice': {'required': False},
         'sign_off': {'required': False},
     },
-}
-
-# editor for images
-EDITOR = {
-    'picture': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full'},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
-    },
-}
-
-# schema for video
-SCHEMA = {
     'video': {
         'keywords': {'required': False},
         'ednote': {'required': False},
@@ -126,23 +109,6 @@ SCHEMA = {
         'copyrightnotice': {'required': False},
         'sign_off': {'required': False},
     },
-}
-
-# editor for video
-EDITOR = {
-    'video': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full'},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
-    },
-}
-
-# schema for audio
-SCHEMA = {
     'audio': {
         'keywords': {'required': False},
         'ednote': {'required': False},
@@ -154,8 +120,26 @@ SCHEMA = {
     },
 }
 
-# editor for audio
+# editor for images, video, audio
 EDITOR = {
+    'picture': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+    'video': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
     'audio': {
         'keywords': {'order': 1, 'sdWidth': 'full'},
         'ednote': {'order': 2, 'sdWidth': 'full'},
