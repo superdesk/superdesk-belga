@@ -46,7 +46,7 @@ module.exports = function(grunt) {
             editorHighlights: true,
             planning: true,
             searchShortcut: true,
-            editFeaturedImage: true,
+            editFeaturedImage: false,
         },
         workspace: {
             analytics: true,

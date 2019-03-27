@@ -2010,7 +2010,28 @@
         },
         "display_name": "City",
         "description": "",
-        "helper_text": "Free text",
+        "helper_text": "",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
+    },
+    {
+        "_id": "country",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Country",
+        "description": "",
+        "helper_text": "",
         "field_options": {
             "single": true
         },
@@ -2031,6 +2052,642 @@
                 "is_active": true,
                 "name": "production",
                 "qcode": "production"
+            }
+        ]
+    },
+    {
+        "_id": "assignment_priority",
+        "display_name": "Assignment priority",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "name": "High",
+                "qcode": 1
+            },
+            {
+                "is_active": true,
+                "name": "Medium",
+                "qcode": 2
+            },
+            {
+                "is_active": true,
+                "name": "Low",
+                "qcode": 3
+            }
+        ]
+    },
+    {
+        "_id": "contact_mobile_usage",
+        "display_name": "Contact mobile usage",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "qcode": "Confidential",
+                "name": "Confidential number",
+                "public": false
+            },
+            {
+                "is_active": true,
+                "qcode": "Business",
+                "name": "Business number",
+                "public": true
+            }
+        ],
+        "helper_text": "Indicates if the contact mobile number is to be made public outside the system"
+    },
+    {
+        "_id": "contact_phone_usage",
+        "display_name": "Contact phone usage",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "qcode": "Confidential",
+                "name": "Confidential number",
+                "public": false
+            },
+            {
+                "is_active": true,
+                "qcode": "Business",
+                "name": "Business number",
+                "public": true
+            }
+        ],
+        "helper_text": "Indicates if the contact phone number is to be made public outside the system"
+    },
+    {
+        "_id": "g2_content_type",
+        "display_name": "Coverage content types",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "name": "Text",
+                "qcode": "text",
+                "content item type": "text"
+            },
+            {
+                "is_active": true,
+                "name": "Picture",
+                "qcode": "picture",
+                "content item type": "picture"
+            },
+            {
+                "is_active": true,
+                "name": "Video",
+                "qcode": "video",
+                "content item type": "video"
+            },
+            {
+                "is_active": true,
+                "name": "Audio",
+                "qcode": "audio",
+                "content item type": "audio"
+            },
+            {
+                "is_active": true,
+                "name": "Infographics",
+                "qcode": "infographics",
+                "content item type": ""
+            },
+            {
+                "is_active": true,
+                "name": "Live video",
+                "qcode": "live_video",
+                "content item type": ""
+            },
+            {
+                "is_active": true,
+                "name": "Live blog",
+                "qcode": "live_blog",
+                "content item type": ""
+            }
+        ]
+    },
+    {
+        "_id": "event_calendars",
+        "display_name": "Event calendars",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "name": "Sport",
+                "qcode": "sport"
+            },
+            {
+                "is_active": true,
+                "name": "News",
+                "qcode": "news"
+            },
+            {
+                "is_active": true,
+                "name": "World News",
+                "qcode": "world_news"
+            },
+            {
+                "is_active": true,
+                "name": "Business",
+                "qcode": "business"
+            },
+            {
+                "is_active": true,
+                "name": "Features",
+                "qcode": "features"
+            }
+        ]
+    },
+    {
+        "_id": "eventoccurstatus",
+        "display_name": "Event occurrence status",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "qcode": "eocstat:eos0",
+                "name": "Unplanned event",
+                "label": "Unplanned event"
+            },
+            {
+                "is_active": true,
+                "qcode": "eocstat:eos1",
+                "name": "Planned, occurrence planned only",
+                "label": "Planned, occurrence planned only"
+            },
+            {
+                "is_active": true,
+                "qcode": "eocstat:eos2",
+                "name": "Planned, occurrence highly uncertain",
+                "label": "Planned, occurrence highly uncertain"
+            },
+            {
+                "is_active": true,
+                "qcode": "eocstat:eos3",
+                "name": "Planned, May occur",
+                "label": "Planned, May occur"
+            },
+            {
+                "is_active": true,
+                "qcode": "eocstat:eos4",
+                "name": "Planned, occurrence highly likely",
+                "label": "Planned, occurrence highly likely"
+            },
+            {
+                "is_active": true,
+                "qcode": "eocstat:eos5",
+                "name": "Planned, occurs certainly",
+                "label": "Planned, occurs certainly"
+            },
+            {
+                "is_active": false,
+                "qcode": "eocstat:eos6",
+                "name": "Planned, then cancelled",
+                "label": "Planned, then cancelled"
+            }
+        ]
+    },
+    {
+        "_id": "newscoveragestatus",
+        "display_name": "News coverage status",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "qcode": "ncostat:int",
+                "name": "coverage intended",
+                "label": "Planned"
+            },
+            {
+                "is_active": true,
+                "qcode": "ncostat:notdec",
+                "name": "coverage not decided yet",
+                "label": "On merit"
+            },
+            {
+                "is_active": false,
+                "qcode": "ncostat:notint",
+                "name": "coverage not intended",
+                "label": "Not planned"
+            },
+            {
+                "is_active": true,
+                "qcode": "ncostat:onreq",
+                "name": "coverage upon request",
+                "label": "On request"
+            }
+        ]
+    },
+    {
+        "_id": "regions",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "unique_field": "qcode",
+        "display_name": "State / Region",
+        "items": [
+            {
+                "is_active": true,
+                "name": "West-Vlaanderen",
+                "qcode": "VWV"
+            },
+            {
+                "is_active": true,
+                "name": "Oost-Vlaanderen",
+                "qcode": "VOV"
+            },
+            {
+                "is_active": true,
+                "name": "Antwerpen",
+                "qcode": "VAN"
+            },
+            {
+                "is_active": true,
+                "name": "Limburg",
+                "qcode": "VLI"
+            },
+            {
+                "is_active": true,
+                "name": "Vlaams-Brabant",
+                "qcode": "VBR"
+            },
+            {
+                "is_active": true,
+                "name": "Brabant wallon",
+                "qcode": "WBR"
+            },
+            {
+                "is_active": true,
+                "name": "Hainaut",
+                "qcode": "WHT"
+            },
+            {
+                "is_active": true,
+                "name": "Namur",
+                "qcode": "WNA"
+            },
+            {
+                "is_active": true,
+                "name": "Liège",
+                "qcode": "WLG"
+            },
+            {
+                "is_active": true,
+                "name": "Luxembourg",
+                "qcode": "WLX"
+            },
+            {
+                "is_active": true,
+                "name": "Brussels",
+                "qcode": "BRU"
+            }
+        ],
+        "helper_text": "The administrative state or region of an address"
+    },
+    {
+        "_id": "geographical_restrictions",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "unique_field": "qcode",
+        "display_name": "Geographical Restrictions",
+        "items": [
+            {
+                "is_active": true,
+                "name": "West-Vlaanderen",
+                "qcode": "VWV"
+            },
+            {
+                "is_active": true,
+                "name": "Oost-Vlaanderen",
+                "qcode": "VOV"
+            },
+            {
+                "is_active": true,
+                "name": "Antwerpen",
+                "qcode": "VAN"
+            },
+            {
+                "is_active": true,
+                "name": "Limburg",
+                "qcode": "VLI"
+            },
+            {
+                "is_active": true,
+                "name": "Vlaams-Brabant",
+                "qcode": "VBR"
+            },
+            {
+                "is_active": true,
+                "name": "Brabant wallon",
+                "qcode": "WBR"
+            },
+            {
+                "is_active": true,
+                "name": "Hainaut",
+                "qcode": "WHT"
+            },
+            {
+                "is_active": true,
+                "name": "Namur",
+                "qcode": "WNA"
+            },
+            {
+                "is_active": true,
+                "name": "Liège",
+                "qcode": "WLG"
+            },
+            {
+                "is_active": true,
+                "name": "Luxembourg",
+                "qcode": "WLX"
+            },
+            {
+                "is_active": true,
+                "name": "Brussels",
+                "qcode": "BRU"
+            }
+        ]
+    },
+    {
+        "_id": "subscriber_types",
+        "display_name": "Subscriber Types",
+        "type": "unmanageable",
+        "selection_type": "do not show",
+        "items": [
+            {
+                "is_active": true,
+                "name": "All",
+                "qcode": "all",
+                "formats": [
+                    {
+                        "name": "NINJS",
+                        "qcode": "ninjs"
+                    },
+                    {
+                        "name": "Newsroom NINJS",
+                        "qcode": "newsroom ninjs"
+                    },
+                    {
+                        "name": "NewsML G2",
+                        "qcode": "newsmlg2"
+                    },
+                    {
+                        "name": "Email",
+                        "qcode": "email"
+                    },
+                    {
+                        "name": "NTB Event",
+                        "qcode": "ntb_event"
+                    },
+                    {
+                        "name": "JSON Event",
+                        "qcode": "json_event"
+                    },
+                    {
+                        "name": "JSON Planning",
+                        "qcode": "json_planning"
+                    },
+                    {
+                        "name": "JSON Planning Featured",
+                        "qcode": "json_planning_featured"
+                    }
+                ]
+            },
+            {
+                "is_active": true,
+                "name": "Digital/Internet",
+                "qcode": "digital",
+                "formats": [
+                    {
+                        "name": "NINJS",
+                        "qcode": "ninjs"
+                    },
+                    {
+                        "name": "Newsroom NINJS",
+                        "qcode": "newsroom ninjs"
+                    },
+                    {
+                        "name": "NewsML G2",
+                        "qcode": "newsmlg2"
+                    },
+                    {
+                        "name": "Email",
+                        "qcode": "email"
+                    },
+                    {
+                        "name": "NTB Event",
+                        "qcode": "ntb_event"
+                    },
+                    {
+                        "name": "JSON Event",
+                        "qcode": "json_event"
+                    },
+                    {
+                        "name": "JSON Planning",
+                        "qcode": "json_planning"
+                    },
+                    {
+                        "name": "JSON Planning Featured",
+                        "qcode": "json_planning_featured"
+                    }
+                ]
+            },
+            {
+                "is_active": true,
+                "name": "Wire/Paper",
+                "qcode": "wire",
+                "formats": [
+                    {
+                        "name": "NITF",
+                        "qcode": "nitf"
+                    },
+                    {
+                        "name": "Newsroom NINJS",
+                        "qcode": "newsroom ninjs"
+                    },
+                    {
+                        "name": "Email",
+                        "qcode": "email"
+                    },
+                    {
+                        "name": "NTB Event",
+                        "qcode": "ntb_event"
+                    },
+                    {
+                        "name": "JSON Event",
+                        "qcode": "json_event"
+                    },
+                    {
+                        "name": "JSON Planning",
+                        "qcode": "json_planning"
+                    },
+                    {
+                        "name": "JSON Planning Featured",
+                        "qcode": "json_planning_featured"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_id": "categories",
+        "display_name": "Categories",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "items": [
+            {
+                "name": "BIN",
+                "qcode": "BIN",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "BRF",
+                "qcode": "BRF",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "BRN",
+                "qcode": "BRN",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "BTL",
+                "qcode": "BTL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CALLCENTER",
+                "qcode": "CALLCENTER",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "EXT",
+                "qcode": "EXT",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "FOCUS",
+                "qcode": "FOCUS",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "HERMES",
+                "qcode": "HERMES",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "ICT",
+                "qcode": "ICT",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "INT",
+                "qcode": "INT",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "NEWS",
+                "qcode": "NEWS",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "PR",
+                "qcode": "PR",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "RESULTS",
+                "qcode": "RESULTS",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPECIAL",
+                "qcode": "SPECIAL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPF",
+                "qcode": "SPF",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPN",
+                "qcode": "SPN",
+                "is_active": true,
+                "language": "fr-BE"
+            }
+        ]
+    },
+    {
+        "_id": "crop_sizes",
+        "display_name": "Image Crop Sizes",
+        "type": "manageable",
+        "unique_field": "name",
+        "items": [
+            {
+                "is_active": true,
+                "name": "4-3",
+                "width": 800,
+                "height": 600
+            },
+            {
+                "is_active": true,
+                "name": "16-9",
+                "width": 1280,
+                "height": 720
+            }
+        ],
+        "schema": {
+            "name": {},
+            "width": {
+                "type": "int"
+            },
+            "height": {
+                "type": "int"
+            }
+        }
+    },
+    {
+        "_id": "product_types",
+        "display_name": "Product Types",
+        "type": "unmanageable",
+        "selection_type": "do not show",
+        "items": [
+            {
+                "is_active": true,
+                "name": "API",
+                "qcode": "api"
+            },
+            {
+                "is_active": true,
+                "name": "Direct",
+                "qcode": "direct"
+            },
+            {
+                "is_active": true,
+                "name": "Both",
+                "qcode": "both"
             }
         ]
     }

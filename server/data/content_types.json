@@ -22,7 +22,7 @@
                 "order": 4,
                 "sdWidth": "half"
             },
-            "authors": {
+            "genre": {
                 "order": 5,
                 "sdWidth": "half"
             },
@@ -38,19 +38,21 @@
                 "order": 8,
                 "sdWidth": "half"
             },
-            "countries": {
+            "authors": {
                 "order": 9,
-                "sdWidth": "half"
-            },
-            "genre": {
-                "order": 10,
-                "sdWidth": "half"
-            },
-            "ednote": {
-                "order": 11,
                 "sdWidth": "full"
             },
+            "ednote": {
+                "order": 10,
+                "sdWidth": "full"
+            },
+            "country": {
+                "section": "header",
+                "order": 11,
+                "sdWidth": "half"
+            },
             "city": {
+                "section": "header",
                 "order": 12,
                 "sdWidth": "half"
             },
@@ -173,7 +175,6 @@
             "subject": {
                 "mandatory_in_list": {
                     "scheme": {
-                        "countries": null,
                         "author_roles": null,
                         "credits": null,
                         "languages": null,
@@ -194,7 +195,6 @@
                             "required": true,
                             "nullable": true,
                             "allowed": [
-                                "countries",
                                 "genre",
                                 "news_products",
                                 "news_services",
@@ -222,6 +222,12 @@
             },
             "belga_related_images": {
                 "type": "related_content",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "country": {
+                "type": "text",
                 "required": false,
                 "enabled": true,
                 "nullable": true

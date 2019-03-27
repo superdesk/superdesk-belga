@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NewsML Version="1.2">
+	<NewsEnvelope>
+		<TransmissionId>20181210123731041</TransmissionId>
+		<SentFrom>
+			<Comment>News Provider</Comment>
+			<Party FormalName="Algemeen Nederlands Persbureau"/>
+		</SentFrom>
+		<DateAndTime>20181210T123731+0100</DateAndTime>
+		<NewsProduct FormalName="ANP Nieuws"/>
+		<Priority FormalName="3"/>
+	</NewsEnvelope>
+	<NewsItem>
+		<Identification>
+			<NewsIdentifier>
+				<ProviderId>ANP</ProviderId>
+				<DateId>20181210</DateId>
+				<NewsItemId>ANPX-101218-041-v2</NewsItemId>
+				<RevisionId PreviousRevision="1" Update="N">2</RevisionId>
+				<PublicIdentifier>urn:newsml:anp.nl:20181210:ANPX-101218-041:2</PublicIdentifier>
+			</NewsIdentifier>
+			<NameLabel/>
+			<DateLabel>10 december 2018</DateLabel>
+		</Identification>
+		<NewsManagement>
+			<NewsItemType FormalName="News"/>
+			<FirstCreated>20181210T093549+0100</FirstCreated>
+			<ThisRevisionCreated>20181210T123731+0100</ThisRevisionCreated>
+			<Status FormalName="usable"/>
+			<Urgency FormalName="3"/>
+		</NewsManagement>
+		<NewsComponent Essential="no" EquivalentsList="no">
+			<NewsLines>
+				<HeadLine>FNV staat alleen met acties bij PostNL (2)</HeadLine>
+				<SubHeadLine/>
+				<ByLine/>
+				<ByLineTitle/>
+				<DateLine/>
+				<CopyrightLine>© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and database rights reserved.</CopyrightLine>
+				<SlugLine>Huub Giesbers (iwi)</SlugLine>
+				<KeywordLine>ECO/ECO10;ECO-POST-CAO</KeywordLine>
+			</NewsLines>
+			<AdministrativeMetadata>
+				<Provider>
+					<Party FormalName="ANP"/>
+				</Provider>
+			</AdministrativeMetadata>
+			<DescriptiveMetadata>
+				<Language FormalName="nl-nl"/>
+				<Genre FormalName="ECO"/>
+				<SubjectCode>
+					<Subject FormalName=""/>
+				</SubjectCode>
+				<SubjectCode>
+					<Subject Vocabulary="urn:newsml:anp.nl:20090407:ANPCatCodes:Webfeed" FormalName="ECO"/>
+				</SubjectCode>
+				<Location HowPresent="Origin">
+					<Property FormalName="Country" Value="NL"/>
+					<Property FormalName="City" Value="UTRECHT"/>
+				</Location>
+				<Property FormalName="Keyword" Value="POST-CAO"/>
+				<Property FormalName="Isin" Value=""/>
+				<Property FormalName="Ticker" Value=""/>
+				<Property FormalName="Company" Value=""/>
+				<Property FormalName="RouteTo" Value="ECO"/>
+				<Property FormalName="Format" Value="nieuws2"/>
+			</DescriptiveMetadata>
+			<ContentItem>
+				<MediaType FormalName="Text"/>
+				<Format FormalName="NITF"/>
+				<Characteristics>
+					<Property Scheme="CharacteristicsProperty" FormalName="FormatVersion" Value="3.3"/>
+					<Property FormalName="Creator" Value="redsys v4.30"/>
+					<Property FormalName="Words" Value="177"/>
+					<Property FormalName="Characters" Value="1043"/>
+				</Characteristics>
+				<DataContent>
+					<nitf version="-//IPTC//DTD NITF 3.3//EN" change.date="June 10, 2005" change.time="19:30">
+						<head>
+							<title>FNV staat alleen met acties bij PostNL (2)</title>
+						</head>
+						<body>
+							<body.content>
+								<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan PostNL</p>
+								<p>UTRECHT (ANP) - FNV kondigt werkonderbrekingen aan bij PostNL, nadat de post- en pakketbezorger maandag niet inging op een ultimatum voor toezeggingen over een nieuwe cao. De drie andere bonden die met PostNL onderhandelen over een nieuwe cao, zien niets in actievoeren.</p>
+								<p>FNV overlegt nog met leden over de precieze omvang en lengte van de stakingen. Later deze week wordt bekend waar postbezorgers het werk neerleggen.</p>
+								<p>Andere betrokken bonden vinden het nog te vroeg voor stakingen. ,,Het is veel te snel om na vijf uur onderhandelen naar het actiemiddel te grijpen'', zei Anselma Zwaagstra van CNV. Ook BVPP en VHP2 zien meer heil in een hervatting van het overleg met PostNL aanstaande woensdag.</p>
+								<p>De drie bonden vinden het ook een brug te ver om juist in de drukke periode rond kerst en oud en nieuw acties te organiseren. Die kunnen PostNL dusdanig hard raken dat ook de werkgelegenheid bij het bedrijf in gevaar komt, waarschuwen ze in een gezamenlijke brief aan hun leden.</p>
+							</body.content>
+						</body>
+					</nitf>
+				</DataContent>
+			</ContentItem>
+		</NewsComponent>
+	</NewsItem>
+</NewsML>

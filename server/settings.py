@@ -24,6 +24,7 @@ INSTALLED_APPS.extend([
     'apps.languages',
     'planning',
     'belga.image',
+    'belga.io'
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -41,9 +42,127 @@ LANGUAGES = [
     {'language': 'ru', 'label': 'Russian', 'source': False, 'destination': False}
 ]
 
+TIMEZONE_CODE = {
+    'aus': 'America/Chicago',
+    'bat': 'Asia/Manila',
+    'bgl': 'Asia/Kolkata',
+    'cav': 'Asia/Manila',
+    'cat': 'Europe/Rome',
+    'chb': 'Asia/Bangkok',
+    'chd': 'America/Phoenix',
+    'chm': 'America/New_York',
+    'cos': 'America/Denver',
+    'cpn': 'America/Chicago',
+    'cri': 'America/New_York',
+    'dal': 'America/Chicago',
+    'dlf': 'Europe/Amsterdam',
+    'drs': 'Europe/Berlin',
+    'ftc': 'America/Denver',
+    'gdh': 'Asia/Kolkata',
+    'grn': 'Europe/Paris',
+    'hlb': 'America/Los_Angeles',
+    'hrt': 'America/Chicago',
+    'irv': 'America/Los_Angeles',
+    'ist': 'Asia/Istanbul',
+    'kws': 'Asia/Tokyo',
+    'lac': 'Europe/Paris',
+    'lee': 'America/New_York',
+    'mbf': 'America/New_York',
+    'mfn': 'America/Los_Angeles',
+    'nwb': 'Europe/London',
+    'pav': 'Europe/Rome',
+    'rlh': 'America/New_York',
+    'roz': 'Europe/Rome',
+    'shg': 'Asia/Shanghai',
+    'sjc': 'America/Los_Angeles',
+    'ssk': 'Asia/Seoul',
+    'svl': 'America/Los_Angeles',
+    'tai': 'Asia/Taipei',
+    'ups': 'Europe/Vienna',
+    'wst': 'America/Indiana/Indianapolis'
+}
+
 # This value gets injected into NewsML 1.2 and G2 output documents.
 NEWSML_PROVIDER_ID = 'belga.be'
 ORGANIZATION_NAME = env('ORGANIZATION_NAME', 'Belga')
 ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
 
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 30  # 30d
+
+# schema for images, video, audio
+SCHEMA = {
+    'picture': {
+        'keywords': {'required': False},
+        'ednote': {'required': False},
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'byline': {'required': False},
+        'copyrightnotice': {'required': False},
+        'sign_off': {'required': False},
+    },
+    'video': {
+        'keywords': {'required': False},
+        'ednote': {'required': False},
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'byline': {'required': False},
+        'copyrightnotice': {'required': False},
+        'sign_off': {'required': False},
+    },
+    'audio': {
+        'keywords': {'required': False},
+        'ednote': {'required': False},
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'byline': {'required': False},
+        'copyrightnotice': {'required': False},
+        'sign_off': {'required': False},
+    },
+}
+
+# editor for images, video, audio
+EDITOR = {
+    'picture': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+    'video': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+    'audio': {
+        'keywords': {'order': 1, 'sdWidth': 'full'},
+        'ednote': {'order': 2, 'sdWidth': 'full'},
+        'headline': {'order': 3, 'sdWidth': 'full'},
+        'description_text': {'order': 4, 'sdWidth': 'full'},
+        'byline': {'order': 5, 'sdWidth': 'half'},
+        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+    },
+}
+
+# media required fields for upload
+VALIDATOR_MEDIA_METADATA = {
+    "headline": {
+        "required": False,
+    },
+    "description_text": {
+        "required": True,
+    },
+    "byline": {
+        "required": False,
+    },
+    "copyrightnotice": {
+        "required": False,
+    },
+}
