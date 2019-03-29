@@ -103,16 +103,22 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if element is not None:
             item['ingest_provider_sequence'] = element.text
 
-        element = envelop_el.find('NewsService')
-        if element is not None:
-            item['service'] = element.get('FormalName', '')
+        # news_services CV
+        for element in envelop_el.findall('NewsService'):
+            if element is not None:
+                item.setdefault('subject', []).append({
+                    "name": element.get('FormalName'),
+                    "qcode": element.get('FormalName'),
+                    "scheme": "news_services"
+                })
 
-        elements = envelop_el.findall('NewsProduct')
-        if elements is not None:
-            item['products'] = []
-            for element in elements:
-                if element.get('FormalName'):
-                    item['products'].append(element.get('FormalName', ''))
+        for element in envelop_el.findall('NewsProduct'):
+            if element is not None:
+                item.setdefault('subject', []).append({
+                    "name": element.get('FormalName'),
+                    "qcode": element.get('FormalName'),
+                    "scheme": "news_product"
+                })
 
         element = envelop_el.find('Priority')
         if element is not None:
@@ -162,9 +168,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         """
         if newsitem_el.attrib.get('Duid', '') != '':
             item['duid'] = newsitem_el.attrib.get('Duid', '')
-
-        if newsitem_el.attrib.get('LinkType', '') != '':
-            item['link_type'] = newsitem_el.attrib.get('LinkType', '')
 
         element = newsitem_el.find('Comment')
         if element is not None:
@@ -227,7 +230,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if newsident_el is not None:
             element = newsident_el.find('ProviderId')
             if element is not None:
-                item['provider_id'] = element.text
+                item['original_source'] = element.text
 
             element = newsident_el.find('DateId')
             if element is not None:
@@ -246,8 +249,12 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 item['guid'] = element.text
 
         element = indent_el.find('NameLabel')
-        if element is not None:
-            item['label'] = element.text
+        if element is not None and element.text:
+            item.setdefault('subject', []).append({
+                "name": element.text,
+                "qcode": element.text,
+                "scheme": "label"
+            })
 
         # ANP
         element = indent_el.find('DateLabel')
@@ -279,9 +286,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if manage_el is None:
             return
 
-        element = manage_el.find('NewsItemType')
-        if element is not None:
-            item['news_item_type'] = element.get('FormalName', '')
+        elements = manage_el.findall('NewsItemType')
+        if elements is not None:
+            for element in elements:
+                item.setdefault('genre', []).append({'name': element.get('FormalName', '')})
 
         element = manage_el.find('FirstCreated')
         if element is not None:
@@ -293,11 +301,13 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         element = manage_el.find('Status')
         if element is not None:
-            item['pubstatus'] = element.get('FormalName', '')
+            item['pubstatus'] = str.lower(element.get('FormalName', ''))
 
         element = manage_el.find('Urgency')
         if element is not None:
             item['urgency'] = element.get('FormalName', '')
+            if item['urgency'] == '':
+                item['urgency'] = element.text
 
         # parser AssociatedWith element
         elements = manage_el.findall('AssociatedWith')
@@ -354,9 +364,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if component_el.attrib.get('Essential') is not None:
             item['news_component_essential'] = component_el.attrib.get('Essential', '')
 
-        if component_el.attrib.get('EquivalentsList') is not None:
-            item['news_component_equivalentslist'] = component_el.attrib.get('EquivalentsList', '')
-
         role = component_el.find('Role')
         if role is not None:
             if role.attrib.get('FormalName', ''):
@@ -393,17 +400,13 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             if element is not None:
                 item['by_line_title'] = element.text
 
-            element = newslines_el.find('DateLine')
-            if element is not None:
-                item['date_line'] = element.text
-
             element = newslines_el.find('CopyrightLine')
             if element is not None:
                 item['copyright_line'] = element.text
 
             element = newslines_el.find('SlugLine')
             if element is not None:
-                item['slug_line'] = element.text
+                item['slugline'] = element.text
 
             element = newslines_el.find('KeywordLine')
             if element is not None:
@@ -437,9 +440,9 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             elements = keywords.findall('item_keyword')
 
             if elements is not None:
-                item['item_keywords'] = []
+                item['keywords'] = []
                 for element in elements:
-                    item['item_keywords'].append(element.text)
+                    item['keywords'].append(element.text)
 
     def parser_descriptivemetadata(self, item, descript_el):
         """
@@ -483,9 +486,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         elements = descript_el.findall('Genre')
         if elements is not None:
-            item['genre'] = []
             for element in elements:
-                item['genre'].append({'name': element.get('FormalName')})
+                item.setdefault('genre', []).append({'name': element.get('FormalName', '')})
 
         element = descript_el.find('guid')
         if element is not None:
@@ -514,18 +516,18 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         location_el = descript_el.find('Location')
         if location_el is not None:
-            item['location'] = {}
+            item['extra'] = {}
 
             how_present_el = location_el.get('HowPresent', '')
             if how_present_el is not None:
-                item['location']['how_present_el'] = how_present_el
+                item['extra']['how_present'] = how_present_el
 
             elements = location_el.findall('Property')
             for element in elements:
                 if element.attrib.get('FormalName', '') == 'Country':
-                    item['location']['country'] = element.attrib['Value']
+                    item['extra']['country'] = element.attrib['Value']
                 if element.attrib.get('FormalName', '') == 'City':
-                    item['location']['city'] = element.attrib['Value']
+                    item['extra']['city'] = element.attrib['Value']
 
         elements = descript_el.findall('Property')
         for element in elements:
@@ -591,7 +593,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         element = content_el.find('MimeType')
         if element is not None:
-            item['mime_type'] = element.get('FormalName', '')
+            item['mimetype'] = element.get('FormalName', '')
 
         element = content_el.find('Format')
         if element is not None:
@@ -658,7 +660,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         for subject in subjects:
             formal_name = subject.get('FormalName')
-            scheme = subject.get('Scheme', '')
+            scheme = subject.get('Scheme', 'genre')
             if formal_name and is_not_formatted(formal_name):
                 formatted_subjects.append(
                     {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''), 'scheme': scheme})

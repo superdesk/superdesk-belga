@@ -32,38 +32,40 @@ class BelgaEFENewsMLOneTestCase(TestCase):
 
     def test_content(self):
         item = self.item[0]
-        self.assertEqual(item["location"], {'how_present_el': 'Event', 'country': 'IND'})
-        self.assertEqual(item["pubstatus"], "Usable")
-        self.assertEqual(item["efe_regional"], "")
-        self.assertEqual(item["administrative"], {'provider': 'Agencia EFE', 'creator': 'daa/mt/msr'})
-        self.assertEqual(item["efe_pais"], "IND")
-        self.assertEqual(item["headline"], "Leones matan a un joven que se coló en un zoológico de la India")
-        self.assertEqual(item["comment"], {'version': '1.0.1', 'name': 'EfeNewsMLVersion'})
+        self.assertEqual(item["subject"], [
+            {'name': 'Texto internacional general para España', 'qcode': 'Texto internacional general para España',
+             'scheme': 'news_product'},
+            {'qcode': '06002001', 'name': 'endangered species', 'scheme': 'IptcSubjectCodes'},
+            {'qcode': '02001000', 'name': 'crime', 'scheme': 'IptcSubjectCodes'}])
+        self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
         self.assertEqual(item["duid"], "text_25413502")
-        self.assertEqual(item["firstcreated"].isoformat(), "2019-01-21T10:36:00+00:00")
-        self.assertEqual(item["news_item_type"], "News")
+        self.assertEqual(item["comment"], {'version': '1.0.1', 'name': 'EfeNewsMLVersion'})
+        self.assertEqual(item["original_source"], "texto.efeservicios.com")
+        self.assertEqual(item["date_id"], "20190121T103600+0000")
         self.assertEqual(item["item_id"], "25413502")
-        self.assertEqual(item["role"], "Main")
-        self.assertEqual(item["type"], "text")
-        self.assertEqual(item["format"], "NITF")
-        self.assertEqual(item["products"], ['Texto internacional general para España'])
-        self.assertEqual(item["efe_complemento"], "")
-        self.assertEqual(item["type"], "text")
-        self.assertEqual(item["sentfrom"], {'organization': 'Agencia EFE', 'party': 'EFE'})
-        self.assertEqual(item["versioncreated"].isoformat(), "2019-01-21T10:36:00+00:00")
         self.assertEqual(item["version"], "1")
+        self.assertEqual(item["guid"], "text_25413502.text")
+        self.assertEqual(item["genre"], [{'name': 'News'}])
+        self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:36:00+00:00")
+        self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:36:00+00:00")
+        self.assertEqual(item["pubstatus"], "usable")
+        self.assertEqual(item["urgency"], "5")
+        self.assertEqual(item["role"], "Main")
+        self.assertEqual(item["headline"], "Leones matan a un joven que se coló en un zoológico de la India")
+        self.assertEqual(item["sub_head_line"], "INDIA SUCESOS")
+        self.assertEqual(item["copyright_line"],
+                         "© EFE 2019. Está expresamente prohibida la redistribución y la redifusión de todo o parte de los contenidos de los servicios de Efe, sin previo y expreso consentimiento de la Agencia EFE S.A.")
+        self.assertEqual(item["administrative"], {'provider': 'Agencia EFE', 'creator': 'daa/mt/msr'})
         self.assertEqual(item["language"], "es-ES")
+        self.assertEqual(item["extra"], {'how_present': 'Event', 'country': 'IND'})
         self.assertEqual(item["tesauro"],
                          "TRI:JUSTICIA-INTERIOR-SUCESOS,SUCESOS;CYT:CIENCIA-TECNOLOGIA,AMBIENTE-NATURALEZA")
-        self.assertEqual(item["guid"], "text_25413502.text")
-        self.assertEqual(item["subject"],
-                         [{'qcode': '06002001', 'name': 'endangered species', 'scheme': 'IptcSubjectCodes'},
-                          {'qcode': '02001000', 'name': 'crime', 'scheme': 'IptcSubjectCodes'}])
-        self.assertEqual(item["mime_type"], "text/vnd.IPTC.NITF")
-        self.assertEqual(item["provider_id"], "texto.efeservicios.com")
-        self.assertEqual(item["urgency"], "5")
-        self.assertEqual(item["date_id"], "20190121T103600+0000")
-        self.assertEqual(item["genre"], [])
+        self.assertEqual(item["efe_pais"], "IND")
+        self.assertEqual(item["efe_regional"], "")
+        self.assertEqual(item["efe_complemento"], "")
+        self.assertEqual(item["type"], "text")
+        self.assertEqual(item["mimetype"], "text/vnd.IPTC.NITF")
+        self.assertEqual(item["format"], "NITF")
 
         expected_body = \
             (

@@ -10,6 +10,7 @@
 
 from superdesk.io.registry import register_feed_parser
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
+import pytz
 
 
 class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -19,6 +20,10 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     label = 'Belga specific ANP News ML 1.2 Parser'
 
     # anp related logic goes here
+    def parser_newsmanagement(self, item, manage_el):
+        super().parser_newsmanagement(item, manage_el)
+        item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
+        item['versioncreated'] = item['firstcreated'].astimezone(pytz.utc)
 
 
 register_feed_parser(BelgaANPNewsMLOneFeedParser.NAME, BelgaANPNewsMLOneFeedParser())
