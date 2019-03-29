@@ -43,13 +43,13 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                                            {'name': 'FEUA', 'qcode': 'FEUA', 'scheme': 'news_product'},
                                            {'name': 'France-procès-assises-drogues-police',
                                             'qcode': 'France-procès-assises-drogues-police', 'scheme': 'label'},
-                                           {'qcode': '02001004', 'name': 'drug trafficking', 'scheme': 'genre'},
-                                           {'qcode': '02003001', 'name': 'law enforcement', 'scheme': 'genre'},
-                                           {'qcode': '02008000', 'name': 'trials', 'scheme': 'genre'},
-                                           {'qcode': '02003000', 'name': 'police', 'scheme': 'genre'},
-                                           {'qcode': '02001000', 'name': 'crime', 'scheme': 'genre'},
-                                           {'qcode': '02007000', 'name': 'justice and rights', 'scheme': 'genre'},
-                                           {'qcode': '02000000', 'name': 'crime, law and justice', 'scheme': 'genre'}])
+                                           {'qcode': '02001004', 'name': 'drug trafficking', 'scheme': ''},
+                                           {'qcode': '02003001', 'name': 'law enforcement', 'scheme': ''},
+                                           {'qcode': '02008000', 'name': 'trials', 'scheme': ''},
+                                           {'qcode': '02003000', 'name': 'police', 'scheme': ''},
+                                           {'qcode': '02001000', 'name': 'crime', 'scheme': ''},
+                                           {'qcode': '02007000', 'name': 'justice and rights', 'scheme': ''},
+                                           {'qcode': '02000000', 'name': 'crime, law and justice', 'scheme': ''}])
         self.assertEqual(item["priority"], "4")
         self.assertEqual(item["original_source"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")

@@ -34,7 +34,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
         self.assertEqual(item["subject"], [{'name': 'ANP Nieuws', 'qcode': 'ANP Nieuws', 'scheme': 'news_product'},
-                                           {'qcode': 'ECO', 'name': '', 'scheme': 'genre'}])
+                                           {'qcode': 'ECO', 'name': '', 'scheme': ''}])
         self.assertEqual(item["priority"], "3")
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["original_source"], "ANP")
