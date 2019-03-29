@@ -54,7 +54,9 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         self.assertEqual(item["headline"], "Leones matan a un joven que se coló en un zoológico de la India")
         self.assertEqual(item["sub_head_line"], "INDIA SUCESOS")
         self.assertEqual(item["copyright_line"],
-                         "© EFE 2019. Está expresamente prohibida la redistribución y la redifusión de todo o parte de los contenidos de los servicios de Efe, sin previo y expreso consentimiento de la Agencia EFE S.A.")
+                         "© EFE 2019. Está expresamente prohibida la redistribución y la redifusión de todo o parte "
+                         "de los contenidos de los servicios de Efe, sin previo y expreso consentimiento de la Agenc"
+                         "ia EFE S.A.")
         self.assertEqual(item["administrative"], {'provider': 'Agencia EFE', 'creator': 'daa/mt/msr'})
         self.assertEqual(item["language"], "es-ES")
         self.assertEqual(item["extra"], {'how_present': 'Event', 'country': 'IND'})
