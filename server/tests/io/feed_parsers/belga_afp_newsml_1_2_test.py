@@ -41,37 +41,49 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                                            {'name': 'EUA', 'qcode': 'EUA', 'scheme': 'news_product'},
                                            {'name': 'MOA', 'qcode': 'MOA', 'scheme': 'news_product'},
                                            {'name': 'FEUA', 'qcode': 'FEUA', 'scheme': 'news_product'},
+                                           {'name': '', 'qcode': '', 'scheme': 'link_type'},
                                            {'name': 'France-procès-assises-drogues-police',
                                             'qcode': 'France-procès-assises-drogues-police', 'scheme': 'label'},
+                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_type'},
+                                           {'name': '', 'qcode': '', 'scheme': 'essential'},
+                                           {'name': '', 'qcode': '', 'scheme': 'equivalents_list'},
                                            {'qcode': '02001004', 'name': 'drug trafficking', 'scheme': ''},
                                            {'qcode': '02003001', 'name': 'law enforcement', 'scheme': ''},
                                            {'qcode': '02008000', 'name': 'trials', 'scheme': ''},
                                            {'qcode': '02003000', 'name': 'police', 'scheme': ''},
                                            {'qcode': '02001000', 'name': 'crime', 'scheme': ''},
                                            {'qcode': '02007000', 'name': 'justice and rights', 'scheme': ''},
-                                           {'qcode': '02000000', 'name': 'crime, law and justice', 'scheme': ''}])
+                                           {'qcode': '02000000', 'name': 'crime, law and justice', 'scheme': ''},
+                                           {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB',
+                                            'scheme': 'of_interest_to'},
+                                           {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW',
+                                            'scheme': 'of_interest_to'},
+                                           {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU',
+                                            'scheme': 'of_interest_to'},
+                                           {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA',
+                                            'scheme': 'of_interest_to'},
+                                           {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
+                                            'scheme': 'of_interest_to'}])
         self.assertEqual(item["priority"], "4")
         self.assertEqual(item["original_source"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")
         self.assertEqual(item["item_id"], "TX-PAR-RHO61")
         self.assertEqual(item["version"], "1")
         self.assertEqual(item["guid"], "urn:newsml:afp.com:20190121T104233Z:TX-PAR-RHO61:1")
-        self.assertEqual(item["genre"], [{'name': 'News'}])
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:42:33+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:42:33+00:00")
         self.assertEqual(item["pubstatus"], "usable")
         self.assertEqual(item["urgency"], "4")
         self.assertEqual(item["associated_with"], {'item': None, 'type': ['Sketch', 'Photo', 'Video']})
-        self.assertEqual(item["dateline"],
-                         {'date': datetime.datetime(2019, 1, 21, 10, 42, 33, tzinfo=datetime.timezone.utc)})
+        self.assertEqual(item["dateline"], {'text': 'Paris, 21 jan 2019 (AFP) -',
+                                            'date': datetime.datetime(2019, 1, 21, 10, 42, 33,
+                                                                      tzinfo=datetime.timezone.utc)})
         self.assertEqual(item["headline"],
                          "France: deux ex-policiers aux frontières devant la justice pour trafic de cocaïne")
         self.assertEqual(item["line_type"], "ProductLine")
         self.assertEqual(item["line_text"], "(Croquis d'audience+Photo+Video)")
         self.assertEqual(item["administrative"], {'provider': 'AFP'})
         self.assertEqual(item["language"], "fr")
-        self.assertEqual(item["OfInterestTo"],
-                         ['DAB-TFG-1=DAB', 'AMN-TFG-1=AMW', 'ARC-TFG-1=ELU', 'EUA-TFG-1=EUA', 'MOA-TFG-1=MOA'])
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'FRA', 'city': 'Paris'})
         self.assertEqual(item["generator_software"], "libg2")
         self.assertEqual(item["keywords"], ['France', 'procès', 'assises', 'drogues', 'police'])

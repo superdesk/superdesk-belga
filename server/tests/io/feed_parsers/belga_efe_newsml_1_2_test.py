@@ -34,7 +34,9 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         item = self.item[0]
         self.assertEqual(item["subject"], [
             {'name': 'Texto internacional general para España', 'qcode': 'Texto internacional general para España',
-             'scheme': 'news_product'},
+             'scheme': 'news_product'}, {'name': '', 'qcode': '', 'scheme': 'link_type'},
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_type'},
+            {'name': '', 'qcode': '', 'scheme': 'essential'}, {'name': '', 'qcode': '', 'scheme': 'equivalents_list'},
             {'qcode': '06002001', 'name': 'endangered species', 'scheme': 'IptcSubjectCodes'},
             {'qcode': '02001000', 'name': 'crime', 'scheme': 'IptcSubjectCodes'}])
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
@@ -45,7 +47,6 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         self.assertEqual(item["item_id"], "25413502")
         self.assertEqual(item["version"], "1")
         self.assertEqual(item["guid"], "text_25413502.text")
-        self.assertEqual(item["genre"], [{'name': 'News'}])
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:36:00+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:36:00+00:00")
         self.assertEqual(item["pubstatus"], "usable")
@@ -55,8 +56,8 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         self.assertEqual(item["sub_head_line"], "INDIA SUCESOS")
         self.assertEqual(item["copyright_line"],
                          "© EFE 2019. Está expresamente prohibida la redistribución y la redifusión de todo o parte "
-                         "de los contenidos de los servicios de Efe, sin previo y expreso consentimiento de la Agenc"
-                         "ia EFE S.A.")
+                         "de los contenidos de los servicios de Efe, sin previo y expreso consentimiento de la "
+                         "Agencia EFE S.A.")
         self.assertEqual(item["administrative"], {'provider': 'Agencia EFE', 'creator': 'daa/mt/msr'})
         self.assertEqual(item["language"], "es-ES")
         self.assertEqual(item["extra"], {'how_present': 'Event', 'country': 'IND'})

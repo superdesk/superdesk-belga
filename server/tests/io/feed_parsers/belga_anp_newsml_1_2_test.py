@@ -34,6 +34,9 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
         self.assertEqual(item["subject"], [{'name': 'ANP Nieuws', 'qcode': 'ANP Nieuws', 'scheme': 'news_product'},
+                                           {'name': '', 'qcode': '', 'scheme': 'link_type'},
+                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_type'},
+                                           {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
                                            {'qcode': 'ECO', 'name': '', 'scheme': ''}])
         self.assertEqual(item["priority"], "3")
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
@@ -43,20 +46,18 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["version"], "2")
         self.assertEqual(item["guid"], "urn:newsml:anp.nl:20181210:ANPX-101218-041:2")
         self.assertEqual(item["date_label"], "10 december 2018")
-        self.assertEqual(item["genre"], [{'name': 'News'}, {'name': 'ECO'}])
         self.assertEqual(str(item["firstcreated"]), "2018-12-10 08:35:49+00:00")
         self.assertEqual(str(item["versioncreated"]), "2018-12-10 08:35:49+00:00")
         self.assertEqual(item["pubstatus"], "usable")
         self.assertEqual(item["urgency"], "3")
-        self.assertEqual(item["news_component_essential"], "no")
         self.assertEqual(item["dateline"], {})
         self.assertEqual(item["headline"], "FNV staat alleen met acties bij PostNL (2)")
         self.assertEqual(item["sub_head_line"], None)
         self.assertEqual(item["byline"], None)
         self.assertEqual(item["by_line_title"], None)
         self.assertEqual(item["copyright_line"],
-                         "© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. "
-                         "All copyrights and database rights reserved.")
+                         "© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and "
+                         "database rights reserved.")
         self.assertEqual(item["slugline"], "Huub Giesbers (iwi)")
         self.assertEqual(item["keyword_line"], "ECO/ECO10;ECO-POST-CAO")
         self.assertEqual(item["administrative"], {'provider': 'ANP'})
@@ -84,6 +85,5 @@ class BelgaANPNewsMLOneTestCase(TestCase):
                 'seren. Die kunnen PostNL dusdanig hard raken dat ook de werkgelegenheid bij het '
                 'bedrijf in gevaar komt, waarschuwen ze in een gezamenlijke brief aan hun leden.<'
                 '/p>\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t'
-
             )
         self.assertEqual(item["body_html"], expected_body)
