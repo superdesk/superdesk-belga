@@ -2690,5 +2690,22 @@
                 "qcode": "both"
             }
         ]
+    },
+    {
+        "_id": "belga-url",
+        "display_name": "URL",
+        "field_type": "urls",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "_deleted": false,
+        "unique_field": "qcode"
     }
 ]
