@@ -11,7 +11,7 @@
       },
       "slugline": {
         "type": "string",
-        "required": true,
+        "required": false,
         "minlength": null,
         "maxlength": null
       },
