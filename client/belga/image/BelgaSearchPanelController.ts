@@ -11,10 +11,13 @@ export default class BelgaSearchPanelController {
 
     $onInit() {
         this.subjects = [
-            {name: 'News', id: 'news'},
-            {name: 'Sports', id: 'sports'},
-            {name: 'Entertainment', id: 'entertainment'},
-            {name: 'Royals', id: 'royals'},
+            {id: 'news', name: 'News'},
+            {id: 'sports', name: 'Sports'},
+            {id: 'entertainment', name: 'Entertainment'},
+            {id: 'royals', name: 'Royals'},
+            {id: 'portraits', name: 'Portraits'},
+            {id: 'archives', name: 'Archives'},
+            {id: 'creative', name: 'Documentary'},
         ];
 
         this.sources = [
