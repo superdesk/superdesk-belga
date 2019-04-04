@@ -76,7 +76,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :return: True if article can formatted else False
         """
 
-        return format_type == 'belganewsml12' and article[ITEM_TYPE] in {CONTENT_TYPE.TEXT, CONTENT_TYPE.PICTURE}
+        if format_type == 'belganewsml12':
+            if article[ITEM_TYPE] == CONTENT_TYPE.TEXT and article.get('profile') == self.BELGA_TEXT_PROFILE:
+                return True
+            elif article[ITEM_TYPE] == CONTENT_TYPE.PICTURE:
+                # TODO add support for picture
+                return False
+        return False
 
     def _format_catalog(self):
         """Creates Catalog and add it to `NewsML` container."""
