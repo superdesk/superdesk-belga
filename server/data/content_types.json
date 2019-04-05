@@ -43,26 +43,30 @@
                 "order": 9,
                 "sdWidth": "half"
             },
-            "authors": {
+            "news_item_types": {
                 "order": 10,
                 "sdWidth": "full"
             },
-            "ednote": {
+            "authors": {
                 "order": 11,
+                "sdWidth": "full"
+            },
+            "ednote": {
+                "order": 12,
                 "sdWidth": "full"
             },
             "country": {
                 "section": "header",
-                "order": 12,
+                "order": 13,
                 "sdWidth": "half"
             },
             "city": {
                 "section": "header",
-                "order": 13,
+                "order": 14,
                 "sdWidth": "half"
             },
             "headline": {
-                "order": 14,
+                "order": 15,
                 "formatOptions": [
                     "underline",
                     "link",
@@ -70,7 +74,7 @@
                 ]
             },
             "body_html": {
-                "order": 15,
+                "order": 16,
                 "formatOptions": [
                     "h2",
                     "bold",
@@ -85,20 +89,20 @@
                 "editor3": true
             },
             "sign_off": {
-                "order": 16
-            },
-            "byline": {
                 "order": 17
             },
-            "belga_related_articles": {
+            "byline": {
                 "order": 18
             },
-            "belga_related_images": {
+            "belga_related_articles": {
                 "order": 19
+            },
+            "belga_related_images": {
+                "order": 20
             },
             "belga-url": {
                 "section": "content",
-                "order": 19
+                "order": 21
             },
             "usageterms": null,
             "anpa_take_key": null,
@@ -116,8 +120,7 @@
             "media_description": null,
             "author_roles": null,
             "credits": null,
-            "languages": null,
-            "news_item_types": null
+            "languages": null
         },
         "schema": {
             "authors": {
@@ -206,7 +209,9 @@
                                 "genre",
                                 "news_products",
                                 "news_services",
-                                "label"
+                                "label",
+                                "news_item_types",
+                                "distribution"
                             ]
                         },
                         "service": {
