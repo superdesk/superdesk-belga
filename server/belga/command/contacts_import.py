@@ -8,6 +8,12 @@ logger = logging.getLogger(__name__)
 
 
 def import_contacts_via_json_file(path_file, unit_test=False):
+    """
+    Get info contacts in file and add to database
+    :param path_file:
+    :param unit_test:
+    :return:
+    """
     with open(path_file, 'rt', encoding='utf-8') as contacts_data:
         json_data = json.load(contacts_data)
         contact_service = get_resource_service('contacts')
@@ -17,7 +23,7 @@ def import_contacts_via_json_file(path_file, unit_test=False):
         for item in json_data:
             if not item.get('email') and not item.get('personalEmail') and not item.get('firstName') and not item.get(
                     'lastName'):
-                logger.info("contact is not name and email, not import. contactId:" + str(item.get('contactId')))
+                logger.info("contact (id:%s) is not name and email, not import." % str(item.get('contactId')))
                 continue
             else:
                 contacts = contact_service.find(
@@ -31,13 +37,17 @@ def import_contacts_via_json_file(path_file, unit_test=False):
                     contact_phones.append('')
                     if (item.get('directPhone1', '') in contact_phones and item.get(
                             'directPhone2', '') in contact_phones):
-                        logger.info("contact is exist, not import. contactId :" + str(item.get('contactId')))
+                        logger.info(
+                            "contact (id:%s) is exist, same name(%s %s), email(%s, %s), phone, not import" % (
+                                str(item.get('contactId')), item.get('firstName'), item.get('lastName'),
+                                item.get('email'),
+                                item.get('personalEmail')))
                         check = True
                         break
                 if check is True:
                     continue
             doc = {}
-            logger.info("contact is insert. contactId:" + str(item.get('contactId')))
+            logger.info("contact (id) is insert successfully:" % str(item.get('contactId')))
             # mapping data
             doc.setdefault('schema', {}).update({"is_active": True,
                                                  "public": item.get("belgaPublic", True)
@@ -100,10 +110,14 @@ def import_contacts_via_json_file(path_file, unit_test=False):
                 doc['notes'] = item.get('Comment1', '')
             if item.get('keywords'):
                 doc['keywords'] = item.get('keywords')
-            # use original_id check the contact exist
+            # use original_id check and sync the contact from the belga.
             doc['original_id'] = str(item.get('contactId'))
+            if unit_test:
+                docs.append(doc)
             count_import += 1
             contact_service.post([doc])
+        if unit_test:
+            return docs
         logger.info("number item: " + str(count_items) + ", number imported item: " + str(count_import))
 
 
@@ -115,7 +129,7 @@ class ContactImportCommand(superdesk.Command):
 
     option_list = [
         superdesk.Option('--file', '-f', dest='contacts_file_path',
-                         default='/home/thanhnguyen/workspace/0_test/contact/contacts-export.json')
+                         default='/home/thanhnguyen/workspace/0_test/contact/contacts.json')
     ]
 
     def run(self, contacts_file_path):
