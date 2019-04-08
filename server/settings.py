@@ -12,7 +12,6 @@
 from pathlib import Path
 from superdesk.default_settings import INSTALLED_APPS, env
 
-
 ABS_PATH = str(Path(__file__).resolve().parent)
 
 init_data = Path(ABS_PATH) / 'data'
@@ -24,7 +23,8 @@ INSTALLED_APPS.extend([
     'apps.languages',
     'planning',
     'belga.image',
-    'belga.io'
+    'belga.io',
+    'belga.command'
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
