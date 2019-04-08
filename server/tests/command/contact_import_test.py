@@ -10,6 +10,7 @@
 import os
 from superdesk.tests import TestCase
 from belga.command.contacts_import import import_contacts_via_json_file
+from superdesk import get_resource_service
 
 
 class BelgaContactImportTestCase(TestCase):
@@ -18,10 +19,10 @@ class BelgaContactImportTestCase(TestCase):
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, './fixtures', self.filename))
-        self.items = import_contacts_via_json_file(fixture, unit_test=True)
+        self.items = import_contacts_via_json_file(fixture)
 
     def test_import(self):
-        self.assertEqual(len(self.items), 1)
+        self.assertEqual(len(self.items), 2)
         item = self.items[0]
         self.assertEqual(item["schema"], {'is_active': True, 'public': True})
         self.assertEqual(item["organisation"], "Commune de Doische")
