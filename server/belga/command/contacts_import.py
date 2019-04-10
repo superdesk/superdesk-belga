@@ -140,7 +140,7 @@ class ContactImportCommand(superdesk.Command):
 
     option_list = [
         superdesk.Option('--file', '-f', dest='contacts_file_path',
-                         default='/home/thanhnguyen/workspace/0_test/contact/contacts.json')
+                         default='contacts.json')
     ]
 
     def run(self, contacts_file_path):
