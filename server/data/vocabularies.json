@@ -2456,6 +2456,10 @@
                     {
                         "name": "JSON Planning Featured",
                         "qcode": "json_planning_featured"
+                    },
+                    {
+                        "name": "Belga News ML 1.2",
+                        "qcode": "belganewsml12"
                     }
                 ]
             },
@@ -2495,6 +2499,10 @@
                     {
                         "name": "JSON Planning Featured",
                         "qcode": "json_planning_featured"
+                    },
+                    {
+                        "name": "Belga News ML 1.2",
+                        "qcode": "belganewsml12"
                     }
                 ]
             },
