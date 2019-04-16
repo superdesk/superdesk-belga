@@ -8,6 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+import html
 import logging
 from lxml import etree
 from lxml.etree import SubElement
@@ -350,10 +351,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 # ContentItem
                 contentitem = SubElement(newscomponent_3_level, 'ContentItem')
                 SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-                SubElement(contentitem, 'DataContent').text = self._article.get(item_key)
+                text = html.escape(self._article.get(item_key))
+                SubElement(contentitem, 'DataContent').text = text
                 characteristics = SubElement(contentitem, 'Characteristics')
                 # string's length is used in original belga's newsml
-                SubElement(characteristics, 'SizeInBytes').text = str(len(self._article.get(item_key)))
+                SubElement(characteristics, 'SizeInBytes').text = str(len(text))
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
     def _format_related_newscomponents(self, newscomponent_1_level):

@@ -392,15 +392,13 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
-            html.unescape(
-                '&lt;p&gt;Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. '
-                'Curabitur aliquet quam id dui posuere blandit. '
-                'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.&lt;/p&gt;'
-            )
+            '&lt;p&gt;Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. '
+            'Curabitur aliquet quam id dui posuere blandit. '
+            'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.&lt;/p&gt;'
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '191'
+            '203'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
