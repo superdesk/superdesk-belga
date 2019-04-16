@@ -42,7 +42,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 04:27:08+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["urgency"], "2")
+        self.assertEqual(item["urgency"], 2)
         self.assertEqual(item["role"], "Main")
         self.assertEqual(item["dateline"], {'text': 'January 21'})
         self.assertEqual(item["headline"], "Kremlin has 'negative reaction' to upcoming EU sanctions")

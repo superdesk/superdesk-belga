@@ -105,7 +105,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         # news_services CV
         for element in envelop_el.findall('NewsService'):
-            if element is not None:
+            if element is not None and element.get('FormalName'):
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
                     "qcode": element.get('FormalName'),
@@ -113,7 +113,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 })
 
         for element in envelop_el.findall('NewsProduct'):
-            if element is not None:
+            if element is not None and element.get('FormalName'):
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
                     "qcode": element.get('FormalName'),
@@ -122,7 +122,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         element = envelop_el.find('Priority')
         if element is not None:
-            item['priority'] = element.get('FormalName', 0)
+            item['priority'] = int(element.get('FormalName', 0))
 
         # EFE
         sentfrom_el = envelop_el.find('SentFrom')
@@ -140,7 +140,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 element = party_el.find('Property')
                 if element is not None:
                     if element.attrib.get('FormalName', '') == 'Organization':
-                        item['sentfrom']['organization'] = element.attrib['Value']
+                        item['sentfrom']['organization'] = element.attrib.get('Value')
 
         return item
 
@@ -308,7 +308,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             return
 
         for element in manage_el.findall('NewsItemType'):
-            if element is not None:
+            if element is not None and element.get('FormalName'):
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
                     "qcode": element.get('FormalName'),
@@ -331,7 +331,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if element is not None:
             item['urgency'] = element.get('FormalName', '')
             if item['urgency'] == '':
-                item['urgency'] = element.text
+                item['urgency'] = int(element.text)
 
         # parser AssociatedWith element
         elements = manage_el.findall('AssociatedWith')
@@ -473,14 +473,14 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         # parser ContentItem element
         self.parser_contentitem(item, component_el.find('ContentItem'))
 
-        # parser OfInterestTo element
+        # parser item_keywords element
         keywords = component_el.find('item_keywords')
         if keywords is not None:
             elements = keywords.findall('item_keyword')
 
             if elements is not None:
                 item['keywords'] = []
-                for element in elements:
+                for element in [e for e in elements if e.text]:
                     item['keywords'].append(element.text)
 
     def parser_descriptivemetadata(self, item, descript_el):
@@ -524,7 +524,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             item['language'] = element.get('FormalName', '')
 
         for element in descript_el.findall('Genre'):
-            if element.get('FormalName'):
+            if element is not None and element.get('FormalName'):
                 # genre CV
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
@@ -544,8 +544,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         # parser OfInterestTo is CV
         for element in descript_el.findall('OfInterestTo'):
-            if element.get('FormalName'):
-                # genre CV
+            if element is not None and element.get('FormalName'):
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
                     "qcode": element.get('FormalName'),
@@ -567,29 +566,29 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             elements = location_el.findall('Property')
             for element in elements:
                 if element.attrib.get('FormalName', '') == 'Country':
-                    item['extra']['country'] = element.attrib['Value']
+                    item['extra']['country'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName', '') == 'City':
-                    item['extra']['city'] = element.attrib['Value']
+                    item['extra']['city'] = element.attrib.get('Value')
 
         elements = descript_el.findall('Property')
         for element in elements:
             if element.attrib.get('FormalName', '') == 'GeneratorSoftware':
-                item['generator_software'] = element.attrib['Value']
+                item['generator_software'] = element.attrib.get('Value')
 
             if element.attrib.get('FormalName', '') == 'Tesauro':
-                item['tesauro'] = element.attrib['Value']
+                item['tesauro'] = element.attrib.get('Value')
 
             if element.attrib.get('FormalName', '') == 'EfePais':
-                item['efe_pais'] = element.attrib['Value']
+                item['efe_pais'] = element.attrib.get('Value')
 
             if element.attrib.get('FormalName', '') == 'EfeRegional':
-                item['efe_regional'] = element.attrib['Value']
+                item['efe_regional'] = element.attrib.get('Value')
 
             if element.attrib.get('FormalName', '') == 'EfeComplemento':
-                item['efe_complemento'] = element.attrib['Value']
+                item['efe_complemento'] = element.attrib.get('Value')
 
             if element.attrib.get('FormalName', '') == 'Keyword':
-                data = element.attrib['Value']
+                data = element.attrib.get('Value')
                 if 'keywords' in item:
                     item['keywords'].append(data)
                 else:
@@ -650,13 +649,13 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             elements = character_el.findall('Property')
             for element in elements:
                 if element.attrib.get('FormalName') == 'Words':
-                    item['characteristics']['word_count'] = element.attrib['Value']
+                    item['characteristics']['word_count'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName') == 'SizeInBytes':
-                    item['characteristics']['size_bytes'] = element.attrib['Value']
+                    item['characteristics']['size_bytes'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName') == 'Creator':
-                    item['characteristics']['creator'] = element.attrib['Value']
+                    item['characteristics']['creator'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName') == 'Characters':
-                    item['characteristics']['characters'] = element.attrib['Value']
+                    item['characteristics']['characters'] = element.attrib.get('Value')
 
         if content_el.find('DataContent/nitf/body/body.content') is not None:
             item['body_html'] = etree.tostring(content_el.find('DataContent/nitf/body/body.content'),
