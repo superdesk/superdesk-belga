@@ -2456,6 +2456,10 @@
                     {
                         "name": "JSON Planning Featured",
                         "qcode": "json_planning_featured"
+                    },
+                    {
+                        "name": "Belga News ML 1.2",
+                        "qcode": "belganewsml12"
                     }
                 ]
             },
@@ -2495,6 +2499,10 @@
                     {
                         "name": "JSON Planning Featured",
                         "qcode": "json_planning_featured"
+                    },
+                    {
+                        "name": "Belga News ML 1.2",
+                        "qcode": "belganewsml12"
                     }
                 ]
             },
@@ -2772,5 +2780,22 @@
                 "qcode": "MOA-TFG-1=MOA"
             }
         ]
+    },
+    {
+        "_id": "belga-url",
+        "display_name": "URL",
+        "field_type": "urls",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "_deleted": false,
+        "unique_field": "qcode"
     }
 ]
