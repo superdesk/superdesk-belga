@@ -2745,7 +2745,7 @@
         ]
     },
     {
-        "_id": "creditline",
+        "_id": "credit",
         "display_name": "Credit",
         "type": "manageable",
         "selection_type": "single selection",
