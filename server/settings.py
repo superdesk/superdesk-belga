@@ -93,30 +93,23 @@ PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 # schema for images, video, audio
 SCHEMA = {
     'picture': {
-        'keywords': {'required': False},
-        'ednote': {'required': False},
         'headline': {'required': False},
         'description_text': {'required': True},
-        'byline': {'required': False},
-        'copyrightnotice': {'required': False},
+        'creditline': {'required': False},
+        'keywords': {'required': False},
+        'city': {'required': False},
+        'country': {'required': False},
         'sign_off': {'required': False},
     },
     'video': {
-        'keywords': {'required': False},
-        'ednote': {'required': False},
+        'slugline': {'required': False},
         'headline': {'required': False},
         'description_text': {'required': True},
-        'byline': {'required': False},
-        'copyrightnotice': {'required': False},
-        'sign_off': {'required': False},
-    },
-    'audio': {
+        'media_type': {'required': False},
+        'creditline': {'required': False},
         'keywords': {'required': False},
-        'ednote': {'required': False},
-        'headline': {'required': False},
-        'description_text': {'required': True},
-        'byline': {'required': False},
-        'copyrightnotice': {'required': False},
+        'city': {'required': False},
+        'country': {'required': False},
         'sign_off': {'required': False},
     },
 }
@@ -124,33 +117,33 @@ SCHEMA = {
 # editor for images, video, audio
 EDITOR = {
     'picture': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full', 'textarea': True},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'headline': {'order': 1, 'sdWidth': 'full'},
+        'description_text': {'order': 2, 'sdWidth': 'full', 'textarea': True},
+        'creditline': {'order': 3, 'sdWidth': 'full'},
+        'keywords': {'order': 4, 'sdWidth': 'full'},
+        'city': {'order': 5, 'sdWidth': 'full'},
+        'country': {'order': 6, 'sdWidth': 'full'},
         'sign_off': {'order': 7, 'sdWidth': 'half'},
+        'byline': {'displayOnMediaEditor': False},
+        'copyrightnotice': {'displayOnMediaEditor': False},
     },
     'video': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full', 'textarea': True},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
-    },
-    'audio': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full', 'textarea': True},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
+        'slugline': {'order': 1, 'sdWidth': 'full'},
+        'headline': {'order': 2, 'sdWidth': 'full'},
+        'description_text': {'order': 3, 'sdWidth': 'full', 'textarea': True},
+        'media_type': {'order': 4, 'sdWidth': 'full'},
+        'creditline': {'order': 5, 'sdWidth': 'full'},
+        'keywords': {'order': 6, 'sdWidth': 'full'},
+        'city': {'order': 7, 'sdWidth': 'full'},
+        'country': {'order': 8, 'sdWidth': 'full'},
+        'sign_off': {'order': 9, 'sdWidth': 'half'},
+        'byline': {'displayOnMediaEditor': False},
+        'copyrightnotice': {'displayOnMediaEditor': False},
     },
 }
+
+SCHEMA['audio'] = SCHEMA['video']
+EDITOR['audio'] = EDITOR['video']
 
 # media required fields for upload
 VALIDATOR_MEDIA_METADATA = {

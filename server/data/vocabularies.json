@@ -2715,5 +2715,51 @@
         },
         "_deleted": false,
         "unique_field": "qcode"
+    },
+    {
+        "_id": "media_type",
+        "display_name": "Type",
+        "type": "manageable",
+        "selection_type": "single selection",
+        "items": [
+            {
+                "is_active": true,
+                "name": "interview dutch",
+                "qcode": "interview dutch"
+            },
+            {
+                "is_active": true,
+                "name": "interview french",
+                "qcode": "interview french"
+            },
+            {
+                "is_active": true,
+                "name": "illustration",
+                "qcode": "illustration"
+            },
+            {
+                "is_active": true,
+                "name": "insert",
+                "qcode": "insert"
+            }
+        ]
+    },
+    {
+        "_id": "creditline",
+        "display_name": "Credit",
+        "type": "manageable",
+        "selection_type": "single selection",
+        "items": [
+            {
+                "is_active": true,
+                "name": "Belga",
+                "qcode": "Belga"
+            },
+            {
+                "is_active": true,
+                "name": "Belga handout",
+                "qcode": "Belga_handout"
+            }
+        ]
     }
 ]
