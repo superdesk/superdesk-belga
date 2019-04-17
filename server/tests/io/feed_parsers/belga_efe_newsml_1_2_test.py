@@ -42,7 +42,7 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
         self.assertEqual(item["duid"], "text_25413502")
         self.assertEqual(item["comment"], {'version': '1.0.1', 'name': 'EfeNewsMLVersion'})
-        self.assertEqual(item["original_source"], "texto.efeservicios.com")
+        self.assertEqual(item["provider_id"], "texto.efeservicios.com")
         self.assertEqual(item["date_id"], "20190121T103600+0000")
         self.assertEqual(item["item_id"], "25413502")
         self.assertEqual(item["version"], "1")

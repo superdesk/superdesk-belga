@@ -251,7 +251,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if newsident_el is not None:
             element = newsident_el.find('ProviderId')
             if element is not None:
-                item['original_source'] = element.text
+                item['provider_id'] = element.text
 
             element = newsident_el.find('DateId')
             if element is not None:

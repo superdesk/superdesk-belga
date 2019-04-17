@@ -65,7 +65,7 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                                            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
                                             'scheme': 'of_interest_to'}])
         self.assertEqual(item["priority"], 4)
-        self.assertEqual(item["original_source"], "afp.com")
+        self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")
         self.assertEqual(item["item_id"], "TX-PAR-RHO61")
         self.assertEqual(item["version"], "1")

@@ -38,7 +38,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
                                            {'name': '', 'qcode': '', 'scheme': 'equivalents_list'},
                                            {'name': '', 'qcode': '', 'scheme': 'essential'},
                                            {'name': '', 'qcode': '', 'scheme': 'equivalents_list'}])
-        self.assertEqual(item["original_source"], "\nwww.itar-tass.com\n")
+        self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 04:27:08+00:00")
         self.assertEqual(item["pubstatus"], "usable")
