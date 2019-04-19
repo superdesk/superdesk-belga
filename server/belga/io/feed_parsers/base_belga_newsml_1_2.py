@@ -10,6 +10,7 @@
 
 import html
 import datetime
+import superdesk
 from superdesk.errors import ParserError
 from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser
@@ -57,7 +58,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         :return:
         """
         try:
-            l_item = []
+            items = []
             self.root = xml
 
             # parser the NewsEnvelope element
@@ -72,8 +73,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue
-                l_item.append(item)
-            return l_item
+                items.append(item)
+            return items
 
         except Exception as ex:
             raise ParserError.newsmlOneParserError(ex, provider)
@@ -117,7 +118,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
                     "qcode": element.get('FormalName'),
-                    "scheme": "news_product"
+                    "scheme": "news_products"
                 })
 
         element = envelop_el.find('Priority')
@@ -171,7 +172,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
         # LinkType is CV
         link_type = newsitem_el.attrib.get('LinkType', '')
-        if link_type == '':
+        if link_type != '':
             item.setdefault('subject', []).append({
                 "name": link_type,
                 "qcode": link_type,
@@ -203,8 +204,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     item['guid'] = component_parent.attrib.get('Duid', '')
 
                 # Essential is CV
-                essential = newsitem_el.attrib.get('Essential', '')
-                if essential == '':
+                essential = component_parent.attrib.get('Essential')
+                if essential:
                     item.setdefault('subject', []).append({
                         "name": essential,
                         "qcode": essential,
@@ -212,8 +213,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     })
 
                 # EquivalentsList is CV
-                equivalents_list = newsitem_el.attrib.get('EquivalentsList', '')
-                if equivalents_list == '':
+                equivalents_list = component_parent.attrib.get('EquivalentsList')
+                if equivalents_list:
                     item.setdefault('subject', []).append({
                         "name": equivalents_list,
                         "qcode": equivalents_list,
@@ -312,7 +313,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 item.setdefault('subject', []).append({
                     "name": element.get('FormalName'),
                     "qcode": element.get('FormalName'),
-                    "scheme": "news_item_type"
+                    "scheme": "news_item_types"
                 })
 
         element = manage_el.find('FirstCreated')
@@ -386,8 +387,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             item['guid'] = component_el.attrib.get('Duid', '')
 
         # Essential is CV
-        essential = component_el.attrib.get('Essential', '')
-        if essential == '':
+        essential = component_el.attrib.get('Essential')
+        if essential:
             item.setdefault('subject', []).append({
                 "name": essential,
                 "qcode": essential,
@@ -395,8 +396,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             })
 
         # EquivalentsList is CV
-        equivalents_list = component_el.attrib.get('EquivalentsList', '')
-        if equivalents_list == '':
+        equivalents_list = component_el.attrib.get('EquivalentsList')
+        if equivalents_list:
             item.setdefault('subject', []).append({
                 "name": equivalents_list,
                 "qcode": equivalents_list,
@@ -699,12 +700,15 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
             return True
 
+        iptcsc_cv = self._get_cv('iptc_subject_codes')
         for subject in subjects:
             formal_name = subject.get('FormalName')
-            scheme = subject.get('Scheme', '')
-            if formal_name and is_not_formatted(formal_name):
-                formatted_subjects.append(
-                    {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''), 'scheme': scheme})
+            for item in iptcsc_cv['items']:
+                if item.get('is_active'):
+                    #: check formal_name, format formal_name and filter missing subjects
+                    if formal_name and is_not_formatted(formal_name) and item.get('qcode') == formal_name:
+                        formatted_subjects.append(
+                            {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''), 'scheme': 'iptc_subject_codes'})
 
         return formatted_subjects
 
@@ -716,5 +720,9 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             text = text.replace(newline, '</p><p>')
         # remove redundant whitespaces
         text = ' '.join(text.split())
-
         return '<p>' + text + '</p>'
+
+    def _get_cv(self, _id):
+        test =  superdesk.get_resource_service('vocabularies')
+        test2 = test.find_one(req=None, _id=_id)
+        return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)

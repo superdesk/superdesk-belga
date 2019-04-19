@@ -8,18 +8,19 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-
+import settings
 import os
 from lxml import etree
-from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_afp_newsml_1_2 import BelgaAFPNewsMLOneFeedParser
 import datetime
+from . import BelgaTestCase
 
 
-class BelgaAFPNewsMLOneTestCase(TestCase):
+class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
     filename = 'afp_belga.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
@@ -35,25 +36,21 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "0579")
         self.assertEqual(item["subject"], [{'name': 'DGTE', 'qcode': 'DGTE', 'scheme': 'news_services'},
-                                           {'name': 'DAB', 'qcode': 'DAB', 'scheme': 'news_product'},
-                                           {'name': 'AMW', 'qcode': 'AMW', 'scheme': 'news_product'},
-                                           {'name': 'ELU', 'qcode': 'ELU', 'scheme': 'news_product'},
-                                           {'name': 'EUA', 'qcode': 'EUA', 'scheme': 'news_product'},
-                                           {'name': 'MOA', 'qcode': 'MOA', 'scheme': 'news_product'},
-                                           {'name': 'FEUA', 'qcode': 'FEUA', 'scheme': 'news_product'},
-                                           {'name': '', 'qcode': '', 'scheme': 'link_type'},
+                                           {'name': 'DAB', 'qcode': 'DAB', 'scheme': 'news_products'},
+                                           {'name': 'AMW', 'qcode': 'AMW', 'scheme': 'news_products'},
+                                           {'name': 'ELU', 'qcode': 'ELU', 'scheme': 'news_products'},
+                                           {'name': 'EUA', 'qcode': 'EUA', 'scheme': 'news_products'},
+                                           {'name': 'MOA', 'qcode': 'MOA', 'scheme': 'news_products'},
+                                           {'name': 'FEUA', 'qcode': 'FEUA', 'scheme': 'news_products'},
                                            {'name': 'France-procès-assises-drogues-police',
                                             'qcode': 'France-procès-assises-drogues-police', 'scheme': 'label'},
-                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_type'},
-                                           {'name': '', 'qcode': '', 'scheme': 'essential'},
-                                           {'name': '', 'qcode': '', 'scheme': 'equivalents_list'},
-                                           {'qcode': '02001004', 'name': 'drug trafficking', 'scheme': ''},
-                                           {'qcode': '02003001', 'name': 'law enforcement', 'scheme': ''},
-                                           {'qcode': '02008000', 'name': 'trials', 'scheme': ''},
-                                           {'qcode': '02003000', 'name': 'police', 'scheme': ''},
-                                           {'qcode': '02001000', 'name': 'crime', 'scheme': ''},
-                                           {'qcode': '02007000', 'name': 'justice and rights', 'scheme': ''},
-                                           {'qcode': '02000000', 'name': 'crime, law and justice', 'scheme': ''},
+                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+                                           {'qcode': '02001004', 'name': 'drug trafficking',
+                                            'scheme': 'iptc_subject_codes'},
+                                           {'qcode': '02008000', 'name': 'trials', 'scheme': 'iptc_subject_codes'},
+                                           {'qcode': '02003000', 'name': 'police', 'scheme': 'iptc_subject_codes'},
+                                           {'qcode': '02000000', 'name': 'crime, law and justice',
+                                            'scheme': 'iptc_subject_codes'},
                                            {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB',
                                             'scheme': 'of_interest_to'},
                                            {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW',
@@ -63,7 +60,9 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                                            {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA',
                                             'scheme': 'of_interest_to'},
                                            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
-                                            'scheme': 'of_interest_to'}])
+                                            'scheme': 'of_interest_to'}]
+
+                         )
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")
@@ -92,6 +91,7 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["characteristics"], {'size_bytes': '1620', 'word_count': '269'})
         expected_body = \
             (
+
                 "\n<p>Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisie"
                 "n Roissy-Charles de Gaulle, accusés d'avoir facilité l'importation de cocaïne de retour de Républiqu"
                 "e dominicaine, s'est ouvert lundi devant un tribunal à Paris. </p>\n<p>Clément Geisse, 42 ans, et Chr"
@@ -111,5 +111,6 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                 't empoché au total entre 540.000 et 620.000 euros, à raison de 40.000 euros par "mule" récupérée, se'
                 'lon une estimation fournie en interrogatoire par Clément Geisse. </p>\n<p>Le verdict est attendu le 7'
                 ' février. </p>\n<p>asl/tib/pid/cac</p>\n\n'
+
             )
         self.assertEqual(item["body_html"], expected_body)

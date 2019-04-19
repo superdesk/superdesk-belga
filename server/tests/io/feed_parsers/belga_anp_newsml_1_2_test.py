@@ -13,12 +13,14 @@ import os
 from lxml import etree
 from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_anp_newsml_1_2 import BelgaANPNewsMLOneFeedParser
+from . import BelgaTestCase
 
 
-class BelgaANPNewsMLOneTestCase(TestCase):
+class BelgaANPNewsMLOneTestCase(BelgaTestCase):
     filename = 'anp_belga.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
@@ -33,11 +35,11 @@ class BelgaANPNewsMLOneTestCase(TestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
-        self.assertEqual(item["subject"], [{'name': 'ANP Nieuws', 'qcode': 'ANP Nieuws', 'scheme': 'news_product'},
-                                           {'name': '', 'qcode': '', 'scheme': 'link_type'},
-                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_type'},
-                                           {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
-                                           {'qcode': 'ECO', 'name': '', 'scheme': ''}])
+        self.assertEqual(item["subject"], [{'name': 'ANP Nieuws', 'qcode': 'ANP Nieuws', 'scheme': 'news_products'},
+                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+                                           {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
+                                           {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
+                                           {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'}])
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["provider_id"], "ANP")

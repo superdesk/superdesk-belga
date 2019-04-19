@@ -61,7 +61,7 @@ Documentacion NewsML y últimos cambios: http://www.efe.com/documentosefe/efenew
 </SubjectCode>
 <SubjectCode>
 <!--Medio ambiente ; Conservación ; Especies en peligro-->
-<SubjectDetail FormalName="06002001" Scheme="IptcSubjectCodes" />
+<SubjectDetail FormalName="01026000" Scheme="IptcSubjectCodes" />
 </SubjectCode>
 <Property FormalName="Tesauro" Value="TRI:JUSTICIA-INTERIOR-SUCESOS,SUCESOS;CYT:CIENCIA-TECNOLOGIA,AMBIENTE-NATURALEZA" />
 <Property FormalName="EfePais" Value="IND" />
