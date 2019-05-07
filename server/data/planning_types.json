@@ -1,0 +1,134 @@
+[
+  {
+    "_id": "event",
+    "name": "event",
+    "schema": {
+      "calendars": {
+        "type": "list",
+        "required": true,
+        "mandatory_in_list": null,
+        "schema": null
+      },
+      "slugline": {
+        "type": "string",
+        "required": false,
+        "minlength": null,
+        "maxlength": null
+      },
+      "occur_status": {
+        "type": "list",
+        "required": false,
+        "nullable": false
+      }
+    },
+    "editor": {
+      "occur_status": {
+        "enabled": true
+      },
+      "anpa_category": {
+        "enabled": false
+      },
+      "subject": {
+        "enabled": false
+      }
+    }
+  },
+  {
+    "_id": "planning",
+    "name": "planning",
+    "schema": {
+      "agendas": {
+        "required": false,
+        "type": "list"
+      },
+      "place": {
+        "required": false,
+        "type": "list"
+      },
+      "description_text": {
+        "required": false,
+        "type": "string"
+      },
+      "ednote": {
+        "required": false,
+        "type": "string"
+      },
+      "flags": {
+        "required": false,
+        "type": "dict"
+      },
+      "headline": {
+        "required": false,
+        "type": "string"
+      },
+      "name": {
+        "required": true,
+        "type": "string"
+      },
+      "internal_note": {
+        "required": false,
+        "type": "string"
+      },
+      "slugline": {
+        "required": false,
+        "type": "string"
+      },
+      "urgency": {
+        "required": false,
+        "type": "number"
+      },
+      "files": {
+        "required": false,
+        "type": "list"
+      }
+    },
+    "editor": {
+      "agendas": {
+        "enabled": true
+      },
+      "place": {
+        "enabled": false
+      },
+      "description_text": {
+        "enabled": true
+      },
+      "ednote": {
+        "enabled": true
+      },
+      "flags": {
+        "enabled": true
+      },
+      "internal_note": {
+        "enabled": true
+      },
+      "slugline": {
+        "enabled": true
+      },
+      "headline": {
+        "enabled": false
+      },
+      "urgency": {
+        "enabled": true
+      },
+      "name": {
+        "enabled": true
+      },
+      "files": {
+        "enabled": true
+      },
+      "anpa_category": {
+        "enabled": false
+      },
+      "subject": {
+        "enabled": false
+      }
+    },
+    "list": {
+      "primary_fields": [
+        "slugline",
+        "internalnote",
+        "name"
+      ]
+    }
+  }
+]
