@@ -27,7 +27,6 @@ export default class BelgaSearchPanelController {
 
         this.periods = [
             {name: 'Whenever', id: ''},
-            {name: 'Last hour', id: 'hour'},
             {name: 'Last 4 hours', id: 'last4h'},
             {name: 'Last 8 hours', id: 'last8h'},
             {name: 'Today', id: 'today'},

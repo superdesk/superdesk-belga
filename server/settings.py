@@ -12,7 +12,6 @@
 from pathlib import Path
 from superdesk.default_settings import INSTALLED_APPS, env
 
-
 ABS_PATH = str(Path(__file__).resolve().parent)
 
 init_data = Path(ABS_PATH) / 'data'
@@ -25,6 +24,7 @@ INSTALLED_APPS.extend([
     'planning',
     'belga.image',
     'belga.io',
+    'belga.command',
     'belga.publish'
 ])
 
@@ -93,30 +93,23 @@ PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 # schema for images, video, audio
 SCHEMA = {
     'picture': {
-        'keywords': {'required': False},
-        'ednote': {'required': False},
         'headline': {'required': False},
         'description_text': {'required': True},
-        'byline': {'required': False},
-        'copyrightnotice': {'required': False},
+        'credit': {'required': False},
+        'keywords': {'required': False},
+        'city': {'required': False},
+        'country': {'required': False},
         'sign_off': {'required': False},
     },
     'video': {
-        'keywords': {'required': False},
-        'ednote': {'required': False},
+        'slugline': {'required': False},
         'headline': {'required': False},
         'description_text': {'required': True},
-        'byline': {'required': False},
-        'copyrightnotice': {'required': False},
-        'sign_off': {'required': False},
-    },
-    'audio': {
+        'media_type': {'required': False},
+        'credit': {'required': False},
         'keywords': {'required': False},
-        'ednote': {'required': False},
-        'headline': {'required': False},
-        'description_text': {'required': True},
-        'byline': {'required': False},
-        'copyrightnotice': {'required': False},
+        'city': {'required': False},
+        'country': {'required': False},
         'sign_off': {'required': False},
     },
 }
@@ -124,33 +117,33 @@ SCHEMA = {
 # editor for images, video, audio
 EDITOR = {
     'picture': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full'},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
+        'headline': {'order': 1, 'sdWidth': 'full'},
+        'description_text': {'order': 2, 'sdWidth': 'full', 'textarea': True},
+        'credit': {'order': 3, 'sdWidth': 'full'},
+        'keywords': {'order': 4, 'sdWidth': 'full'},
+        'city': {'order': 5, 'sdWidth': 'full'},
+        'country': {'order': 6, 'sdWidth': 'full'},
         'sign_off': {'order': 7, 'sdWidth': 'half'},
+        'byline': {'displayOnMediaEditor': False},
+        'copyrightnotice': {'displayOnMediaEditor': False},
     },
     'video': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full'},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
-    },
-    'audio': {
-        'keywords': {'order': 1, 'sdWidth': 'full'},
-        'ednote': {'order': 2, 'sdWidth': 'full'},
-        'headline': {'order': 3, 'sdWidth': 'full'},
-        'description_text': {'order': 4, 'sdWidth': 'full'},
-        'byline': {'order': 5, 'sdWidth': 'half'},
-        'copyrightnotice': {'order': 6, 'sdWidth': 'half'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
+        'slugline': {'order': 1, 'sdWidth': 'full'},
+        'headline': {'order': 2, 'sdWidth': 'full'},
+        'description_text': {'order': 3, 'sdWidth': 'full', 'textarea': True},
+        'media_type': {'order': 4, 'sdWidth': 'full'},
+        'credit': {'order': 5, 'sdWidth': 'full'},
+        'keywords': {'order': 6, 'sdWidth': 'full'},
+        'city': {'order': 7, 'sdWidth': 'full'},
+        'country': {'order': 8, 'sdWidth': 'full'},
+        'sign_off': {'order': 9, 'sdWidth': 'half'},
+        'byline': {'displayOnMediaEditor': False},
+        'copyrightnotice': {'displayOnMediaEditor': False},
     },
 }
+
+SCHEMA['audio'] = SCHEMA['video']
+EDITOR['audio'] = EDITOR['video']
 
 # media required fields for upload
 VALIDATOR_MEDIA_METADATA = {
@@ -167,3 +160,25 @@ VALIDATOR_MEDIA_METADATA = {
         "required": False,
     },
 }
+
+# noqa
+PLANNING_EXPORT_BODY_TEMPLATE = '''
+{% for item in items %}
+{% set pieces = [
+    item.get('planning_date') | format_datetime(date_format='%H:%M'),
+    item.get('slugline'),
+    item.get('name'),
+] %}
+<h2>{{ pieces|select|join(' - ') }}</h2>
+{% if item.coverages %}<p>{{ item.coverages | join(' - ') }}</p>{% endif %}
+{% if item.get('description_text') or item.get('links') %}
+<p>{{ item.description_text }}{% if item.get('links') %} URL: {{ item.links | join(' ') }}{% endif %}</p>
+{% endif %}
+{% if item.contacts %}{% for contact in item.contacts %}
+<p>{{ contact.honorific }} {{ contact.first_name }} {{ contact.last_name }}{% if contact.contact_email %} - {{ contact.contact_email|join(' - ') }}{% endif %}{% if contact.contact_phone %} - {{ contact.contact_phone|selectattr('public')|join(' - ', attribute='number') }}{% endif %}</p>
+{% endfor %}{% endif %}
+{% if item.event and item.event.location %}
+<p>{{ item.event.location|join(', ', attribute='name') }}</p>
+{% endif %}
+{% endfor %}
+'''
