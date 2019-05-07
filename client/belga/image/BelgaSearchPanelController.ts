@@ -11,10 +11,13 @@ export default class BelgaSearchPanelController {
 
     $onInit() {
         this.subjects = [
-            {name: 'News', id: 'news'},
-            {name: 'Sports', id: 'sports'},
-            {name: 'Entertainment', id: 'entertainment'},
-            {name: 'Royals', id: 'royals'},
+            {id: 'news', name: 'News'},
+            {id: 'sports', name: 'Sports'},
+            {id: 'entertainment', name: 'Entertainment'},
+            {id: 'royals', name: 'Royals'},
+            {id: 'portraits', name: 'Portraits'},
+            {id: 'archives', name: 'Archives'},
+            {id: 'creative', name: 'Documentary'},
         ];
 
         this.sources = [
@@ -24,7 +27,6 @@ export default class BelgaSearchPanelController {
 
         this.periods = [
             {name: 'Whenever', id: ''},
-            {name: 'Last hour', id: 'hour'},
             {name: 'Last 4 hours', id: 'last4h'},
             {name: 'Last 8 hours', id: 'last8h'},
             {name: 'Today', id: 'today'},
