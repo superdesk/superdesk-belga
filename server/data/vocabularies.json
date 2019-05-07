@@ -2700,88 +2700,6 @@
         ]
     },
     {
-        "_id": "link_type",
-        "display_name": "Link Types",
-        "type": "unmanageable",
-        "selection_type": "do not show",
-        "items": [
-            {
-                "is_active": true,
-                "name": "normal",
-                "qcode": "normal"
-            }
-        ]
-    },
-    {
-        "_id": "essential",
-        "display_name": "Link Types",
-        "type": "unmanageable",
-        "selection_type": "do not show",
-        "items": [
-            {
-                "is_active": true,
-                "name": "yes",
-                "qcode": "yes"
-            },
-            {
-                "is_active": true,
-                "name": "no",
-                "qcode": "no"
-            }
-        ]
-    },
-    {
-        "_id": "equivalents_list",
-        "display_name": "Link Types",
-        "type": "unmanageable",
-        "selection_type": "do not show",
-        "items": [
-            {
-                "is_active": true,
-                "name": "yes",
-                "qcode": "yes"
-            },
-            {
-                "is_active": true,
-                "name": "no",
-                "qcode": "no"
-            }
-        ]
-    },
-    {
-        "_id": "of_interest_to",
-        "display_name": "Of Interest To",
-        "type": "unmanageable",
-        "selection_type": "do not show",
-        "items": [
-            {
-                "is_active": true,
-                "name": "DAB-TFG-1=DAB",
-                "qcode": "DAB-TFG-1=DAB"
-            },
-            {
-                "is_active": true,
-                "name": "AMN-TFG-1=AMW",
-                "qcode": "AMN-TFG-1=AMW"
-            },
-            {
-                "is_active": true,
-                "name": "ARC-TFG-1=ELU",
-                "qcode": "ARC-TFG-1=ELU"
-            },
-            {
-                "is_active": true,
-                "name": "EUA-TFG-1=EUA",
-                "qcode": "EUA-TFG-1=EUA"
-            },
-            {
-                "is_active": true,
-                "name": "MOA-TFG-1=MOA",
-                "qcode": "MOA-TFG-1=MOA"
-            }
-        ]
-    },
-    {
         "_id": "belga-url",
         "display_name": "URL",
         "field_type": "urls",
@@ -2797,6 +2715,52 @@
         },
         "_deleted": false,
         "unique_field": "qcode"
+    },
+    {
+        "_id": "media_type",
+        "display_name": "Type",
+        "type": "manageable",
+        "selection_type": "single selection",
+        "items": [
+            {
+                "is_active": true,
+                "name": "interview dutch",
+                "qcode": "interview dutch"
+            },
+            {
+                "is_active": true,
+                "name": "interview french",
+                "qcode": "interview french"
+            },
+            {
+                "is_active": true,
+                "name": "illustration",
+                "qcode": "illustration"
+            },
+            {
+                "is_active": true,
+                "name": "insert",
+                "qcode": "insert"
+            }
+        ]
+    },
+    {
+        "_id": "credit",
+        "display_name": "Credit",
+        "type": "manageable",
+        "selection_type": "single selection",
+        "items": [
+            {
+                "is_active": true,
+                "name": "Belga",
+                "qcode": "Belga"
+            },
+            {
+                "is_active": true,
+                "name": "Belga handout",
+                "qcode": "Belga_handout"
+            }
+        ]
     },
     {
         "_id": "iptc_subject_codes",
@@ -3036,49 +3000,38 @@
             {"is_active": true, "name": "report", "qcode": "17004000", "parent": "17000000"},
             {"is_active": true, "name": "statistic", "qcode": "17004000", "parent": "17000000"},
             {"is_active": true, "name": "warning", "qcode": "17005000", "parent": "17000000"}
-
-        "_id": "media_type",
-        "display_name": "Type",
-        "type": "manageable",
-        "selection_type": "single selection",
-        "items": [
-            {
-                "is_active": true,
-                "name": "interview dutch",
-                "qcode": "interview dutch"
-            },
-            {
-                "is_active": true,
-                "name": "interview french",
-                "qcode": "interview french"
-            },
-            {
-                "is_active": true,
-                "name": "illustration",
-                "qcode": "illustration"
-            },
-            {
-                "is_active": true,
-                "name": "insert",
-                "qcode": "insert"
-            }
         ]
     },
-    {
-        "_id": "credit",
-        "display_name": "Credit",
-        "type": "manageable",
-        "selection_type": "single selection",
+        {
+        "_id": "of_interest_to",
+        "display_name": "Of Interest To",
+        "type": "unmanageable",
+        "selection_type": "do not show",
         "items": [
             {
                 "is_active": true,
-                "name": "Belga",
-                "qcode": "Belga"
+                "name": "DAB-TFG-1=DAB",
+                "qcode": "DAB-TFG-1=DAB"
             },
             {
                 "is_active": true,
-                "name": "Belga handout",
-                "qcode": "Belga_handout"
+                "name": "AMN-TFG-1=AMW",
+                "qcode": "AMN-TFG-1=AMW"
+            },
+            {
+                "is_active": true,
+                "name": "ARC-TFG-1=ELU",
+                "qcode": "ARC-TFG-1=ELU"
+            },
+            {
+                "is_active": true,
+                "name": "EUA-TFG-1=EUA",
+                "qcode": "EUA-TFG-1=EUA"
+            },
+            {
+                "is_active": true,
+                "name": "MOA-TFG-1=MOA",
+                "qcode": "MOA-TFG-1=MOA"
             }
         ]
     }

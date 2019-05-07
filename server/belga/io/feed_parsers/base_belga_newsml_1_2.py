@@ -708,7 +708,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     #: check formal_name, format formal_name and filter missing subjects
                     if formal_name and is_not_formatted(formal_name) and item.get('qcode') == formal_name:
                         formatted_subjects.append(
-                            {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''), 'scheme': 'iptc_subject_codes'})
+                            {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''),
+                             'scheme': 'iptc_subject_codes'})
 
         return formatted_subjects
 
@@ -723,6 +724,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         return '<p>' + text + '</p>'
 
     def _get_cv(self, _id):
-        test =  superdesk.get_resource_service('vocabularies')
+        test = superdesk.get_resource_service('vocabularies')
         test2 = test.find_one(req=None, _id=_id)
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
