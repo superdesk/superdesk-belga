@@ -1,7 +1,11 @@
 {% for agenda in agendas %}
 
   {% if agenda.get('items') %}
-  <h2>{{ agenda.name }}</h2>
+    {% if agenda._id == 'unassigned' %}
+      <h2 translate>{{ agenda.name }}</h2>
+    {% else %}
+      <h2>{{ agenda.name }}</h2>
+    {% endif %}
   {% endif %}
 
   {% for item in agenda.get('items') %}
