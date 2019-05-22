@@ -724,6 +724,4 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         return '<p>' + text + '</p>'
 
     def _get_cv(self, _id):
-        test = superdesk.get_resource_service('vocabularies')
-        test2 = test.find_one(req=None, _id=_id)
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)

@@ -18,7 +18,5 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     NAME = 'belga_afp_newsml12'
     label = 'Belga specific AFP News ML 1.2 Parser'
 
-    # afp related logic goes here
-
 
 register_feed_parser(BelgaAFPNewsMLOneFeedParser.NAME, BelgaAFPNewsMLOneFeedParser())
