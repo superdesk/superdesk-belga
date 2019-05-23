@@ -3001,5 +3001,38 @@
             {"is_active": true, "name": "statistic", "qcode": "17004000", "parent": "17000000"},
             {"is_active": true, "name": "warning", "qcode": "17005000", "parent": "17000000"}
         ]
+    },
+        {
+        "_id": "of_interest_to",
+        "display_name": "Of Interest To",
+        "type": "unmanageable",
+        "selection_type": "do not show",
+        "items": [
+            {
+                "is_active": true,
+                "name": "DAB-TFG-1=DAB",
+                "qcode": "DAB-TFG-1=DAB"
+            },
+            {
+                "is_active": true,
+                "name": "AMN-TFG-1=AMW",
+                "qcode": "AMN-TFG-1=AMW"
+            },
+            {
+                "is_active": true,
+                "name": "ARC-TFG-1=ELU",
+                "qcode": "ARC-TFG-1=ELU"
+            },
+            {
+                "is_active": true,
+                "name": "EUA-TFG-1=EUA",
+                "qcode": "EUA-TFG-1=EUA"
+            },
+            {
+                "is_active": true,
+                "name": "MOA-TFG-1=MOA",
+                "qcode": "MOA-TFG-1=MOA"
+            }
+        ]
     }
 ]
