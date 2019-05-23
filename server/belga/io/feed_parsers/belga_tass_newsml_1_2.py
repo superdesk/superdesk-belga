@@ -10,6 +10,7 @@
 
 from superdesk.io.registry import register_feed_parser
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
+from superdesk.utc import local_to_utc
 
 
 class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -22,7 +23,11 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # TODO clarify version
         return xml.tag == 'NewsML' and xml.get('Version', '1.2') == '1.2'
 
-    # tass related logic goes here
+    def parser_newsmanagement(self, item, manage_el):
+        super().parser_newsmanagement(item, manage_el)
+        tz = 'Europe/Moscow'
+        item['firstcreated'] = local_to_utc(tz, item['firstcreated'])
+        item['versioncreated'] = local_to_utc(tz, item['firstcreated'])
 
 
 register_feed_parser(BelgaTASSNewsMLOneFeedParser.NAME, BelgaTASSNewsMLOneFeedParser())

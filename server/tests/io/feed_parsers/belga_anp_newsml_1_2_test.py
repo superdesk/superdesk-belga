@@ -13,12 +13,14 @@ import os
 from lxml import etree
 from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_anp_newsml_1_2 import BelgaANPNewsMLOneFeedParser
+from . import BelgaTestCase
 
 
-class BelgaANPNewsMLOneTestCase(TestCase):
+class BelgaANPNewsMLOneTestCase(BelgaTestCase):
     filename = 'anp_belga.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
@@ -32,37 +34,42 @@ class BelgaANPNewsMLOneTestCase(TestCase):
 
     def test_content(self):
         item = self.item[0]
-
-        self.assertEqual(item["news_item_type"], "News")
-        self.assertEqual(item["firstcreated"].isoformat(), "2018-12-10T09:35:49+01:00")
-        self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["type"], "text")
-        self.assertEqual(item["versioncreated"].isoformat(), "2018-12-10T12:37:31+01:00")
-        self.assertEqual(item["guid"], "urn:newsml:anp.nl:20181210:ANPX-101218-041:2")
-        self.assertEqual(item["location"], {'country': 'NL', 'how_present_el': 'Origin', 'city': 'UTRECHT'})
-        self.assertEqual(item["format"], "NITF")
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
-        self.assertEqual(item["date_id"], "20181210")
-        self.assertEqual(item["dateline"], {})
-        self.assertEqual(item["urgency"], "3")
-        self.assertEqual(item["headline"], "FNV staat alleen met acties bij PostNL (2)")
-        self.assertEqual(item["item_id"], "ANPX-101218-041-v2")
-        self.assertEqual(item["sentfrom"], {'party': 'Algemeen Nederlands Persbureau', 'comment': 'News Provider'})
-        self.assertEqual(item["administrative"], {'provider': 'ANP'})
-        self.assertEqual(item["products"], ['ANP Nieuws'])
-        self.assertEqual(item["language"], "nl-nl")
-        self.assertEqual(item["news_component_equivalentslist"], "no")
-        self.assertEqual(item["date_label"], "10 december 2018")
-        self.assertEqual(item["genre"], [{'name': 'ECO'}])
-        self.assertEqual(item["version"], "2")
-        self.assertEqual(item["news_component_essential"], "no")
+        self.assertEqual(item["subject"], [{'name': 'ANP Nieuws', 'qcode': 'ANP Nieuws', 'scheme': 'news_products'},
+                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+                                           {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
+                                           {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
+                                           {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'}])
+        self.assertEqual(item["priority"], 3)
+        self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["provider_id"], "ANP")
-        self.assertEqual(item["characteristics"],
-                         {'characters': '1043', 'word_count': '177', 'creator': 'redsys v4.30'})
-        self.assertEqual(item["label"], None)
-        self.assertEqual(item["subject"], [{'name': '', 'scheme': '', 'qcode': 'ECO'}])
-        self.assertEqual(item["priority"], "3")
+        self.assertEqual(item["date_id"], "20181210")
+        self.assertEqual(item["item_id"], "ANPX-101218-041-v2")
+        self.assertEqual(item["version"], "2")
+        self.assertEqual(item["guid"], "urn:newsml:anp.nl:20181210:ANPX-101218-041:2")
+        self.assertEqual(item["date_label"], "10 december 2018")
+        self.assertEqual(str(item["firstcreated"]), "2018-12-10 08:35:49+00:00")
+        self.assertEqual(str(item["versioncreated"]), "2018-12-10 08:35:49+00:00")
+        self.assertEqual(item["pubstatus"], "usable")
+        self.assertEqual(item["urgency"], "3")
+        self.assertEqual(item["dateline"], {})
+        self.assertEqual(item["headline"], "FNV staat alleen met acties bij PostNL (2)")
+        self.assertEqual(item["sub_head_line"], None)
+        self.assertEqual(item["byline"], None)
+        self.assertEqual(item["by_line_title"], None)
+        self.assertEqual(item["copyright_line"],
+                         "© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and "
+                         "database rights reserved.")
+        self.assertEqual(item["slugline"], "Huub Giesbers (iwi)")
+        self.assertEqual(item["keyword_line"], "ECO/ECO10;ECO-POST-CAO")
+        self.assertEqual(item["administrative"], {'provider': 'ANP'})
+        self.assertEqual(item["language"], "nl-nl")
+        self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'NL', 'city': 'UTRECHT'})
         self.assertEqual(item["keywords"], ['POST-CAO'])
+        self.assertEqual(item["type"], "text")
+        self.assertEqual(item["format"], "NITF")
+        self.assertEqual(item["characteristics"],
+                         {'creator': 'redsys v4.30', 'word_count': '177', 'characters': '1043'})
         expected_body = \
             (
                 '\n\t\t\t\t\t\t\t\t<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan Post'
@@ -80,6 +87,5 @@ class BelgaANPNewsMLOneTestCase(TestCase):
                 'seren. Die kunnen PostNL dusdanig hard raken dat ook de werkgelegenheid bij het '
                 'bedrijf in gevaar komt, waarschuwen ze in een gezamenlijke brief aan hun leden.<'
                 '/p>\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t'
-
             )
         self.assertEqual(item["body_html"], expected_body)
