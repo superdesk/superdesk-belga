@@ -112,6 +112,16 @@ SCHEMA = {
         'country': {'required': False},
         'sign_off': {'required': False},
     },
+    'graphic': {
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'credit': {'required': False},
+        'keywords': {'required': False},
+        'city': {'required': False},
+        'country': {'required': False},
+        'sign_off': {'required': False},
+        'bcoverage': {'required': False},
+    },
 }
 
 # editor for images, video, audio
@@ -139,6 +149,18 @@ EDITOR = {
         'sign_off': {'order': 9, 'sdWidth': 'half'},
         'byline': {'displayOnMediaEditor': False},
         'copyrightnotice': {'displayOnMediaEditor': False},
+    },
+    'graphic': {
+        'headline': {'order': 1, 'sdWidth': 'full'},
+        'description_text': {'order': 2, 'sdWidth': 'full', 'textarea': True},
+        'credit': {'order': 3, 'sdWidth': 'full'},
+        'keywords': {'order': 4, 'sdWidth': 'full'},
+        'city': {'order': 5, 'sdWidth': 'full'},
+        'country': {'order': 6, 'sdWidth': 'full'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+        'byline': {'displayOnMediaEditor': False},
+        'copyrightnotice': {'displayOnMediaEditor': False},
+        'bcoverage': {'displayOnMediaEditor': False},
     },
 }
 
