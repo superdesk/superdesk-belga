@@ -1,5 +1,8 @@
 import React from 'react';
 
+import {Grid} from 'superdesk-core/scripts/core/ui/components/grid';
+import {Alert} from 'superdesk-core/scripts/core/ui/components/alert';
+
 import {getCoverageImages, IBelgaImage} from './belga-image-api';
 
 interface IProps {
@@ -13,6 +16,11 @@ interface IState {
     images: Array<IBelgaImage>;
 }
 
+const URLS = {
+    preview: 'previewUrl',
+    thumbnail: 'thumbnailUrl',
+};
+
 export default class BelgaCoverage extends React.Component<IProps, IState> {
 
     readonly state = {loading: false, images: [] as IBelgaImage[]};
@@ -21,7 +29,7 @@ export default class BelgaCoverage extends React.Component<IProps, IState> {
         this.fetchImages();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: IProps) {
         if (prevProps.coverageId !== this.props.coverageId) {
             this.fetchImages();
         }
@@ -44,22 +52,16 @@ export default class BelgaCoverage extends React.Component<IProps, IState> {
 
         if (this.state.images.length === 0) {
             return (
-                <p className="warn">{'Coverage is empty.'}</p>
+                <Alert type="warning">{'Coverage is empty.'}</Alert>
             );
         }
 
-        const className = this.props.rendition === 'thumbnail' ?
-            'flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-3' :
-            'flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-1';
-
         return (
-            <div className={className}>
+            <Grid columns={this.props.rendition === 'thumbnail' ? 3 : 1} boxed={true}>
                 {this.state.images.map((image) => (
-                    <div key={image.imageId} className="flex-grid__item">
-                        <img src={image[this.props.rendition + 'Url']} alt={image.name} />
-                    </div>
+                    <img key={image.imageId} src={image[URLS[this.props.rendition]]} alt={image.name} />
                 ))}
-            </div>
+            </Grid>
         );
     }
 

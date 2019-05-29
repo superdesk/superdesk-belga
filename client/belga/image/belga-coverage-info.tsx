@@ -1,5 +1,8 @@
 import React from 'react';
 
+import {Alert} from 'superdesk-core/scripts/core/ui/components/alert';
+import {RelatedMedia} from 'superdesk-core/scripts/core/ui/components/related-media';
+
 import {IBelgaCoverage, getCoverageInfo} from './belga-image-api';
 
 interface IProps {
@@ -19,17 +22,6 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
         this.fetchCoverage();
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.coverageId !== this.props.coverageId) {
-            if (this.props.coverageId) {
-                this.setState({loading: true, coverage: null});
-                this.fetchCoverage();
-            } else {
-                this.setState({loading: false, coverage: null})
-            }
-        }
-    }
-
     fetchCoverage() {
         getCoverageInfo(this.props.coverageId)
             .then((coverage) => this.setState({coverage: coverage, loading: false}))
@@ -43,31 +35,15 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
             return null;
         }
 
-        if (this.state.coverage != null) {
-            return this.renderCoverage(this.state.coverage);
+        if (this.state.coverage == null) {
+            return <Alert type="error">{'There was an error when fetching coverage.'}</Alert>;
         }
 
-        return <div>{'There was an error when fetching coverage.'}</div>;
-    }
-
-    renderCoverage(coverage: IBelgaCoverage) {
-        const inEditor = this.props.removeCoverage != null;
         return (
-            <div className={inEditor ? "sd-media-carousel__content" : ''}>
-                <figure className="item-association item-association--preview" style={{margin: 0, height: 'inherit'}}>
-                    {inEditor && (
-                        <button className="item-association__remove-item" onClick={(event) => this.props.removeCoverage()}>
-                            <i className="icon-close-small" />
-                        </button>
-                    )}
-                    <div className="item-association__image-container">
-                        <div className="item-association__image-overlay" />
-                        <img src={coverage.iconThumbnailUrl} />
-                    </div>
-                </figure>
-                <div className={inEditor ? "sd-media-carousel__media-caption" : ''}>{coverage.description}</div>
-            </div>
+            <RelatedMedia caption={this.state.coverage.description}
+                onRemove={this.props.removeCoverage}>
+                <img src={this.state.coverage.iconThumbnailUrl} />
+            </RelatedMedia>
         );
-
     }
 }

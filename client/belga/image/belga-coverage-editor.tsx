@@ -5,43 +5,42 @@ import {IEditorComponentProps} from 'superdesk-core/scripts/apps/fields';
 import BelgaCoverageInfo from './belga-coverage-info';
 import BelgaCoverageImages from './belga-coverage-images';
 
-const ALLOWED_TYPES = [
-    'application/superdesk.item.graphic',
-];
+const ALLOWED = 'application/superdesk.item.graphic';
 
-export default class BelgaCoverageEditor extends React.PureComponent<IEditorComponentProps> {
-    render() {
-        if (this.props.value) {
-            return (
-                <div>
-                    <BelgaCoverageInfo
-                        coverageId={this.props.value}
-                        removeCoverage={this.props.readOnly ? null : () => this.props.setValue(null)}
-                    />
-                    <BelgaCoverageImages
-                        coverageId={this.props.value}
-                        rendition={'thumbnail'}
-                        maxImages={3}
-                    />
-                </div>
-            );
-        }
+function isAllowedType(event: DragEvent) {
+    return event.dataTransfer.types.includes(ALLOWED);
+}
 
-        return this.renderDropzone();
-    }
+function getData(event: DragEvent) {
+    return event.dataTransfer.getData(ALLOWED);
+}
 
-    addCoverage(data) {
-        const coverage = JSON.parse(data);
-        this.props.setValue(coverage.guid);
-    }
-
-    renderDropzone() {
+export default function BelgaCoverageEditor(props: IEditorComponentProps) {
+    if (props.value) {
         return (
-            <DropZone
-                text={gettext('Drop coverage here')}
-                onDrop={({data}) => this.addCoverage(data)}
-                allowedTypes={ALLOWED_TYPES}
-            />
+            <div>
+                <BelgaCoverageInfo
+                    coverageId={props.value}
+                    removeCoverage={props.readOnly ? null : () => props.setValue(null)}
+                />
+                <BelgaCoverageImages
+                    coverageId={props.value}
+                    rendition={'thumbnail'}
+                    maxImages={3}
+                />
+            </div>
         );
     }
+
+    return (
+        <DropZone
+            label={gettext('Drop coverage here')}
+            canDrop={isAllowedType}
+            onDrop={(event) => {
+                const coverage = JSON.parse(getData(event));
+
+                props.setValue(coverage.guid);
+            }}
+        />
+    );
 }
