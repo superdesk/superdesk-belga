@@ -1,5 +1,5 @@
 import angular from 'angular';
-import {customField} from 'superdesk-core/scripts/apps/fields';
+import {addFieldType} from 'superdesk-core/scripts/apps/fields';
 
 import BelgaSearchPanelController from './BelgaSearchPanelController';
 import BelgaCoverageEditor from './belga-coverage-editor';
@@ -9,7 +9,7 @@ export default angular.module('belga.image', [
 ])
     .controller('BelgaSearchPanel', BelgaSearchPanelController)
     .run(() => {
-        customField('belga.coverage', {
+        addFieldType('belga.coverage', {
             label: 'Belga Coverage',
             editorComponent: BelgaCoverageEditor,
             previewComponent: BelgaCoveragePreview,

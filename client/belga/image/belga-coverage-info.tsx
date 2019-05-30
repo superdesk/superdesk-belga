@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {Alert} from 'superdesk-core/scripts/core/ui/components/alert';
-import {RelatedMedia} from 'superdesk-core/scripts/core/ui/components/related-media';
+import {Figure} from 'superdesk-core/scripts/core/ui/components/figure';
 
 import {IBelgaCoverage, getCoverageInfo} from './belga-image-api';
 
@@ -40,10 +40,10 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
         }
 
         return (
-            <RelatedMedia caption={this.state.coverage.description}
+            <Figure caption={this.state.coverage.description}
                 onRemove={this.props.removeCoverage}>
                 <img src={this.state.coverage.iconThumbnailUrl} />
-            </RelatedMedia>
+            </Figure>
         );
     }
 }
