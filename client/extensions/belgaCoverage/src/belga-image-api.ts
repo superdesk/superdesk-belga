@@ -14,7 +14,7 @@ export interface IBelgaImage {
 
 const API_URL = 'https://api.ssl.belga.be/belgaimage-api/';
 
-const callApi = (endpoint, params) => {
+const callApi = (endpoint: string, params: {[key: string]: string}) => {
     const queryString = Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
 
     return fetch(API_URL + endpoint + '?' + queryString)
@@ -25,12 +25,12 @@ const callApi = (endpoint, params) => {
         });
 };
 
-const parseCoverageId = (coverageId) => coverageId.split(':')[3];
+const parseCoverageId = (coverageId: string) => coverageId.split(':')[3];
 
 export function getCoverageInfo(coverageId: string) : Promise<IBelgaCoverage> {
     return callApi('getGalleryById', {i: parseCoverageId(coverageId)});
 }
 
 export function getCoverageImages(coverageId: string, max: number): Promise<Array<IBelgaImage>> {
-    return callApi('getGalleryItems', {i: parseCoverageId(coverageId), n: max});
+    return callApi('getGalleryItems', {i: parseCoverageId(coverageId), n: '' + max});
 }

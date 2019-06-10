@@ -1,18 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 
-import {Alert} from 'superdesk-core/scripts/core/ui/components/alert';
-import {Figure} from 'superdesk-core/scripts/core/ui/components/figure';
-
+import {ISuperdesk} from 'superdesk-api';
 import {IBelgaCoverage, getCoverageInfo} from './belga-image-api';
 
 interface IProps {
     coverageId: string;
     removeCoverage?: () => void;
+    superdesk: ISuperdesk;
 }
 
 interface IState {
     loading: boolean;
-    coverage: IBelgaCoverage;
+    coverage: IBelgaCoverage | null;
 }
 
 export default class BelgaCoverageAssocation extends React.Component<IProps, IState> {
@@ -31,19 +30,21 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
     }
 
     render() {
+        const {components} = this.props.superdesk;
+
         if (this.state.loading) {
             return null;
         }
 
         if (this.state.coverage == null) {
-            return <Alert type="error">{'There was an error when fetching coverage.'}</Alert>;
+            return <components.Alert type="error">{'There was an error when fetching coverage.'}</components.Alert>;
         }
 
         return (
-            <Figure caption={this.state.coverage.description}
+            <components.Figure caption={this.state.coverage.description}
                 onRemove={this.props.removeCoverage}>
                 <img src={this.state.coverage.iconThumbnailUrl} />
-            </Figure>
+            </components.Figure>
         );
     }
 }

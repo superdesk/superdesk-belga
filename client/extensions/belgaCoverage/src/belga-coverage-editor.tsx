@@ -1,36 +1,39 @@
-import React from 'react';
-import {gettext} from 'superdesk-core/scripts/core/utils';
-import {DropZone} from 'superdesk-core/scripts/core/ui/components/drop-zone';
-import {IEditorComponentProps} from 'superdesk-core/scripts/apps/fields';
+import * as React from 'react';
 import BelgaCoverageInfo from './belga-coverage-info';
 import BelgaCoverageImages from './belga-coverage-images';
+import {ICustomFieldType, IEditorComponentProps} from 'superdesk-api';
 
 const ALLOWED = 'application/superdesk.item.graphic';
 
 function isAllowedType(event: DragEvent) {
-    return event.dataTransfer.types.includes(ALLOWED);
+    return !!event.dataTransfer && event.dataTransfer.types.includes(ALLOWED);
 }
 
 function getData(event: DragEvent) {
-    return event.dataTransfer.getData(ALLOWED);
+    return event.dataTransfer ? event.dataTransfer.getData(ALLOWED) : '';
 }
 
-export default function BelgaCoverageEditor(props: IEditorComponentProps) {
+export const BelgaCoverageEditor: ICustomFieldType['editorComponent'] = (props: IEditorComponentProps) => {
     if (props.value) {
         return (
             <div>
                 <BelgaCoverageInfo
                     coverageId={props.value}
-                    removeCoverage={props.readOnly ? null : () => props.setValue(null)}
+                    removeCoverage={props.readOnly ? undefined : () => props.setValue(null)}
+                    superdesk={props.superdesk}
                 />
                 <BelgaCoverageImages
                     coverageId={props.value}
                     rendition={'thumbnail'}
                     maxImages={3}
+                    superdesk={props.superdesk}
                 />
             </div>
         );
     }
+
+    const {gettext} = props.superdesk.localization;
+    const {DropZone} = props.superdesk.components;
 
     return (
         <DropZone
