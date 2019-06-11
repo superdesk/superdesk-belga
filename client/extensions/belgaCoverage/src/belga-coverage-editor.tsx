@@ -1,7 +1,7 @@
 import * as React from 'react';
 import BelgaCoverageInfo from './belga-coverage-info';
 import BelgaCoverageImages from './belga-coverage-images';
-import {ICustomFieldType, IEditorComponentProps} from 'superdesk-api';
+import {IEditorComponentProps, ISuperdesk} from 'superdesk-api';
 
 const ALLOWED = 'application/superdesk.item.graphic';
 
@@ -13,7 +13,7 @@ function getData(event: DragEvent) {
     return event.dataTransfer ? event.dataTransfer.getData(ALLOWED) : '';
 }
 
-export const BelgaCoverageEditor: ICustomFieldType['editorComponent'] = (props: IEditorComponentProps) => {
+export const BelgaCoverageEditor: React.StatelessComponent<IEditorComponentProps & {superdesk: ISuperdesk}> = (props) => {
     if (props.value) {
         return (
             <div>

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {ICustomFieldType, IPreviewComponentProps} from 'superdesk-api';
+import {IPreviewComponentProps, ISuperdesk} from 'superdesk-api';
 
 import BelgaCoverageInfo from './belga-coverage-info';
 import BelgaCoverageImages from './belga-coverage-images';
 
-export const BelgaCoveragePreview: ICustomFieldType['previewComponent'] = (props: IPreviewComponentProps) => {
+export const BelgaCoveragePreview: React.StatelessComponent<IPreviewComponentProps & {superdesk: ISuperdesk}> = (props) => {
     return (
         <div>
             {props.item.type !== 'graphic' &&

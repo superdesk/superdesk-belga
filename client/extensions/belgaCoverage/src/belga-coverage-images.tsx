@@ -49,7 +49,7 @@ export default class BelgaCoverage extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {components} = this.props.superdesk;
+        const {Alert, Grid} = this.props.superdesk.components;
 
         if (this.state.loading) {
             return null;
@@ -57,16 +57,16 @@ export default class BelgaCoverage extends React.Component<IProps, IState> {
 
         if (this.state.images.length === 0) {
             return (
-                <components.Alert type="warning">{'Coverage is empty.'}</components.Alert>
+                <Alert type="warning">{'Coverage is empty.'}</Alert>
             );
         }
 
         return (
-            <components.Grid columns={this.props.rendition === 'thumbnail' ? 3 : 1} boxed={true}>
+            <Grid columns={this.props.rendition === 'thumbnail' ? 3 : 1} boxed={true}>
                 {this.state.images.map((image) => (
                     <img key={image.imageId} src={getImageUrl(image, this.props.rendition)} alt={image.name} />
                 ))}
-            </components.Grid>
+            </Grid>
         );
     }
 

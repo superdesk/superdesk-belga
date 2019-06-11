@@ -30,21 +30,24 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
     }
 
     render() {
-        const {components} = this.props.superdesk;
+        const {Alert, Figure} = this.props.superdesk.components;
 
         if (this.state.loading) {
             return null;
         }
 
-        if (this.state.coverage == null) {
-            return <components.Alert type="error">{'There was an error when fetching coverage.'}</components.Alert>;
+        if (this.state.coverage === null) {
+            return <Alert type="error">{'There was an error when fetching coverage.'}</Alert>;
         }
 
+        // workaround for this.state.coverage can be null
+        const coverage: IBelgaCoverage = this.state.coverage!;
+
         return (
-            <components.Figure caption={this.state.coverage.description}
+            <Figure caption={coverage.description}
                 onRemove={this.props.removeCoverage}>
-                <img src={this.state.coverage.iconThumbnailUrl} />
-            </components.Figure>
+                <img src={coverage.iconThumbnailUrl} />
+            </Figure>
         );
     }
 }
