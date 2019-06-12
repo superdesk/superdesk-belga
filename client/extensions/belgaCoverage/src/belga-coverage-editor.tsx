@@ -41,9 +41,13 @@ export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessCo
                 label={gettext('Drop coverage here')}
                 canDrop={isAllowedType}
                 onDrop={(event) => {
-                    const coverage = JSON.parse(getData(event));
+                    try {
+                        const coverage = JSON.parse(getData(event));
 
-                    props.setValue(coverage.guid);
+                        props.setValue(coverage.guid);
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }}
             />
         );
