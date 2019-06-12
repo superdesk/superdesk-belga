@@ -15,7 +15,11 @@ interface IState {
 }
 
 export default class BelgaCoverageAssocation extends React.Component<IProps, IState> {
-    readonly state = {loading: true, coverage: null};
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {loading: true, coverage: null};
+    }
 
     componentDidMount() {
         this.fetchCoverage();
@@ -38,16 +42,13 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
 
         if (this.state.coverage === null) {
             return <Alert type="error">{'There was an error when fetching coverage.'}</Alert>;
+        } else {
+            return (
+                <Figure caption={this.state.coverage.description}
+                    onRemove={this.props.removeCoverage}>
+                    <img src={this.state.coverage.iconThumbnailUrl} />
+                </Figure>
+            );
         }
-
-        // workaround for this.state.coverage can be null
-        const coverage: IBelgaCoverage = this.state.coverage!;
-
-        return (
-            <Figure caption={coverage.description}
-                onRemove={this.props.removeCoverage}>
-                <img src={coverage.iconThumbnailUrl} />
-            </Figure>
-        );
     }
 }

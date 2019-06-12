@@ -26,7 +26,10 @@ function getImageUrl(image: IBelgaImage, rendition: IProps['rendition']): string
 
 export default class BelgaCoverage extends React.Component<IProps, IState> {
 
-    readonly state = {loading: false, images: [] as IBelgaImage[]};
+    constructor(props: IProps) {
+        super(props);
+        this.state = {loading: false, images: []};
+    }
 
     componentDidMount() {
         this.fetchImages();
