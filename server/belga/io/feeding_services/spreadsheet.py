@@ -4,8 +4,8 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import logging
+import json
 from datetime import timedelta
-from pathlib import Path
 
 import gspread
 from gspread import Cell
@@ -28,6 +28,7 @@ class IngestSpreadsheetError(SuperdeskIngestError):
     _codes = {
         15100: "Missing permission",
         15200: "Quota limit",
+        15300: "Invalid credentials"
     }
 
     @classmethod
@@ -37,6 +38,10 @@ class IngestSpreadsheetError(SuperdeskIngestError):
     @classmethod
     def SpreadsheetQuotaLimit(cls, exception=None, provider=None):
         return IngestSpreadsheetError(15200, exception, provider)
+
+    @classmethod
+    def SpreadsheetCredentialsError(cls, exception=None, provider=None):
+        return IngestSpreadsheetError(15300, exception, provider)
 
 
 class SpreadsheetFeedingService(FeedingService):
@@ -51,6 +56,10 @@ class SpreadsheetFeedingService(FeedingService):
     label = 'Google Spreadsheet'
 
     fields = [
+        {
+            'id': 'service_account', 'type': 'text', 'label': 'Service account',
+            'required': True, 'errors': {15300: 'Invalid service account key'},
+        },
         {
             'id': 'url', 'type': 'text', 'label': 'Source',
             'placeholder': 'Google Spreadsheet URL', 'required': True,
@@ -102,7 +111,7 @@ class SpreadsheetFeedingService(FeedingService):
         """
         config = provider.get('config', {})
         url = config.get('url', '')
-        worksheet = self._get_worksheet(url)
+        worksheet = self._get_worksheet(url, config.get('service_account', ''))
         try:
             # Get all values to avoid reaching read limit
             data = worksheet.get_all_values()
@@ -166,7 +175,7 @@ class SpreadsheetFeedingService(FeedingService):
                         'definition_long': values[index['Long description']],
                         'internal_note': values[index['Internal note']],
                         'ednote': values[index['Ed note']],
-                        'links': values[index['External links']],
+                        'links': [values[index['External links']]],
                         'guid': guid,
                         'status': is_updated,
                         'version': 1,
@@ -228,12 +237,13 @@ class SpreadsheetFeedingService(FeedingService):
                         'Provider %s: Event "%s": Invalid timezone %s',
                         provider.get('name'), values[index['Event name']], tzone
                     )
-            worksheet.update_cells(cells_list)
+            if cells_list:
+                worksheet.update_cells(cells_list)
             return [items]
-        except gspread.exceptions.CellNotFound:
-            raise ParserError.parseFileError()
+        except gspread.exceptions.CellNotFound as e:
+            raise ParserError.parseFileError(e)
 
-    def _get_worksheet(self, url):
+    def _get_worksheet(self, url, service_account):
         """Get worksheet from google spreadsheet
 
         :return: worksheet
@@ -246,15 +256,18 @@ class SpreadsheetFeedingService(FeedingService):
             'https://www.googleapis.com/auth/drive',
         ]
 
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(Path('serviceAccount.json'), scope)
-        gc = gspread.authorize(credentials)
         try:
+            service_account = json.loads(service_account)
+            credentials = ServiceAccountCredentials.from_json_keyfile_dict(service_account, scope)
+            gc = gspread.authorize(credentials)
             spreadsheet = gc.open_by_url(url)
             permission = spreadsheet.list_permissions()[0]
             if permission['role'] != 'writer':
                 raise IngestSpreadsheetError.SpreadsheetPermissionError()
             worksheet = spreadsheet.worksheet('Agenda for ingest')
             return worksheet
+        except (json.decoder.JSONDecodeError, ValueError):
+            raise IngestSpreadsheetError.SpreadsheetCredentialsError()
         except gspread.exceptions.NoValidUrlKeyFound:
             raise IngestApiError.apiNotFoundError()
         except gspread.exceptions.WorksheetNotFound:
