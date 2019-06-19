@@ -15,6 +15,7 @@ from pytz import timezone
 from pytz.exceptions import UnknownTimeZoneError
 from tzlocal import get_localzone
 
+import superdesk
 from superdesk.errors import IngestApiError, ParserError, SuperdeskIngestError
 from superdesk.io.feeding_services import FeedingService
 from superdesk.io.registry import register_feeding_service
@@ -102,12 +103,10 @@ class SpreadsheetFeedingService(FeedingService):
         return self._update(provider, update=None, test=True)
 
     def _update(self, provider, update, test=False):
-        """ Load items from google spreadsheet
+        """Load items from google spreadsheet and insert (update) to events database
 
-        If STATUS or GUID field is null, create new item
-        If STATUS field is UPDATED, update item with new value
-        Find and update Contact based on all field in required_contact_field, create new record if not found
-        Find and update Location based on all field in required_location_field, create new record if not found
+        If STATUS field is empty, create new item
+        If STATUS field is UPDATED, update item
         """
         config = provider.get('config', {})
         url = config.get('url', '')
@@ -123,16 +122,16 @@ class SpreadsheetFeedingService(FeedingService):
                     raise ParserError.parseFileError()
                 index[field] = titles.index(field.lower().strip())
 
-            # avoid exceed row/col limits error
-            if len(titles) <= len(self.titles) + 2:
-                worksheet.add_cols(2)
+            # avoid maximum limit cols error
+            total_col = worksheet.col_count
+            if total_col < len(titles) + 3:
+                worksheet.add_cols(len(titles) + 3 - total_col)
 
-            for i, field in enumerate(('STATUS', 'GUID'), len(self.titles)):
-                if field.lower().strip() in titles:
-                    index[field] = titles.index(field.lower().strip())
-                else:
-                    worksheet.update_cell(1, i, field)
-                    index[field] = i
+            for field in ('_STATUS', '_ERR_MESSAGE', '_GUID'):
+                if field.lower() not in titles:
+                    titles.append(field.lower())
+                    worksheet.update_cell(1, len(titles), field)
+                index[field] = titles.index(field.lower())
 
             items = []
             cells_list = []
@@ -140,10 +139,14 @@ class SpreadsheetFeedingService(FeedingService):
             for row in range(3, len(data) + 1):
                 if not row:
                     break
+                error_message = None
                 values = data[row - 1]
-                is_updated = None if len(values) < index['STATUS'] else values[index['STATUS']].strip().upper()
-                if len(values) - 1 > index['GUID'] and values[index['GUID']]:
-                    guid = values[index['GUID']]
+                is_updated = None if len(values) < index['_STATUS'] + 1 else values[index['_STATUS']].strip().upper()
+                if len(values) - 1 > index['_GUID'] and values[index['_GUID']]:
+                    guid = values[index['_GUID']]
+                    # find item to check if it's exists and guid is valid
+                    if not superdesk.get_resource_service('events').find_one(guid=guid, req=None):
+                        raise KeyError('GUID is not exists')
                 else:
                     guid = generate_guid(type=GUID_NEWSML)
                 try:
@@ -220,23 +223,35 @@ class SpreadsheetFeedingService(FeedingService):
                     item.setdefault(ITEM_STATE, CONTENT_STATE.DRAFT)
                     # ignore invalid item
                     missing_fields = [field for field in self.required_field if not item.get(field)]
-                    if not missing_fields:
-                        if not is_updated or is_updated == 'UPDATED':
-                            cells_list.append(Cell(row, index['STATUS'] + 1, 'DONE'))
-                        cells_list.append(Cell(row, index['GUID'] + 1, guid))
-                        items.append(item)
-                    else:
+                    if missing_fields:
+                        missing_fields = ', '.join(missing_fields)
                         logger.error(
                             'Provider %s: Ignore event "%s". Missing %s fields',
-                            provider.get('name'), item.get('name'), ', '.join(missing_fields),
+                            provider.get('name'), item.get('name'), missing_fields,
                         )
-                except TypeError as e:
-                    logger.error(e)
+                        error_message = 'Missing ' + missing_fields + ' fields'
+                    elif not is_updated or is_updated in ('UPDATED', 'ERROR'):
+                        cells_list.extend([
+                            Cell(row, index['_STATUS'] + 1, 'DONE'),
+                            Cell(row, index['_ERR_MESSAGE'] + 1, ''),
+                            Cell(row, index['_GUID'] + 1, guid)
+                        ])
+                        items.append(item)
                 except UnknownTimeZoneError:
+                    error_message = 'Invalid timezone'
                     logger.error(
                         'Provider %s: Event "%s": Invalid timezone %s',
                         provider.get('name'), values[index['Event name']], tzone
                     )
+                except (TypeError, ValueError, KeyError) as e:
+                    error_message = e.args[0]
+                    logger.error(error_message)
+
+                if error_message:
+                    cells_list.extend([
+                        Cell(row, index['_STATUS'] + 1, 'ERROR'),
+                        Cell(row, index['_ERR_MESSAGE'] + 1, error_message)
+                    ])
             if cells_list:
                 worksheet.update_cells(cells_list)
             return [items]
