@@ -58,20 +58,17 @@ class BelgaSpreadsheetsParser(FeedParser):
         'Planned, occurs certainly': 'eocstat:eos5',
     }
 
-    def can_parse(self, items):
-        pass
+    def can_parse(self, titles):
+        try:
+            self.parse_titles(titles)
+            return True
+        except ParserError:
+            return False
 
     def parse(self, data, provider=None):
-        # lookup title columns to avoid it's not followed order
-        index = {}
-        titles = [s.lower().strip() for s in data[0]]
-        for field in self.titles:
-            if field.lower().strip() not in titles:
-                raise ParserError.parseFileError()
-            index[field] = titles.index(field.lower().strip())
-
+        index = self.parse_titles(data[0])
         items = []
-        cells_list = []  # patch update to reduce write requests usage
+        cells_list = []  # use for patch update to reduce write requests usage
         # skip first two title rows
         for row in range(3, len(data) + 1):
             if not row:
@@ -201,6 +198,17 @@ class BelgaSpreadsheetsParser(FeedParser):
                     ])
                     items.append(item)
         return items, cells_list
+
+    def parse_titles(self, titles):
+        """Lookup title columns and return dictionary of titles index
+        """
+        index = {}
+        titles = [s.lower().strip() for s in titles]
+        for field in self.titles:
+            if field.lower().strip() not in titles:
+                raise ParserError.parseFileError()
+            index[field] = titles.index(field.lower().strip())
+        return index
 
 
 register_feed_parser(BelgaSpreadsheetsParser.NAME, BelgaSpreadsheetsParser())

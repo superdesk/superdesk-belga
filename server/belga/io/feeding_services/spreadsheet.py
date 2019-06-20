@@ -1,3 +1,8 @@
+# -*- coding: utf-8; -*-
+#
+# This file is part of Superdesk.
+#
+# Copyright 2013, 2014 Sourcefabric z.u. and contributors.
 #
 # For the full copyright and license information, please see the
 # AUTHORS and LICENSE files distributed with this source code, or
@@ -29,7 +34,7 @@ class IngestSpreadsheetError(SuperdeskIngestError):
         return IngestSpreadsheetError(15100, exception, provider)
 
     @classmethod
-    def SpreadsheetQuotaLimit(cls, exception=None, provider=None):
+    def SpreadsheetQuotaLimitError(cls, exception=None, provider=None):
         return IngestSpreadsheetError(15200, exception, provider)
 
     @classmethod
@@ -44,6 +49,8 @@ class SpreadsheetFeedingService(FeedingService):
         IngestApiError.apiNotFoundError().get_error_description(),
         ParserError.parseFileError().get_error_description(),
         IngestSpreadsheetError.SpreadsheetPermissionError().get_error_description(),
+        IngestSpreadsheetError.SpreadsheetQuotaLimitError().get_error_description(),
+        IngestSpreadsheetError.SpreadsheetCredentialsError().get_error_description(),
     ]
 
     label = 'Google Spreadsheet'
@@ -67,54 +74,51 @@ class SpreadsheetFeedingService(FeedingService):
     ]
 
     def _test(self, provider):
-        return self._update(provider, update=None, test=True)
+        worksheet = self._get_worksheet(provider.get('config', {}))
+        data = worksheet.get_all_values()
+        BelgaSpreadsheetsParser().parse_titles(data[0])
 
-    def _update(self, provider, update, test=False):
+    def _update(self, provider, update):
         """Load items from google spreadsheet and insert (update) to events database
 
         If STATUS field is empty, create new item
         If STATUS field is UPDATED, update item
         """
-        config = provider.get('config', {})
-        url = config.get('url', '')
-        service_account = config.get('service_account', '')
-        worksheet = self._get_worksheet(url, service_account)
-        try:
-            # Get all values to avoid reaching read limit
-            data = worksheet.get_all_values()
-            titles = [s.lower().strip() for s in data[0]]
+        worksheet = self._get_worksheet(provider.get('config', {}))
 
-            # avoid maximum limit cols error
-            total_col = worksheet.col_count
-            if total_col < len(titles) + 3:
-                worksheet.add_cols(len(titles) + 3 - total_col)
+        # Get all values to avoid reaching read limit
+        data = worksheet.get_all_values()
+        titles = [s.lower().strip() for s in data[0]]
 
-            for field in ('_STATUS', '_ERR_MESSAGE', '_GUID'):
-                if field.lower() not in titles:
-                    titles.append(field)
-                    worksheet.update_cell(1, len(titles), field)
-            data[0] = titles  # pass to parser uses for looking up index
+        # avoid maximum limit cols error
+        total_col = worksheet.col_count
+        if total_col < len(titles) + 3:
+            worksheet.add_cols(len(titles) + 3 - total_col)
 
-            parser = BelgaSpreadsheetsParser()
-            items, cells_list = parser.parse(data, provider)
-            if cells_list:
-                worksheet.update_cells(cells_list)
-            return [items]
-        except gspread.exceptions.CellNotFound as e:
-            raise ParserError.parseFileError(e)
+        for field in ('_STATUS', '_ERR_MESSAGE', '_GUID'):
+            if field.lower() not in titles:
+                titles.append(field)
+                worksheet.update_cell(1, len(titles), field)
+        data[0] = titles  # pass to parser uses for looking up index
 
-    def _get_worksheet(self, url, service_account):
+        parser = BelgaSpreadsheetsParser()
+        items, cells_list = parser.parse(data, provider)
+        if cells_list:
+            worksheet.update_cells(cells_list)
+        return [items]
+
+    def _get_worksheet(self, config):
         """Get worksheet from google spreadsheet
 
         :return: worksheet
         :rtype: object
-
-        :raises IngestSpreadsheetError
         """
         scope = [
             'https://spreadsheets.google.com/feeds',
             'https://www.googleapis.com/auth/drive',
         ]
+        url = config.get('url', '')
+        service_account = config.get('service_account', '')
 
         try:
             service_account = json.loads(service_account)
@@ -126,7 +130,10 @@ class SpreadsheetFeedingService(FeedingService):
                 raise IngestSpreadsheetError.SpreadsheetPermissionError()
             worksheet = spreadsheet.worksheet('Agenda for ingest')
             return worksheet
-        except (json.decoder.JSONDecodeError, ValueError):
+        except (json.decoder.JSONDecodeError, AttributeError, ValueError) as e:
+            # both permission and credential raise Value error
+            if e.args[0] == 15100:
+                raise IngestSpreadsheetError.SpreadsheetPermissionError()
             raise IngestSpreadsheetError.SpreadsheetCredentialsError()
         except gspread.exceptions.NoValidUrlKeyFound:
             raise IngestApiError.apiNotFoundError()
@@ -137,7 +144,7 @@ class SpreadsheetFeedingService(FeedingService):
             if response_code == 403:
                 raise IngestSpreadsheetError.SpreadsheetPermissionError()
             elif response_code == 429:
-                raise IngestSpreadsheetError.SpreadsheetQuotaLimit()
+                raise IngestSpreadsheetError.SpreadsheetQuotaLimitError()
             else:
                 raise IngestApiError.apiNotFoundError()
 

@@ -37,8 +37,11 @@ data = [
 class BelgaSpreadsheetsTestCase(TestCase):
     def setUp(self):
         provider = {'name': 'test'}
-        parser = BelgaSpreadsheetsParser()
-        self.items, self.error = parser.parse(data, provider)
+        self.parser = BelgaSpreadsheetsParser()
+        self.items, self.error = self.parser.parse(data, provider)
+
+    def test_can_parse(self):
+        self.assertTrue(self.parser.can_parse(data[0]))
 
     def test_content(self):
         item = self.items[0]
