@@ -196,33 +196,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         # Parser NewsComponent element
         component_parent = newsitem_el.find('NewsComponent')
         if component_parent is not None:
-            # if have a child NewsComponent, run the parser for TASS xml file.
-            component_child = component_parent.find('NewsComponent')
-            if component_child is not None:
-                self.parser_newscomponent(item, component_child.find('NewsComponent'))
-                if component_parent.attrib.get('Duid') is not None:
-                    item['guid'] = component_parent.attrib.get('Duid', '')
-
-                # Essential is CV
-                essential = component_parent.attrib.get('Essential')
-                if essential:
-                    item.setdefault('subject', []).append({
-                        "name": essential,
-                        "qcode": essential,
-                        "scheme": "essential"
-                    })
-
-                # EquivalentsList is CV
-                equivalents_list = component_parent.attrib.get('EquivalentsList')
-                if equivalents_list:
-                    item.setdefault('subject', []).append({
-                        "name": equivalents_list,
-                        "qcode": equivalents_list,
-                        "scheme": "equivalents_list"
-                    })
-
-            else:
-                self.parser_newscomponent(item, component_parent)
+            self.parser_newscomponent(item, component_parent)
 
     def parser_identification(self, item, indent_el):
         """
@@ -465,6 +439,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             if element is not None:
                 item['administrative']['creator'] = element.get('FormalName', '')
 
+            element = admin_el.find('Source/Party')
+            if element is not None:
+                item['administrative']['source'] = element.get('FormalName', '')
+
         # parser DescriptiveMetadata element
         if component_el.find('DescriptiveMetadata') is not None:
             self.parser_descriptivemetadata(item, component_el.find('DescriptiveMetadata'))
@@ -570,6 +548,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     item['extra']['country'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName', '') == 'City':
                     item['extra']['city'] = element.attrib.get('Value')
+                if element.attrib.get('FormalName', '') == 'CountryArea':
+                    item['extra']['country_area'] = element.attrib.get('Value')
 
         elements = descript_el.findall('Property')
         for element in elements:
@@ -657,6 +637,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     item['characteristics']['creator'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName') == 'Characters':
                     item['characteristics']['characters'] = element.attrib.get('Value')
+                if element.attrib.get('FormalName') == 'FormatVersion':
+                    item['characteristics']['format_version'] = element.attrib.get('Value')
 
         if content_el.find('DataContent/nitf/body/body.content') is not None:
             item['body_html'] = etree.tostring(content_el.find('DataContent/nitf/body/body.content'),
