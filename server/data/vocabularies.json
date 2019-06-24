@@ -1,4 +1,4 @@
-[
+ [
     {
         "_id": "countries",
         "schema": {
@@ -1713,11 +1713,6 @@
                 "name": "UNKNOWN",
                 "qcode": "UNKNOWN",
                 "is_active": true
-            },
-            {
-                "name": "Basisdienst F",
-                "qcode": "Basisdienst F",
-                "is_active": true
             }
         ]
     },
@@ -1808,11 +1803,6 @@
             {
                 "name": "SPN",
                 "qcode": "SPN",
-                "is_active": true
-            },
-            {
-                "name": "SDA-ATS News Service",
-                "qcode": "SDA-ATS News Service",
                 "is_active": true
             }
         ]
