@@ -91,7 +91,7 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         meta = super().parse_content_meta(tree, item)
         elem = meta.find(self.qname('dateline'))
         if elem is not None:
-            item['dateline'] = elem.text
+            self.set_dateline(item, text=elem.text)
         elem = meta.find(self.qname('creditline'))
         if elem is not None:
             item['credit_line'] = elem.text

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/" xmlns:h="http://www.w3.org/1999/xhtml">
+  <header>
+    <sent>2019-06-03T17:00:02+02:00</sent>
+    <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_17.xml"/>
+    <catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+    <origin>ines</origin>
+  </header>
+  <itemSet>
+    <newsItem conformance="power" guid="urn:newsml:dpa.com:20090101:190603-99-492251" standard="NewsML-G2" standardversion="2.23" version="3" xml:lang="de">
+      <catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+      <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_25.xml"/>
+      <rightsInfo>
+        <copyrightHolder qcode="nprov:dpa">
+          <name xml:lang="en">Deutsche Presse-Agentur GmbH</name>
+          <definition xml:lang="de">dpa - Deutsche Presse Agentur GmbH / Handelsregister Hamburg, HRB 68431</definition>
+        </copyrightHolder>
+        <copyrightNotice xml:lang="de">Copyright 2019, dpa (www.dpa.de). Alle Rechte vorbehalten</copyrightNotice>
+        <copyrightNotice xml:lang="en">(c) 2019 dpa Deutsche Presse Agentur GmbH</copyrightNotice>
+        <usageTerms xml:lang="de">Nutzung nur nach schriftlicher Vereinbarung mit dpa</usageTerms>
+        <usageTerms xml:lang="en">Use only with the written agreement with dpa</usageTerms>
+      </rightsInfo>
+      <itemMeta>
+        <itemClass qcode="ninat:text">
+          <name xml:lang="en">Text Item(s)</name>
+        </itemClass>
+        <provider qcode="nprov:dpa">
+          <name xml:lang="en">Deutsche Presse-Agentur GmbH</name>
+        </provider>
+        <versionCreated>2019-06-03T15:00:01+02:00</versionCreated>
+        <pubStatus qcode="stat:usable">
+          <name xml:lang="en">Usable</name>
+        </pubStatus>
+        <generator versioninfo="2.0.0">service-ines</generator>
+        <profile versioninfo="2.0.0">dpa-G2</profile>
+        <service qcode="dpasrv:edi">
+          <name role="nrol:full">Europadienst auf AFP ECS uplink</name>
+          <name role="nrol:mnemonic">edi</name>
+        </service>
+        <service qcode="dpasrv:erd">
+          <name role="nrol:display" xml:lang="de">dpa-Europadienst</name>
+          <name role="nrol:mnemonic">erd</name>
+        </service>
+        <service qcode="dpasrv:edt">
+          <name role="nrol:display" xml:lang="de">dpa-Europadienst</name>
+          <name role="nrol:mnemonic">edt</name>
+        </service>
+        <service qcode="dpasrv:bdt">
+          <name role="nrol:mnemonic">bdt</name>
+        </service>
+        <edNote role="dpaednoterole:notepad">
+          <section xmlns="http://www.w3.org/1999/xhtml" class="notepad">
+            <header>
+              <h3>Notizblock</h3>
+            </header>
+            <section class="np-public">
+              <h4>Redaktionelle Hinweise</h4>
+              <ul>
+                <li>Migranten sind nach Definition der Internationalen Organisation ‎für Migration (IOM) alle Menschen, die ihren Wohnort verlassen – egal ‎aus welchen Gründen, wie lange oder ob freiwillig oder ‎unfreiwillig. Flüchtlinge dagegen suchen Schutz vor Krieg oder vor ‎drohender Verfolgung, etwa wegen ihrer Religion, Nationalität oder ‎ihrer politischen Überzeugung. Damit sind Flüchtlinge auch Migranten‎, aber nicht alle Migranten Flüchtlinge.</li>
+              </ul>
+              <h4>Internet</h4>
+              <ul>
+                <li>
+                  <a href="http://dpaq.de/UUng0">Küstenwache Mitteilungen</a>
+                </li>
+              </ul>
+              <h4>Orte</h4>
+              <ul>
+                <li>[Alexandroupolis](Alexandroupolis 681 00, Griechenland)</li>
+                <li>[Kleininsel Agathonisi](Agathonisi, Griechenland)</li>
+              </ul>
+            </section>
+            <section class="np-nonpublic">
+              <p class="np-constraint">Die folgenden Informationen sind nicht zur Veröffentlichung bestimmt</p>
+              <h4>Kontakte</h4>
+              <ul>
+                <li>Autor: Takis Tsafos (Athen), +30 6944 33 24 77, &lt;<a href="mailto:tsafos.takis@dpa.com">tsafos.takis@dpa.com</a>&gt;</li>
+              </ul>
+            </section>
+            <p class="closingline">dpa tt xx n1</p>
+          </section>
+        </edNote>
+        <edNote role="dpaednoterole:closingline">dpa tt xx n1</edNote>
+        <edNote role="dpaednoterole:editorialnote">Migranten sind nach Definition der Internationalen Organisation ‎für Migration (IOM) alle Menschen, die ihren Wohnort verlassen – egal ‎aus welchen Gründen, wie lange oder ob freiwillig oder ‎unfreiwillig. Flüchtlinge dagegen suchen Schutz vor Krieg oder vor ‎drohender Verfolgung, etwa wegen ihrer Religion, Nationalität oder ‎ihrer politischen Überzeugung. Damit sind Flüchtlinge auch Migranten‎, aber nicht alle Migranten Flüchtlinge.</edNote>
+        <edNote pubconstraint="dpapconstraint:nonpublic" role="dpaednoterole:dpacontacts">Autor: Takis Tsafos (Athen), +30 6944 33 24 77, &lt;tsafos.takis@dpa.com&gt;</edNote>
+        <link href="http://www.hcg.gr/enimerosi" rank="1" rel="irel:seeAlso">
+          <title>Küstenwache Mitteilungen</title>
+          <link href="http://dpaq.de/UUng0" rel="dparel:shorturl"/>
+        </link>
+      </itemMeta>
+      <contentMeta>
+        <urgency>4</urgency>
+        <located>
+          <name>Athen</name>
+        </located>
+        <creator qcode="dpa-ad:tsafos">
+          <name>tsafos</name>
+        </creator>
+        <contributor qcode="dpa-ad:tsafos">
+          <name>tsafos</name>
+        </contributor>
+        <contributor qcode="dpa-ad:nikolei.hans-hermann">
+          <name>nikolei.hans-hermann</name>
+        </contributor>
+        <altId environment="dpasrv:bdt" type="dpa7901rendition:iptc7901Id">bdt:0375:4:pl:152:dpa:1196::20190603150008MESZ</altId>
+        <altId environment="dpasrv:edt" type="dpa7901rendition:iptc7901Id">edt:0223:4:pl:152:cccce dpa-euro:1196::20190603150008MESZ</altId>
+        <altId environment="dpasrv:erd" type="dpa7901rendition:iptc7901Id">erd:0224:4:pl:152:dpa-euro:1196::20190603150008MESZ</altId>
+        <altId environment="dpasrv:edi" type="dpa7901rendition:iptc7901Id">edi:0223:4:pl:152:cccce dpa-euro:1196::20190603150008MESZ</altId>
+        <genre qcode="dpatextgenre:1">
+          <name xml:lang="de">Meldung</name>
+        </genre>
+        <subject qcode="dpacountry:53" rank="1" type="cpnat:geoArea">
+          <name role="nrol:display" xml:lang="de">Griechenland</name>
+          <sameAs qcode="iso3166-1a3:GRC">
+            <name role="nrol:mnemonic">GRC</name>
+          </sameAs>
+          <sameAs qcode="iso3166-1a2:GR">
+            <name role="nrol:mnemonic">GR</name>
+          </sameAs>
+          <sameAs qcode="wikidata:Q41">
+            <name role="nrol:display" xml:lang="de">Griechenland</name>
+          </sameAs>
+          <broader qcode="dpageosbj:44">
+            <name role="nrol:display" xml:lang="de">Europa</name>
+          </broader>
+        </subject>
+        <subject qcode="dpacountry:177" rank="2" type="cpnat:geoArea">
+          <name role="nrol:display" xml:lang="de">Türkei</name>
+          <sameAs qcode="wikidata:Q43">
+            <name role="nrol:display" xml:lang="de">Türkei</name>
+          </sameAs>
+          <sameAs qcode="iso3166-1a3:TUR">
+            <name role="nrol:mnemonic">TUR</name>
+          </sameAs>
+          <sameAs qcode="iso3166-1a2:TR">
+            <name role="nrol:mnemonic">TR</name>
+          </sameAs>
+          <broader qcode="dpageosbj:209">
+            <name role="nrol:display" xml:lang="de">Asien</name>
+          </broader>
+        </subject>
+        <subject qcode="medtop:20000634" rank="1" type="dpatype:dpasubject">
+          <name xml:lang="de">Migration</name>
+          <sameAs qcode="subj:11017000">
+            <name xml:lang="de">Migration</name>
+          </sameAs>
+          <sameAs qcode="dpasubject:635">
+            <name xml:lang="de">Migration</name>
+          </sameAs>
+          <broader qcode="medtop:20000621">
+            <name xml:lang="de">Regierungspolitik</name>
+          </broader>
+        </subject>
+        <subject qcode="medtop:20000645" rank="2" type="dpatype:dpasubject">
+          <name xml:lang="de">Flüchtling</name>
+          <sameAs qcode="dpasubject:644">
+            <name xml:lang="de">Flüchtlinge</name>
+          </sameAs>
+          <sameAs qcode="subj:11011000">
+            <name xml:lang="de">Flüchtling, Asyl</name>
+          </sameAs>
+          <broader qcode="medtop:20000638">
+            <name xml:lang="de">Internationale Beziehung</name>
+          </broader>
+        </subject>
+        <subject qcode="dpacat:pl" type="dpatype:category">
+          <name role="nrol:mnemonic" xml:lang="de">pl</name>
+        </subject>
+        <headline rank="1">Mehr als 200 Migranten in der Ägäis aufgegriffen</headline>
+        <dateline>Athen (dpa) - </dateline>
+        <creditline>dpa</creditline>
+        <subject literal="ID0EXD" type="cpnat:poi">
+          <name>Alexandroupolis, Alexandroupolis 681 00, Griechenland</name>
+        </subject>
+        <subject literal="ID0EIE" type="cpnat:poi">
+          <name>Kleininsel Agathonisi, Agathonisi, Griechenland</name>
+        </subject>
+        <language tag="de"/>
+      </contentMeta>
+      <assert qcode="dpapconstraint:nonpublic">
+        <name xml:lang="de">nicht öffentlich</name>
+      </assert>
+      <assert literal="ID0EXD">
+        <POIDetails>
+          <position latitude="40.8457193" longitude="25.8739620"/>
+          <address>
+            <line role="nrol:display">Alexandroupolis</line>
+            <line role="nrol:full">Alexandroupolis 681 00, Griechenland</line>
+            <locality role="dpalocalityrole:locality">
+              <name>Alexandroupolis</name>
+            </locality>
+            <area role="dpaarearole:subarea">
+              <name>Evros</name>
+            </area>
+            <country qcode="dpacountry:53" type="cpnat:geoArea">
+              <name role="nrol:display" xml:lang="de">Griechenland</name>
+              <sameAs qcode="iso3166-1a2:GR">
+                <name role="nrol:mnemonic">GR</name>
+              </sameAs>
+              <sameAs qcode="iso3166-1a3:GRC">
+                <name role="nrol:mnemonic">GRC</name>
+              </sameAs>
+              <sameAs qcode="wikidata:Q41">
+                <name role="nrol:display" xml:lang="de">Griechenland</name>
+              </sameAs>
+              <broader qcode="dpageosbj:44">
+                <name role="nrol:display" xml:lang="de">Europa</name>
+              </broader>
+            </country>
+          </address>
+        </POIDetails>
+      </assert>
+      <assert literal="ID0EIE">
+        <POIDetails>
+          <position latitude="37.4647633" longitude="26.9675814"/>
+          <address>
+            <line role="nrol:display">Kleininsel Agathonisi</line>
+            <line role="nrol:full">Agathonisi, Griechenland</line>
+            <area role="dpaarearole:subarea">
+              <name>Kalymnos</name>
+            </area>
+            <country qcode="dpacountry:53" type="cpnat:geoArea">
+              <name role="nrol:display" xml:lang="de">Griechenland</name>
+              <sameAs qcode="iso3166-1a2:GR">
+                <name role="nrol:mnemonic">GR</name>
+              </sameAs>
+              <sameAs qcode="iso3166-1a3:GRC">
+                <name role="nrol:mnemonic">GRC</name>
+              </sameAs>
+              <sameAs qcode="wikidata:Q41">
+                <name role="nrol:display" xml:lang="de">Griechenland</name>
+              </sameAs>
+              <broader qcode="dpageosbj:44">
+                <name role="nrol:display" xml:lang="de">Europa</name>
+              </broader>
+            </country>
+          </address>
+        </POIDetails>
+      </assert>
+      <contentSet>
+        <inlineXML contenttype="application/xhtml+xml" wordcount="152">
+          <html xmlns="http://www.w3.org/1999/xhtml">
+            <head><title>Mehr als 200 Migranten in der Ägäis aufgegriffen</title><meta charset="utf-8"/></head><body><header>  <ul class="slugline">    <li class="subject" data-qcode="medtop:20000634">Migration</li>
+    <li class="subject" data-qcode="medtop:20000645">Flüchtling</li>
+    <li class="geo" data-qcode="dpacountry:53">Griechenland</li>
+    <li class="geo" data-qcode="dpacountry:177">Türkei</li>
+  </ul>
+  <time class="publicationDate" data-datetime="2019-06-03T15:00:01+02:00">03.06.2019 15:00</time>
+  <h1>Mehr als 200 Migranten in der Ägäis aufgegriffen</h1>
+</header><section class="main dpatextgenre-1"><p><span class="dateline">Athen <span class="credit">(dpa)</span> - </span>Ungeachtet der EU-Vereinbarung mit der Türkei kommen weiterhin Migranten über die Ägäis in die Europäische Union. Zwischen Samstag- und Montagmorgen setzten nach Angaben der griechischen Küstenwache 234 Migranten aus der Türkei nach Griechenland über.</p><p>Vor den Inseln Lesbos und Agathonisi wurden 118 Migranten von der Küstenwache und den Besatzungen von Schiffen der europäischen Grenzschutzagentur (Frontex) aufgegriffen. Vor der nordgriechischen Hafenstadt Alexandroupolis entdeckte die Küstenwache am Wochenende weitere 116 Migranten. Die Registrierlager (sogenannte Hotspots) auf den Inseln Lesbos, Chios, Samos, Leros und Kos sind überfüllt.</p><p class="backround">Der im März 2016 geschlossenen Flüchtlingspakt EU-Türkei sieht vor, dass die EU alle Migranten, die illegal über die Türkei auf die griechischen Inseln kommen, zurückschicken kann. Im Gegenzug nehmen EU-Staaten der Türkei schutzbedürftige Flüchtlinge aus Syrien ab und finanzieren Hilfen für in der Türkei lebende Flüchtlinge. Auf dem Höhepunkt der Flüchtlingskrise 2015 hatte es Tage gegeben, an denen 7000 Migranten über die Türkei griechische Inseln erreichten.</p></section></body>
+          </html>
+        </inlineXML>
+      </contentSet>
+    </newsItem>
+  </itemSet>
+</newsMessage>
