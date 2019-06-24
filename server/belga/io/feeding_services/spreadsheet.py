@@ -26,7 +26,8 @@ class IngestSpreadsheetError(SuperdeskIngestError):
     _codes = {
         15100: "Missing permission",
         15200: "Quota limit",
-        15300: "Invalid credentials"
+        15300: "Invalid credentials",
+        15400: "Worksheet not found",
     }
 
     @classmethod
@@ -41,6 +42,10 @@ class IngestSpreadsheetError(SuperdeskIngestError):
     def SpreadsheetCredentialsError(cls, exception=None, provider=None):
         return IngestSpreadsheetError(15300, exception, provider)
 
+    @classmethod
+    def WorksheetNotFoundError(cls, exception=None, provider=None):
+        return IngestSpreadsheetError(15400, exception, provider)
+
 
 class SpreadsheetFeedingService(FeedingService):
     NAME = 'spreadsheet'
@@ -51,6 +56,7 @@ class SpreadsheetFeedingService(FeedingService):
         IngestSpreadsheetError.SpreadsheetPermissionError().get_error_description(),
         IngestSpreadsheetError.SpreadsheetQuotaLimitError().get_error_description(),
         IngestSpreadsheetError.SpreadsheetCredentialsError().get_error_description(),
+        IngestSpreadsheetError.WorksheetNotFoundError().get_error_description(),
     ]
 
     label = 'Google Spreadsheet'
@@ -70,7 +76,11 @@ class SpreadsheetFeedingService(FeedingService):
                 15100: 'Missing write permission while processing file',
                 15200: 'Server reaches read quota limits.'
             }
-        }
+        },
+        {
+            'id': 'worksheet_title', 'type': 'text', 'label': 'Sheet title',
+            'placeholder': 'Title / Name of sheet', 'required': True, 'errors': {15400: 'Sheet not found'}
+        },
     ]
 
     def _test(self, provider):
@@ -119,6 +129,7 @@ class SpreadsheetFeedingService(FeedingService):
         ]
         url = config.get('url', '')
         service_account = config.get('service_account', '')
+        title = config.get('worksheet_title', '')
 
         try:
             service_account = json.loads(service_account)
@@ -128,7 +139,7 @@ class SpreadsheetFeedingService(FeedingService):
             permission = spreadsheet.list_permissions()[0]
             if permission['role'] != 'writer':
                 raise IngestSpreadsheetError.SpreadsheetPermissionError()
-            worksheet = spreadsheet.worksheet('Agenda for ingest')
+            worksheet = spreadsheet.worksheet(title)
             return worksheet
         except (json.decoder.JSONDecodeError, AttributeError, ValueError) as e:
             # both permission and credential raise Value error
@@ -138,7 +149,7 @@ class SpreadsheetFeedingService(FeedingService):
         except gspread.exceptions.NoValidUrlKeyFound:
             raise IngestApiError.apiNotFoundError()
         except gspread.exceptions.WorksheetNotFound:
-            raise ParserError.parseFileError()
+            raise IngestSpreadsheetError.WorksheetNotFoundError()
         except gspread.exceptions.APIError as e:
             response_code = e.response.json()['error']['code']
             if response_code == 403:
