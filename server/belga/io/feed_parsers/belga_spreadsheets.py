@@ -39,8 +39,10 @@ class BelgaSpreadsheetsParser(FeedParser):
         'Location State/Province/Region', 'Location Country', 'Contact Honorific', 'Contact First name',
         'Contact Last name', 'Contact Organisation', 'Contact Point of Contact', 'Contact Email',
         'Contact Phone Number', 'Contact Phone Usage', 'Contact Phone Public', 'Long description', 'Internal note',
-        'Ed note', 'External links', '_STATUS', '_ERR_MESSAGE', '_GUID'
+        'Ed note', 'External links',
     ]
+
+    generate_fields = ['_STATUS', '_ERR_MESSAGE', '_GUID']
 
     required_field = [
         'slugline', 'calendars', 'name',
@@ -208,6 +210,11 @@ class BelgaSpreadsheetsParser(FeedParser):
             if field.lower().strip() not in titles:
                 raise ParserError.parseFileError()
             index[field] = titles.index(field.lower().strip())
+        # generate_fields may not present when testing config
+        for field in self.generate_fields:
+            if field.lower().strip() in titles:
+                index[field] = titles.index(field.lower().strip())
+
         return index
 
 
