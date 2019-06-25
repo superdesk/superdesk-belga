@@ -49,7 +49,7 @@ class BelgaDPANewsMLTwoTestCase(BelgaTestCase):
                                             'scheme': 'iptc_subject_code'}])
         self.assertEqual(item["genre"], [])
         self.assertEqual(item["authors"], [{'uri': None, 'name': 'tsafos'}])
-        self.assertEqual(item["dateline"], "Athen (dpa) - ")
+        self.assertEqual(item["dateline"], {'text': 'Athen (dpa) - '})
         self.assertEqual(item["credit_line"], "dpa")
         self.assertEqual(item["usageterms"], "Nutzung nur nach schriftlicher Vereinbarung mit dpa")
         self.assertEqual(item["renditions"], {})
