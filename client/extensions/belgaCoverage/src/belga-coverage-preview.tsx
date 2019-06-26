@@ -9,9 +9,10 @@ export function getBelgaCoveragePreview(superdesk: ISuperdesk): React.StatelessC
         return (
             <div>
                 {props.item.type !== 'graphic' &&
-                    <BelgaCoverageInfo coverageId={props.value} superdesk={superdesk} />
+                    <BelgaCoverageInfo key={props.value} coverageId={props.value} superdesk={superdesk} />
                 }
                 <BelgaCoverageImages
+                    key={props.value}
                     coverageId={props.value}
                     rendition={'preview'}
                     maxImages={10}

@@ -35,12 +35,6 @@ export default class BelgaCoverage extends React.Component<IProps, IState> {
         this.fetchImages();
     }
 
-    componentDidUpdate(prevProps: IProps) {
-        if (prevProps.coverageId !== this.props.coverageId) {
-            this.fetchImages();
-        }
-    }
-
     fetchImages() {
         this.setState({loading: true});
 

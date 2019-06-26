@@ -19,11 +19,13 @@ export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessCo
             return (
                 <div>
                     <BelgaCoverageInfo
+                        key={props.value}
                         coverageId={props.value}
                         removeCoverage={props.readOnly ? undefined : () => props.setValue(null)}
                         superdesk={superdesk}
                     />
                     <BelgaCoverageImages
+                        key={props.value}
                         coverageId={props.value}
                         rendition={'thumbnail'}
                         maxImages={3}
