@@ -24,7 +24,7 @@ data = [
      'Planned, occurrence planned only', 'Culture', 'Name', 'Address', 'City', 'State', 'Country', 'Honorific',
      'First name', 'Last name', 'Organisation', 'Point of Contact', 'email@mail.com', 'Phone', 'Business', 'FALSE',
      'Long description', 'Inote', 'Enote', 'https://www.superdesk.org', '', '', ''],
-    ['2019-06-20', '7:00', '2019-06-20', '8:00', 'TRUE', 'Europe/Brussels', 'Slugline2', 'Event 2', 'Description',
+    ['2019-06-20', '7:00', '2019-06-21', '8:00', 'TRUE', 'Europe/Brussels', 'Slugline2', 'Event 2', 'Description',
      '', 'Business', ''] + [''] * 20,
     ['2019-06-20', '7:00', '2019-06-20', '8:00', 'TRUE', 'Europe/Brussels', '', 'Event 2', 'Description',
      '', 'Business'] + [''] * 20,
@@ -80,8 +80,8 @@ class BelgaSpreadsheetsTestCase(TestCase):
     def test_all_day(self):
         item = self.items[1]
         self.assertDictEqual(item['dates'], {
-            'start': datetime(2019, 6, 20, 5, tzinfo=timezone.utc),
-            'end': datetime(2019, 6, 20, 21, 59, 59, tzinfo=timezone.utc),
+            'start': datetime(2019, 6, 19, 22, tzinfo=timezone.utc),
+            'end': datetime(2019, 6, 21, 21, 59, 59, tzinfo=timezone.utc),
             'tz': 'Europe/Brussels'
         })
 

@@ -94,12 +94,10 @@ class BelgaSpreadsheetsParser(FeedParser):
                 # avoid momentsJS throw null timezone value error
                 tzone = values[index['Timezone']] if values[index['Timezone']] != 'none' else 'UTC'
                 start_datetime = parse(values[index['Start date']] + ' ' + values[index['Start time']])
-                end_date = values[index['End date']]
+                end_datetime = parse(values[index['End date']] + ' ' + values[index['End time']])
                 if values[index['All day']] == 'TRUE':
-                    # set end datetime to the end of day of start date
-                    end_datetime = parse(values[index['Start date']]) + timedelta(days=1, seconds=-1)
-                else:
-                    end_datetime = parse(end_date + ' ' + values[index['End time']])
+                    start_datetime = parse(values[index['Start date']])
+                    end_datetime = parse(values[index['End date']]) + timedelta(days=1, seconds=-1)
 
                 item = {
                     'type': 'event',
