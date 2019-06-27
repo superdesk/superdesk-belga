@@ -54,6 +54,7 @@ module.exports = function(grunt) {
             assignments: true
         },
         enabledExtensions: {
+            markForUser: 1,
             belgaCoverage: 1,
         },
     };
