@@ -8,8 +8,5 @@
   "devDependencies": {
     "typescript": "3.4.4",
     "@types/react": "16.4.9"
-  },
-  "peerDependencies": {
-    "react": "16.2.0"
   }
 }
