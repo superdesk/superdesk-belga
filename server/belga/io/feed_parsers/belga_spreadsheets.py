@@ -44,9 +44,7 @@ class BelgaSpreadsheetsParser(FeedParser):
 
     generate_fields = ['_STATUS', '_ERR_MESSAGE', '_GUID']
 
-    required_field = [
-        'slugline', 'calendars', 'name',
-    ]
+    required_field = ['calendars', 'name']
 
     required_contact_field = ['Contact Email', 'Contact Phone Number']
     required_location_field = ['Location Name', 'Location Address', 'Location Country']
@@ -82,8 +80,7 @@ class BelgaSpreadsheetsParser(FeedParser):
 
             try:
                 # only insert item if _STATUS is empty
-                if len(values) - 1 >= index['_GUID'] and values[index['_GUID']] \
-                   and (not is_updated or is_updated in ('UPDATED', 'ERROR')):
+                if is_updated in ('UPDATED', 'ERROR'):
                     guid = values[index['_GUID']]
                     # check if it's exists and guid is valid
                     if not superdesk.get_resource_service('events').find_one(guid=guid, req=None):
@@ -194,8 +191,10 @@ class BelgaSpreadsheetsParser(FeedParser):
                     cells_list.extend([
                         Cell(row, index['_STATUS'] + 1, 'DONE'),
                         Cell(row, index['_ERR_MESSAGE'] + 1, ''),
-                        Cell(row, index['_GUID'] + 1, guid)
                     ])
+                    if not is_updated:
+                        # only update _GUID when status is empty
+                        cells_list.append(Cell(row, index['_GUID'] + 1, guid))
                     items.append(item)
         return items, cells_list
 
