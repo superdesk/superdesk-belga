@@ -1,5 +1,8 @@
 import os
+import hmac
+import hashlib
 import unittest
+import requests
 import superdesk
 
 from flask import json
@@ -22,6 +25,9 @@ def search_mock(url, request):
 class DetailResponse():
 
     status_code = 200
+
+    def raise_for_status(self):
+        pass
 
     def json(self):
         with open(fixture('belga-image-by-id.json')) as _file:
@@ -104,29 +110,42 @@ class BelgaImageTestCase(unittest.TestCase):
 
         provider.find(query, params)
 
-        provider.session.get.assert_called_with(
-            '%s%s' % (provider.base_url, 'searchImages'),
-            params={
-                's': 10,
-                'l': 20,
-                't': 'test AND query',
-                'c': 'belga,ansa',
-                'h': 'news,sports',
-                'p': 'TODAY',
-            }
-        )
+        url = requests.Request('GET', provider.base_url + 'searchImages', params={
+            's': 10,
+            'l': 20,
+            'c': 'belga,ansa',
+            'h': 'news,sports',
+            'p': 'TODAY',
+            't': 'test AND query',
+        }).prepare().url
+        provider.session.get.assert_called_with(url, headers={})
 
     def test_fetch(self):
-
         provider = BelgaImageSearchProvider(dict())
         provider.session.get = MagicMock(return_value=DetailResponse())
 
         item = provider.fetch('urn:belga.be:image:143831778')
 
-        provider.session.get.assert_called_with(
-            '%s%s' % (provider.base_url, 'getImageById'),
-            params={'i': '143831778'}
-        )
+        url = requests.Request('GET', provider.base_url + 'getImageById', params={
+            'i': '143831778',
+        }).prepare().url
+        provider.session.get.assert_called_with(url, headers={})
 
         self.assertEqual('urn:belga.be:image:143831778', item['guid'])
         self.assertEqual('Belloumi', item['byline'])
+
+    def test_auth_headers(self):
+        provider = BelgaImageSearchProvider(dict())
+        provider.provider['config'] = {'username': 'john', 'password': 'pwd'}
+        headers = provider.auth_headers('/test', 'pwd')
+        self.assertIn('X-Date', headers)
+        self.assertEqual(
+            headers['X-Authorization'],
+            'john:{}'.format(
+                hmac.new(
+                    'pwd'.encode(),
+                    '/test+{}'.format(headers['X-Date']).encode(),
+                    hashlib.sha256,
+                ).hexdigest(),
+            )
+        )
