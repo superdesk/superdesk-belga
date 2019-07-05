@@ -174,16 +174,18 @@ class SpreadsheetFeedingService(FeedingService):
             if item.get('contact'):
                 contact = item.pop('contact')
                 contact_service = superdesk.get_resource_service('contacts')
-                contacts = self._query_contact(contact)
-                if contacts and status == 'UPDATED':
-                    item.setdefault('event_contact_info', contacts)
-                    # will patch only first contact
-                    contact_service.patch(contacts[0], contact)
+                _contact = contact_service.find_one(req=None, **{
+                    'first_name': contact['first_name'],
+                    'last_name': contact['last_name'],
+                    'organisation': contact['organisation'],
+                    'contact_email': contact['contact_email'][0],
+                    'contact_phone.number': contact['contact_phone'][0]['number'],
+                })
+                if _contact and status == 'UPDATED':
+                    item.setdefault('event_contact_info', [_contact[superdesk.config.ID_FIELD]])
+                    contact_service.patch(_contact[superdesk.config.ID_FIELD], contact)
                 else:
-                    _id = generate_guid(type=GUID_NEWSML)
-                    contact.setdefault(superdesk.config.ID_FIELD, _id)
-                    superdesk.get_resource_service('contacts').post([contact])
-                    item.setdefault('event_contact_info', [_id])
+                    item.setdefault('event_contact_info', list(contact_service.post([contact])))
 
             if location:
                 location_service = superdesk.get_resource_service('locations')
@@ -209,16 +211,6 @@ class SpreadsheetFeedingService(FeedingService):
         if new_items:
             events_service.post(new_items)
             logger.info('Provider %s: %s new events inserted', provider.get('name'), len(new_items))
-
-    def _query_contact(self, contact):
-        query = deepcopy(contact)
-        # only query with required fields
-        query.pop('honorific')
-        phone = query.pop('contact_phone')
-        query.update({'contact_phone.number': phone[0]['number']})
-        return [
-            contact[superdesk.config.ID_FIELD] for contact in superdesk.get_resource_service('contacts').find(query)
-        ]
 
 
 register_feeding_service(SpreadsheetFeedingService)
