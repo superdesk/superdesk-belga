@@ -30,7 +30,7 @@
   {% if item.get('internal_coverages') %}
     <p>
       {% for coverage in item.get('internal_coverages') %}
-      <span>{{ coverage.get('type') }} ({{ coverage.get('user').get('sign_off') }})</span>
+      <span>{{ coverage.get('type') }} ({{ coverage.get('user').get('sign_off') }}){% if not loop.last %},{% endif %}</span>
       {% endfor %}
     </p>
   {% endif %}
