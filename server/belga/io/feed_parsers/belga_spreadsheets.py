@@ -95,6 +95,8 @@ class BelgaSpreadsheetsParser(FeedParser):
                 if values[index['All day']] == 'TRUE':
                     start_datetime = parse(values[index['Start date']])
                     end_datetime = parse(values[index['End date']]) + timedelta(days=1, seconds=-1)
+                if end_datetime < start_datetime:
+                    raise ValueError('End datetime is smaller than Start datetime')
 
                 item = {
                     'type': 'event',
