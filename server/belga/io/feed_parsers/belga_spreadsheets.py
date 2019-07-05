@@ -183,21 +183,20 @@ class BelgaSpreadsheetsParser(FeedParser):
                     'Provider %s: Event "%s": %s',
                     provider.get('name'), item.get('name'), error_message)
 
-            if not is_updated or is_updated in ('UPDATED', 'ERROR'):
-                if error_message:
-                    cells_list.extend([
-                        Cell(row, index['_STATUS'] + 1, 'ERROR'),
-                        Cell(row, index['_ERR_MESSAGE'] + 1, error_message)
-                    ])
-                else:
-                    cells_list.extend([
-                        Cell(row, index['_STATUS'] + 1, 'DONE'),
-                        Cell(row, index['_ERR_MESSAGE'] + 1, ''),
-                    ])
-                    if not is_updated:
-                        # only update _GUID when status is empty
-                        cells_list.append(Cell(row, index['_GUID'] + 1, guid))
-                    items.append(item)
+            if error_message:
+                cells_list.extend([
+                    Cell(row, index['_STATUS'] + 1, 'ERROR'),
+                    Cell(row, index['_ERR_MESSAGE'] + 1, error_message)
+                ])
+            elif not is_updated or is_updated == 'UPDATED':
+                cells_list.extend([
+                    Cell(row, index['_STATUS'] + 1, 'DONE'),
+                    Cell(row, index['_ERR_MESSAGE'] + 1, ''),
+                ])
+                if not is_updated:
+                    # only update _GUID when status is empty
+                    cells_list.append(Cell(row, index['_GUID'] + 1, guid))
+                items.append(item)
         return items, cells_list
 
     def parse_titles(self, titles):
