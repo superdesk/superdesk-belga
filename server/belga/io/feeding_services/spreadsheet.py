@@ -8,16 +8,21 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import logging
 import json
+import logging
+from copy import deepcopy
+from datetime import datetime
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+import superdesk
+from belga.io.feed_parsers.belga_spreadsheets import BelgaSpreadsheetsParser
 from superdesk.errors import IngestApiError, ParserError, SuperdeskIngestError
 from superdesk.io.feeding_services import FeedingService
 from superdesk.io.registry import register_feeding_service
-from belga.io.feed_parsers.belga_spreadsheets import BelgaSpreadsheetsParser
+from superdesk.metadata.item import GUID_FIELD, GUID_NEWSML
+from superdesk.metadata.utils import generate_guid
 
 logger = logging.getLogger(__name__)
 
@@ -113,9 +118,10 @@ class SpreadsheetFeedingService(FeedingService):
 
         parser = BelgaSpreadsheetsParser()
         items, cells_list = parser.parse(data, provider)
+        self._process_event_items(items, provider)
+
         if cells_list:
             worksheet.update_cells(cells_list)
-        return [items]
 
     def _get_worksheet(self, config):
         """Get worksheet from google spreadsheet
@@ -158,6 +164,61 @@ class SpreadsheetFeedingService(FeedingService):
                 raise IngestSpreadsheetError.SpreadsheetQuotaLimitError()
             else:
                 raise IngestApiError.apiNotFoundError()
+
+    def _process_event_items(self, items, provider):
+        events_service = superdesk.get_resource_service('events')
+        new_items = []
+        for item in items:
+            status = item.pop('status')
+            location = item.get('location')
+            if item.get('contact'):
+                contact = item.pop('contact')
+                contact_service = superdesk.get_resource_service('contacts')
+                contacts = self._query_contact(contact)
+                if contacts and status == 'UPDATED':
+                    item.setdefault('event_contact_info', contacts)
+                    # will patch only first contact
+                    contact_service.patch(contacts[0], contact)
+                else:
+                    _id = generate_guid(type=GUID_NEWSML)
+                    contact.setdefault(superdesk.config.ID_FIELD, _id)
+                    superdesk.get_resource_service('contacts').post([contact])
+                    item.setdefault('event_contact_info', [_id])
+
+            if location:
+                location_service = superdesk.get_resource_service('locations')
+                saved_location = list(location_service.find({
+                    'name': location[0]['name'],
+                    'address.line': location[0]['address']['line'],
+                    'address.country': location[0]['address']['country'],
+                }))
+                if saved_location and status == 'UPDATED':
+                    location_service.patch(saved_location[0][superdesk.config.ID_FIELD], location[0])
+                if not saved_location:
+                    location_service.post(location)
+
+            old_item = events_service.find_one(guid=item[GUID_FIELD], req=None)
+            if not old_item:
+                if not status:
+                    item.setdefault('firstcreated', datetime.now())
+                    item.setdefault('versioncreated', datetime.now())
+                    new_items.append(item)
+            elif status == 'UPDATED':
+                events_service.patch(old_item[superdesk.config.ID_FIELD], item)
+
+        if new_items:
+            events_service.post(new_items)
+            logger.info('Provider %s: %s new events inserted', provider.get('name'), len(new_items))
+
+    def _query_contact(self, contact):
+        query = deepcopy(contact)
+        # only query with required fields
+        query.pop('honorific')
+        phone = query.pop('contact_phone')
+        query.update({'contact_phone.number': phone[0]['number']})
+        return [
+            contact[superdesk.config.ID_FIELD] for contact in superdesk.get_resource_service('contacts').find(query)
+        ]
 
 
 register_feeding_service(SpreadsheetFeedingService)
