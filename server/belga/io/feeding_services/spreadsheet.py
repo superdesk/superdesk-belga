@@ -196,8 +196,10 @@ class SpreadsheetFeedingService(FeedingService):
                 }))
                 if saved_location and status == 'UPDATED':
                     location_service.patch(saved_location[0][superdesk.config.ID_FIELD], location[0])
-                if not saved_location:
-                    location_service.post(location)
+                elif not saved_location:
+                    _location = deepcopy(location)
+                    location_service.post(_location)
+                    item['location'][0]['qcode'] = _location[0]['guid']
 
             old_item = events_service.find_one(guid=item[GUID_FIELD], req=None)
             if not old_item:
