@@ -26,8 +26,6 @@ data = [
      'Long description', 'Inote', 'Enote', 'https://www.superdesk.org', '', '', ''],
     ['2019-06-20', '7:00', '2019-06-21', '8:00', 'TRUE', 'Europe/Brussels', 'Slugline2', 'Event 2', 'Description',
      '', 'Business', ''] + [''] * 20,
-    ['2019-06-20', '7:00', '2019-06-20', '8:00', 'TRUE', 'Europe/Brussels', '', 'Event 2', 'Description',
-     '', 'Business'] + [''] * 20,
     ['2019-06-20', '7:00', '2019-06-20', '7:00', 'TRUE', 'Europe/Bruss', 'Slugline3', 'Event 3'] + [''] * 20,
     ['', '7:00', '2019-06-20', '7:00', 'TRUE', 'Europe/Brussels', 'Slugline4', 'Event 4'] + [''] * 20,
 
@@ -88,7 +86,6 @@ class BelgaSpreadsheetsTestCase(TestCase):
     def test_error(self):
         error = [c.value for c in self.error[6:]]  # ignore first 6 non-error cells
         self.assertListEqual(error, [
-            'ERROR', 'Missing slugline fields',
             'ERROR', 'Invalid timezone',
             'ERROR', 'String does not contain a date:',
         ])
