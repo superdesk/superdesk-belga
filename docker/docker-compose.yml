@@ -34,11 +34,6 @@ postfix:
     file: common.yml
     service: postfix
 
-grammalecte:
-  extends:
-    file: common.yml
-    service: grammalecte
-
 superdesk:
   extends:
     file: common.yml
@@ -50,7 +45,6 @@ superdesk:
    - logstash
    - postfix
    - pubapi
-   - grammalecte
   ports:
    - "443:443"
    - "80:80"
