@@ -54,7 +54,7 @@ class IngestSpreadsheetError(SuperdeskIngestError):
 
 class SpreadsheetFeedingService(FeedingService):
     NAME = 'spreadsheet'
-
+    service = 'events'
     ERRORS = [
         IngestApiError.apiNotFoundError().get_error_description(),
         ParserError.parseFileError().get_error_description(),
@@ -118,8 +118,8 @@ class SpreadsheetFeedingService(FeedingService):
 
         parser = BelgaSpreadsheetParser()
         items, cells_list = parser.parse(data, provider)
-        self._process_event_items(items, provider)
-
+        items = self._process_event_items(items, provider)
+        yield items
         if cells_list:
             worksheet.update_cells(cells_list)
 
@@ -167,7 +167,7 @@ class SpreadsheetFeedingService(FeedingService):
 
     def _process_event_items(self, items, provider):
         events_service = superdesk.get_resource_service('events')
-        new_items = []
+        list_items = []
         for item in items:
             status = item.pop('status')
             location = item.get('location')
@@ -206,13 +206,11 @@ class SpreadsheetFeedingService(FeedingService):
                 if not status:
                     item.setdefault('firstcreated', datetime.now())
                     item.setdefault('versioncreated', datetime.now())
-                    new_items.append(item)
-            elif status == 'UPDATED':
-                events_service.patch(old_item[superdesk.config.ID_FIELD], item)
-
-        if new_items:
-            events_service.post(new_items)
-            logger.info('Provider %s: %s new events inserted', provider.get('name'), len(new_items))
+                    list_items.append(item)
+            else:
+                old_item.update(item)
+                list_items.append(old_item)
+        return list_items
 
 
 register_feeding_service(SpreadsheetFeedingService)
