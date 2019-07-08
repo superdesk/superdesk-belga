@@ -11,6 +11,7 @@ import socket
 import email
 import imaplib
 import io
+import logging
 from flask import current_app as app
 from superdesk.media.media_operations import process_file_from_stream
 from superdesk.io.feeding_services import EmailFeedingService
@@ -18,6 +19,8 @@ from superdesk.io.feed_parsers.rfc822 import EMailRFC822FeedParser
 from superdesk.io.registry import register_feeding_service, register_feeding_service_parser
 from superdesk.errors import IngestEmailError
 from superdesk import get_resource_service
+
+logger = logging.getLogger(__name__)
 
 
 class EmailBelgaFeedingService(EmailFeedingService):
@@ -136,12 +139,17 @@ class EmailBelgaFeedingService(EmailFeedingService):
                                                      content_type=content_type,
                                                      metadata=metadata,
                                                      resource='attachments')
-                            attachment_service = get_resource_service('attachments')
-                            ids = attachment_service.post([{"media": media_id,
-                                                            "title": 'attachment',
-                                                            "description": "email's attachment"
-                                                            }])
-                            attachments.append({'attachment': next(iter(ids or []), None)})
+                            try:
+                                attachment_service = get_resource_service('attachments')
+                                ids = attachment_service.post([{"media": media_id,
+                                                                "title": 'attachment',
+                                                                "description": "email's attachment"
+                                                                }])
+                                if ids:
+                                    attachments.append({'attachment': next(iter(ids), None)})
+                            except Exception as ex:
+                                logger.error("cannot add attachment for %s, %s" % (fileName, ex.message))
+                                app.media.delete(media_id)
 
                 if attachments:
                     for item in items:
