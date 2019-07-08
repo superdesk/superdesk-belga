@@ -17,7 +17,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 import superdesk
-from belga.io.feed_parsers.belga_spreadsheets import BelgaSpreadsheetsParser
+from belga.io.feed_parsers.belga_spreadsheet import BelgaSpreadsheetParser
 from superdesk.errors import IngestApiError, ParserError, SuperdeskIngestError
 from superdesk.io.feeding_services import FeedingService
 from superdesk.io.registry import register_feeding_service
@@ -64,7 +64,7 @@ class SpreadsheetFeedingService(FeedingService):
         IngestSpreadsheetError.WorksheetNotFoundError().get_error_description(),
     ]
 
-    label = 'Google Spreadsheet'
+    label = 'Events from Google Documents Spreadsheet'
 
     fields = [
         {
@@ -75,8 +75,8 @@ class SpreadsheetFeedingService(FeedingService):
             'id': 'url', 'type': 'text', 'label': 'Source',
             'placeholder': 'Google Spreadsheet URL', 'required': True,
             'errors': {
-                1001: 'Can\'t parse spreadsheets.',
-                1002: 'Can\'t parse spreadsheets.',
+                1001: 'Can\'t parse spreadsheet.',
+                1002: 'Can\'t parse spreadsheet.',
                 4006: 'URL not found.',
                 15100: 'Missing write permission while processing file',
                 15200: 'Server reaches read quota limits.'
@@ -91,7 +91,7 @@ class SpreadsheetFeedingService(FeedingService):
     def _test(self, provider):
         worksheet = self._get_worksheet(provider.get('config', {}))
         data = worksheet.get_all_values()
-        BelgaSpreadsheetsParser().parse_titles(data[0])
+        BelgaSpreadsheetParser().parse_titles(data[0])
 
     def _update(self, provider, update):
         """Load items from google spreadsheet and insert (update) to events database
@@ -116,7 +116,7 @@ class SpreadsheetFeedingService(FeedingService):
                 worksheet.update_cell(1, len(titles), field)
         data[0] = titles  # pass to parser uses for looking up index
 
-        parser = BelgaSpreadsheetsParser()
+        parser = BelgaSpreadsheetParser()
         items, cells_list = parser.parse(data, provider)
         self._process_event_items(items, provider)
 

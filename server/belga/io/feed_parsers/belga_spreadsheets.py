@@ -26,12 +26,12 @@ from superdesk.utc import local_to_utc
 logger = logging.getLogger(__name__)
 
 
-class BelgaSpreadsheetsParser(FeedParser):
+class BelgaSpreadsheetParser(FeedParser):
     """Feed Parser for Spreadsheet"""
 
-    NAME = 'belgaspreadsheets'
+    NAME = 'belgaspreadsheet'
 
-    label = 'Belga Spreadsheets Parser'
+    label = 'Belga Google Documents Spreadsheet Parser'
 
     titles = [
         'Start date', 'Start time', 'End date', 'End time', 'All day', 'Timezone', 'Slugline', 'Event name',
@@ -216,4 +216,4 @@ class BelgaSpreadsheetsParser(FeedParser):
         return index
 
 
-register_feed_parser(BelgaSpreadsheetsParser.NAME, BelgaSpreadsheetsParser())
+register_feed_parser(BelgaSpreadsheetParser.NAME, BelgaSpreadsheetParser())

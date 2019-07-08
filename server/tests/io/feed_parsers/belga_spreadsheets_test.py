@@ -10,7 +10,7 @@
 from datetime import datetime, timezone
 
 from superdesk.tests import TestCase
-from belga.io.feed_parsers.belga_spreadsheets import BelgaSpreadsheetsParser
+from belga.io.feed_parsers.belga_spreadsheet import BelgaSpreadsheetParser
 
 data = [
     ['Start date', 'Start time', 'End date', 'End time', 'All day', 'Timezone', 'Slugline', 'Event name',
@@ -37,7 +37,7 @@ data = [
 class BelgaSpreadsheetsTestCase(TestCase):
     def setUp(self):
         provider = {'name': 'test'}
-        self.parser = BelgaSpreadsheetsParser()
+        self.parser = BelgaSpreadsheetParser()
         self.items, self.error = self.parser.parse(data, provider)
 
     def test_can_parse(self):
