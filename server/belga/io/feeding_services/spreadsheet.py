@@ -119,7 +119,9 @@ class SpreadsheetFeedingService(FeedingService):
         parser = BelgaSpreadsheetParser()
         items, cells_list = parser.parse(data, provider)
         items = self._process_event_items(items, provider)
+        # add ingest item
         yield items
+        # Update status for google sheet
         if cells_list:
             worksheet.update_cells(cells_list)
 
