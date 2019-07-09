@@ -142,13 +142,14 @@ class EmailBelgaFeedingService(EmailFeedingService):
                             try:
                                 attachment_service = get_resource_service('attachments')
                                 ids = attachment_service.post([{"media": media_id,
+                                                                "filename": fileName,
                                                                 "title": 'attachment',
                                                                 "description": "email's attachment"
                                                                 }])
                                 if ids:
                                     attachments.append({'attachment': next(iter(ids), None)})
                             except Exception as ex:
-                                logger.error("cannot add attachment for %s, %s" % (fileName, ex.message))
+                                logger.error("cannot add attachment for %s, %s" % (fileName, ex.args[0]))
                                 app.media.delete(media_id)
 
                 if attachments:
