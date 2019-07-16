@@ -35,7 +35,17 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
 
     label = 'Belga specific DPA News ML 2.0 Parser'
     SUBJ_QCODE_PREFIXES = {
-        'subj': 'iptc_subject_code'
+        'subj': 'iptc_subject_code',
+        'dpacat': 'news_products',
+    }
+    CATEGORY_MAPPING = {
+        'F': 'ECONOMY',
+        'WI': 'ECONOMY',
+        'I': 'POLITICS',
+        'PL': 'POLITICS',
+        'KU': 'CULTURE',
+        'S': 'SPORTS',
+        'SP': 'SPORTS'
     }
 
     def can_parse(self, xml):
@@ -103,6 +113,14 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         elem = meta.find(self.qname('creditline'))
         if elem is not None:
             item['credit_line'] = elem.text
+        item['anpa_category'] = []
+        for subject in meta.iter(self.qname('subject')):
+            if subject.get('type', '') == 'dpatype:category':
+                code = subject.find(self.qname('name')).text
+                item['anpa_category'].append({'qcode': code.upper()})
+        if not item.get('anpa_category'):
+            item['anpa_category'].append({'qcode': 'GENERAL'})
+
         return meta
 
     def parse_content_subject(self, tree, item):
@@ -134,20 +152,21 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         qcode_parts = subject_elt.get('qcode', '').split(':')
         if len(qcode_parts) == 2 and qcode_parts[0] in self.SUBJ_QCODE_PREFIXES:
             scheme = self.SUBJ_QCODE_PREFIXES[qcode_parts[0]]
-            if scheme:
-                # we use the given name if it exists
-                name_elt = subject_elt.find(self.qname('name'))
-                name = name_elt.text if name_elt is not None and name_elt.text else ""
-                try:
-                    name = self.getVocabulary(scheme, qcode_parts[1], name)
-                    subject_data = {
-                        'qcode': qcode_parts[1],
-                        'name': name,
-                        "scheme": scheme
-                    }
-                    return subject_data
-                except ValueError:
-                    logger.info('Subject element rejected for "{code}"'.format(code=qcode_parts[1]))
+            # we use the given name if it exists
+            name_elt = subject_elt.find(self.qname('name'))
+            name = name_elt.text if name_elt is not None and name_elt.text else ""
+            try:
+                if scheme == 'news_products':
+                    qcode_parts[1] = self.CATEGORY_MAPPING.get(qcode_parts[1].upper(), 'GENERAL')
+                name = self.getVocabulary(scheme, qcode_parts[1], name)
+                subject_data = {
+                    'qcode': qcode_parts[1],
+                    'name': name,
+                    'scheme': scheme
+                }
+                return subject_data
+            except ValueError:
+                logger.info('Subject element rejected for "{code}"'.format(code=qcode_parts[1]))
         return None
 
 
