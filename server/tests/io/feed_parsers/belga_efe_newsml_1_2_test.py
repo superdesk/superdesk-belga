@@ -37,7 +37,10 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["subject"], [
             {'name': 'Texto internacional general para España', 'qcode': 'Texto internacional general para España',
              'scheme': 'news_products'}, {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'}])
+            {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
+            {'qcode': 'GENERAL', 'name': 'GENERAL', 'scheme': 'news_products'},
+        ])
+        self.assertEqual(item['anpa_category'], [{'qcode': 'GENERAL'}])
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
         self.assertEqual(item["duid"], "text_25413502")
         self.assertEqual(item["comment"], {'version': '1.0.1', 'name': 'EfeNewsMLVersion'})
