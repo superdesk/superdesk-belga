@@ -5,10 +5,8 @@
 <Catalog Href="http://www.afp.com/dtd/AFPCatalog.xml"/>
 <NewsEnvelope>
 <TransmissionId>0579</TransmissionId>
-<DateAndTime>20190121T104233Z</DateAndTime>
+<DateAndTime>20190121T104234Z</DateAndTime>
 <NewsService FormalName="DGTE"/>
-<NewsProduct FormalName="DAB"/>
-<NewsProduct FormalName="AMW"/>
 <NewsProduct FormalName="ELU"/>
 <NewsProduct FormalName="EUA"/>
 <NewsProduct FormalName="MOA"/>
@@ -29,7 +27,7 @@
 <NewsManagement>
 <NewsItemType FormalName="News"/>
 <FirstCreated>20190121T104233+0000</FirstCreated>
-<ThisRevisionCreated>20190121T104233+0000</ThisRevisionCreated>
+<ThisRevisionCreated>20190121T104234+0000</ThisRevisionCreated>
 <Status FormalName="Usable"/>
 <Urgency FormalName="4"/>
 <AssociatedWith NewsItem="urn:newsml:afp.com:20190121T104233Z:doc-1cg0j2"/>
@@ -63,7 +61,7 @@
 <SubjectMatter FormalName="02003000" cat="CLJ"/>
 </SubjectCode>
 <SubjectCode>
-<SubjectMatter FormalName="02001000" cat="CLJ"/>
+<SubjectMatter FormalName="02001000" cat="POL"/>
 </SubjectCode>
 <SubjectCode>
 <Subject FormalName="02000000" cat="CLJ"/>
@@ -96,6 +94,7 @@
 <Property FormalName="Keyword" Value="assises"/>
 <Property FormalName="Keyword" Value="drogues"/>
 <Property FormalName="Keyword" Value="police"/>
+<Property FormalName="Keyword" Value="marches"/>
 </DescriptiveMetadata>
 <ContentItem>
 <MediaType FormalName="Text"/>

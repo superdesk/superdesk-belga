@@ -528,6 +528,12 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         subjects += descript_el.findall('SubjectCode/SubjectMatter')
         subjects += descript_el.findall('SubjectCode/Subject')
         item.setdefault('subject', []).extend(self.format_subjects(subjects))
+        for subject in subjects:
+            if subject.get('cat'):
+                category = {'qcode': subject.get('cat')
+                            }
+                if category not in item.get('anpa_category', []):
+                    item.setdefault('anpa_category', []).append(category)
 
         # parser OfInterestTo is CV
         for element in descript_el.findall('OfInterestTo'):
@@ -687,13 +693,12 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             for formatted_subject in formatted_subjects:
                 if formatted_subject['qcode'] == qcode:
                     return False
-
             return True
 
         iptcsc_cv = self._get_cv('iptc_subject_codes')
         for subject in subjects:
             formal_name = subject.get('FormalName')
-            for item in iptcsc_cv['items']:
+            for item in iptcsc_cv.get('items', []):
                 if item.get('is_active'):
                     #: check formal_name, format formal_name and filter missing subjects
                     if formal_name and is_not_formatted(formal_name) and item.get('qcode') == formal_name:
