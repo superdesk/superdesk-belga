@@ -43,7 +43,6 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
             {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
         ])
-        self.assertEqual(item["anpa_category"], [{'qcode': 'ECO'}])
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["provider_id"], "ANP")
