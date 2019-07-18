@@ -40,7 +40,7 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
             {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
             {'qcode': 'GENERAL', 'name': 'GENERAL', 'scheme': 'news_products'},
         ])
-        self.assertEqual(item['anpa_category'], [{'qcode': 'GENERAL'}])
+        self.assertEqual(item['anpa_category'], [{'qcode': 'JEI'}])
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
         self.assertEqual(item["duid"], "text_25413502")
         self.assertEqual(item["comment"], {'version': '1.0.1', 'name': 'EfeNewsMLVersion'})
