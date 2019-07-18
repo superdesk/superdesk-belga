@@ -2674,6 +2674,12 @@
             },
             {
                 "name": "ECONOMY",
+                "qcode": "ECO",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "ECONOMY",
                 "qcode": "WI",
                 "is_active": true,
                 "language": "fr-BE"
