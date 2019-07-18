@@ -8,10 +8,11 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from superdesk.io.registry import register_feed_parser
-from superdesk import get_resource_service
-from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 import pytz
+
+from superdesk.io.registry import register_feed_parser
+
+from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 
 
 class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -19,6 +20,11 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     NAME = 'belga_anp_newsml12'
     label = 'Belga specific ANP News ML 1.2 Parser'
+
+    MAPPING_PRODUCTS = {
+        'SPO': 'SPORTS',
+        'ECO': 'ECONOMY',
+    }
 
     # anp related logic goes here
     def parser_newsmanagement(self, item, manage_el):
@@ -28,20 +34,18 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     def parse(self, xml, provider=None):
         items = super().parse(xml, provider)
-        vocabularies = get_resource_service('vocabularies').find_one(req=None, _id='categories').get('items', [])
-        categories = {cat['qcode']: cat['name'] for cat in vocabularies}
         for item in items:
             news_products = []
             for subject in item['subject']:
                 if subject.get('scheme', '') == 'genre':
                     qcode = subject.get('name')
-                    category = categories.get(qcode, 'GENERAL')
-                    item.setdefault('anpa_category', []).append({'qcode': qcode})
-                    news_products.append({
-                        'name': category,
-                        'qcode': category,
+                    product = {
+                        'name': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+                        'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
                         'scheme': 'news_products',
-                    })
+                    }
+                    if product not in item['subject']:
+                        news_products.append(product)
             item['subject'].extend(news_products)
         return items
 
