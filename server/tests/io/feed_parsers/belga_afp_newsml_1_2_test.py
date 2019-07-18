@@ -36,8 +36,6 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "0579")
         self.assertEqual(item["subject"], [{'name': 'DGTE', 'qcode': 'DGTE', 'scheme': 'news_services'},
-                                           {'name': 'DAB', 'qcode': 'DAB', 'scheme': 'news_products'},
-                                           {'name': 'AMW', 'qcode': 'AMW', 'scheme': 'news_products'},
                                            {'name': 'ELU', 'qcode': 'ELU', 'scheme': 'news_products'},
                                            {'name': 'EUA', 'qcode': 'EUA', 'scheme': 'news_products'},
                                            {'name': 'MOA', 'qcode': 'MOA', 'scheme': 'news_products'},
@@ -60,9 +58,10 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
                                            {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA',
                                             'scheme': 'of_interest_to'},
                                            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
-                                            'scheme': 'of_interest_to'}]
-
-                         )
+                                            'scheme': 'of_interest_to'},
+                                           {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
+                                           {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
+                                           {'name': 'POLITICS', 'qcode': 'POLITICS', 'scheme': 'news_products'}])
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")
@@ -70,7 +69,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["version"], "1")
         self.assertEqual(item["guid"], "urn:newsml:afp.com:20190121T104233Z:TX-PAR-RHO61:1")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:42:33+00:00")
-        self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:42:33+00:00")
+        self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:42:34+00:00")
         self.assertEqual(item["pubstatus"], "usable")
         self.assertEqual(item["urgency"], "4")
         self.assertEqual(item["associated_with"], {'item': None, 'type': ['Sketch', 'Photo', 'Video']})
@@ -83,9 +82,10 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["line_text"], "(Croquis d'audience+Photo+Video)")
         self.assertEqual(item["administrative"], {'provider': 'AFP'})
         self.assertEqual(item["language"], "fr")
+        self.assertEqual(item["anpa_category"], [{'qcode': 'CLJ'}, {'qcode': 'POL'}])
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'FRA', 'city': 'Paris'})
         self.assertEqual(item["generator_software"], "libg2")
-        self.assertEqual(item["keywords"], ['France', 'procès', 'assises', 'drogues', 'police'])
+        self.assertEqual(item["keywords"], ['France', 'procès', 'assises', 'drogues', 'police', 'marches'])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF3.1")
         self.assertEqual(item["characteristics"], {'size_bytes': '1620', 'word_count': '269'})
