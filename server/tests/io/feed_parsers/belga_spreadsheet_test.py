@@ -72,6 +72,7 @@ class BelgaSpreadsheetsTestCase(TestCase):
             'last_name': 'Last name',
             'organisation': 'Organisation',
             'contact_email': ['email@mail.com'],
+            'contact_address': ['Point of Contact'],
             'contact_phone': [{'number': 'Phone', 'public': False, 'usage': 'Business'}]
         })
 

@@ -156,6 +156,7 @@ class BelgaSpreadsheetParser(FeedParser):
                         'last_name': values[index['Contact Last name']],
                         'organisation': values[index['Contact Organisation']],
                         'contact_email': [values[index['Contact Email']]],
+                        'contact_address': [values[index['Contact Point of Contact']]],
                         'contact_phone': [{
                             'number': values[index['Contact Phone Number']],
                             'public': is_public,
