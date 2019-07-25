@@ -205,7 +205,6 @@ OIDC_CLIENT_SECRETS_ID = env('OIDC_CLIENT_SECRETS_ID', "5f4f619a-8a4f-472d-ab56-
 
 OIDC_CLIENT_SECRETS_DATA = {
     "issuer": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM,
-    "auth_uri": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM + "/protocol/openid-connect/registrations",
     "client_id": OIDC_CLIENT_ID,
     "client_secret": OIDC_CLIENT_SECRETS_ID,
     "userinfo_uri": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM + "/protocol/openid-connect/userinfo",
