@@ -193,21 +193,10 @@ PLANNING_EXPORT_BODY_TEMPLATE = '''
 {% endif %}
 {% endfor %}
 '''
+
 SECRET_KEY = 'SomethingNotEntirelySecret'
 OIDC_CLIENT_SECRETS = env('OIDC_CLIENT_SECRETS', 'client_secrets.json')
+OIDC_CLIENT_REDIRECT_URI = env('OIDC_CLIENT_REDIRECT_URI', 'http://localhost:9000')
 OIDC_USER_INFO_ENABLED = env('OIDC_USER_INFO_ENABLED', True)
-OIDC_OPENID_REALM = env('OIDC_OPENID_REALM', 'Superdesk')
 OIDC_SCOPES = ['openid', 'email', 'profile']
 OIDC_INTROSPECTION_AUTH_METHOD = env('OIDC_INTROSPECTION_AUTH_METHOD', 'client_secret_post')
-OIDC_HOST = env('OIDC_HOST', "http://192.168.100.4:9900")
-OIDC_CLIENT_ID = env('OIDC_CLIENT_ID', "superdesk-client")
-OIDC_CLIENT_SECRETS_ID = env('OIDC_CLIENT_SECRETS_ID', "5f4f619a-8a4f-472d-ab56-e5ef9b48b698")
-
-OIDC_CLIENT_SECRETS_DATA = {
-    "issuer": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM,
-    "client_id": OIDC_CLIENT_ID,
-    "client_secret": OIDC_CLIENT_SECRETS_ID,
-    "userinfo_uri": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM + "/protocol/openid-connect/userinfo",
-    "token_uri": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM + "/protocol/openid-connect/token",
-    "token_introspection_uri": OIDC_HOST + "/auth/realms/" + OIDC_OPENID_REALM + "/protocol/openid-connect/token/introspect"
-}

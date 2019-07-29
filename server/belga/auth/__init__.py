@@ -8,7 +8,6 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-
 import superdesk
 from apps.auth import AuthResource
 
@@ -34,10 +33,24 @@ class AuthResource(Resource):
     datasource = {'source': 'auth'}
     mongo_indexes = {'token': ([('token', 1)], {'background': True})}
 
+
 def init_app(app):
     oidc = OpenIDConnect(app)
-    oidc.client_secrets = app.config['OIDC_CLIENT_SECRETS_DATA']
     endpoint_name = 'oidcauth'
+
+    app.client_config['oidc_auth'] = False
+    if app.config['OIDC_CLIENT_SECRETS']:
+        app.client_config['oidc_auth'] = True
+        url, realm = oidc.client_secrets['issuer'].split('/realms/')
+        app.client_config['keycloak_config'] = {
+            'url': url,
+            'realm': realm,
+            'clientId': oidc.client_secrets['client_id'],
+            'credentials': {
+                "secret": oidc.client_secrets['client_secret'],
+            },
+            'redirectUri': app.config['OIDC_CLIENT_REDIRECT_URI']  # allow redirect uri configuable on client
+        }
 
     class OIDCAuthService(AuthService):
         @oidc.accept_token(require_token=True, scopes_required=['openid'])
@@ -46,7 +59,7 @@ def init_app(app):
                                                                username=g.oidc_token_info.get('sub'))
             if not user:
                 role = get_resource_service('roles').find_one(req=None,
-                                                              name=g.oidc_token_info.get('role'))
+                                                              name=g.oidc_token_info.get('role', {}))
                 new_user = {
                     "email": g.oidc_token_info.get('email'),
                     "first_name": g.oidc_token_info.get('given_name'),
@@ -69,5 +82,3 @@ def init_app(app):
 
     service = OIDCAuthService('auth', backend=superdesk.get_backend())
     AuthResource(endpoint_name, app=app, service=service)
-
-
