@@ -84,11 +84,14 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         for item in items:
             # avoid update_ingest mark item as expired
             item['versioncreated'] = datetime.now()
-            urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-                              r'[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
+            urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-;]|[\[\]?@_~]|'
+                              r'(?:%[0-9a-fA-F][0-9a-fA-F]))+',
                               item.get('body_html', ''))
-            if urls and embed:
-                item['body_html'] += self._create_embed(urls[1], key)
+            if embed:
+                for url in set(urls):
+                    item['body_html'] += '<!-- EMBED START Twitter -->'
+                    item['body_html'] += self._create_embed(url, key)
+                    item['body_html'] += '<!-- EMBED END Twitter -->'
         return [items]
 
     def _create_embed(self, url, key):
