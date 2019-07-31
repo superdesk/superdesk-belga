@@ -11,9 +11,12 @@ import re
 from datetime import datetime
 
 import requests
+
+import superdesk
+from superdesk.errors import IngestTwitterError, SuperdeskIngestError
 from superdesk.io.feeding_services import TwitterFeedingService
-from superdesk.errors import SuperdeskIngestError, IngestTwitterError
 from superdesk.io.registry import register_feeding_service
+from superdesk.metadata.item import GUID_FIELD
 
 
 class IngestTwitterBelgaError(SuperdeskIngestError):
@@ -81,6 +84,7 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         config = provider.get('config', {})
         key = config.get('iframely_key')
         embed = config.get('embed_tweet')
+        ingest_service = superdesk.get_resource_service('ingest')
         for item in items:
             # avoid update_ingest mark item as expired
             item['versioncreated'] = datetime.now()
@@ -92,6 +96,14 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
                     item['body_html'] += '<!-- EMBED START Twitter -->'
                     item['body_html'] += self._create_embed(url, key)
                     item['body_html'] += '<!-- EMBED END Twitter -->'
+            else:
+                old_item = ingest_service.find_one(guid=item[GUID_FIELD], req=None)
+                comment = '<!-- EMBED START Twitter -->'
+                # only replace body_html of the tweet when embed is turn off
+                # skip embed content as it is
+                if old_item and comment in old_item.get('body_html', ''):
+                    embed_content = comment.join(old_item['body_html'].split(comment)[1:])
+                    item['body_html'] += comment + embed_content
         return [items]
 
     def _create_embed(self, url, key):
