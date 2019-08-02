@@ -45,37 +45,38 @@ def init_app(app):
         app.client_config['keycloak_config'] = {
             'url': url,
             'realm': realm,
-            'clientId': oidc.client_secrets['client_id'],
-            'credentials': {
-                "secret": oidc.client_secrets['client_secret'],
-            },
-            'redirectUri': app.config['OIDC_CLIENT_REDIRECT_URI']  # allow redirect uri configuable on client
+            'clientId': app.config['OIDC_BROWSER_ID'],
+            'redirectUri': app.config['OIDC_BROWSER_REDIRECT_URI']  # allow redirect uri configuable on client
         }
 
     class OIDCAuthService(AuthService):
         @oidc.accept_token(require_token=True, scopes_required=['openid'])
         def authenticate(self, credentials, ignore_expire=False):
-            user = get_resource_service('auth_users').find_one(req=None,
-                                                               username=g.oidc_token_info.get('sub'))
+            auth_service = get_resource_service('auth_users')
+            users_service = get_resource_service('users')
+            user = auth_service.find_one(req=None,
+                                         username=g.oidc_token_info.get('username'))
+            role = get_resource_service('roles').find_one(req=None,
+                                                          name=g.oidc_token_info.get('role', {}))
+            sync_data = {
+                "email": g.oidc_token_info.get('email'),
+                "first_name": g.oidc_token_info.get('given_name'),
+                "last_name": g.oidc_token_info.get('family_name'),
+                "needs_activation": False,
+                "password": 'xxxxx',
+                "user_type": g.oidc_token_info.get('user_type'),
+                "username": g.oidc_token_info.get('username'),
+                "role": role.get('_id') if role else None,
+                "display_name": g.oidc_token_info.get('name'),
+            }
             if not user:
-                role = get_resource_service('roles').find_one(req=None,
-                                                              name=g.oidc_token_info.get('role', {}))
-                new_user = {
-                    "email": g.oidc_token_info.get('email'),
-                    "first_name": g.oidc_token_info.get('given_name'),
-                    "last_name": g.oidc_token_info.get('family_name'),
-                    "needs_activation": False,
-                    "password": 'xxxxx',
-                    "user_type": g.oidc_token_info.get('user_type'),
-                    "username": g.oidc_token_info.get('sub'),
-                    "role": role.get('_id'),
-                    "display_name": g.oidc_token_info.get('name'),
-                }
-                users_service = get_resource_service('users')
-                user_id = users_service.post([new_user])[0]
-                user = get_resource_service('auth_users').find_one(req=None,
-                                                                   _id=user_id)
-
+                user_id = users_service.post([sync_data])[0]
+                user = auth_service.find_one(req=None,
+                                             _id=user_id)
+            else:
+                users_service.put(user.get('_id'), sync_data)
+                user = auth_service.find_one(req=None,
+                                             _id=user.get('_id'))
             user["oidc"] = g.oidc_token_info
 
             return user
