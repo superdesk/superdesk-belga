@@ -1,3 +1,7 @@
+<!--
+  This is a copy of planning_multiple_agendas_template
+  with added info about assignees of a coverage
+-->
 {% for agenda in agendas %}
 
   {% if agenda.get('items') %}
@@ -20,6 +24,18 @@
   {% if item.get('agendas')|length > 1 %}
     <p>
       <i translate>also in:</i> <span>{{ item.get('agendas') | rejectattr('_id', 'equalto', agenda.get('_id')) | map(attribute='name') | list | join(', ') }}</span>
+    </p>
+  {% endif %}
+
+  {% if item.get('internal_coverages') %}
+    <p>
+      {% for coverage in item.get('internal_coverages') %}
+        {% if coverage.get('user') %}
+          <span>{{ coverage.get('type') }} ({{ coverage.get('user').get('sign_off') }}){% if not loop.last %},{% endif %}</span>
+        {% else %}
+          <span>{{ coverage.get('type') }}{% if not loop.last %},{% endif %}</span>
+        {% endif %}
+      {% endfor %}
     </p>
   {% endif %}
 

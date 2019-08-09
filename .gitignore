@@ -19,7 +19,6 @@ env/
 bin/
 lib/
 man/
-src/
 dist/
 node_modules
 .settings

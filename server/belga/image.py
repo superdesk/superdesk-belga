@@ -1,5 +1,9 @@
+import hmac
+import uuid
 import arrow
+import hashlib
 import requests
+import datetime
 import superdesk
 
 from urllib.parse import urljoin
@@ -48,9 +52,46 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
     def __init__(self, provider, **kwargs):
         super().__init__(provider, **kwargs)
         self.session = requests.Session()
+        self._id_token = None
+        self._auth_token = None
+        if self.provider.get('config') and self.provider['config'].get('username'):
+            self.auth()
+
+    def auth_headers(self, url, secret=None):
+        if not secret and not self._id_token:
+            return {}
+        nonce = uuid.uuid4().hex
+        return {
+            'X-Date': nonce,
+            'X-Identification': '{}:{}'.format(
+                self.provider['config']['username'],
+                self._hash(url, nonce, secret or self._id_token)
+            ),
+            'X-Authorization': '{}:{}'.format(
+                self.provider['config']['username'],
+                self._hash(url, nonce, secret or self._auth_token),
+            ),
+        }
+
+    def _hash(self, url, now, secret):
+        return hmac.new(
+            secret.encode(),
+            '/{}+{}'.format(url.lstrip('/'), now).encode(),
+            hashlib.sha256,
+        ).hexdigest()
+
+    def auth(self):
+        url = '/authorizeUser?l={}'.format(self.provider['config']['username'])
+        headers = self.auth_headers(url, self.provider['config'].get('password'))
+        resp = self.session.get(self.url(url), headers=headers)
+        resp.raise_for_status()
+        if resp.status_code == 200 and resp.content:
+            data = resp.json()
+            self._id_token = data.get('idToken')
+            self._auth_token = data.get('authToken')
 
     def url(self, resource):
-        return urljoin(self.base_url, resource)
+        return urljoin(self.base_url, resource.lstrip('/'))
 
     def find(self, query, params=None):
         api_params = {
@@ -74,22 +115,21 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         except KeyError:
             pass
 
-        resp = self.session.get(self.url(self.search_endpoint), params=api_params)
-        if resp.status_code != 200:
-            resp.raise_for_status()
-
-        data = resp.json()
+        data = self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
+
+    def api_get(self, endpoint, params):
+        url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
+        headers = self.auth_headers(url)
+        resp = self.session.get(self.url(url), headers=headers)
+        resp.raise_for_status()
+        return resp.json()
 
     def fetch(self, guid):
         _id = guid.replace(self.GUID_PREFIX, '')
         params = {'i': _id}
-        resp = self.session.get(self.url('getImageById'), params=params)
-        if resp.status_code != 200:
-            resp.raise_for_status()
-
-        data = resp.json()
+        data = self.api_get('/getImageById', params)
         return self.format_list_item(data)
 
     def format_list_item(self, data):
@@ -165,7 +205,10 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
                 'baseImage': {
                     'href': thumbnail,
                 },
-            }
+            },
+            'extra': {
+                'bcoverage': guid,
+            },
         }
 
 
