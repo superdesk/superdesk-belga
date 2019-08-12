@@ -43,24 +43,24 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
     fields = [
         {
             'id': 'consumer_key', 'type': 'text', 'label': 'Twitter Consumer Key',
-            'placeholder': 'Twitter consumer_key', 'required': True,
+            'placeholder': 'Twitter consumer key', 'required': True,
             'errors': {6100: 'Twitter authentication failure'}
         },
         {
             'id': 'consumer_secret', 'type': 'password', 'label': 'Twitter Consumer Secret',
-            'placeholder': 'Twitter consumer_secret', 'required': True
+            'placeholder': 'Twitter consumer secret', 'required': True
         },
         {
             'id': 'access_token_key', 'type': 'text', 'label': 'Twitter Access Token Key',
-            'placeholder': 'Twitter access_token_key', 'required': True
+            'placeholder': 'Twitter access token key', 'required': True
         },
         {
             'id': 'access_token_secret', 'type': 'password', 'label': 'Twitter Access Token Secret',
-            'placeholder': 'Twitter access_token_secret', 'required': True
+            'placeholder': 'Twitter access token secret', 'required': True
         },
         {
             'id': 'screen_names', 'type': 'text', 'label': 'Twitter Screen Names',
-            'placeholder': 'Twitter screen_names', 'required': True,
+            'placeholder': 'Twitter screen names', 'required': True,
             'errors': {6200: 'No Screen names specified'}
         },
         {
@@ -86,16 +86,16 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         embed = config.get('embed_tweet')
         ingest_service = superdesk.get_resource_service('ingest')
         for item in items:
-            # avoid update_ingest mark item as expired
-            item['versioncreated'] = datetime.now()
             urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-;]|[\[\]?@_~]|'
                               r'(?:%[0-9a-fA-F][0-9a-fA-F]))+',
                               item.get('body_html', ''))
             if embed:
                 for url in set(urls):
-                    item['body_html'] += '<!-- EMBED START Twitter -->'
-                    item['body_html'] += self._create_embed(url, key)
-                    item['body_html'] += '<!-- EMBED END Twitter -->'
+                    embed_content = self._create_embed(url, key)
+                    if embed_content:
+                        item['body_html'] += '<!-- EMBED START Twitter -->'
+                        item['body_html'] += embed_content
+                        item['body_html'] += '<!-- EMBED END Twitter -->'
             else:
                 old_item = ingest_service.find_one(guid=item[GUID_FIELD], req=None)
                 comment = '<!-- EMBED START Twitter -->'
