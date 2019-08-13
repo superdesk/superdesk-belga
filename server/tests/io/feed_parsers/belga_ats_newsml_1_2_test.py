@@ -63,7 +63,8 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["format"], "NITF")
         self.assertEqual(item["characteristics"], {'format_version': '3.0'})
         self.assertEqual(item["type"], "text")
-
+        self.assertEqual(item["authors"], [{'name': 'lm', 'role': 'author'}, {'name': 'me', 'role': 'author'},
+                                           {'name': 'hl', 'role': 'author'}])
         expected_body = \
             (
                 '\n                  <p lede="true">Un taureau âgé d\'un an est entré dans un magasin Denner lundi à La'
