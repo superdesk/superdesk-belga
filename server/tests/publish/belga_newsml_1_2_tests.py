@@ -8,7 +8,6 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import html
 import datetime
 from lxml import etree
 from unittest import mock
@@ -78,7 +77,7 @@ class BelgaNewsML12FormatterTest(TestCase):
                 'role': 'AUTHOR',
                 'name': 'AUTHOR',
                 'parent': '5c94ebcdfe985e1c9fc26d52',
-                'sub_label': 'admin',
+                'sub_label': 'John Smith',
                 'scheme': None
             },
             {
@@ -195,7 +194,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
-            self.formatter._package_duid
+            self.formatter._duid
         )
         revisionid = self.newsml.xpath('NewsItem/Identification/NewsIdentifier/RevisionId')[0]
         self.assertEqual(revisionid.text, '2')
@@ -234,7 +233,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_1_level.attrib),
             {
-                'Duid': 'pkg_urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
+                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -259,7 +258,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -302,7 +300,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'AUTHOR', 'Topic': 'AUTHOR'}
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -341,6 +339,10 @@ class BelgaNewsML12FormatterTest(TestCase):
                 attribs,
                 expected_attribs[idx]
             )
+        self.assertDictEqual(
+            dict(newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0].attrib),
+            {'FormalName': 'Belga'}
+        )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
@@ -367,7 +369,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -405,7 +406,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -449,7 +449,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -480,7 +479,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'AUTHOR', 'Topic': 'AUTHOR'}
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -545,7 +544,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -581,7 +579,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )

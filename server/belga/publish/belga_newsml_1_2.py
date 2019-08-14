@@ -49,14 +49,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
 
         try:
-            pub_seq_num = superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
+            #pub_seq_num = superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
+            pub_seq_num = 1111111111
             self._newsml = etree.Element('NewsML')
             self._article = article
             self._now = utcnow()
             self._string_now = self._now.strftime(self.DATETIME_FORMAT)
-            # SD does not have the same structure, there are no packages,
-            # but to cover old belga's news ml 1.2 output, this value will be used:
-            self._package_duid = 'pkg_{}'.format(self._article[GUID_FIELD])
+            self._duid = self._article[GUID_FIELD]
 
             self._format_catalog()
             self._format_newsenvelope()
@@ -118,7 +117,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         news_identifier = SubElement(identification, 'NewsIdentifier')
         SubElement(news_identifier, 'ProviderId').text = app.config['NEWSML_PROVIDER_ID']
         SubElement(news_identifier, 'DateId').text = self._article.get('firstcreated').strftime(self.DATETIME_FORMAT)
-        SubElement(news_identifier, 'NewsItemId').text = self._package_duid
+        SubElement(news_identifier, 'NewsItemId').text = self._duid
         revision = self._process_revision(self._article)
         SubElement(news_identifier, 'RevisionId', attrib=revision).text = str(self._article.get(config.VERSION, ''))
         SubElement(news_identifier, 'PublicIdentifier').text = self._generate_public_identifier(
@@ -165,7 +164,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         newscomponent_1_level = SubElement(
             newsitem, 'NewsComponent',
-            {'Duid': self._package_duid, XML_LANG: self._article.get('language')}
+            {'Duid': self._duid, XML_LANG: self._article.get('language')}
         )
         newslines = SubElement(newscomponent_1_level, 'NewsLines')
         SubElement(newslines, 'HeadLine').text = self._article.get('headline', '')
@@ -191,7 +190,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         newscomponent_2_level = SubElement(
             newscomponent_1_level, 'NewsComponent',
-            {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
+            {XML_LANG: self._article.get('language')}
         )
 
         _type = self._article.get('type')
@@ -257,7 +256,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         for author in self._article.get('authors', []):
             SubElement(
                 creator, 'Party',
-                {'FormalName': author.get('name', ''), 'Topic': author.get('role', '')}
+                {'FormalName': self._get_author_name(author), 'Topic': author.get('role', '')}
             )
         SubElement(
             SubElement(administrative_metadata, 'Contributor'), 'Party',
@@ -303,6 +302,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     property_newspackage, 'Property',
                     {'FormalName': 'NewsProduct', 'Value': subject['qcode']}
                 )
+        if 'source' in self._article:
+            SubElement(
+                SubElement(administrative_metadata, 'Source'),
+                'Party',
+                {'FormalName': self._article.get('source', '')}
+            )
+
 
     def _format_descriptive_metadata(self, newscomponent_2_level):
         """
@@ -339,7 +345,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             if self._article.get(item_key):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
-                    {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
+                    {XML_LANG: self._article.get('language')}
                 )
                 # Role
                 SubElement(newscomponent_3_level, 'Role', {'FormalName': formalname})
@@ -368,7 +374,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         for belga_url in self._article.get('extra', {}).get('belga-url', []):
             newscomponent_2_level = SubElement(
                 newscomponent_1_level, 'NewsComponent',
-                {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
+                {XML_LANG: self._article.get('language')}
             )
             SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
             newslines = SubElement(newscomponent_2_level, 'NewsLines')
@@ -382,7 +388,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             for role, key in (('Title', 'description'), ('Locator', 'url')):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
-                    {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
+                    {XML_LANG: self._article.get('language')}
                 )
                 SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
                 SubElement(
@@ -397,3 +403,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 # string's length is used in original belga's newsml
                 SubElement(characteristics, 'SizeInBytes').text = str(len(belga_url.get(key)))
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+    def _get_author_name(self, author):
+        name = author.get('sub_label', author.get('name', ''))
+        if 'parent' in author:
+            users_service = superdesk.get_resource_service('users')
+            try:
+                user = next(users_service.find({'_id': author['parent']}))
+            except StopIteration:
+                logger.warning("unknown user: {user_id}".format(user_id=author['parent']))
+            else:
+                if user.get('display_name'):
+                    name = user.get('display_name')
+        return name
