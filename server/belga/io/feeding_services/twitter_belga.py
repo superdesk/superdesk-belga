@@ -15,7 +15,7 @@ import requests
 import superdesk
 from superdesk.errors import IngestTwitterError, SuperdeskIngestError
 from superdesk.io.feeding_services import TwitterFeedingService
-from superdesk.io.registry import register_feeding_service
+from superdesk.io.registry import register_feeding_service, register_feeding_service_parser
 from superdesk.metadata.item import GUID_FIELD
 
 
@@ -81,29 +81,26 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
 
     def _update(self, provider, update, test=False):
         items = super()._update(provider, update, test)[0]
+        return self.parse_twitter_belga(items, provider)
+
+    def parse_twitter_belga(self, items, provider):
         config = provider.get('config', {})
         key = config.get('iframely_key')
         embed = config.get('embed_tweet')
         ingest_service = superdesk.get_resource_service('ingest')
+        # remove old item from list checking embed
+        [items.remove(item) for item in items.copy() if (ingest_service.find_one(guid=item[GUID_FIELD], req=None))]
         for item in items:
-            urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-;]|[\[\]?@_~]|'
-                              r'(?:%[0-9a-fA-F][0-9a-fA-F]))+',
-                              item.get('body_html', ''))
             if embed:
+                urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-;]|[\[\]?@_~]|'
+                                  r'(?:%[0-9a-fA-F][0-9a-fA-F]))+',
+                                  item.get('body_html', ''))
                 for url in set(urls):
                     embed_content = self._create_embed(url, key)
                     if embed_content:
                         item['body_html'] += '<!-- EMBED START Twitter -->'
                         item['body_html'] += embed_content
                         item['body_html'] += '<!-- EMBED END Twitter -->'
-            else:
-                old_item = ingest_service.find_one(guid=item[GUID_FIELD], req=None)
-                comment = '<!-- EMBED START Twitter -->'
-                # only replace body_html of the tweet when embed is turn off
-                # skip embed content as it is
-                if old_item and comment in old_item.get('body_html', ''):
-                    embed_content = comment.join(old_item['body_html'].split(comment)[1:])
-                    item['body_html'] += comment + embed_content
         return [items]
 
     def _create_embed(self, url, key):
@@ -122,3 +119,4 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
 
 
 register_feeding_service(TwitterBelgaFeedingService)
+register_feeding_service_parser(TwitterBelgaFeedingService.NAME, None)
