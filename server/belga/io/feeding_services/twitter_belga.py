@@ -88,8 +88,11 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         key = config.get('iframely_key')
         embed = config.get('embed_tweet')
         ingest_service = superdesk.get_resource_service('ingest')
-        # remove old item from list checking embed
-        [items.remove(item) for item in items.copy() if (ingest_service.find_one(guid=item[GUID_FIELD], req=None))]
+        # get all guid of old items
+        old_guid = [item[GUID_FIELD] for item in
+                    ingest_service.find({GUID_FIELD: {"$in": [item[GUID_FIELD] for item in items]}})]
+        # remove all old item
+        [items.remove(item) for item in items.copy() if item[GUID_FIELD] in old_guid]
         for item in items:
             if embed:
                 urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-;]|[\[\]?@_~]|'
