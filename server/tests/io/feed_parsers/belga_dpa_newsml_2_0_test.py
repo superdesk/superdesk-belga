@@ -63,12 +63,9 @@ class BelgaDPANewsMLTwoTestCase(BelgaTestCase):
         self.assertEqual(item["headline"], "Mehr als 200 Migranten in der Ägäis aufgegriffen")
         self.assertEqual(item["slugline"], "")
         self.assertEqual(item["language"], "de")
-        self.assertEqual(item["subject"], [
-            {'qcode': '11017000', 'name': 'Migration', 'scheme': 'iptc_subject_code'},
-            {'qcode': '11011000', 'name': 'Flüchtling, Asyl', 'scheme': 'iptc_subject_code'},
-            {'qcode': 'POLITICS', 'name': 'POLITICS', 'scheme': 'news_products'},
-        ])
-        self.assertEqual(item['anpa_category'], [{'qcode': 'PL'}])
+        self.assertEqual(item["subject"], [{'qcode': '11017000', 'name': 'Migration', 'scheme': 'iptc_subject_code'},
+                                           {'qcode': '11011000', 'name': 'Flüchtling, Asyl',
+                                            'scheme': 'iptc_subject_code'}])
         self.assertEqual(item["genre"], [])
         self.assertEqual(item["authors"], [{'uri': None, 'role': 'tsafos'}])
         self.assertEqual(item["dateline"], {'text': 'Athen (dpa) - '})
