@@ -20,18 +20,21 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     NAME = 'belga_efe_newsml12'
     label = 'Belga specific EFE News ML 1.2 Parser'
 
+    MAPPING_PRODUCTS = {
+        'SPO': 'SPORTS',
+        'ECO': 'ECONOMY',
+    }
+
     # efe related logic goes here
     def parser_contentitem(self, item, content_el):
         super().parser_contentitem(item, content_el)
         categoria = content_el.find('DataContent/nitf/head/meta[@name="categoria"]')
-        qcode = categoria.attrib.get('content') if categoria is not None else 'GENERAL'
+        qcode = categoria.attrib.get('content').upper() if categoria is not None else 'GENERAL'
 
-        vocabularies = get_resource_service('vocabularies').find_one(req=None, _id='categories').get('items', [])
-        categories = {cat['qcode']: cat['name'] for cat in vocabularies}
         item.setdefault('anpa_category', []).append({'qcode': qcode})
         item.setdefault('subject', []).append({
-            'qcode': categories.get(qcode, 'GENERAL'),
-            'name': categories.get(qcode, 'GENERAL'),
+            'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+            'name': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
             'scheme': 'news_products',
         })
 
