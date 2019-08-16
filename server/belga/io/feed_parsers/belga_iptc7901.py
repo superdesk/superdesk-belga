@@ -37,6 +37,11 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
     ]
     txt_type = None
 
+    MAPPING_PRODUCTS = {
+        'CL': 'CULTURE',
+        'EC': 'ECONOMY',
+    }
+
     def can_parse(self, file_path):
         try:
             BelgaIPTC7901FeedParser.txt_type = None
@@ -78,10 +83,16 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
             # parse first header line
             m = re.match(b'\x7f\x01([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', lines[1], flags=re.I)
             if m:
+                qcode = m.group(4).decode().upper()
                 item['original_source'] = m.group(1).decode('latin-1', 'replace')
                 item['ingest_provider_sequence'] = m.group(2).decode()
                 item['priority'] = self.map_priority(m.group(3).decode())
-                item['anpa_category'] = [{'qcode': self.map_category(m.group(4).decode())}]
+                item['anpa_category'] = [{'qcode': self.map_category(qcode)}]
+                item['subject'] = [{
+                    'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+                    'name': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+                    'scheme': 'news_products'
+                }]
                 item['word_count'] = int(m.group(5).decode())
 
             inHeader = False

@@ -89,7 +89,8 @@ class ATSBelgaFeedParserTestCase(DPABelgaFeedParserTestCase):
         item = self.item
         self.assertEqual(item["ingest_provider_sequence"], "037")
         # self.assertEqual(item["slugline"], "Notes de frais GE")
-        self.assertEqual(item["anpa_category"], [{'qcode': 'su'}])
+        self.assertEqual(item["anpa_category"], [{'qcode': 'SU'}])
+        self.assertListEqual(item["subject"], [{'qcode': 'GENERAL', 'name': 'GENERAL', 'scheme': 'news_products'}])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["original_source"], "bsf")
         expected_headline = \
