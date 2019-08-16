@@ -37,39 +37,23 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         for item in items:
             # mapping from keyword
             for keyword in item.get('keywords', []):
-                product = {}
-                for product_code, keywords in self.MAPPING_KEYWORDS.items():
-                    if keyword.strip('/').upper() in keywords:
-                        product = {
-                            "name": product_code,
-                            "qcode": product_code,
-                            "scheme": "news_products"
-                        }
-                        add_unique_item_to_list(product, item.get('subject', []))
-                if not product:
-                    product = {
-                        "name": 'GENERAL',
-                        "qcode": 'GENERAL',
-                        "scheme": "news_products"
-                    }
-                    add_unique_item_to_list(product, item.get('subject', []))
+                keyword = keyword.strip('/').upper()
+                product_code = [k if keyword in v else 'GENERAL' for k, v in self.MAPPING_KEYWORDS.items()][0]
+                product = {
+                    "name": product_code,
+                    "qcode": product_code,
+                    "scheme": "news_products"
+                }
+                add_unique_item_to_list(product, item.get('subject', []))
             # mapping from anpa_category
             for category in item.get('anpa_category', []):
                 qcode = category.get('qcode')
-                if qcode in self.MAPPING_CATEGORY:
-                    product = {
-                        "name": self.MAPPING_CATEGORY[qcode],
-                        "qcode": self.MAPPING_CATEGORY[qcode],
-                        "scheme": "news_products"
-                    }
-                    add_unique_item_to_list(product, item.get('subject', []))
-                else:
-                    product = {
-                        "name": 'GENERAL',
-                        "qcode": 'GENERAL',
-                        "scheme": "news_products"
-                    }
-                    add_unique_item_to_list(product, item.get('subject', []))
+                product = {
+                    "name": self.MAPPING_CATEGORY.get(qcode, 'GENERAL'),
+                    "qcode": self.MAPPING_CATEGORY.get(qcode, 'GENERAL'),
+                    "scheme": "news_products"
+                }
+                add_unique_item_to_list(product, item.get('subject', []))
         return items
 
 
