@@ -25,7 +25,8 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["anpa_take_key"], "2ND LEAD 3RD NET")
         self.assertEqual(item["slugline"], "/politics/Britain/EU/Brexit/justice")
-        self.assertEqual(item["anpa_category"], [{'qcode': 'i'}])
+        self.assertEqual(item["anpa_category"], [{'qcode': 'I'}])
+        self.assertListEqual(item["subject"], [{'qcode': 'GENERAL', 'name': 'GENERAL', 'scheme': 'news_products'}])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["byline"], "Helen Maguire, dpa")
         expected_body = \
