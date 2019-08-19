@@ -63,7 +63,6 @@ def init_app(app):
                 "first_name": g.oidc_token_info.get('given_name'),
                 "last_name": g.oidc_token_info.get('family_name'),
                 "needs_activation": False,
-                "password": 'xxxxx',
                 "user_type": g.oidc_token_info.get('user_type'),
                 "username": g.oidc_token_info.get('username'),
                 "role": role.get('_id') if role else None,
