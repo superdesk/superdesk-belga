@@ -1,5 +1,7 @@
-from superdesk.tests import TestCase
 import datetime
+
+from belga.io.feeding_services.twitter_belga import TwitterBelgaFeedingService
+from superdesk.tests import TestCase
 
 items = [{
     'source': 'twitter',
@@ -16,31 +18,18 @@ items = [{
 }]
 
 
-class RssBelgaIngestServiceTest(TestCase):
-    """Base class for RSSFeedingService tests."""
+class TwitterBelgaServiceTestCase(TestCase):
 
-    def setUpForChildren(self):
-        super().setUpForChildren()
-        try:
-            from belga.io.feeding_services.twitter_belga import TwitterBelgaFeedingService
-        except ImportError:
-            # a missing class should result in a test failure, not in an error
-            self.fail("Could not import class under test (RSSFeedingService).")
-        else:
-            provider = {
-                "config": {
-                    "iframely_key": "9b959025054a1629510c03",
-                    "embed_tweet": True
-                }
+    def setUp(self):
+        provider = {
+            "config": {
+                "iframely_key": "9b959025054a1629510c03",
+                "embed_tweet": True
             }
-            self.items = TwitterBelgaFeedingService().parse_twitter_belga(items, provider)[0]
+        }
+        self.items = TwitterBelgaFeedingService().parse_twitter_belga(items, provider)[0]
 
-
-class RSSBelgaTestCase(RssBelgaIngestServiceTest):
-    """Tests for the _create_item() method."""
-
-    def test_creates_item_from_given_data(self):
-        self.maxDiff = None
+    def test_embed_content(self):
         item = self.items[0]
         self.assertEqual(item["source"], "twitter")
         self.assertEqual(item["extra"], {'tweet_url': 'https://twitter.com/thanhnguyenfs/status/1161474034728460290'})
