@@ -20,7 +20,7 @@ import superdesk
 from belga.io.feed_parsers.belga_spreadsheet import BelgaSpreadsheetParser
 from superdesk.errors import IngestApiError, ParserError, SuperdeskIngestError
 from superdesk.io.feeding_services import FeedingService
-from superdesk.io.registry import register_feeding_service
+from superdesk.io.registry import register_feeding_service, register_feeding_service_parser
 from superdesk.metadata.item import GUID_FIELD, GUID_NEWSML
 from superdesk.metadata.utils import generate_guid
 
@@ -89,7 +89,7 @@ class SpreadsheetFeedingService(FeedingService):
     ]
 
     def _test(self, provider):
-        worksheet = self._get_worksheet(provider.get('config', {}))
+        worksheet = self._get_worksheet(provider)
         data = worksheet.get_all_values()
         BelgaSpreadsheetParser().parse_titles(data[0])
 
@@ -99,7 +99,7 @@ class SpreadsheetFeedingService(FeedingService):
         If STATUS field is empty, create new item
         If STATUS field is UPDATED, update item
         """
-        worksheet = self._get_worksheet(provider.get('config', {}))
+        worksheet = self._get_worksheet(provider)
 
         # Get all values to avoid reaching read limit
         data = worksheet.get_all_values()
@@ -125,7 +125,7 @@ class SpreadsheetFeedingService(FeedingService):
         if cells_list:
             worksheet.update_cells(cells_list)
 
-    def _get_worksheet(self, config):
+    def _get_worksheet(self, provider):
         """Get worksheet from google spreadsheet
 
         :return: worksheet
@@ -135,6 +135,7 @@ class SpreadsheetFeedingService(FeedingService):
             'https://spreadsheets.google.com/feeds',
             'https://www.googleapis.com/auth/drive',
         ]
+        config = provider.get('config', {})
         url = config.get('url', '')
         service_account = config.get('service_account', '')
         title = config.get('worksheet_title', '')
@@ -159,7 +160,9 @@ class SpreadsheetFeedingService(FeedingService):
         except gspread.exceptions.WorksheetNotFound:
             raise IngestSpreadsheetError.WorksheetNotFoundError()
         except gspread.exceptions.APIError as e:
-            response_code = e.response.json()['error']['code']
+            error = e.response.json()['error']
+            response_code = error['code']
+            logger.error('Provider %s: %s', provider.get('name'), error['message'])
             if response_code == 403:
                 raise IngestSpreadsheetError.SpreadsheetPermissionError()
             elif response_code == 429:
@@ -216,3 +219,4 @@ class SpreadsheetFeedingService(FeedingService):
 
 
 register_feeding_service(SpreadsheetFeedingService)
+register_feeding_service_parser(SpreadsheetFeedingService.NAME, 'belgaspreadsheet')
