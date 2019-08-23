@@ -205,7 +205,10 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
                 'baseImage': {
                     'href': thumbnail,
                 },
-            }
+            },
+            'extra': {
+                'bcoverage': guid,
+            },
         }
 
 
