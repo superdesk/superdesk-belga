@@ -257,136 +257,55 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_media(self, newscomponent_1_level):
         """
-        Formats images from body, related images, galleries.
+        Format media items.
+
+        - Associated items with type `picture` (images from body / related images / related gallery) will be
+          converted to Belga360 NewsML representation as an `Image`.
+        - Associated items with type `graphic` (belga coverage) will be converted to Belga360 NewsML representation
+          as an `Gallery`.
+        - Associated items with type `audio` will be converted to Belga360 NewsML representation
+          as an `Audio`.
+        - Associated items with type `video` will be converted to Belga360 NewsML representation
+          as an `Video`.
         :param Element newscomponent_1_level:
         """
 
+        # format media from associations
         associations = self._article.get('associations', {})
+        for _type, _format in (
+                ('picture', self._format_picture),
+                ('graphic', self._format_coverage),
+                ('audio', self._format_audio),
+                ('video', self._format_video)
+        ):
+            # get all associated items with type `_type` where `renditions` are already IN the items.
+            items = [
+                associations[i] for i in associations
+                if associations[i]
+                   and associations[i]['type'] == _type
+                   and 'renditions' in self._article['associations'][i]
+            ]
+            # get all associated items `_id`s with type `_type` where `renditions` are NOT IN the item
+            items_ids = [
+                associations[i]['_id'] for i in associations
+                if associations[i]
+                   and associations[i]['type'] == _type
+                   and 'renditions' not in self._article['associations'][i]
+            ]
 
-        # NOTE:
-        # - Associated items with type `picture` (images from body / related images / related gallery) will be
-        #   converted to Belga360 NewsML representation as an `Image`.
-        # - Associated items with type `graphic` (belga coverage) will be converted to Belga360 NewsML representation
-        #   as an `Gallery`.
-        # - Associated items with type `audio` will be converted to Belga360 NewsML representation
-        #   as an `Audio`.
-        # - Associated items with type `video` will be converted to Belga360 NewsML representation
-        #   as an `Video`.
+            # fetch associated docs by _id
+            if items_ids:
+                archive_service = superdesk.get_resource_service('archive')
+                items += list(archive_service.find({
+                    '_id': {'$in': items_ids}}
+                ))
+            # format pictures
+            formatted_ids = []
+            for item in items:
+                if item['_id'] not in formatted_ids:
+                    formatted_ids.append(item['_id'])
+                    _format(newscomponent_1_level, item)
 
-        # PICTUTES
-        # get all associated docs with type `picture` where `renditions` are already IN the doc.
-        pictures = [
-            associations[i] for i in associations
-            if associations[i]
-            and associations[i]['type'] == 'picture'
-            and 'renditions' in self._article['associations'][i]
-        ]
-        # get all associated docs _ids with type `picture` where `renditions` are NOT IN the doc
-        pictures_ids = [
-            associations[i]['_id'] for i in associations
-            if associations[i]
-            and associations[i]['type'] == 'picture'
-            and 'renditions' not in self._article['associations'][i]
-        ]
-        # fetch associated docs by _id
-        if pictures_ids:
-            archive_service = superdesk.get_resource_service('archive')
-            pictures += list(archive_service.find({
-                '_id': {'$in': pictures_ids}}
-            ))
-        # format pictures
-        formatted_ids = []
-        for picture in pictures:
-            if picture['_id'] not in formatted_ids:
-                formatted_ids.append(picture['_id'])
-                self._format_picture(newscomponent_1_level, picture)
-
-        # COVERAGES
-        # get all associated docs with type `graphic` where `renditions` are already IN the doc.
-        coverages = [
-            associations[i] for i in associations
-            if associations[i]
-            and associations[i]['type'] == 'graphic'
-            and 'renditions' in self._article['associations'][i]
-        ]
-        # get all associated docs _ids with type `graphic` where `renditions` are NOT IN the doc
-        coverages_ids = [
-            associations[i]['_id'] for i in associations
-            if associations[i]
-            and associations[i]['type'] == 'graphic'
-            and 'renditions' not in self._article['associations'][i]
-        ]
-        # fetch associated docs by _id
-        if coverages_ids:
-            archive_service = superdesk.get_resource_service('archive')
-            coverages += list(archive_service.find({
-                '_id': {'$in': pictures_ids}}
-            ))
-
-        # format coverages
-        formatted_ids = []
-        for coverage in coverages:
-            if coverage['_id'] not in formatted_ids:
-                formatted_ids.append(coverage['_id'])
-                self._format_coverage(newscomponent_1_level, coverage)
-
-        # AUDIOS
-        # get all associated docs with type `audio` where `renditions` are already IN the doc.
-        audios = [
-            associations[i] for i in associations
-            if associations[i]
-               and associations[i]['type'] == 'audio'
-               and 'renditions' in self._article['associations'][i]
-        ]
-        # get all associated docs _ids with type `graphic` where `renditions` are NOT IN the doc
-        audios_ids = [
-            associations[i]['_id'] for i in associations
-            if associations[i]
-               and associations[i]['type'] == 'audio'
-               and 'renditions' not in self._article['associations'][i]
-        ]
-        # fetch associated docs by _id
-        if audios_ids:
-            archive_service = superdesk.get_resource_service('archive')
-            audios += list(archive_service.find({
-                '_id': {'$in': pictures_ids}}
-            ))
-
-        # format audio
-        formatted_ids = []
-        for audio in audios:
-            if audio['_id'] not in formatted_ids:
-                formatted_ids.append(audio['_id'])
-                self._format_audio(newscomponent_1_level, audio)
-
-        # VIDEOS
-        # get all associated docs with type `video` where `renditions` are already IN the doc.
-        videos = [
-            associations[i] for i in associations
-            if associations[i]
-               and associations[i]['type'] == 'video'
-               and 'renditions' in self._article['associations'][i]
-        ]
-        # get all associated docs _ids with type `graphic` where `renditions` are NOT IN the doc
-        videos_ids = [
-            associations[i]['_id'] for i in associations
-            if associations[i]
-               and associations[i]['type'] == 'video'
-               and 'renditions' not in self._article['associations'][i]
-        ]
-        # fetch associated docs by _id
-        if videos_ids:
-            archive_service = superdesk.get_resource_service('archive')
-            videos += list(archive_service.find({
-                '_id': {'$in': pictures_ids}}
-            ))
-
-        # format video
-        formatted_ids = []
-        for video in videos:
-            if video['_id'] not in formatted_ids:
-                formatted_ids.append(video['_id'])
-                self._format_video(newscomponent_1_level, video)
 
     def _format_picture(self, newscomponent_1_level, picture):
         """
