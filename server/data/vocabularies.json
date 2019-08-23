@@ -2671,6 +2671,12 @@
             },
             {
                 "name": "POLITICS",
+                "qcode": "P",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "POLITICS",
                 "qcode": "PL",
                 "is_active": true,
                 "language": "fr-BE"
@@ -2678,6 +2684,18 @@
             {
                 "name": "CULTURE",
                 "qcode": "KU",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CULTURE",
+                "qcode": "CL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CULTURE",
+                "qcode": "E",
                 "is_active": true,
                 "language": "fr-BE"
             },

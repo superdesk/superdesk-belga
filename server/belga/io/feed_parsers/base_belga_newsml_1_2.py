@@ -357,7 +357,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if component_el is None:
             return
 
-        if component_el.attrib.get('Duid') is not None:
+        if component_el.attrib.get('Duid') is not None and not item.get('guid'):
             item['guid'] = component_el.attrib.get('Duid', '')
 
         # Essential is CV
