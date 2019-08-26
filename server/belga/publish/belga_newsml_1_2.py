@@ -282,15 +282,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             items = [
                 associations[i] for i in associations
                 if associations[i]
-                   and associations[i]['type'] == _type
-                   and 'renditions' in self._article['associations'][i]
+                and associations[i]['type'] == _type
+                and 'renditions' in self._article['associations'][i]
             ]
             # get all associated items `_id`s with type `_type` where `renditions` are NOT IN the item
             items_ids = [
                 associations[i]['_id'] for i in associations
                 if associations[i]
-                   and associations[i]['type'] == _type
-                   and 'renditions' not in self._article['associations'][i]
+                and associations[i]['type'] == _type
+                and 'renditions' not in self._article['associations'][i]
             ]
 
             # fetch associated docs by _id
