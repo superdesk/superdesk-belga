@@ -9,7 +9,6 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import html
-from copy import deepcopy
 import logging
 from datetime import datetime
 from lxml import etree
@@ -22,8 +21,9 @@ from superdesk.errors import FormatterError
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.metadata.item import ITEM_TYPE, CONTENT_TYPE, EMBARGO, GUID_FIELD
-
 from apps.archive.common import get_utc_schedule
+
+from belga.image import BelgaCoverageSearchProvider
 
 logger = logging.getLogger(__name__)
 
@@ -306,6 +306,23 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     formatted_ids.append(item['_id'])
                     _format(newscomponent_1_level, item)
 
+        # format media item from custom field `belga.coverage`
+        extra = self._article.get('extra', {})
+        vocabularies_service = superdesk.get_resource_service('vocabularies')
+        belga_coverage_field_ids = [
+            i['_id'] for i in vocabularies_service.find({'custom_field_type': 'belga.coverage'})
+        ]
+        for belga_coverage_field_id in belga_coverage_field_ids:
+            if belga_coverage_field_id in extra:
+                belga_item_id = extra[belga_coverage_field_id]
+                belga_cov_search_provider = BelgaCoverageSearchProvider({})
+                try:
+                    data = belga_cov_search_provider.api_get('/getGalleryById', {'i': belga_item_id.rsplit(':', 1)[-1]})
+                except Exception as e:
+                    logger.warning("Failed to fetch belga coverage: {}".format(e))
+                else:
+                    data = belga_cov_search_provider.format_list_item(data)
+                    self._format_coverage(newscomponent_1_level, data)
 
     def _format_picture(self, newscomponent_1_level, picture):
         """
