@@ -11,6 +11,7 @@
 import html
 import logging
 from datetime import datetime
+from urllib.parse import urljoin
 from lxml import etree
 from lxml.etree import SubElement
 from eve.utils import config
@@ -193,6 +194,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         self._format_belga_text(newscomponent_1_level)
         self._format_belga_urls(newscomponent_1_level)
         self._format_media(newscomponent_1_level)
+        self._format_attachments(newscomponent_1_level)
 
     def _format_belga_text(self, newscomponent_1_level):
         """
@@ -254,6 +256,18 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 # string's length is used in original belga's newsml
                 SubElement(characteristics, 'SizeInBytes').text = str(len(belga_url.get(key)))
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+    def _format_attachments(self, newscomponent_1_level):
+        """
+        Format attachments.
+        :param Element newscomponent_1_level:
+        """
+
+        attachments_ids = [i['attachment'] for i in self._article.get('attachments', [])]
+        attachments_service = superdesk.get_resource_service('attachments')
+        attachments = list(attachments_service.find({'_id': {'$in': attachments_ids}}))
+        for attachment in attachments:
+            self._format_attachment(newscomponent_1_level, attachment)
 
     def _format_media(self, newscomponent_1_level):
         """
@@ -528,6 +542,66 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
 
+    def _format_attachment(self, newscomponent_1_level, attachment):
+        """
+        Creates a NewsComponent of a 2nd level with file attached to the article.
+        :param Element newscomponent_1_level:
+        :param dict audio:
+        """
+
+        from pprint import pprint
+        pprint(attachment)
+
+        attachment['_id'] = str(attachment['_id'])
+        attachment[GUID_FIELD] = attachment['_id']
+        attachment['headline'] = attachment.pop('title')
+        attachment['description_text'] = attachment.pop('description')
+
+        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
+        newscomponent_2_level.attrib['Duid'] = str(attachment.get('_id'))
+
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedDocument'})
+        self._format_media_newslines(newscomponent_2_level, item=attachment)
+        self._format_administrative_metadata(newscomponent_2_level, item=attachment)
+        self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
+
+        for role, key in (('Title', 'headline'), ('Body', 'description_text')):
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+            )
+            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+            SubElement(contentitem, 'DataContent').text = attachment.get(key)
+            characteristics = SubElement(contentitem, 'Characteristics')
+            # string's length is used in original belga's newsml
+            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment.get(key)))
+            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+        # Component
+        newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+        newscomponent_3_level.attrib['Duid'] = attachment.get(GUID_FIELD)
+
+        SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Component'})
+        SubElement(
+            SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+            'Property',
+            {'FormalName': 'ComponentClass', 'Value': 'Binary'}
+        )
+
+        self._format_media_contentitem(
+            newscomponent_3_level,
+            rendition={
+                'filename': attachment['filename'],
+                'media': attachment['media'],
+                'mimetype': attachment['mimetype'],
+                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}?resource=attachments'.format(attachment['media']))
+            }
+        )
+
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
         """
         Creates a ContentItem for media item.
@@ -538,18 +612,17 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_3_level, 'ContentItem',
             {'Href': r'{}'.format(rendition['href'])}
         )
-        SubElement(contentitem, 'Format', {'FormalName': rendition['href'].rsplit('.', 1)[-1]})
+
+        filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
+        SubElement(contentitem, 'Format', {'FormalName': filename.rsplit('.', 1)[-1].capitalize()})
         if rendition.get('mimetype'):
             SubElement(contentitem, 'MimeType', {'FormalName': rendition['mimetype']})
         characteristics = SubElement(contentitem, 'Characteristics')
 
         if rendition.get('media'):
-            SubElement(
-                characteristics, 'SizeInBytes'
-            ).text = str(
-                # str is used in original belga's newsml
-                app.media.get(rendition['media']).metadata['length']
-            )
+            media = app.media.get(str(rendition['media']))
+            length = media.length if media.length else media.metadata.get('length')
+            SubElement(characteristics, 'SizeInBytes').text = str(length)
         if rendition.get('width'):
             SubElement(
                 characteristics, 'Property',
@@ -605,7 +678,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         creator = SubElement(administrative_metadata, 'Creator')
 
-        if item['type'] == CONTENT_TYPE.PICTURE:
+        if item.get('type') == CONTENT_TYPE.PICTURE:
             authors = (item['original_creator'],) if item.get('original_creator') else tuple()
         else:
             authors = item.get('authors', tuple())
@@ -674,10 +747,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param dict item:
         """
 
-        descriptive_metadata = SubElement(
-            newscomponent_2_level, 'DescriptiveMetadata',
-            {'DateAndTime': self._get_formatted_datetime(item['firstcreated'])}
-        )
+        descriptive_metadata = SubElement(newscomponent_2_level, 'DescriptiveMetadata')
+        if item.get('firstcreated'):
+            descriptive_metadata.attrib['DateAndTime'] = self._get_formatted_datetime(item['firstcreated'])
+
         SubElement(descriptive_metadata, 'SubjectCode')
         location = SubElement(descriptive_metadata, 'Location')
 
