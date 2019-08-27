@@ -52,8 +52,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
 
         try:
-            # pub_seq_num = superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
-            pub_seq_num = 11111
+            pub_seq_num = superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
             self._newsml = etree.Element('NewsML')
             self._article = article
             self._now = utcnow()
@@ -85,14 +84,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         return False
 
     def _format_catalog(self):
-        """Creates Catalog and add it to `NewsML` container."""
+        """Creates `<Catalog>` and adds it to `<NewsML>`."""
+
         SubElement(
             self._newsml, 'Catalog',
             {'Href': 'http://www.belga.be/dtd/BelgaCatalog.xml'}
         )
 
     def _format_newsenvelope(self):
-        """Creates NewsEnvelope and add it to `NewsML` container."""
+        """Creates `<NewsEnvelope>` and adds it to `<NewsML>`."""
 
         newsenvelope = SubElement(self._newsml, 'NewsEnvelope')
         SubElement(newsenvelope, 'DateAndTime').text = self._string_now
@@ -100,7 +100,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newsenvelope, 'NewsProduct', {'FormalName': ''})
 
     def _format_newsitem(self):
-        """Creates NewsItem and add it to `NewsML` container."""
+        """Creates `<NewsItem>` and all internal elements and adds it to `<NewsML>`."""
 
         newsitem = SubElement(self._newsml, 'NewsItem')
         self._format_identification(newsitem)
@@ -109,8 +109,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_identification(self, newsitem):
         """
-        Creates the Identification element and add it to `newsitem`
-        :param Element newsitem:
+        Creates the `<Identification>` element and adds it to `<NewsItem>`.
+        :param Element newsitem: NewsItem
         """
 
         identification = SubElement(newsitem, 'Identification')
@@ -128,9 +128,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newsmanagement(self, newsitem):
         """
-        Creates the NewsManagement element and add it to `newsitem`
-        :param Element newsitem:
+        Creates the `<NewsManagement>` element and adds it to `<NewsItem>`.
+        :param Element newsitem: NewsItem
         """
+
         news_management = SubElement(newsitem, 'NewsManagement')
         SubElement(news_management, 'NewsItemType', {'FormalName': 'News'})
         SubElement(
@@ -158,8 +159,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newscomponent_1_level(self, newsitem):
         """
-        Creates the NewsComponent element and add it to `newsitem`
-        :param Element newsitem:
+        Creates the `<NewsComponent>` element and adds it to `<NewsItem>`.
+        :param Element newsitem: NewsItem
         """
 
         newscomponent_1_level = SubElement(
@@ -184,8 +185,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newscomponent_2_level(self, newscomponent_1_level):
         """
-        Creates the NewsComponent of a 2nd level element and add it to `newscomponent_1_level`
-        :param Element newscomponent_1_level:
+        Creates the `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
         _type = self._article.get('type')
@@ -198,8 +199,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_belga_text(self, newscomponent_1_level):
         """
-        Creates a NewsComponent of a 2nd level with information related to `belga_text` content profile.
-        :param Element newscomponent_1_level:
+        Creates a `<NewsComponent>` of a 2nd level with information related to `belga_text` content profile.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
         newscomponent_2_level = SubElement(
@@ -210,7 +211,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # Role
         SubElement(newscomponent_2_level, 'Role', {'FormalName': self.BELGA_TEXT_PROFILE})
         # NewsLines
-        self._format_newslines(newscomponent_2_level)
+        self._format_newslines(newscomponent_2_level, item=self._article)
         # AdministrativeMetadata
         self._format_administrative_metadata(newscomponent_2_level, item=self._article)
         # DescriptiveMetadata
@@ -220,8 +221,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_belga_urls(self, newscomponent_1_level):
         """
-        Creates a NewsComponents of a 2nd level with URLs from `belga-text`.
-        :param Element newscomponent_1_level:
+        Creates a `NewsComponent`(s) of a 2nd level with data from custom url fields.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
         for belga_url in self._article.get('extra', {}).get('belga-url', []):
@@ -259,8 +260,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_attachments(self, newscomponent_1_level):
         """
-        Format attachments.
-        :param Element newscomponent_1_level:
+        Format attached to the article files.
+        Creates `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
         attachments_ids = [i['attachment'] for i in self._article.get('attachments', [])]
@@ -272,6 +274,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     def _format_media(self, newscomponent_1_level):
         """
         Format media items.
+        Creates `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
 
         - Associated items with type `picture` (images from body / related images / related gallery) will be
           converted to Belga360 NewsML representation as an `Image`.
@@ -281,7 +284,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
           as an `Audio`.
         - Associated items with type `video` will be converted to Belga360 NewsML representation
           as an `Video`.
-        :param Element newscomponent_1_level:
+        - Belga coverage from `belga.coverage` custom field will be converted to Belga360 NewsML
+          representation as an `Gallery`.
+
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
         # format media from associations
@@ -340,9 +346,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_picture(self, newscomponent_1_level, picture):
         """
-        Creates a NewsComponent of a 2nd level with picture from `belga-text` article.
-        :param Element newscomponent_1_level:
-        :param dict picture:
+        Creates a `<NewsComponent>` of a 2nd level with associated picture data.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict picture: picture item
         """
 
         # NewsComponent
@@ -354,7 +360,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # Role
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Picture'})
         # NewsLines
-        self._format_media_newslines(newscomponent_2_level, item=picture)
+        self._format_newslines(newscomponent_2_level, item=picture)
         # AdministrativeMetadata
         self._format_administrative_metadata(newscomponent_2_level, item=picture)
         self._format_descriptive_metadata(newscomponent_2_level, item=picture)
@@ -395,9 +401,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_coverage(self, newscomponent_1_level, coverage):
         """
-        Creates a NewsComponent of a 2nd level with coverage item from an article.
-        :param Element newscomponent_1_level:
-        :param dict coverage:
+        Creates a `<NewsComponent>` of a 2nd level with associated graphic item's data
+        or with data from `belga.coverage` field.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict coverage: coverage data
         """
 
         newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
@@ -406,7 +413,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if coverage.get('language'):
             newscomponent_2_level.attrib[XML_LANG] = coverage.get('language')
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Gallery'})
-        self._format_media_newslines(newscomponent_2_level, item=coverage)
+        self._format_newslines(newscomponent_2_level, item=coverage)
         self._format_administrative_metadata(newscomponent_2_level, item=coverage)
         self._format_descriptive_metadata(newscomponent_2_level, item=coverage)
 
@@ -444,9 +451,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_audio(self, newscomponent_1_level, audio):
         """
-        Creates a NewsComponent of a 2nd level with audio item from an article.
-        :param Element newscomponent_1_level:
-        :param dict audio:
+        Creates a `<NewsComponent>` of a 2nd level with associated audio data.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict audio: audio item
         """
 
         newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
@@ -455,7 +462,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if audio.get('language'):
             newscomponent_2_level.attrib[XML_LANG] = audio.get('language')
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Audio'})
-        self._format_media_newslines(newscomponent_2_level, item=audio)
+        self._format_newslines(newscomponent_2_level, item=audio)
         self._format_administrative_metadata(newscomponent_2_level, item=audio)
         self._format_descriptive_metadata(newscomponent_2_level, item=audio)
 
@@ -494,9 +501,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_video(self, newscomponent_1_level, video):
         """
-        Creates a NewsComponent of a 2nd level with video item from an article.
-        :param Element newscomponent_1_level:
-        :param dict audio:
+        Creates a `<NewsComponent>` of a 2nd level with associated video data.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict audio: video item
         """
 
         newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
@@ -505,7 +512,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if video.get('language'):
             newscomponent_2_level.attrib[XML_LANG] = video.get('language')
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Video'})
-        self._format_media_newslines(newscomponent_2_level, item=video)
+        self._format_newslines(newscomponent_2_level, item=video)
         self._format_administrative_metadata(newscomponent_2_level, item=video)
         self._format_descriptive_metadata(newscomponent_2_level, item=video)
 
@@ -544,9 +551,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_attachment(self, newscomponent_1_level, attachment):
         """
-        Creates a NewsComponent of a 2nd level with file attached to the article.
-        :param Element newscomponent_1_level:
-        :param dict audio:
+        Creates a `<NewsComponent>` of a 2nd level with file attached to the article.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict attachment: attachment
         """
 
         from pprint import pprint
@@ -561,7 +568,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         newscomponent_2_level.attrib['Duid'] = str(attachment.get('_id'))
 
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedDocument'})
-        self._format_media_newslines(newscomponent_2_level, item=attachment)
+        self._format_newslines(newscomponent_2_level, item=attachment)
         self._format_administrative_metadata(newscomponent_2_level, item=attachment)
         self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
 
@@ -604,9 +611,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
         """
-        Creates a ContentItem for media item.
-        :param Element newscomponent_3_level:
-        :param dict rendition:
+        Creates a ContentItem for provided rendition.
+        :param Element newscomponent_3_level: NewsComponent of 3st level
+        :param dict rendition: rendition info
         """
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
@@ -634,40 +641,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 {'FormalName': 'Height', 'Value': str(rendition['height'])}
             )
 
-    def _format_media_newslines(self, newscomponent_2_level, item):
+    def _format_newslines(self, newscomponent_2_level, item):
         """
-        Creates the NewsLines element for media item and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
-        :param dict item:
+        Creates the `<NewsLines>` element for text item and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
+        :param dict item: item
         """
         newslines = SubElement(newscomponent_2_level, 'NewsLines')
         SubElement(newslines, 'DateLine')
         SubElement(newslines, 'CreditLine').text = item.get('creditline', item.get('byline'))
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-        SubElement(newslines, 'KeywordLine').text = item.get('extra', {}).get('belga-keywords')
-
-    def _format_newslines(self, newscomponent_2_level):
-        """
-        Creates the NewsLines element for text item and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
-        """
-        newslines = SubElement(newscomponent_2_level, 'NewsLines')
-        SubElement(newslines, 'DateLine')
-        SubElement(newslines, 'CreditLine').text = self._article.get('byline')
-        SubElement(newslines, 'HeadLine').text = self._article.get('headline')
-        SubElement(newslines, 'CopyrightLine').text = self._article.get('copyrightholder')
-        for keyword in self._article.get('keywords', []):
+        for keyword in item.get('keywords', []):
             SubElement(newslines, 'KeywordLine').text = keyword
+        if item.get('extra', {}).get('belga-keywords'):
+            SubElement(newslines, 'KeywordLine').text = item['extra']['belga-keywords']
         newsline = SubElement(newslines, 'NewsLine')
-        SubElement(newsline, 'NewsLineType', {'FormalName': self._article.get('line_type', '')})
-        SubElement(newsline, 'NewsLineText').text = self._article.get('line_text')
+        SubElement(newsline, 'NewsLineType', {'FormalName': item.get('line_type', '')})
+        SubElement(newsline, 'NewsLineText').text = item.get('line_text')
 
     def _format_administrative_metadata(self, newscomponent_2_level, item):
         """
-        Creates the AdministrativeMetadata element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
-        :param dict item:
+        Creates the `<AdministrativeMetadata>` element and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
+        :param dict item: item
         """
 
         administrative_metadata = SubElement(newscomponent_2_level, 'AdministrativeMetadata')
@@ -742,9 +739,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_descriptive_metadata(self, newscomponent_2_level, item):
         """
-        Creates the DescriptiveMetadata element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
-        :param dict item:
+        Creates the `<DescriptiveMetadata>` element and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
+        :param dict item: item
         """
 
         descriptive_metadata = SubElement(newscomponent_2_level, 'DescriptiveMetadata')
@@ -767,8 +764,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newscomponent_3_level(self, newscomponent_2_level):
         """
-        Creates the NewsComponent(s) of a 3rd level element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
+        Creates the `<NewsComponent>`(s) of a 3rd level element and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
         """
 
         # Title, Lead, Body
