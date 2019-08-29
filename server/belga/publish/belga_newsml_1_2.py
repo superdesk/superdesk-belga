@@ -556,9 +556,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param dict attachment: attachment
         """
 
-        from pprint import pprint
-        pprint(attachment)
-
         attachment['_id'] = str(attachment['_id'])
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
@@ -655,7 +652,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         for keyword in item.get('keywords', []):
             SubElement(newslines, 'KeywordLine').text = keyword
         if item.get('extra', {}).get('belga-keywords'):
-            SubElement(newslines, 'KeywordLine').text = item['extra']['belga-keywords']
+            for keyword in [i.strip() for i in item['extra']['belga-keywords'].split(',')]:
+                SubElement(newslines, 'KeywordLine').text = keyword
         newsline = SubElement(newslines, 'NewsLine')
         SubElement(newsline, 'NewsLineType', {'FormalName': item.get('line_type', '')})
         SubElement(newsline, 'NewsLineText').text = item.get('line_text')
