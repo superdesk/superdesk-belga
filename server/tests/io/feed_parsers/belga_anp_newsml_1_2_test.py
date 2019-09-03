@@ -49,7 +49,7 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["guid"], "urn:newsml:anp.nl:20181210:ANPX-101218-041:2")
         self.assertEqual(item["date_label"], "10 december 2018")
         self.assertEqual(str(item["firstcreated"]), "2018-12-10 08:35:49+00:00")
-        self.assertEqual(str(item["versioncreated"]), "2018-12-10 08:35:49+00:00")
+        self.assertEqual(str(item["versioncreated"]), "2018-12-10 11:37:31+00:00")
         self.assertEqual(item["pubstatus"], "usable")
         self.assertEqual(item["urgency"], "3")
         self.assertEqual(item["dateline"], {})
@@ -69,7 +69,8 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF")
         self.assertEqual(item["characteristics"],
-                         {'creator': 'redsys v4.30', 'word_count': '177', 'characters': '1043'})
+                         {'creator': 'redsys v4.30', 'word_count': '177', 'characters': '1043',
+                          'format_version': '3.3'})
         expected_body = \
             (
                 '\n\t\t\t\t\t\t\t\t<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan Post'
