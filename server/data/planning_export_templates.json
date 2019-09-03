@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "planning_multiple_agendas",
+    "name": "multiple-agendas",
+    "type": "planning",
+    "data": {
+      "slugline": "multiple-agendas",
+      "body_html_template": "planning_multiple_agendas_template.html"
+    },
+    "label": "Multiple Agendas"
+  },
+  {
+    "_id": "planning_multiple_agendas_internal",
+    "name": "internal",
+    "type": "planning",
+    "data": {
+      "slugline": "internal",
+      "body_html_template": "planning_multiple_agendas_internal_template.html"
+    },
+    "label": "Internal"
+  }
+]

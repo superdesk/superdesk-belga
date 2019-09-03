@@ -25,3 +25,11 @@ postfix:
     service: postfix
   ports:
   - "25:25"
+
+grammalecte:
+  extends:
+    file: common.yml
+    service: grammalecte
+  ports:
+  - "9999:9999"
+
