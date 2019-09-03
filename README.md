@@ -44,7 +44,11 @@ These services must be installed, configured and running:
  * Python (>= 3.5)
  * Node.js (with `npm`)
 
-On macOS, if you have [homebrew](https://brew.sh/) installed, simply run: `brew install mongodb elasticsearch@2.4 redis python3 node`.
+On macOS, if you have [homebrew](https://brew.sh/) installed, simply run: 
+```sh
+brew tap mongodb/brew
+brew install mongodb-community elasticsearch@2.4 redis python3 node
+```
 
 ### Installation steps:
 
