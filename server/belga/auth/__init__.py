@@ -35,12 +35,10 @@ class AuthResource(Resource):
 
 
 def init_app(app):
-    oidc = OpenIDConnect(app)
-    endpoint_name = 'oidcauth'
-
-    app.client_config['oidc_auth'] = False
-    if app.config['OIDC_CLIENT_SECRETS']:
-        app.client_config['oidc_auth'] = True
+    if app.config['OIDC_SSO_ENABLE']:
+        oidc = OpenIDConnect(app)
+        endpoint_name = 'oidcauth'
+        app.client_config['oidc_auth'] = app.config['OIDC_SSO_ENABLE']        
         url, realm = oidc.client_secrets['issuer'].split('/realms/')
         app.client_config['keycloak_config'] = {
             'url': url,
@@ -49,36 +47,36 @@ def init_app(app):
             'redirectUri': app.config['OIDC_BROWSER_REDIRECT_URI']  # allow redirect uri configuable on client
         }
 
-    class OIDCAuthService(AuthService):
-        @oidc.accept_token(require_token=True, scopes_required=['openid'])
-        def authenticate(self, credentials, ignore_expire=False):
-            auth_service = get_resource_service('auth_users')
-            users_service = get_resource_service('users')
-            user = auth_service.find_one(req=None,
-                                         username=g.oidc_token_info.get('username'))
-            role = get_resource_service('roles').find_one(req=None,
-                                                          name=g.oidc_token_info.get('role', {}))
-            sync_data = {
-                "email": g.oidc_token_info.get('email'),
-                "first_name": g.oidc_token_info.get('given_name'),
-                "last_name": g.oidc_token_info.get('family_name'),
-                "needs_activation": False,
-                "user_type": g.oidc_token_info.get('user_type'),
-                "username": g.oidc_token_info.get('username'),
-                "role": role.get('_id') if role else None,
-                "display_name": g.oidc_token_info.get('name'),
-            }
-            if not user:
-                user_id = users_service.post([sync_data])[0]
+        class OIDCAuthService(AuthService):
+            @oidc.accept_token(require_token=True, scopes_required=['openid'])
+            def authenticate(self, credentials, ignore_expire=False):
+                auth_service = get_resource_service('auth_users')
+                users_service = get_resource_service('users')
                 user = auth_service.find_one(req=None,
-                                             _id=user_id)
-            else:
-                users_service.put(user.get('_id'), sync_data)
-                user = auth_service.find_one(req=None,
-                                             _id=user.get('_id'))
-            user["oidc"] = g.oidc_token_info
+                                            username=g.oidc_token_info.get('username'))
+                role = get_resource_service('roles').find_one(req=None,
+                                                            name=g.oidc_token_info.get('role', {}))
+                sync_data = {
+                    "email": g.oidc_token_info.get('email'),
+                    "first_name": g.oidc_token_info.get('given_name'),
+                    "last_name": g.oidc_token_info.get('family_name'),
+                    "needs_activation": False,
+                    "user_type": g.oidc_token_info.get('user_type'),
+                    "username": g.oidc_token_info.get('username'),
+                    "role": role.get('_id') if role else None,
+                    "display_name": g.oidc_token_info.get('name'),
+                }
+                if not user:
+                    user_id = users_service.post([sync_data])[0]
+                    user = auth_service.find_one(req=None,
+                                                _id=user_id)
+                else:
+                    users_service.put(user.get('_id'), sync_data)
+                    user = auth_service.find_one(req=None,
+                                                _id=user.get('_id'))
+                user["oidc"] = g.oidc_token_info
 
-            return user
+                return user
 
-    service = OIDCAuthService('auth', backend=superdesk.get_backend())
-    AuthResource(endpoint_name, app=app, service=service)
+        service = OIDCAuthService('auth', backend=superdesk.get_backend())
+        AuthResource(endpoint_name, app=app, service=service)
