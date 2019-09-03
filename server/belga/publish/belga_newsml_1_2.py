@@ -10,6 +10,8 @@
 
 import html
 import logging
+from datetime import datetime
+from urllib.parse import urljoin
 from lxml import etree
 from lxml.etree import SubElement
 from eve.utils import config
@@ -20,8 +22,9 @@ from superdesk.errors import FormatterError
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.metadata.item import ITEM_TYPE, CONTENT_TYPE, EMBARGO, GUID_FIELD
-
 from apps.archive.common import get_utc_schedule
+
+from belga.image import BelgaCoverageSearchProvider
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +57,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._article = article
             self._now = utcnow()
             self._string_now = self._now.strftime(self.DATETIME_FORMAT)
-            # SD does not have the same structure, there are no packages,
-            # but to cover old belga's news ml 1.2 output, this value will be used:
-            self._package_duid = 'pkg_{}'.format(self._article[GUID_FIELD])
+            self._duid = self._article[GUID_FIELD]
 
             self._format_catalog()
             self._format_newsenvelope()
@@ -80,20 +81,18 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if format_type == 'belganewsml12':
             if article[ITEM_TYPE] == CONTENT_TYPE.TEXT and article.get('profile') == self.BELGA_TEXT_PROFILE:
                 return True
-            elif article[ITEM_TYPE] == CONTENT_TYPE.PICTURE:
-                # TODO add support for picture
-                return False
         return False
 
     def _format_catalog(self):
-        """Creates Catalog and add it to `NewsML` container."""
+        """Creates `<Catalog>` and adds it to `<NewsML>`."""
+
         SubElement(
             self._newsml, 'Catalog',
             {'Href': 'http://www.belga.be/dtd/BelgaCatalog.xml'}
         )
 
     def _format_newsenvelope(self):
-        """Creates NewsEnvelope and add it to `NewsML` container."""
+        """Creates `<NewsEnvelope>` and adds it to `<NewsML>`."""
 
         newsenvelope = SubElement(self._newsml, 'NewsEnvelope')
         SubElement(newsenvelope, 'DateAndTime').text = self._string_now
@@ -101,7 +100,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newsenvelope, 'NewsProduct', {'FormalName': ''})
 
     def _format_newsitem(self):
-        """Creates NewsItem and add it to `NewsML` container."""
+        """Creates `<NewsItem>` and all internal elements and adds it to `<NewsML>`."""
 
         newsitem = SubElement(self._newsml, 'NewsItem')
         self._format_identification(newsitem)
@@ -110,15 +109,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_identification(self, newsitem):
         """
-        Creates the Identification element and add it to `newsitem`
-        :param Element newsitem:
+        Creates the `<Identification>` element and adds it to `<NewsItem>`.
+        :param Element newsitem: NewsItem
         """
 
         identification = SubElement(newsitem, 'Identification')
         news_identifier = SubElement(identification, 'NewsIdentifier')
         SubElement(news_identifier, 'ProviderId').text = app.config['NEWSML_PROVIDER_ID']
-        SubElement(news_identifier, 'DateId').text = self._article.get('firstcreated').strftime(self.DATETIME_FORMAT)
-        SubElement(news_identifier, 'NewsItemId').text = self._package_duid
+        SubElement(news_identifier, 'DateId').text = self._get_formatted_datetime(self._article.get('firstcreated'))
+        SubElement(news_identifier, 'NewsItemId').text = self._duid
         revision = self._process_revision(self._article)
         SubElement(news_identifier, 'RevisionId', attrib=revision).text = str(self._article.get(config.VERSION, ''))
         SubElement(news_identifier, 'PublicIdentifier').text = self._generate_public_identifier(
@@ -129,17 +128,18 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newsmanagement(self, newsitem):
         """
-        Creates the NewsManagement element and add it to `newsitem`
-        :param Element newsitem:
+        Creates the `<NewsManagement>` element and adds it to `<NewsItem>`.
+        :param Element newsitem: NewsItem
         """
+
         news_management = SubElement(newsitem, 'NewsManagement')
         SubElement(news_management, 'NewsItemType', {'FormalName': 'News'})
         SubElement(
             news_management, 'FirstCreated'
-        ).text = self._article.get('firstcreated').strftime(self.DATETIME_FORMAT)
+        ).text = self._get_formatted_datetime(self._article.get('firstcreated'))
         SubElement(
             news_management, 'ThisRevisionCreated'
-        ).text = self._article['versioncreated'].strftime(self.DATETIME_FORMAT)
+        ).text = self._get_formatted_datetime(self._article['versioncreated'])
 
         if self._article.get(EMBARGO):
             SubElement(news_management, 'Status', {'FormalName': 'Embargoed'})
@@ -159,13 +159,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newscomponent_1_level(self, newsitem):
         """
-        Creates the NewsComponent element and add it to `newsitem`
-        :param Element newsitem:
+        Creates the `<NewsComponent>` element and adds it to `<NewsItem>`.
+        :param Element newsitem: NewsItem
         """
 
         newscomponent_1_level = SubElement(
             newsitem, 'NewsComponent',
-            {'Duid': self._package_duid, XML_LANG: self._article.get('language')}
+            {'Duid': self._duid, XML_LANG: self._article.get('language')}
         )
         newslines = SubElement(newscomponent_1_level, 'NewsLines')
         SubElement(newslines, 'HeadLine').text = self._article.get('headline', '')
@@ -185,114 +185,539 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_newscomponent_2_level(self, newscomponent_1_level):
         """
-        Creates the NewsComponent of a 2nd level element and add it to `newscomponent_1_level`
-        :param Element newscomponent_1_level:
+        Creates the `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
-
-        newscomponent_2_level = SubElement(
-            newscomponent_1_level, 'NewsComponent',
-            {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
-        )
 
         _type = self._article.get('type')
         _profile = self._article.get('profile')
 
-        # belga text
-        if _type == CONTENT_TYPE.TEXT and _profile == self.BELGA_TEXT_PROFILE:
-            self._format_belga_text(newscomponent_2_level)
-            self._format_related_newscomponents(newscomponent_1_level)
-        # picture
-        elif _type == CONTENT_TYPE.PICTURE:
-            pass
+        self._format_belga_text(newscomponent_1_level)
+        self._format_belga_urls(newscomponent_1_level)
+        self._format_media(newscomponent_1_level)
+        self._format_attachments(newscomponent_1_level)
 
-    def _format_belga_text(self, newscomponent_2_level):
+    def _format_belga_text(self, newscomponent_1_level):
         """
-        Fills a NewsComponent of a 2nd level with information related to `belga_text` content profile.
-        :param Element newscomponent_2_level:
+        Creates a `<NewsComponent>` of a 2nd level with information related to `belga_text` content profile.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
         """
+
+        newscomponent_2_level = SubElement(
+            newscomponent_1_level, 'NewsComponent',
+            {XML_LANG: self._article.get('language')}
+        )
 
         # Role
         SubElement(newscomponent_2_level, 'Role', {'FormalName': self.BELGA_TEXT_PROFILE})
         # NewsLines
-        self._format_newslines(newscomponent_2_level)
+        self._format_newslines(newscomponent_2_level, item=self._article)
         # AdministrativeMetadata
-        self._format_administrative_metadata(newscomponent_2_level)
+        self._format_administrative_metadata(newscomponent_2_level, item=self._article)
         # DescriptiveMetadata
-        self._format_descriptive_metadata(newscomponent_2_level)
+        self._format_descriptive_metadata(newscomponent_2_level, item=self._article)
         # NewsComponent 3rd level
         self._format_newscomponent_3_level(newscomponent_2_level)
 
-    def _format_picture(self, newscomponent_2_level):
-        raise NotImplementedError
-
-    def _format_newslines(self, newscomponent_2_level):
+    def _format_belga_urls(self, newscomponent_1_level):
         """
-        Creates the NewsLines element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
+        Creates a `NewsComponent`(s) of a 2nd level with data from custom url fields.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        """
+
+        for belga_url in self._article.get('extra', {}).get('belga-url', []):
+            newscomponent_2_level = SubElement(
+                newscomponent_1_level, 'NewsComponent',
+                {XML_LANG: self._article.get('language')}
+            )
+            SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
+            newslines = SubElement(newscomponent_2_level, 'NewsLines')
+            SubElement(newslines, 'DateLine')
+            SubElement(newslines, 'CreditLine').text = self._article.get('byline')
+            SubElement(newslines, 'HeadLine').text = belga_url.get('description')
+            SubElement(newslines, 'CopyrightLine').text = self._article.get('copyrightholder')
+            self._format_administrative_metadata(newscomponent_2_level, item=self._article)
+            self._format_descriptive_metadata(newscomponent_2_level, item=self._article)
+
+            for role, key in (('Title', 'description'), ('Locator', 'url')):
+                newscomponent_3_level = SubElement(
+                    newscomponent_2_level, 'NewsComponent',
+                    {XML_LANG: self._article.get('language')}
+                )
+                SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+                SubElement(
+                    SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                    'Property',
+                    {'FormalName': 'ComponentClass', 'Value': 'Text'}
+                )
+                contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+                SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+                SubElement(contentitem, 'DataContent').text = belga_url.get(key)
+                characteristics = SubElement(contentitem, 'Characteristics')
+                # string's length is used in original belga's newsml
+                SubElement(characteristics, 'SizeInBytes').text = str(len(belga_url.get(key)))
+                SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+    def _format_attachments(self, newscomponent_1_level):
+        """
+        Format attached to the article files.
+        Creates `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        """
+
+        attachments_ids = [i['attachment'] for i in self._article.get('attachments', [])]
+        attachments_service = superdesk.get_resource_service('attachments')
+        attachments = list(attachments_service.find({'_id': {'$in': attachments_ids}}))
+        for attachment in attachments:
+            self._format_attachment(newscomponent_1_level, attachment)
+
+    def _format_media(self, newscomponent_1_level):
+        """
+        Format media items.
+        Creates `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
+
+        - Associated items with type `picture` (images from body / related images / related gallery) will be
+          converted to Belga360 NewsML representation as an `Image`.
+        - Associated items with type `graphic` (belga coverage) will be converted to Belga360 NewsML representation
+          as an `Gallery`.
+        - Associated items with type `audio` will be converted to Belga360 NewsML representation
+          as an `Audio`.
+        - Associated items with type `video` will be converted to Belga360 NewsML representation
+          as an `Video`.
+        - Belga coverage from `belga.coverage` custom field will be converted to Belga360 NewsML
+          representation as an `Gallery`.
+
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        """
+
+        # format media from associations
+        associations = self._article.get('associations', {})
+        for _type, _format in (
+                ('picture', self._format_picture),
+                ('graphic', self._format_coverage),
+                ('audio', self._format_audio),
+                ('video', self._format_video)
+        ):
+            # get all associated items with type `_type` where `renditions` are already IN the items.
+            items = [
+                associations[i] for i in associations
+                if associations[i]
+                and associations[i]['type'] == _type
+                and 'renditions' in self._article['associations'][i]
+            ]
+            # get all associated items `_id`s with type `_type` where `renditions` are NOT IN the item
+            items_ids = [
+                associations[i]['_id'] for i in associations
+                if associations[i]
+                and associations[i]['type'] == _type
+                and 'renditions' not in self._article['associations'][i]
+            ]
+
+            # fetch associated docs by _id
+            if items_ids:
+                archive_service = superdesk.get_resource_service('archive')
+                items += list(archive_service.find({
+                    '_id': {'$in': items_ids}}
+                ))
+            # format pictures
+            formatted_ids = []
+            for item in items:
+                if item['_id'] not in formatted_ids:
+                    formatted_ids.append(item['_id'])
+                    _format(newscomponent_1_level, item)
+
+        # format media item from custom field `belga.coverage`
+        extra = self._article.get('extra', {})
+        vocabularies_service = superdesk.get_resource_service('vocabularies')
+        belga_coverage_field_ids = [
+            i['_id'] for i in vocabularies_service.find({'custom_field_type': 'belga.coverage'})
+        ]
+        for belga_coverage_field_id in belga_coverage_field_ids:
+            if belga_coverage_field_id in extra:
+                belga_item_id = extra[belga_coverage_field_id]
+                belga_cov_search_provider = BelgaCoverageSearchProvider({})
+                try:
+                    data = belga_cov_search_provider.api_get('/getGalleryById', {'i': belga_item_id.rsplit(':', 1)[-1]})
+                except Exception as e:
+                    logger.warning("Failed to fetch belga coverage: {}".format(e))
+                else:
+                    data = belga_cov_search_provider.format_list_item(data)
+                    self._format_coverage(newscomponent_1_level, data)
+
+    def _format_picture(self, newscomponent_1_level, picture):
+        """
+        Creates a `<NewsComponent>` of a 2nd level with associated picture data.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict picture: picture item
+        """
+
+        # NewsComponent
+        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
+        if picture.get(GUID_FIELD):
+            newscomponent_2_level.attrib['Duid'] = picture.get(GUID_FIELD)
+        if picture.get('language'):
+            newscomponent_2_level.attrib[XML_LANG] = picture.get('language')
+        # Role
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Picture'})
+        # NewsLines
+        self._format_newslines(newscomponent_2_level, item=picture)
+        # AdministrativeMetadata
+        self._format_administrative_metadata(newscomponent_2_level, item=picture)
+        self._format_descriptive_metadata(newscomponent_2_level, item=picture)
+
+        for role, key in (('Title', 'headline'), ('Caption', 'description_text')):
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if picture.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = picture.get('language')
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+            )
+            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+            SubElement(contentitem, 'DataContent').text = picture.get(key)
+            characteristics = SubElement(contentitem, 'Characteristics')
+            # string's length is used in original belga's newsml
+            SubElement(characteristics, 'SizeInBytes').text = str(len(picture.get(key)))
+            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+        # original, thumbnail, preview
+        for role, key in (('Image', 'original'), ('Thumbnail', 'thumbnail'), ('Preview', 'viewImage')):
+            if key not in picture['renditions']:
+                continue
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if picture.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = picture.get('language')
+
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Image'}
+            )
+            self._format_media_contentitem(newscomponent_3_level, rendition=picture['renditions'][key])
+
+    def _format_coverage(self, newscomponent_1_level, coverage):
+        """
+        Creates a `<NewsComponent>` of a 2nd level with associated graphic item's data
+        or with data from `belga.coverage` field.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict coverage: coverage data
+        """
+
+        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
+        if coverage.get(GUID_FIELD):
+            newscomponent_2_level.attrib['Duid'] = coverage.get(GUID_FIELD)
+        if coverage.get('language'):
+            newscomponent_2_level.attrib[XML_LANG] = coverage.get('language')
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Gallery'})
+        self._format_newslines(newscomponent_2_level, item=coverage)
+        self._format_administrative_metadata(newscomponent_2_level, item=coverage)
+        self._format_descriptive_metadata(newscomponent_2_level, item=coverage)
+
+        for role, key in (('Title', 'headline'), ('Caption', 'description_text')):
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if coverage.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = coverage.get('language')
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+            )
+            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+            SubElement(contentitem, 'DataContent').text = coverage.get(key)
+            characteristics = SubElement(contentitem, 'Characteristics')
+            # string's length is used in original belga's newsml
+            SubElement(characteristics, 'SizeInBytes').text = str(len(coverage.get(key)))
+            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+        newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+        if coverage.get(GUID_FIELD):
+            newscomponent_3_level.attrib['Duid'] = coverage.get(GUID_FIELD)
+        if coverage.get('language'):
+            newscomponent_3_level.attrib[XML_LANG] = coverage.get('language')
+
+        SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Component'})
+        SubElement(
+            SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+            'Property',
+            {'FormalName': 'ComponentClass', 'Value': 'Image'}
+        )
+        self._format_media_contentitem(newscomponent_3_level, rendition=coverage['renditions']['original'])
+
+    def _format_audio(self, newscomponent_1_level, audio):
+        """
+        Creates a `<NewsComponent>` of a 2nd level with associated audio data.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict audio: audio item
+        """
+
+        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
+        if audio.get(GUID_FIELD):
+            newscomponent_2_level.attrib['Duid'] = audio.get(GUID_FIELD)
+        if audio.get('language'):
+            newscomponent_2_level.attrib[XML_LANG] = audio.get('language')
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Audio'})
+        self._format_newslines(newscomponent_2_level, item=audio)
+        self._format_administrative_metadata(newscomponent_2_level, item=audio)
+        self._format_descriptive_metadata(newscomponent_2_level, item=audio)
+
+        for role, key in (('Title', 'headline'), ('Body', 'description_text')):
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if audio.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = audio.get('language')
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+            )
+            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+            SubElement(contentitem, 'DataContent').text = audio.get(key)
+            characteristics = SubElement(contentitem, 'Characteristics')
+            # string's length is used in original belga's newsml
+            SubElement(characteristics, 'SizeInBytes').text = str(len(audio.get(key)))
+            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+        # sound
+        newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+        if audio.get(GUID_FIELD):
+            newscomponent_3_level.attrib['Duid'] = audio.get(GUID_FIELD)
+        if audio.get('language'):
+            newscomponent_3_level.attrib[XML_LANG] = audio.get('language')
+
+        SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Sound'})
+        SubElement(
+            SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+            'Property',
+            {'FormalName': 'ComponentClass', 'Value': 'Audio'}
+        )
+        self._format_media_contentitem(newscomponent_3_level, rendition=audio['renditions']['original'])
+
+    def _format_video(self, newscomponent_1_level, video):
+        """
+        Creates a `<NewsComponent>` of a 2nd level with associated video data.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict audio: video item
+        """
+
+        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
+        if video.get(GUID_FIELD):
+            newscomponent_2_level.attrib['Duid'] = video.get(GUID_FIELD)
+        if video.get('language'):
+            newscomponent_2_level.attrib[XML_LANG] = video.get('language')
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': 'Video'})
+        self._format_newslines(newscomponent_2_level, item=video)
+        self._format_administrative_metadata(newscomponent_2_level, item=video)
+        self._format_descriptive_metadata(newscomponent_2_level, item=video)
+
+        for role, key in (('Title', 'headline'), ('Body', 'description_text')):
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if video.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = video.get('language')
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+            )
+            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+            SubElement(contentitem, 'DataContent').text = video.get(key)
+            characteristics = SubElement(contentitem, 'Characteristics')
+            # string's length is used in original belga's newsml
+            SubElement(characteristics, 'SizeInBytes').text = str(len(video.get(key)))
+            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+        # sound
+        newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+        if video.get(GUID_FIELD):
+            newscomponent_3_level.attrib['Duid'] = video.get(GUID_FIELD)
+        if video.get('language'):
+            newscomponent_3_level.attrib[XML_LANG] = video.get('language')
+
+        SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Clip'})
+        SubElement(
+            SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+            'Property',
+            {'FormalName': 'ComponentClass', 'Value': 'Audio'}
+        )
+        self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
+
+    def _format_attachment(self, newscomponent_1_level, attachment):
+        """
+        Creates a `<NewsComponent>` of a 2nd level with file attached to the article.
+        :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict attachment: attachment
+        """
+
+        attachment['_id'] = str(attachment['_id'])
+        attachment[GUID_FIELD] = attachment['_id']
+        attachment['headline'] = attachment.pop('title')
+        attachment['description_text'] = attachment.pop('description')
+
+        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
+        newscomponent_2_level.attrib['Duid'] = str(attachment.get('_id'))
+
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedDocument'})
+        self._format_newslines(newscomponent_2_level, item=attachment)
+        self._format_administrative_metadata(newscomponent_2_level, item=attachment)
+        self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
+
+        for role, key in (('Title', 'headline'), ('Body', 'description_text')):
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+            )
+            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+            SubElement(contentitem, 'DataContent').text = attachment.get(key)
+            characteristics = SubElement(contentitem, 'Characteristics')
+            # string's length is used in original belga's newsml
+            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment.get(key)))
+            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+        # Component
+        newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+        newscomponent_3_level.attrib['Duid'] = attachment.get(GUID_FIELD)
+
+        SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Component'})
+        SubElement(
+            SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+            'Property',
+            {'FormalName': 'ComponentClass', 'Value': 'Binary'}
+        )
+
+        self._format_media_contentitem(
+            newscomponent_3_level,
+            rendition={
+                'filename': attachment['filename'],
+                'media': attachment['media'],
+                'mimetype': attachment['mimetype'],
+                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}?resource=attachments'.format(attachment['media']))
+            }
+        )
+
+    def _format_media_contentitem(self, newscomponent_3_level, rendition):
+        """
+        Creates a ContentItem for provided rendition.
+        :param Element newscomponent_3_level: NewsComponent of 3st level
+        :param dict rendition: rendition info
+        """
+        contentitem = SubElement(
+            newscomponent_3_level, 'ContentItem',
+            {'Href': r'{}'.format(rendition['href'])}
+        )
+
+        filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
+        SubElement(contentitem, 'Format', {'FormalName': filename.rsplit('.', 1)[-1].capitalize()})
+        if rendition.get('mimetype'):
+            SubElement(contentitem, 'MimeType', {'FormalName': rendition['mimetype']})
+        characteristics = SubElement(contentitem, 'Characteristics')
+
+        if rendition.get('media'):
+            media = app.media.get(str(rendition['media']))
+            length = media.length if media.length else media.metadata.get('length')
+            SubElement(characteristics, 'SizeInBytes').text = str(length)
+        if rendition.get('width'):
+            SubElement(
+                characteristics, 'Property',
+                {'FormalName': 'Width', 'Value': str(rendition['width'])}
+            )
+        if rendition.get('height'):
+            SubElement(
+                characteristics, 'Property',
+                {'FormalName': 'Height', 'Value': str(rendition['height'])}
+            )
+
+    def _format_newslines(self, newscomponent_2_level, item):
+        """
+        Creates the `<NewsLines>` element for text item and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
+        :param dict item: item
         """
         newslines = SubElement(newscomponent_2_level, 'NewsLines')
         SubElement(newslines, 'DateLine')
-        SubElement(newslines, 'CreditLine').text = self._article.get('byline')
-        SubElement(newslines, 'HeadLine').text = self._article.get('headline')
-        SubElement(newslines, 'CopyrightLine').text = self._article.get('copyrightholder')
-        for keyword in self._article.get('keywords', []):
+        SubElement(newslines, 'CreditLine').text = item.get('creditline', item.get('byline'))
+        SubElement(newslines, 'HeadLine').text = item.get('headline')
+        SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
+        for keyword in item.get('keywords', []):
             SubElement(newslines, 'KeywordLine').text = keyword
+        if item.get('extra', {}).get('belga-keywords'):
+            for keyword in [i.strip() for i in item['extra']['belga-keywords'].split(',')]:
+                SubElement(newslines, 'KeywordLine').text = keyword
         newsline = SubElement(newslines, 'NewsLine')
-        SubElement(newsline, 'NewsLineType', {'FormalName': self._article.get('line_type', '')})
-        SubElement(newsline, 'NewsLineText').text = self._article.get('line_text')
+        SubElement(newsline, 'NewsLineType', {'FormalName': item.get('line_type', '')})
+        SubElement(newsline, 'NewsLineText').text = item.get('line_text')
 
-    def _format_administrative_metadata(self, newscomponent_2_level):
+    def _format_administrative_metadata(self, newscomponent_2_level, item):
         """
-        Creates the AdministrativeMetadata element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
+        Creates the `<AdministrativeMetadata>` element and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
+        :param dict item: item
         """
 
         administrative_metadata = SubElement(newscomponent_2_level, 'AdministrativeMetadata')
         SubElement(
             SubElement(administrative_metadata, 'Provider'),
             'Party',
-            {'FormalName': self._article.get('line_type', '')}
+            {'FormalName': item.get('line_type', '')}
         )
         creator = SubElement(administrative_metadata, 'Creator')
-        for author in self._article.get('authors', []):
+
+        if item.get('type') == CONTENT_TYPE.PICTURE:
+            authors = (item['original_creator'],) if item.get('original_creator') else tuple()
+        else:
+            authors = item.get('authors', tuple())
+        for author in authors:
+            author = self._get_author_info(author)
             SubElement(
                 creator, 'Party',
-                {'FormalName': author.get('name', ''), 'Topic': author.get('role', '')}
+                {'FormalName': author['name'], 'Topic': author['role']}
             )
-        SubElement(
-            SubElement(administrative_metadata, 'Contributor'), 'Party',
-            {'FormalName': self._article.get('administrative', {}).get('contributor', '')}
-        )
-        if 'validator' in self._article.get('administrative', {}):
+        if 'contributor' in item.get('administrative', {}):
+            SubElement(
+                SubElement(administrative_metadata, 'Contributor'), 'Party',
+                {'FormalName': item['administrative']['contributor']}
+            )
+        if 'validator' in item.get('administrative', {}):
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'Validator', 'Value': self._article['administrative']['validator']}
+                {'FormalName': 'Validator', 'Value': item['administrative']['validator']}
             )
-        if 'validation_date' in self._article.get('administrative', {}):
+        if 'validation_date' in item.get('administrative', {}):
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'ValidationDate', 'Value': self._article['administrative']['validation_date']}
+                {'FormalName': 'ValidationDate', 'Value': item['administrative']['validation_date']}
             )
-        if 'foreign_id' in self._article.get('administrative', {}):
+        if 'foreign_id' in item.get('administrative', {}):
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'ForeignId', 'Value': self._article['administrative']['foreign_id']}
+                {'FormalName': 'ForeignId', 'Value': item['administrative']['foreign_id']}
             )
-        if 'priority' in self._article:
+        if 'priority' in item:
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'Priority', 'Value': str(self._article['priority'])}
+                {'FormalName': 'Priority', 'Value': str(item['priority'])}
             )
         SubElement(
             administrative_metadata,
             'Property',
-            {'FormalName': 'NewsObjectId', 'Value': self._article[GUID_FIELD]}
+            {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
         )
         property_newspackage = SubElement(
             administrative_metadata, 'Property',
             {'FormalName': 'NewsPackage'}
         )
-        for subject in self._article.get('subject', []):
+        for subject in item.get('subject', []):
             if subject['scheme'] == 'news_services':
                 SubElement(
                     property_newspackage, 'Property',
@@ -303,35 +728,42 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     property_newspackage, 'Property',
                     {'FormalName': 'NewsProduct', 'Value': subject['qcode']}
                 )
+        if 'source' in item:
+            SubElement(
+                SubElement(administrative_metadata, 'Source'),
+                'Party',
+                {'FormalName': item['source']}
+            )
 
-    def _format_descriptive_metadata(self, newscomponent_2_level):
+    def _format_descriptive_metadata(self, newscomponent_2_level, item):
         """
-        Creates the DescriptiveMetadata element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
+        Creates the `<DescriptiveMetadata>` element and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
+        :param dict item: item
         """
 
-        descriptive_metadata = SubElement(
-            newscomponent_2_level, 'DescriptiveMetadata',
-            {'DateAndTime': self._article['_created'].strftime(self.DATETIME_FORMAT)}
-        )
+        descriptive_metadata = SubElement(newscomponent_2_level, 'DescriptiveMetadata')
+        if item.get('firstcreated'):
+            descriptive_metadata.attrib['DateAndTime'] = self._get_formatted_datetime(item['firstcreated'])
+
         SubElement(descriptive_metadata, 'SubjectCode')
         location = SubElement(descriptive_metadata, 'Location')
 
         city_property = SubElement(location, 'Property', {'FormalName': 'City'})
-        if self._article.get('extra', {}).get('city'):
-            city_property.set('Value', self._article['extra']['city'])
+        if item.get('extra', {}).get('city'):
+            city_property.set('Value', item['extra']['city'])
 
         country_property = SubElement(location, 'Property', {'FormalName': 'Country'})
-        if self._article.get('extra', {}).get('country'):
-            country_property.set('Value', self._article['extra']['country'])
+        if item.get('extra', {}).get('country'):
+            country_property.set('Value', item['extra']['country'])
 
         SubElement(location, 'Property', {'FormalName': 'CountryArea'})
         SubElement(location, 'Property', {'FormalName': 'WorldRegion'})
 
     def _format_newscomponent_3_level(self, newscomponent_2_level):
         """
-        Creates the NewsComponent(s) of a 3rd level element and add it to `newscomponent_2_level`
-        :param Element newscomponent_2_level:
+        Creates the `<NewsComponent>`(s) of a 3rd level element and add it to `newscomponent_2_level`
+        :param Element newscomponent_2_level: NewsComponent of 2nd level
         """
 
         # Title, Lead, Body
@@ -339,7 +771,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             if self._article.get(item_key):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
-                    {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
+                    {XML_LANG: self._article.get('language')}
                 )
                 # Role
                 SubElement(newscomponent_3_level, 'Role', {'FormalName': formalname})
@@ -358,42 +790,47 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(characteristics, 'SizeInBytes').text = str(len(text))
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
-    def _format_related_newscomponents(self, newscomponent_1_level):
-        """
-        Fills a NewsComponent of a 2nd level with information related to main NewsComponent.
-        :param Element newscomponent_1_level:
-        """
+    def _get_author_info(self, author):
+        author_info = {
+            'name': '',
+            'role': ''
+        }
+        users_service = superdesk.get_resource_service('users')
 
-        # belga-url
-        for belga_url in self._article.get('extra', {}).get('belga-url', []):
-            newscomponent_2_level = SubElement(
-                newscomponent_1_level, 'NewsComponent',
-                {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
-            )
-            SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
-            newslines = SubElement(newscomponent_2_level, 'NewsLines')
-            SubElement(newslines, 'DateLine')
-            SubElement(newslines, 'CreditLine').text = self._article.get('byline')
-            SubElement(newslines, 'HeadLine').text = belga_url.get('description')
-            SubElement(newslines, 'CopyrightLine').text = self._article.get('copyrightholder')
-            self._format_administrative_metadata(newscomponent_2_level)
-            self._format_descriptive_metadata(newscomponent_2_level)
+        if type(author) is str:
+            author_id = author
+            try:
+                user = next(users_service.find({'_id': author_id}))
+            except StopIteration:
+                logger.warning("unknown user: {user_id}".format(user_id=author_id))
+            else:
+                if user.get('display_name'):
+                    author_info['name'] = user.get('display_name')
+                if user.get('role'):
+                    roles_service = superdesk.get_resource_service('roles')
+                    try:
+                        role = next(roles_service.find({'_id': user['role']}))
+                    except StopIteration:
+                        logger.warning("unknown role: {role_id}".format(role_id=user['role']))
+                    else:
+                        author_info['role'] = role.get('author_role', '')
+        else:
+            author_info['name'] = author.get('sub_label', author['name'] if author.get('name') else '')
+            author_info['role'] = author['role'] if author.get('role') else ''
 
-            for role, key in (('Title', 'description'), ('Locator', 'url')):
-                newscomponent_3_level = SubElement(
-                    newscomponent_2_level, 'NewsComponent',
-                    {'Duid': self._article[GUID_FIELD], XML_LANG: self._article.get('language')}
-                )
-                SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
-                SubElement(
-                    SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
-                    'Property',
-                    {'FormalName': 'ComponentClass', 'Value': 'Text'}
-                )
-                contentitem = SubElement(newscomponent_3_level, 'ContentItem')
-                SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-                SubElement(contentitem, 'DataContent').text = belga_url.get(key)
-                characteristics = SubElement(contentitem, 'Characteristics')
-                # string's length is used in original belga's newsml
-                SubElement(characteristics, 'SizeInBytes').text = str(len(belga_url.get(key)))
-                SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+            if 'parent' in author:
+                try:
+                    user = next(users_service.find({'_id': author['parent']}))
+                except StopIteration:
+                    logger.warning("unknown user: {user_id}".format(user_id=author['parent']))
+                else:
+                    if user.get('display_name'):
+                        author_info['name'] = user.get('display_name')
+
+        return author_info
+
+    def _get_formatted_datetime(self, _datetime):
+        if type(_datetime) is str:
+            return datetime.strptime(_datetime, '%Y-%m-%dT%H:%M:%S+0000').strftime(self.DATETIME_FORMAT)
+        else:
+            return _datetime.strftime(self.DATETIME_FORMAT)
