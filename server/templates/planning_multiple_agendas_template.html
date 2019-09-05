@@ -1,0 +1,30 @@
+{% for agenda in agendas %}
+
+  {% if agenda.get('items') %}
+    {% if agenda._id == 'unassigned' %}
+      <h2 translate>{{ agenda.name }}</h2>
+    {% else %}
+      <h2>{{ agenda.name }}</h2>
+    {% endif %}
+  {% endif %}
+
+  {% for item in agenda.get('items') %}
+  {% if item.event %}
+  <p><b>{{ item.event.name }}</b>{% if item.event.get('location') %}{{ ', ' + item.event.location[0].name }}
+    {% endif %}{{ ', ' + item.event.dates.start.strftime('%H%M - ') }}{{ item.get('assignees')|join(', ') }}</p>
+  {% else %}
+  <p><b>{{ item.slugline }}</b>{{ ', ' + item.planning_date.strftime('%H%M - ') }}{{ item.get('assignees')|join(', ') }}</p>
+  {% endif %}
+
+
+  {% if item.get('agendas')|length > 1 %}
+    <p>
+      <i translate>also in:</i> <span>{{ item.get('agendas') | rejectattr('_id', 'equalto', agenda.get('_id')) | map(attribute='name') | list | join(', ') }}</span>
+    </p>
+  {% endif %}
+
+  <p>---</p>
+  {% endfor %}
+
+{% endfor %}
+

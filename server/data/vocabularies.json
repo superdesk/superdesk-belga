@@ -2038,6 +2038,27 @@
         "unique_field": "qcode"
     },
     {
+        "_id": "belga-keywords",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Belga Keywords",
+        "description": "",
+        "helper_text": "",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
+    },
+    {
         "_id": "desk_types",
         "display_name": "Desk Types",
         "type": "unmanageable",
