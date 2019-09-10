@@ -15,6 +15,8 @@ from superdesk.io.registry import register_feed_parser
 from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
 from superdesk import etree as sd_etree, get_resource_service
+from xml.etree import ElementTree
+import re
 
 import dateutil.parser
 import logging
@@ -77,7 +79,6 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         except IndexError:
             body_elt = tree.xpath('//xhtml:body', namespaces=NS)[0]
         body_elt = sd_etree.clean_html(body_elt)
-
         content = dict()
         content['contenttype'] = tree.attrib['contenttype']
         if len(body_elt) > 0:
@@ -86,6 +87,13 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
             content['content'] = '<pre>' + body_elt.text + '</pre>'
             content['format'] = CONTENT_TYPE.PREFORMATTED
         return content
+
+    def parse_item_meta(self, tree, item):
+        super().parse_item_meta(tree, item)
+        meta = tree.find(self.qname('itemMeta'))
+        edNote = meta.find(self.qname('edNote'))
+        text = ElementTree.tostring(edNote, encoding="utf-8", method="text")
+        item['ednote'] = text.decode('utf-8').replace(' \n', '').replace('  ', '')
 
     def parse_content_meta(self, tree, item):
         meta = super().parse_content_meta(tree, item)
@@ -111,6 +119,16 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                     if subject_data:
                         item['subject'].append(subject_data)
                         break
+
+    def parse_authors(self, meta, item):
+        item['authors'] = []
+        for creator in meta.findall(self.qname('creator')):
+            role = creator.find(self.qname('name'))
+            if role is not None:
+                item['authors'].append({
+                    'uri': creator.get('uri'),
+                    'role': role.text,
+                })
 
     def _get_data_subject(self, subject_elt):
         qcode_parts = subject_elt.get('qcode', '').split(':')

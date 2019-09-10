@@ -38,7 +38,7 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     def parser_newsmanagement(self, item, manage_el):
         super().parser_newsmanagement(item, manage_el)
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
-        item['versioncreated'] = item['firstcreated'].astimezone(pytz.utc)
+        item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
 
     def parser_newscomponent(self, item, newscomponent_el):
         """
