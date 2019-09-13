@@ -212,6 +212,100 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
         }
 
 
+class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
+
+    GUID_PREFIX = 'urn:belga.be:360archive:'
+
+    label = 'Belga 360 Archive'
+    base_url = 'http://192.168.100.4:8081/belgabox/fo/'
+    search_endpoint = 'archivenewsobjects'
+    items_field = 'newsObjects'
+    count_field = 'nrNewsObjects'
+
+    def __init__(self, provider, **kwargs):
+        super().__init__(provider, **kwargs)
+        self.session = requests.Session()
+        self._id_token = None
+        self._auth_token = None
+
+
+    def url(self, resource):
+        return urljoin(self.base_url, resource.lstrip('/'))
+
+    def find(self, query, params=None):
+        api_params = {
+            'start': query.get('from', 0),
+            'pageSize': query.get('size', 25),
+        }
+
+        try:
+            query_string = query['query']['filtered']['query']['query_string']['query']
+            api_params['searchText'] = query_string.strip().replace('  ', ' ').split()
+        except KeyError:
+            api_params['searchText'] = ''
+
+        data = self.api_get(self.search_endpoint, api_params)
+        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        return BelgaListCursor(docs, data[self.count_field])
+
+    def api_get(self, endpoint, params):
+        url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
+        resp = self.session.get(self.url(url))
+        resp.raise_for_status()
+        return resp.json()
+
+    def _get_body_html(self, item):
+        body_html = [i for i in item.get('newsComponents') if i['assetType'].lower() == 'body']
+        return body_html[0]['proxies'][0]['varcharData']
+    
+    def _get_abstract(self, item):
+        body_html = [i for i in item.get('newsComponents') if i['assetType'].lower() == 'lead']
+        return body_html[0]['proxies'][0]['varcharData']
+
+    def format_list_item(self, data):
+        guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
+        assets = ('picture')
+        asset_type = get_text(data['assetType']).lower()
+        created = get_datetime(datetime.datetime.now())
+        return {
+            'type': asset_type if asset_type in assets else 'text',
+            '_type': 'item',
+            'mimetype': 'application/vnd.belga.360archive',
+            'pubstatus': 'usable',
+            '_id': guid,
+            'guid': guid,
+            'headline': get_text(data['headLine']),
+            'name': get_text(data['name']),
+            'description_text': get_text(data.get('description')),
+            'versioncreated': created,
+            'firstcreated': created,
+            # 'byline': get_text(data.get('author')) or get_text(data.get('userId')),
+            'creditline': get_text(data['credit']),
+            'source': get_text(data['source']),
+            'language': get_text(data['language']),
+            # 'renditions': {
+            #     'original': {
+            #         'href': thumbnail,
+            #     },
+            #     'thumbnail': {
+            #         'href': thumbnail,
+            #     },
+            #     'viewImage': {
+            #         'href': thumbnail,
+            #     },
+            #     'baseImage': {
+            #         'href': thumbnail,
+            #     },
+            # },
+            'abstract': get_text(self._get_abstract(data)),
+            'body_html': get_text(self._get_body_html(data)),
+            'extra': {
+                'bcoverage': guid,
+            },
+        }
+
+
 def init_app(app):
     superdesk.register_search_provider('belga_image', provider_class=BelgaImageSearchProvider)
     superdesk.register_search_provider('belga_coverage', provider_class=BelgaCoverageSearchProvider)
+    superdesk.register_search_provider('belga_360archive', provider_class=Belga360ArchiveSearchProvider)
