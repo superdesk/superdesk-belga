@@ -114,3 +114,19 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
 
             )
         self.assertEqual(item["body_html"], expected_body)
+
+    def test_empty_headline(self):
+        news_lines = self.xml_root.find('NewsItem/NewsComponent/NewsLines')
+        headline = news_lines.find('HeadLine')
+        news_lines.remove(headline)
+        # set urgency
+        urgency = self.xml_root.find('NewsItem/NewsManagement/Urgency')
+        urgency.attrib['FormalName'] = '1'
+
+        parser = BelgaAFPNewsMLOneFeedParser()
+        item = parser.parse(self.xml_root, {'name': 'test'})
+        assert item[0]['headline'] == (
+            "URGENT: Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisien"
+            " Roissy-Charles de Gaulle, accusés d'avoir facilité l'importation de cocaïne de retour de République "
+            "dominicaine, s'est ouvert lundi devant un tribunal à Paris."
+        )

@@ -10,6 +10,7 @@
 
 from superdesk.io.registry import register_feed_parser
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
+from lxml import etree
 
 
 class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -17,6 +18,16 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     NAME = 'belga_afp_newsml12'
     label = 'Belga specific AFP News ML 1.2 Parser'
+
+    def parse(self, xml, provider=None):
+        items = super().parse(xml, provider)
+        for item in items:
+            if item.get('urgency') in ('1', '2') and not item.get('headline'):
+                first_line = item.get('body_html', '').strip().split('\n')[0]
+                first_line = etree.fromstring(first_line).text
+                headline = 'URGENT: ' + first_line.strip()
+                item['headline'] = headline
+        return items
 
 
 register_feed_parser(BelgaAFPNewsMLOneFeedParser.NAME, BelgaAFPNewsMLOneFeedParser())
