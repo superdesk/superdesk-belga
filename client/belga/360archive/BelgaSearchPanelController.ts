@@ -7,6 +7,7 @@ interface Subject {
 export default class BelgaSearchPanelController {
     languages: Array<Subject>;
     periods: Array<Subject>;
+    types: Array<Subject>;
 
     $onInit() {
         this.languages = [
@@ -16,6 +17,12 @@ export default class BelgaSearchPanelController {
             {name: 'ES', id: 'es'},
             {name: 'NL', id: 'nl'},
         ];
+
+        this.types = [
+            {name: 'alert', id: 'alert'},
+            {name: 'text', id: 'text'},
+            {name: 'brief', id: 'brief'}
+        ]
 
         this.periods = [
             {name: 'Whenever', id: ''},

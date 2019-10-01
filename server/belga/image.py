@@ -217,7 +217,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     GUID_PREFIX = 'urn:belga.be:360archive:'
 
     label = 'Belga 360 Archive'
-    base_url = 'http://192.168.100.4:8081/belgabox/fo/'
+    base_url = 'http://mules.staging.belga.be:48080/belga360-ws/'
     search_endpoint = 'archivenewsobjects'
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
@@ -227,7 +227,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         self.session = requests.Session()
         self._id_token = None
         self._auth_token = None
-
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip('/'))
