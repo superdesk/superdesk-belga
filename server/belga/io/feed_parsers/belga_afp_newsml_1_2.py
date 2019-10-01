@@ -11,6 +11,7 @@
 from superdesk.io.registry import register_feed_parser
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 from superdesk import get_resource_service
+from lxml import etree
 
 
 class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -54,6 +55,16 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     "scheme": "news_products"
                 }
                 add_unique_item_to_list(product, item.get('subject', []))
+        return items
+
+    def parse(self, xml, provider=None):
+        items = super().parse(xml, provider)
+        for item in items:
+            if item.get('urgency') in ('1', '2') and not item.get('headline'):
+                first_line = item.get('body_html', '').strip().split('\n')[0]
+                first_line = etree.fromstring(first_line).text
+                headline = 'URGENT: ' + first_line.strip()
+                item['headline'] = headline
         return items
 
 
