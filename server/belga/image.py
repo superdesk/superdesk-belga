@@ -232,22 +232,22 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         return urljoin(self.base_url, resource.lstrip('/'))
 
     def find(self, query, params=None):
+        page_size = query.get('size', 25)
         api_params = {
-            'start': query.get('from', 0),
-            'pageSize': query.get('size', 25),
+            'start': query.get('from', 0) // page_size,
+            'pageSize': page_size,
         }
 
         try:
-            query_string = query['query']['filtered']['query']['query_string']['query']
-            api_params['searchText'] = query_string.strip().replace('  ', ' ').split()
+            api_params['searchText'] = query['query']['filtered']['query']['query_string']['query']
         except KeyError:
             api_params['searchText'] = ''
 
-        data = self.api_get(self.search_endpoint, api_params)
+        data = self._api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
 
-    def api_get(self, endpoint, params):
+    def _api_get(self, endpoint, params):
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         resp = self.session.get(self.url(url))
         resp.raise_for_status()
@@ -256,7 +256,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     def _get_body_html(self, item):
         body_html = [i for i in item.get('newsComponents') if i['assetType'].lower() == 'body']
         return body_html[0]['proxies'][0]['varcharData']
-    
+
     def _get_abstract(self, item):
         body_html = [i for i in item.get('newsComponents') if i['assetType'].lower() == 'lead']
         return body_html[0]['proxies'][0]['varcharData']
@@ -278,24 +278,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'description_text': get_text(data.get('description')),
             'versioncreated': created,
             'firstcreated': created,
-            # 'byline': get_text(data.get('author')) or get_text(data.get('userId')),
             'creditline': get_text(data['credit']),
             'source': get_text(data['source']),
             'language': get_text(data['language']),
-            # 'renditions': {
-            #     'original': {
-            #         'href': thumbnail,
-            #     },
-            #     'thumbnail': {
-            #         'href': thumbnail,
-            #     },
-            #     'viewImage': {
-            #         'href': thumbnail,
-            #     },
-            #     'baseImage': {
-            #         'href': thumbnail,
-            #     },
-            # },
             'abstract': get_text(self._get_abstract(data)),
             'body_html': get_text(self._get_body_html(data)),
             'extra': {
