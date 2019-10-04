@@ -6,8 +6,9 @@ import requests
 import superdesk
 
 from flask import json
+from functools import partial
 from httmock import all_requests, HTTMock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from belga.image import BelgaImageSearchProvider, Belga360ArchiveSearchProvider
 
@@ -157,6 +158,16 @@ def archive_mock(url, request):
         return _file.read()
 
 
+def archive_service_mock(service, return_item=False):
+    fake_service = MagicMock()
+    fake_service.find_one.side_effect = None
+    if return_item:
+        with open(fixture('belga-360archive-search.json')) as _file:
+            items = json.load(_file)
+            fake_service.find_one.side_effect = items['newsObjects'][0]
+    return fake_service
+
+
 class Belga360ArchiveTestCase(unittest.TestCase):
     def setUp(self):
         self.provider = Belga360ArchiveSearchProvider(dict())
@@ -183,12 +194,13 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.provider.find(self.query)
 
         url = requests.Request('GET', self.provider.base_url + 'archivenewsobjects', params={
-            'searchText': 'test query',
             'start': 0,
+            'searchText': 'test query',
             'pageSize': 20,
         }).prepare().url
         self.provider.session.get.assert_called_with(url)
 
+    @patch('superdesk.get_resource_service', MagicMock(side_effect=partial(archive_service_mock, False)))
     def test_format_list_item(self):
         with open(fixture('belga-360archive-search.json')) as _file:
             items = json.load(_file)
@@ -216,6 +228,15 @@ class Belga360ArchiveTestCase(unittest.TestCase):
             ' Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.'
         )
 
+    @patch('superdesk.get_resource_service', MagicMock(side_effect=partial(archive_service_mock, True)))
+    def test_format_inserted_item(self):
+        with open(fixture('belga-360archive-search.json')) as _file:
+            items = json.load(_file)
+            item = self.provider.format_list_item(items['newsObjects'][0])
+        assert item['_type'] == 'externalsource'
+        assert item['state'] == 'imported'
+
+    @patch('superdesk.get_resource_service', MagicMock(side_effect=partial(archive_service_mock, False)))
     def test_find_item(self):
         with HTTMock(archive_mock):
             items = self.provider.find(self.query)
