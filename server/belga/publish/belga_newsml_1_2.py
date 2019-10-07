@@ -79,7 +79,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
 
         if format_type == 'belganewsml12':
-            if article[ITEM_TYPE] == CONTENT_TYPE.TEXT and article.get('profile') == self.BELGA_TEXT_PROFILE:
+            if article[ITEM_TYPE] == CONTENT_TYPE.TEXT:
                 return True
         return False
 
