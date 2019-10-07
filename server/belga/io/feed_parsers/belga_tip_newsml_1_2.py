@@ -65,7 +65,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             for news_component_2 in news_component_1.findall('NewsComponent'):
                 # create an item
                 item = {**self._item_seed, 'guid': self._item_seed.get("date_id")}
-                
+
                 # NewsComponent
                 try:
                     self.parser_newscomponent(item, news_component_2)

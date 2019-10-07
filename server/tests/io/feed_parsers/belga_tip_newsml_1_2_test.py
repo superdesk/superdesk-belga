@@ -39,7 +39,9 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item["item_id"], None)
         self.assertEqual(item["version"], 0)
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
-        self.assertEqual(item["subject"], [{'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_item_types'}, {'name': 'BIN', 'qcode': 'BIN', 'scheme': 'news_services'}, {'name': 'ALG', 'qcode': 'ALG', 'scheme': 'news_products'}])
+        self.assertEqual(item["subject"], [{'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_item_types'},
+                                           {'name': 'BIN', 'qcode': 'BIN', 'scheme': 'news_services'},
+                                           {'name': 'ALG', 'qcode': 'ALG', 'scheme': 'news_products'}])
         self.assertEqual(str(item["firstcreated"]), "2019-09-28 05:41:32+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-09-28 05:41:32+00:00")
         self.assertEqual(item["pubstatus"], "usable")
