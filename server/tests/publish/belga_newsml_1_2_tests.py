@@ -864,10 +864,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.article['state'] = 'published'
         self.formatter = BelgaNewsML12Formatter()
         seq, doc = self.formatter.format(self.article, self.subscriber)[0]
-
-        with open('/Users/olegpshenichniy/PycharmProjects/superdesk_belga/_playground/output/dummy.xml', 'w') as f:
-            f.write(doc)
-
         self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
 
     def test_catalog(self):

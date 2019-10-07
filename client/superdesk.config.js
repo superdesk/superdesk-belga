@@ -93,5 +93,13 @@ module.exports = function(grunt) {
                 'associatedItems',
             ]
         },
+        monitoring: {
+            scheduled: {
+                sort: {
+                    default: { field: 'publish_schedule', order: 'asc' },
+                    allowed_fields_to_sort: [ 'publish_schedule' ]
+                }
+            },
+        },
     };
 };
