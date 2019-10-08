@@ -10,11 +10,13 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
 
     return function getActionsBulk(articles: Array<IArticleArchive>) {
         const omitProps = [
+            '_id',
             '_created',
             '_etag',
             '_links',
             '_type',
             '_updated',
+            'guid',
             'name',
             'selected',
             'ingest_provider',
@@ -42,7 +44,10 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                                     return omit(article, omitProps);
                                 })
                             )
-                            .then(res => console.log(res))
+                            .then((res: any) => {
+                                const length = (res._items || {}).length || 1;
+                                superdesk.ui.alert(`${length} new items inserted`);
+                            })
                             .catch(err => console.error(err));
                     });
                 },
