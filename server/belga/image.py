@@ -243,11 +243,25 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         except KeyError:
             api_params['searchText'] = ''
 
-        data = self._api_get(self.search_endpoint, api_params)
+        try:
+            # get invidiual item to show on UI, otherwise, it will only show info of first item
+            # when item is selected, frontend will send a request to get item info if _type is not externalsource
+            _id = query['query']['filtered']['filter']['or'][0]['term']['_id']
+            doc = self.fetch(_id)
+            return BelgaListCursor([doc], 1)
+        except (KeyError, IndexError):
+            pass
+
+        data = self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
 
-    def _api_get(self, endpoint, params):
+    def fetch(self, guid):
+        _id = guid.replace(self.GUID_PREFIX, '')
+        data = self.api_get(self.search_endpoint + '/' + _id, {})
+        return self.format_list_item(data)
+
+    def api_get(self, endpoint, params):
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         resp = self.session.get(self.url(url))
         resp.raise_for_status()
@@ -268,7 +282,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         created = get_datetime(datetime.datetime.now())
         return {
             'type': asset_type if asset_type in assets else 'text',
-            '_type': 'item',
+            '_type': 'item',  # override default _type externalsource so that item can be checked
             'mimetype': 'application/vnd.belga.360archive',
             'pubstatus': 'usable',
             '_id': guid,

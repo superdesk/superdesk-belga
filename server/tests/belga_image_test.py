@@ -157,6 +157,12 @@ def archive_mock(url, request):
         return _file.read()
 
 
+def get_belga360_item():
+    with open(fixture('belga-360archive-search.json')) as _file:
+        items = json.load(_file) 
+        return items['newsObjects'][0]
+
+
 class Belga360ArchiveTestCase(unittest.TestCase):
     def setUp(self):
         self.provider = Belga360ArchiveSearchProvider(dict())
@@ -190,9 +196,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.provider.session.get.assert_called_with(url)
 
     def test_format_list_item(self):
-        with open(fixture('belga-360archive-search.json')) as _file:
-            items = json.load(_file)
-            item = self.provider.format_list_item(items['newsObjects'][0])
+        item = self.provider.format_list_item(get_belga360_item())
         guid = 'urn:belga.be:360archive:39670442'
         assert item['type'] == 'text'
         assert item['mimetype'] == 'application/vnd.belga.360archive'
@@ -221,3 +225,17 @@ class Belga360ArchiveTestCase(unittest.TestCase):
             items = self.provider.find(self.query)
         assert len(items.docs) == 2
         assert items._count == 25000
+
+    def test_fetch(self):
+        response = DetailResponse()
+        response.json = MagicMock(return_value=get_belga360_item())
+        self.provider.session.get = MagicMock(return_value=response)
+
+        item = self.provider.fetch('urn:belga.be:360archive:39670442')
+
+        url = requests.Request(
+            'GET', self.provider.base_url + 'archivenewsobjects/39670442'
+        ).prepare().url
+        self.provider.session.get.assert_called_with(url)
+
+        self.assertEqual('urn:belga.be:360archive:39670442', item['guid'])
