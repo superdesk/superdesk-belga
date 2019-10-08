@@ -266,16 +266,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         assets = ('picture')
         asset_type = get_text(data['assetType']).lower()
         created = get_datetime(datetime.datetime.now())
-
-        archive_service = superdesk.get_resource_service('archive')
-        # disable insert on imported item
-        item = archive_service.find_one(req=None, _id=guid)
-        _type = 'externalsource' if item else 'text'
-        state = {'state': 'imported'} if item else {}
         return {
-            **state,
             'type': asset_type if asset_type in assets else 'text',
-            '_type': _type,
+            '_type': 'item',
             'mimetype': 'application/vnd.belga.360archive',
             'pubstatus': 'usable',
             '_id': guid,

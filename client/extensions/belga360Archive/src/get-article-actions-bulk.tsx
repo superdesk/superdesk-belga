@@ -42,10 +42,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                                     return omit(article, omitProps);
                                 })
                             )
-                            .then((res: any) => {
-                                const length = (res._items || {}).length || 1;
-                                superdesk.ui.alert(`${length} new items inserted`);
-                            })
+                            .then(res => console.log(res))
                             .catch(err => console.error(err));
                     });
                 },
