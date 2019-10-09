@@ -8,10 +8,11 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from superdesk.io.registry import register_feed_parser
-from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
-from superdesk import get_resource_service
 from lxml import etree
+
+from superdesk.io.registry import register_feed_parser
+
+from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 
 
 class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
