@@ -30,9 +30,9 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     }
 
     def parse(self, xml, provider=None):
-        def add_unique_item_to_list(data, list):
-            if data not in list:
-                list.append(data)
+        def add_unique_item_to_list(data, _list):
+            if data not in _list:
+                _list.append(data)
 
         items = super().parse(xml, provider)
         # mapping data follow xsl file
