@@ -44,7 +44,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
                         'scheme': 'news_products',
                     }
-                    if product not in item['subject']:
+                    if product not in item.get('subject', []):
                         news_products.append(product)
             item['subject'].extend(news_products)
         return items
