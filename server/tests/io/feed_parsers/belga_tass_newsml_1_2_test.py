@@ -32,11 +32,14 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
 
     def test_content(self):
         item = self.item[0]
-        self.assertEqual(item["subject"], [{'name': 'FILE_MROUTER', 'qcode': 'FILE_MROUTER', 'scheme': 'news_products'},
-                                           {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
-                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-                                           {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
-                                           {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'}])
+        self.assertEqual(item["subject"], [
+            {'name': 'FILE_MROUTER', 'qcode': 'FILE_MROUTER', 'scheme': 'news_products'},
+            {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
+            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
+            {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
+        ])
         self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 04:27:08+00:00")
