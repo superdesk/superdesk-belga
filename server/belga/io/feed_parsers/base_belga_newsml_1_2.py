@@ -530,8 +530,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         item.setdefault('subject', []).extend(self.format_subjects(subjects))
         for subject in subjects:
             if subject.get('cat'):
-                category = {'qcode': subject.get('cat')
-                            }
+                category = {'qcode': subject.get('cat')}
                 if category not in item.get('anpa_category', []):
                     item.setdefault('anpa_category', []).append(category)
 

@@ -36,7 +36,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         items = super().parse(xml, provider)
         for item in items:
             news_products = []
-            for subject in item['subject']:
+            for subject in item.get('subject', []):
                 if subject.get('scheme', '') == 'genre':
                     qcode = subject.get('name')
                     product = {
@@ -46,7 +46,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     }
                     if product not in item.get('subject', []):
                         news_products.append(product)
-            item['subject'].extend(news_products)
+            item.setdefault('subject', []).extend(news_products)
         return items
 
 
