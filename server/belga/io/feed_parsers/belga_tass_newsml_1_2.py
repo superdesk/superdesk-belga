@@ -19,6 +19,11 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     NAME = 'belga_tass_newsml12'
     label = 'Belga specific TASS News ML 1.2 Parser'
 
+    MAPPING_PRODUCTS = {
+        'POLITICS': 'POLITICS',
+        'ECONOMY': 'ECONOMY',
+    }
+
     def can_parse(self, xml):
         # TODO clarify version
         return xml.tag == 'NewsML' and xml.get('Version', '1.2') == '1.2'
@@ -49,7 +54,18 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if newscomponent_el.attrib.get('Duid') is not None:
             item['guid'] = newscomponent_el.attrib.get('Duid', '')
 
-            # Essential is CV
+        # mapping news products from keywords
+        if item.get('keywords'):
+            for keyword in item['keywords']:
+                new_product = {
+                    'name': self.MAPPING_PRODUCTS.get(keyword, 'GENERAL'),
+                    'qcode': self.MAPPING_PRODUCTS.get(keyword, 'GENERAL'),
+                    'scheme': 'news_products',
+                }
+                if new_product not in item.get('subject', []):
+                    item.setdefault('subject', []).append(new_product)
+
+        # Essential is CV
         essential = newscomponent_el.attrib.get('Essential')
         if essential:
             item.setdefault('subject', []).append({
