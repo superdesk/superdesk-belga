@@ -91,6 +91,7 @@ module.exports = function(grunt) {
                 'fetchedDesk',
                 'nestedlink',
                 'associatedItems',
+                'translations',
             ]
         },
         monitoring: {
