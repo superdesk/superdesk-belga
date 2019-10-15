@@ -243,15 +243,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         except KeyError:
             api_params['searchText'] = ''
 
-        try:
-            # get invidiual item to show on UI, otherwise, it will only show info of first item
-            # when item is selected, frontend will send a request to get item info if _type is not externalsource
-            _id = query['query']['filtered']['filter']['or'][0]['term']['_id']
-            doc = self.fetch(_id)
-            return BelgaListCursor([doc], 1)
-        except (KeyError, IndexError):
-            pass
-
         data = self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
@@ -267,13 +258,18 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         resp.raise_for_status()
         return resp.json()
 
+    def _get_newscomponent(self, item, component):
+        components = [i for i in item.get('newsComponents', []) if i.get('assetType', '').lower() == component.lower()]
+        try:
+            return components[0]['proxies'][0]['varcharData']
+        except (KeyError, IndexError):
+            return ''
+
     def _get_body_html(self, item):
-        body_html = [i for i in item.get('newsComponents') if i['assetType'].lower() == 'body']
-        return body_html[0]['proxies'][0]['varcharData']
+        return self._get_newscomponent(item, 'body')
 
     def _get_abstract(self, item):
-        body_html = [i for i in item.get('newsComponents') if i['assetType'].lower() == 'lead']
-        return body_html[0]['proxies'][0]['varcharData']
+        return self._get_newscomponent(item, 'lead')
 
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
@@ -282,7 +278,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         created = get_datetime(datetime.datetime.now())
         return {
             'type': asset_type if asset_type in assets else 'text',
-            '_type': 'item',  # override default _type externalsource so that item can be checked
             'mimetype': 'application/vnd.belga.360archive',
             'pubstatus': 'usable',
             '_id': guid,
