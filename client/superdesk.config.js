@@ -56,7 +56,6 @@ module.exports = function(grunt) {
         enabledExtensions: {
             markForUser: 1,
             belgaCoverage: 1,
-            belga360Archive: 1,
         },
     };
 };
