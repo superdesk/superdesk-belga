@@ -159,7 +159,7 @@ def archive_mock(url, request):
 
 def get_belga360_item():
     with open(fixture('belga-360archive-search.json')) as _file:
-        items = json.load(_file) 
+        items = json.load(_file)
         return items['newsObjects'][0]
 
 
