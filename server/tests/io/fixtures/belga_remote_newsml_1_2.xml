@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-15" standalone="yes"?>
+<NewsML>
+    <Catalog Href="http://www.belga.be/dtd/BelgaCatalog.xml"/>
+    <NewsEnvelope>
+        <DateAndTime>20190603T160219</DateAndTime>
+        <NewsService FormalName=""/>
+        <NewsProduct FormalName=""/>
+    </NewsEnvelope>
+    <NewsItem>
+        <Identification>
+            <NewsIdentifier>
+                <ProviderId>belga.be</ProviderId>
+                <DateId>20190603T160217</DateId>
+                <NewsItemId>0</NewsItemId>
+                <RevisionId Update="N" PreviousRevision="0">0</RevisionId>
+                <PublicIdentifier>urn:newsml:www.belga.be</PublicIdentifier>
+            </NewsIdentifier>
+        </Identification>
+        <NewsManagement>
+            <NewsItemType FormalName="NEWS"/>
+            <FirstCreated>20190603T160217</FirstCreated>
+            <ThisRevisionCreated>20190603T160217</ThisRevisionCreated>
+            <Status FormalName="USABLE"/>
+        </NewsManagement>
+        <NewsComponent Duid="0" xml:lang="nl">
+            <NewsLines>
+                <HeadLine>Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten</HeadLine>
+            </NewsLines>
+            <AdministrativeMetadata/>
+            <DescriptiveMetadata>
+                <Genre FormalName=""/>
+            </DescriptiveMetadata>
+            <NewsComponent Duid="0" xml:lang="nl">
+                <Role FormalName="Original"/>
+                <NewsLines>
+                    <DateLine></DateLine>
+                    <CreditLine>BELGA</CreditLine>
+                    <HeadLine>Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten</HeadLine>
+                    <CopyrightLine>Belga</CopyrightLine>
+                    <NewsLine>
+                        <NewsLineType FormalName="1"/>
+                        <NewsLineText/>
+                    </NewsLine>
+                    <KeywordLine>BELGIUM</KeywordLine>
+                    <KeywordLine>MOBILITEIT</KeywordLine>
+                    <KeywordLine>VERKEER</KeywordLine>
+                    <KeywordLine>INFRASTRUCTUUR</KeywordLine>
+                    <KeywordLine>STEDEN</KeywordLine>
+                    <KeywordLine>BRIEF</KeywordLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName=""/>
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="COR 360" Topic="CORRESPONDENT"/>
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA"/>
+                    </Source>
+                    <Contributor>
+                        <Party FormalName=""/>
+                    </Contributor>
+                    <Property FormalName="Validator" Value=""/>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="BIN"/>
+                        <Property FormalName="NewsProduct" Value="ALG"/>
+                    </Property>
+                    <Property FormalName="NewsObjectId" Value="0"/>
+                    <Property FormalName="ForeignId" Value="0"/>
+                    <Property FormalName="Priority" Value="3"/>
+                    <Property FormalName="AverageWordCount" Value="0"/>
+                    <Property FormalName="MaxWordCount" Value="0"/>
+                    <Property FormalName="Label" Value="S1"/>
+                    <Property FormalName="Topic" Value=""/>
+                </AdministrativeMetadata>
+                <DescriptiveMetadata DateAndTime="20190603T160217">
+                    <SubjectCode/>
+                    <Location>
+                        <Property FormalName="City" Value="ANTWERPEN"/>
+                        <Property FormalName="Country" Value="BELGIUM"/>
+                        <Property FormalName="CountryArea" Value=""/>
+                        <Property FormalName="SubLocation" Value=""/>
+                        <Property FormalName="WorldRegion" Value=""/>
+                    </Location>
+                </DescriptiveMetadata>
+                <NewsComponent Duid="0" xml:lang="nl">
+                    <Role FormalName="Title"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>64</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="0" xml:lang="nl">
+                    <Role FormalName="Lead"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>655</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en Slachthuislaan in juli en augustus volledig afgesloten worden voor nutswerken. Er worden waterleidingen en gasleidingen onder het kruispunt geplaatst en de afwatering van de Antwerpse ring en de Schijn-Scheldeverbinding krijgen nieuwe kokers, zo meldt de Beheersmaatschappij Antwerpen Mobiel (BAM) vrijdag. Na die werken wordt bovendien ook het kruispunt zelf heraangelegd. De BAM hoopt de hinder zoveel mogelijk te beperken door de werken in de zomermaanden uit te voeren, wanneer er sowieso minder verkeer is en bovendien de naburige concertzalen geen evenementen organiseren.</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="0" xml:lang="nl">
+                    <Role FormalName="Body"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>995</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>	Auto's, vrachtverkeer en het openbaar vervoer zullen het kruispunt twee maanden lang niet kunnen passeren, fietsers en voetgangers wel via een gemengde doorgang langs de werf. Lokaal verkeer kan de Noordersingel en Slachthuislaan inrijden maar zal een keerbeweging moeten maken aan het kruispunt. Vanop de snelweg zal je via de afrit Deurne wel richting Deurne of Merksem kunnen rijden, maar niet naar de binnenstad. De afrit Borgerhout is een alternatief voor het oostelijke deel van het stadscentrum, de afrit Merksem voor het noordelijke. De oprit aan het Sportpaleis zal eveneens enkel bereikbaar zijn vanuit Deurne en Merksem.
+	De werken kaderen in de grote heraanleg van de Noordersingel, volgens het beeld van de zuidelijke Singel. In elke rijrichting zullen er nog twee rijstroken zijn met een groene berm ertussenin. Aan beide zijden komt een breed fietspad dat afgescheiden is van de rijweg door een groenstrook of vergroende parkeerstrook. Ook de kruispunten worden veiliger gemaakt.</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+        </NewsComponent>
+    </NewsItem>
+</NewsML>
