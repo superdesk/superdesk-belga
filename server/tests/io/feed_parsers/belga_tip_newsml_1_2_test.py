@@ -17,7 +17,7 @@ from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_tip_newsml_1_2 import BelgaTipNewsMLOneFeedParser
 
 
-class BelgaNewsMLOneTestCase(TestCase):
+class BelgaTipNewsMLOneTestCase(TestCase):
     filename = 'belga_tip_newsml_1_2.xml'
 
     def setUp(self):

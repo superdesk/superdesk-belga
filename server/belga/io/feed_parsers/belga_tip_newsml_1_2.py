@@ -13,7 +13,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
     label = 'Belga Tip News ML 1.2 Parser'
 
-    SUPPORTED_ASSET_TYPES = ('TIP')
+    SUPPORTED_ASSET_TYPES = ('TIP',)
 
     def parser_newsitem(self, newsitem_el):
         """
@@ -33,7 +33,6 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             </NewsComponent>
           </NewsItem>
 
-        :param item:
         :param newsitem_el:
         :return:
         """
@@ -145,9 +144,9 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             if role is not None:
                 newscomponent = role.getparent()
                 datacontent = newscomponent.find('ContentItem/DataContent')
-                format = newscomponent.find('ContentItem/Format')
+                _format = newscomponent.find('ContentItem/Format')
 
-                if datacontent is not None and format is not None:
+                if datacontent is not None and _format is not None:
                     if datacontent.text:
                         item[item_key] = datacontent.text.strip()
 
