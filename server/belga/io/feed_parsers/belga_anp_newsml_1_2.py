@@ -8,9 +8,11 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from superdesk.io.registry import register_feed_parser
-from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 import pytz
+
+from superdesk.io.registry import register_feed_parser
+
+from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 
 
 class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -19,11 +21,33 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     NAME = 'belga_anp_newsml12'
     label = 'Belga specific ANP News ML 1.2 Parser'
 
+    MAPPING_PRODUCTS = {
+        'SPO': 'SPORTS',
+        'ECO': 'ECONOMY',
+    }
+
     # anp related logic goes here
     def parser_newsmanagement(self, item, manage_el):
         super().parser_newsmanagement(item, manage_el)
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
-        item['versioncreated'] = item['firstcreated'].astimezone(pytz.utc)
+        item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
+
+    def parse(self, xml, provider=None):
+        items = super().parse(xml, provider)
+        for item in items:
+            news_products = []
+            for subject in item.get('subject', []):
+                if subject.get('scheme', '') == 'genre':
+                    qcode = subject.get('name')
+                    product = {
+                        'name': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+                        'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+                        'scheme': 'news_products',
+                    }
+                    if product not in item.get('subject', []):
+                        news_products.append(product)
+            item.setdefault('subject', []).extend(news_products)
+        return items
 
 
 register_feed_parser(BelgaANPNewsMLOneFeedParser.NAME, BelgaANPNewsMLOneFeedParser())

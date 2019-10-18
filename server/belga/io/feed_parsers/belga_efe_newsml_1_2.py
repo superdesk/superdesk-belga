@@ -8,7 +8,9 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
+from superdesk import get_resource_service
 from superdesk.io.registry import register_feed_parser
+
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 
 
@@ -18,7 +20,23 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     NAME = 'belga_efe_newsml12'
     label = 'Belga specific EFE News ML 1.2 Parser'
 
+    MAPPING_PRODUCTS = {
+        'SPO': 'SPORTS',
+        'ECO': 'ECONOMY',
+    }
+
     # efe related logic goes here
+    def parser_contentitem(self, item, content_el):
+        super().parser_contentitem(item, content_el)
+        categoria = content_el.find('DataContent/nitf/head/meta[@name="categoria"]')
+        qcode = categoria.attrib.get('content').upper() if categoria is not None else 'GENERAL'
+
+        item.setdefault('anpa_category', []).append({'qcode': qcode})
+        item.setdefault('subject', []).append({
+            'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+            'name': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
+            'scheme': 'news_products',
+        })
 
 
 register_feed_parser(BelgaEFENewsMLOneFeedParser.NAME, BelgaEFENewsMLOneFeedParser())

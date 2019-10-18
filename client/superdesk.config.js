@@ -57,5 +57,50 @@ module.exports = function(grunt) {
             markForUser: 1,
             belgaCoverage: 1,
         },
+        list: {
+            priority: [
+                'priority',
+                'urgency'
+            ],
+            firstLine: [
+                'wordcount',
+                'slugline',
+                'highlights',
+                'markedDesks',
+                'associations',
+                'publish_queue_errors',
+                'headline',
+                'versioncreated'
+            ],
+            secondLine: [
+                'language',
+                'profile',
+                'state',
+                'scheduledDateTime',
+                'embargo',
+                'update',
+                'takekey',
+                'signal',
+                'broadcast',
+                'flags',
+                'updated',
+                'category',
+                'provider',
+                'expiry',
+                'desk',
+                'fetchedDesk',
+                'nestedlink',
+                'associatedItems',
+                'translations',
+            ]
+        },
+        monitoring: {
+            scheduled: {
+                sort: {
+                    default: { field: 'publish_schedule', order: 'asc' },
+                    allowed_fields_to_sort: [ 'publish_schedule' ]
+                }
+            },
+        },
     };
 };

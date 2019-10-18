@@ -2665,6 +2665,78 @@
                 "qcode": "SPN",
                 "is_active": true,
                 "language": "fr-BE"
+            },
+            {
+                "name": "ECONOMY",
+                "qcode": "F",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "ECONOMY",
+                "qcode": "ECO",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "ECONOMY",
+                "qcode": "WI",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "POLITICS",
+                "qcode": "I",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "POLITICS",
+                "qcode": "P",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "POLITICS",
+                "qcode": "PL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CULTURE",
+                "qcode": "KU",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CULTURE",
+                "qcode": "CL",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "CULTURE",
+                "qcode": "E",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPORTS",
+                "qcode": "S",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "SPORTS",
+                "qcode": "SP",
+                "is_active": true,
+                "language": "fr-BE"
+            },
+            {
+                "name": "GENERAL",
+                "qcode": "GENERAL",
+                "is_active": true,
+                "language": "fr-BE"
             }
         ]
     },

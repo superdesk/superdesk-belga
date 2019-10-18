@@ -8,20 +8,35 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import html
+from io import BytesIO
 import datetime
 from lxml import etree
 from unittest import mock
 from bson.objectid import ObjectId
 
 from superdesk.tests import TestCase
+from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
 
+belga_apiget_response = {
+    'galleryId': 6666666,
+    'active': True,
+    'type': 'C',
+    'name': 'JUDO   JPN   WORLD',
+    'description': "Noel Van T End of Netherlands (L) celebrates after winning the gold medal.",
+    'createDate': '2019-08-30T14:33:10Z',
+    'deadlineDate': None,
+    'author': 'auto',
+    'credit': 'AFP',
+    'category': None,
+    'tagAuthor': None,
+    'iconImageId': 777777777,
+    'iconThumbnailUrl': 'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa',
+    'nrImages': 364,
+    'themes': ['all', 'news', 'sports']
+}
 
-@mock.patch(
-    'superdesk.publish.subscribers.SubscribersService.generate_sequence_number',
-    lambda self, subscriber: 1
-)
+
 class BelgaNewsML12FormatterTest(TestCase):
     article = {
         '_id': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
@@ -43,14 +58,14 @@ class BelgaNewsML12FormatterTest(TestCase):
         'task': {
             'desk': ObjectId('5c94ed09fe985e1b69d7cb64'),
             'stage': ObjectId('5c94ed09fe985e1b69d7cb62'),
-            'user': ObjectId('5c94ebcdfe985e1c9fc26d52')
+            'user': ObjectId('5d385f31fe985ec67a0ca583')
         },
         '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
         '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
         '_current_version': 2,
         'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
         'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-        'original_creator': '5c94ebcdfe985e1c9fc26d52',
+        'original_creator': '5d385f31fe985ec67a0ca583',
         'unique_id': 43,
         'unique_name': '#43',
         'state': 'in_progress',
@@ -62,23 +77,438 @@ class BelgaNewsML12FormatterTest(TestCase):
         'sign_off': 'ADM',
         'language': 'en',
         'operation': 'update',
-        'version_creator': '5c94ebcdfe985e1c9fc26d52',
+        'version_creator': '5d385f31fe985ec67a0ca583',
         'expiry': None,
         'schedule_settings': {'utc_embargo': None, 'time_zone': None},
         '_etag': '61c350853dc1513064f9e566f6d3c161cd387a0f',
         'lock_action': 'edit',
         'lock_session': ObjectId('5ca1cb4afe985e54931ee112'),
         'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'lock_user': ObjectId('5c94ebcdfe985e1c9fc26d52'),
+        'lock_user': ObjectId('5d385f31fe985ec67a0ca583'),
         'annotations': [],
-        'associations': {},
+        "associations": {
+            "editor_0": {
+                "renditions": {
+                    "original": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
+                        "media": "pic_1",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    },
+                    "baseImage": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
+                        "media": "pic_1",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    },
+                    "thumbnail": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
+                        "media": "pic_1",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    },
+                    "viewImage": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
+                        "media": "pic_1",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    }
+                },
+                "extra": {
+                    "belga-keywords": "japan, tokyo, mazda",
+                    "city": "Tokio",
+                    "country": "Japan"
+                },
+                "_id": "urn:newsml:localhost:5000:2019-08-19T15:15:01.015742:0976acf1-6956-4e03-beb1-e1c84833df45",
+                "guid": "tag:localhost:5000:2019:7999396b-23a7-4642-94f4-55a09624d7ec",
+                "media": "pic_1",
+                "type": "picture",
+                "pubstatus": "usable",
+                "format": "HTML",
+                "firstcreated": "2019-08-19T13:15:01+0000",
+                "versioncreated": "2019-08-19T13:15:01+0000",
+                "original_creator": "5d385f31fe985ec67a0ca583",
+                "state": "in_progress",
+                "source": "Superdesk",
+                "priority": 6,
+                "urgency": 3,
+                "genre": [
+                    {
+                        "qcode": "Article",
+                        "name": "Article (news)"
+                    }
+                ],
+                "place": [],
+                "sign_off": "ADM",
+                "language": "nl",
+                "version_creator": "5d385f31fe985ec67a0ca583",
+                "mimetype": "image/jpeg",
+                "filemeta_json": "{\"length\": 883005}",
+                "alt_text": "",
+                "archive_description": "",
+                "byline": "",
+                "copyrightholder": "Belga",
+                "copyrightnotice": "",
+                "description_text": "Mazda MX5 retro 1990",
+                "expiry": "2047-01-03T13:15:01+0000",
+                "headline": "Mazda MX5 retro",
+                "subject": [],
+                "usageterms": "",
+                "version": 2
+            },
+            "editor_1": {
+                "renditions": {
+                    "original": {
+                        "width": 5472,
+                        "height": 3648,
+                        "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                    },
+                    "thumbnail": {
+                        "href": "http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom"
+                    },
+                    "viewImage": {
+                        "href": "https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj"
+                    },
+                    "baseImage": {
+                        "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                    }
+                },
+                "type": "picture",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:image:154620545",
+                "guid": "urn:belga.be:image:154620545",
+                "headline": "20190827_zap_d99_014.jpg",
+                "description_text": "August 27, 2019: Gaza, Palestine. 27 August 2019.The Al-Azza team defeats the Qala"
+                                    "t Al-Janoub team 3-0 in the opening match of the amputees football league. The mat"
+                                    "ch has been organized by the Palestine Amputee Football Association under the ausp"
+                                    "ices of the International Committee of the Red Cross (ICRC) and was held at the P"
+                                    "alestine stadium in Gaza City. Although some of the players were either born disab"
+                                    "le or lost their limbs in the three recent Israeli offensives on Gaza, many others"
+                                    " have lost their limbs in recent months after being shot by Israeli forces while t"
+                                    "aking part in the Great March of Return rallies along the Gaza-Israeli border. The"
+                                    " ICRC in Gaza believes in the importance of supporting people with disabilities ca"
+                                    "used by military conflicts and in reintegrating them into society through both ps"
+                                    "ychological and physical rehabilitation.",
+                "versioncreated": "2019-08-28T09:22:17+0000",
+                "firstcreated": "2019-08-28T09:22:17+0000",
+                "byline": "NBWBNX",
+                "creditline": "ZUMAPRESS",
+                "source": "ZUMAPRESS",
+            },
+            "editor_2": {
+                "_id": "urn:newsml:localhost:5000:2019-08-22T19:21:03.822095:354d20b8-1e3f-479a-ab80-eea6d72d5324",
+                "media": "audio_1",
+                "type": "audio",
+                "pubstatus": "usable",
+                "format": "HTML",
+                "firstcreated": "2019-08-22T17:21:03+0000",
+                "versioncreated": "2019-08-22T17:21:04+0000",
+                "original_creator": "5d385f31fe985ec67a0ca583",
+                "guid": "tag:localhost:5000:2019:a0b22047-4620-435a-8042-8f9ee24c282f",
+                "unique_id": 28,
+                "unique_name": "#28",
+                "state": "in_progress",
+                "source": "Superdesk",
+                "priority": 6,
+                "urgency": 3,
+                "genre": [
+                    {
+                        "qcode": "Article",
+                        "name": "Article (news)"
+                    }
+                ],
+                "place": [],
+                "sign_off": "ADM",
+                "language": "nl",
+                "operation": "update",
+                "version_creator": "5d385f31fe985ec67a0ca583",
+                "renditions": {
+                    "original": {
+                        "href": "http://localhost:5000/api/upload-raw/audio_1.mp3",
+                        "media": "audio_1",
+                        "mimetype": "audio/mp3"
+                    }
+                },
+                "mimetype": "audio/mp3",
+                "filemeta_json": "{\"title\": \"Impact Moderato\", \"author\": \"Kevin MacLeod\", \"album\": \"YouTube "
+                                 "Audio Library\", \"duration\": \"0:00:27.193425\", \"music_genre\": \"Cinematic\", \""
+                                 "nb_channel\": \"2\", \"sample_rate\": \"44100\", \"bits_per_sample\": \"16\", \"compr"
+                                 "_rate\": \"4.41\", \"bit_rate\": \"320000\", \"format_version\": \"MPEG version 1 lay"
+                                 "er III\", \"mime_type\": \"audio/mpeg\", \"endian\": \"Big endian\", \"length\": 1087"
+                                 "849}",
+                "description_text": "Some desc is here",
+                "expiry": "2047-01-06T17:21:04+0000",
+                "extra": {
+                    "belga-keywords": "audio, music",
+                    "city": "Pragua",
+                    "country": "CZ"
+                },
+                "headline": "audio head",
+            },
+            "editor_3": {
+                "_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
+                "media": "video_1",
+                "type": "video",
+                "pubstatus": "usable",
+                "format": "HTML",
+                "firstcreated": "2019-08-14T14:51:06+0000",
+                "versioncreated": "2019-08-14T14:51:06+0000",
+                "original_creator": "5d385f31fe985ec67a0ca583",
+                "guid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
+                "unique_id": 13,
+                "unique_name": "#13",
+                "family_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06."
+                             "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
+                "event_id": "tag:localhost:5000:2019:d8846c42-d18a-447d-96e2-c3173c3adfdd",
+                "state": "in_progress",
+                "source": "Superdesk",
+                "priority": 6,
+                "urgency": 3,
+                "genre": [
+                    {
+                        "qcode": "Article",
+                        "name": "Article (news)"
+                    }
+                ],
+                "place": [],
+                "sign_off": "ADM",
+                "language": "nl",
+                "operation": "update",
+                "version_creator": "5d385f31fe985ec67a0ca583",
+                "renditions": {
+                    "original": {
+                        "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
+                        "media": "video_1",
+                        "mimetype": "video/mp4"
+                    }
+                },
+                "mimetype": "video/mp4",
+                "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
+                                 "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
+                                 "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
+                                 "n\": \"Big endian\", \"length\": 1022462}",
+                "description_text": "water",
+                "expiry": "2046-12-29T14:51:06+0000",
+                "headline": "water",
+            },
+            "belga_related_images--1": {
+                "_id": "urn:newsml:localhost:5000:2019-08-15T13:04:19.702285:d201d16e-1011-4d4c-a262-fed9942a64db",
+                "type": "picture"
+            },
+            "belga_related_images--2": {
+                "renditions": {
+                    "original": {
+                        "width": 4288,
+                        "height": 3012,
+                        "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                    },
+                    "thumbnail": {
+                        "href": "http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh"
+                    },
+                    "viewImage": {
+                        "href": "https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc"
+                    },
+                    "baseImage": {
+                        "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                    }
+                },
+                "_links": {
+                    "self": {
+                        "title": "Search_providers_proxy",
+                        "href": "search_providers_proxy/urn:belga.be:image:154670415"
+                    }
+                },
+                "type": "picture",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:image:154670415",
+                "guid": "urn:belga.be:image:154670415",
+                "headline": "urn:newsml:dpa.com:20090101:190829-99-659387",
+                "description_text": "29 August 2019, Hanover: Cycling: UCI Europaserie, Germany Tour, 1st stage from Ha"
+                                    "nnover to Halberstadt (167,00 km). The German Pascal Ackermann from Team Bora-Hans"
+                                    "grohe before the start of the race. Photo: Bernd Thissen/dpa",
+                "versioncreated": "2019-08-29T13:22:02+0000",
+                "firstcreated": "2019-08-29T13:22:02+0000",
+                "byline": "NBYXIU",
+                "creditline": "DPA",
+                "source": "DPA",
+                "_type": "externalsource",
+                "fetch_endpoint": "search_providers_proxy"
+            },
+            "belga_related_gallery--1": {
+                "renditions": {
+                    "original": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_3.jpg",
+                        "media": "pic_3",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    },
+                    "baseImage": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_3.jpg",
+                        "media": "pic_3",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    },
+                    "thumbnail": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_3.jpg",
+                        "media": "pic_3",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    },
+                    "viewImage": {
+                        "href": "http://localhost:5000/api/upload-raw/pic_3.jpg",
+                        "media": "pic_3",
+                        "mimetype": "image/jpeg",
+                        "width": 3000,
+                        "height": 2000
+                    }
+                },
+                "extra": {
+                    "belga-keywords": "japan, tokyo, mazda",
+                    "city": "Tokio",
+                    "country": "Japan"
+                },
+                "_id": "urn:newsml:localhost:5000:2019-08-19T15:16:08.719058:f5628876-33e5-4dd1-89f0-1d9e792eebaa",
+                "guid": "tag:localhost:5000:2019:c9d059aa-4056-4009-9e26-06cf718badaa",
+                "media": "pic_3",
+                "type": "picture",
+                "pubstatus": "usable",
+                "format": "HTML",
+                "firstcreated": "2019-08-19T13:15:01+0000",
+                "versioncreated": "2019-08-19T13:15:01+0000",
+                "original_creator": "5d385f31fe985ec67a0ca583",
+                "state": "in_progress",
+                "source": "Superdesk",
+                "priority": 6,
+                "urgency": 3,
+                "genre": [
+                    {
+                        "qcode": "Article",
+                        "name": "Article (news)"
+                    }
+                ],
+                "place": [],
+                "sign_off": "ADM",
+                "language": "nl",
+                "version_creator": "5d385f31fe985ec67a0ca583",
+                "mimetype": "image/jpeg",
+                "filemeta_json": "{\"length\": 883005}",
+                "alt_text": "",
+                "archive_description": "",
+                "byline": "",
+                "copyrightholder": "Belga",
+                "copyrightnotice": "",
+                "description_text": "Mazda MX5 new 2017",
+                "expiry": "2047-01-03T13:15:01+0000",
+                "headline": "Mazda MX5 new",
+                "subject": [],
+                "usageterms": "",
+                "version": 2
+            },
+            "belga_related_gallery--2": {
+                "renditions": {
+                    "original": {
+                        "width": 4000,
+                        "height": 2580,
+                        "href": "https://2.t.cdn.belga.be/belgaimage:147832075:1800x650:w?v=5d5aaa94&m=lhkkcgbb"
+                    },
+                    "thumbnail": {
+                        "href": "http://p.cdn.belga.be/belgaimage:147832075:600x140?v=5d5aaa94&m=pmahjglh"
+                    },
+                    "viewImage": {
+                        "href": "https://0.t.cdn.belga.be/belgaimage:147832075:800x800:w?v=5d5aaa94&m=lgmbdgan"
+                    },
+                    "baseImage": {
+                        "href": "https://2.t.cdn.belga.be/belgaimage:147832075:1800x650:w?v=5d5aaa94&m=lhkkcgbb"
+                    }
+                },
+                "_links": {
+                    "self": {
+                        "title": "Search_providers_proxy",
+                        "href": "search_providers_proxy/urn:belga.be:image:147832075"
+                    }
+                },
+                "type": "picture",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:image:147832075",
+                "guid": "urn:belga.be:image:147832075",
+                "headline": "JAPAN-AUTOMOBILE-MAZDA",
+                "description_text": "April 5, 2019, Chiba, Japan - Japanese automaker Mazda Motor designer Masashi Naka"
+                                    "yama displays Mazda MX-5 or Roadster 30th anniversary edition at the Automobile Co"
+                                    "uncil in Chiba, suburban Tokyo on Friday, April 5, 2019. Mazda started to accept o"
+                                    "rders of 3,000 limited units worldwide including softtop and retractable hardtop f"
+                                    "or the world's best selling roadster's 30th anniversary model.   (Photo by Yoshio "
+                                    "Tsunoda/AFLO)\nNO THIRD PARTY SALES.",
+                "versioncreated": "2019-04-07T22:03:56+0000",
+                "firstcreated": "2019-04-07T22:03:56+0000",
+                "byline": "MMZTTC",
+                "creditline": "AFLO",
+                "source": "AFLO",
+                "fetch_endpoint": "search_providers_proxy",
+                "ingest_provider": "5d542028c04280bc6d6157f4",
+                "_etag": "abb9ce931da3840290650facfcc7961f0dd476b7"
+            },
+            "belga-coverages--1": {
+                "renditions": {
+                    "original": {
+                        "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                    },
+                    "thumbnail": {
+                        "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                    },
+                    "viewImage": {
+                        "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                    },
+                    "baseImage": {
+                        "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                    }
+                },
+                "extra": {
+                    "bcoverage": "urn:belga.be:coverage:6690595"
+                },
+                "_links": {
+                    "self": {
+                        "title": "Search_providers_proxy",
+                        "href": "search_providers_proxy/urn:belga.be:coverage:6690595"
+                    }
+                },
+                "type": "graphic",
+                "mimetype": "application/vnd.belga.coverage",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:coverage:6690595",
+                "guid": "urn:belga.be:coverage:6690595",
+                "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
+                "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                                    " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
+                "versioncreated": "2019-08-29T15:46:39+0000",
+                "firstcreated": "2019-08-29T15:46:39+0000",
+                "byline": "",
+                "creditline": "ITARTASS",
+                "source": "ITARTASS",
+                "_type": "externalsource",
+            },
+            "belga-related-audio--1": {
+                "_id": "urn:newsml:localhost:5000:2019-08-22T19:21:03.822095:354d20b8-1e3f-479a-ab80-eea6d72d5324",
+                "type": "audio"
+            },
+            "belga-related-audio--2": {
+                "_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
+                "type": "video"
+            }
+        },
         'authors': [
             {
-                '_id': ['5c94ebcdfe985e1c9fc26d52', 'AUTHOR'],
+                '_id': ['5d385f31fe985ec67a0ca583', 'AUTHOR'],
                 'role': 'AUTHOR',
                 'name': 'AUTHOR',
-                'parent': '5c94ebcdfe985e1c9fc26d52',
-                'sub_label': 'admin',
+                'parent': '5d385f31fe985ec67a0ca583',
+                'sub_label': 'John Smith',
                 'scheme': None
             },
             {
@@ -86,9 +516,21 @@ class BelgaNewsML12FormatterTest(TestCase):
                 'name': 'OLEG',
             }
         ],
-        'body_html': '<p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. '
-                     'Curabitur aliquet quam id dui posuere blandit. Curabitur non nulla sit amet '
-                     'nisl tempus convallis quis ac lectus.</p>',
+        'body_html': '<p>hellow world</p>\n<!-- EMBED START Image {id: \"editor_0\"} -->\n<figure>\n <img src=\"http://'
+                     'localhost:5000/api/upload-raw/pic_1.jpg\" alt=\"\" />\n <figcaption>Mazda MX5 '
+                     'retro</figcaption>\n</figure>\n<!-- EMBED END Image {id: \"editor_0\"} -->\n<p><br></p>\n<!-- EMB'
+                     'ED START Image {id: \"editor_1\"} -->\n<figure>\n <img src=\"https://3.t.cdn.belga.be/belgaimage:'
+                     '154620545:1800x650:w?v=5d5aaa94&m=njopcomo\" alt=\"\" />\n <figcaption>August 27, 2019: Gaza, Pal'
+                     'estine. 27 August 2019.The Al-Azza team defeats the Qalat Al-Janoub team 3-0 in the opening match'
+                     ' of the amputees football league. The match has been organized by the Palestine Amputee Football '
+                     'Association under the auspices of the International Committee of the Red Cross (ICRC) and was hel'
+                     'd at the Palestine stadium in Gaza City. Although some of the players were either born disable or'
+                     ' lost their limbs in the three recent Israeli offensives on Gaza, many others have lost their lim'
+                     'bs in recent months after being shot by Israeli forces while taking part in the Great March of Re'
+                     'turn rallies along the Gaza-Israeli border. The ICRC in Gaza believes in the importance of suppor'
+                     'ting people with disabilities caused by military conflicts and in reintegrating them into society'
+                     ' through both psychological and physical rehabilitation.</figcaption>\n</figure>\n<!-- EMBED END '
+                     'Image {id: \"editor_1\"} -->\n<p>&nbsp;</p>',
         'ednote': 'Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.',
         'extra': {
             'belga-url': [
@@ -97,6 +539,7 @@ class BelgaNewsML12FormatterTest(TestCase):
             ],
             "city": "Prague",
             "country": "CZ",
+            "belga-coverage-new": "urn:belga.be:coverage:6666666"
         },
         'fields_meta': {
             'extracountry': {'draftjsState': [{'blocks': [
@@ -148,14 +591,277 @@ class BelgaNewsML12FormatterTest(TestCase):
         },
         'line_type': '1',
         'line_text': 'line text is here',
+        "attachments": [
+            {
+                "attachment": ObjectId("5d692b76c8f549e289b0270b")
+            }
+        ]
     }
+
+    attachments = (
+        {
+            "_id": ObjectId("5d692b76c8f549e289b0270b"),
+            "media": "pdf_1",
+            "title": "booktype pdf",
+            "description": "A pdf cover for a book",
+            "user": ObjectId("5d385f31fe985ec67a0ca583"),
+            "filename": "AIR_16-17_ar_frontcover_web.pdf",
+            "mimetype": "application/pdf",
+            "length": 40248,
+        },
+    )
+
+    archive = (
+        {
+            "_id": "urn:newsml:localhost:5000:2019-08-15T13:04:19.702285:d201d16e-1011-4d4c-a262-fed9942a64db",
+            "media": "pic_2",
+            "type": "picture",
+            "pubstatus": "usable",
+            "format": "HTML",
+            "_current_version": 4,
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "original_creator": "5d385f31fe985ec67a0ca583",
+            "guid": "tag:localhost:5000:2019:bb1f22ac-d33a-4b31-8ed6-2c7889373c78",
+            "state": "in_progress",
+            "source": "Superdesk",
+            "priority": 6,
+            "urgency": 3,
+            "genre": [
+                {
+                    "qcode": "Article",
+                    "name": "Article (news)"
+                }
+            ],
+            "place": [],
+            "sign_off": "ADM",
+            "language": "nl",
+            "version_creator": "5d385f31fe985ec67a0ca583",
+            "renditions": {
+                "original": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c333031e2855a2e5662.jpg",
+                    "media": "pic_2",
+                    "mimetype": "image/jpeg",
+                    "width": 1920,
+                    "height": 1280,
+                    "poi": {
+                        "x": 960,
+                        "y": 640
+                    }
+                },
+                "baseImage": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5664.jpg",
+                    "media": "pic_2",
+                    "mimetype": "image/jpeg",
+                    "width": 1400,
+                    "height": 933,
+                    "poi": {
+                        "x": 700,
+                        "y": 466
+                    }
+                },
+                "thumbnail": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5666.jpg",
+                    "media": "pic_2",
+                    "mimetype": "image/jpeg",
+                    "width": 180,
+                    "height": 120,
+                    "poi": {
+                        "x": 90,
+                        "y": 60
+                    }
+                },
+                "viewImage": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5668.jpg",
+                    "media": "pic_2",
+                    "mimetype": "image/jpeg",
+                    "width": 640,
+                    "height": 426,
+                    "poi": {
+                        "x": 320,
+                        "y": 213
+                    }
+                }
+            },
+            "mimetype": "image/jpeg",
+            "filemeta_json": "{\"length\": 170263}",
+            "byline": "BIENVENIDO VELASCO",
+            "description_text": "History of Mazda",
+            "headline": "History",
+            "extra": {
+                "belga-keywords": "one, two, three",
+                "city": "Prague",
+                "country": "CZ"
+            },
+            "subject": [
+                {
+                    "name": "Belga",
+                    "qcode": "Belga",
+                    "scheme": "credit"
+                }
+            ]
+        },
+        {
+            "_id": "urn:newsml:localhost:5000:2019-08-22T19:21:03.822095:354d20b8-1e3f-479a-ab80-eea6d72d5324",
+            "media": "audio_1",
+            "type": "audio",
+            "pubstatus": "usable",
+            "format": "HTML",
+            "firstcreated": "2019-08-22T17:21:03+0000",
+            "versioncreated": "2019-08-22T17:21:04+0000",
+            "original_creator": "5d385f31fe985ec67a0ca583",
+            "guid": "tag:localhost:5000:2019:a0b22047-4620-435a-8042-8f9ee24c282f",
+            "unique_id": 28,
+            "unique_name": "#28",
+            "state": "in_progress",
+            "source": "Superdesk",
+            "priority": 6,
+            "urgency": 3,
+            "genre": [
+                {
+                    "qcode": "Article",
+                    "name": "Article (news)"
+                }
+            ],
+            "place": [],
+            "sign_off": "ADM",
+            "language": "nl",
+            "operation": "update",
+            "version_creator": "5d385f31fe985ec67a0ca583",
+            "renditions": {
+                "original": {
+                    "href": "http://localhost:5000/api/upload-raw/audio_1",
+                    "media": "audio_1",
+                    "mimetype": "audio/mp3"
+                }
+            },
+            "mimetype": "audio/mp3",
+            "filemeta_json": "{\"title\": \"Impact Moderato\", \"author\": \"Kevin MacLeod\", \"album\": \"YouTube Audi"
+                             "o Library\", \"duration\": \"0:00:27.193425\", \"music_genre\": \"Cinematic\", \"nb_chann"
+                             "el\": \"2\", \"sample_rate\": \"44100\", \"bits_per_sample\": \"16\", \"compr_rate\": \"4"
+                             ".41\", \"bit_rate\": \"320000\", \"format_version\": \"MPEG version 1 layer III\", \"mime"
+                             "_type\": \"audio/mpeg\", \"endian\": \"Big endian\", \"length\": 1087849}",
+            "description_text": "Some desc is here",
+            "expiry": "2047-01-06T17:21:04+0000",
+            "extra": {
+                "belga-keywords": "audio, music",
+                "city": "Pragua",
+                "country": "CZ"
+            },
+            "headline": "audio head",
+        }
+    )
+
+    users = ({
+        "_id": ObjectId("5d385f31fe985ec67a0ca583"),
+        "username": "admin",
+        "password": "blabla",
+        "email": "admin@example.com",
+        "user_type": "administrator",
+        "is_active": True,
+        "needs_activation": False,
+        "is_author": True,
+        "is_enabled": True,
+        "display_name": "John Smith",
+        "sign_off": "ADM",
+        "first_name": "John",
+        "last_name": "Smith",
+        "role": ObjectId("5d542206c04280bc6d6157f9"),
+    },)
+
+    roles = ({
+        "_id": ObjectId("5d542206c04280bc6d6157f9"),
+        "author_role": "AUTHOR",
+        "editor_role": "AUTHOR"
+    },)
+
+    vocabularies = (
+        {
+            "_id": "belga-coverage-new",
+            "field_type": "custom",
+            "items": [],
+            "type": "manageable",
+            "schema": {
+                "name": {},
+                "qcode": {},
+                "parent": {}
+            },
+            "service": {
+                "all": 1
+            },
+            "custom_field_type": "belga.coverage",
+            "display_name": "belga coverage new",
+            "unique_field": "qcode",
+        },
+    )
 
     subscriber = {
         '_id': 'some_id',
         'name': 'Dev Subscriber',
     }
 
+    @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
+    @mock.patch('belga.search_providers.BelgaCoverageSearchProvider.api_get', lambda self,
+                endpoint, params: belga_apiget_response)
     def setUp(self):
+        init_app(self.app)
+        self.app.data.insert('users', self.users)
+        self.app.data.insert('archive', self.archive)
+        self.app.data.insert('attachments', self.attachments)
+        self.app.data.insert('roles', self.roles)
+        self.app.data.insert('vocabularies', self.vocabularies)
+        # insert pictures
+        media_items = (
+            {
+                '_id': 'pic_1',
+                'content': BytesIO(b'pic_one_content'),
+                'content_type': 'image/jpeg',
+                'metadata': {
+                    'length': 10
+                }
+            },
+            {
+                '_id': 'pic_2',
+                'content': BytesIO(b'pic_two_content'),
+                'content_type': 'image/jpeg'
+            },
+            {
+                '_id': 'pic_3',
+                'content': BytesIO(b'pic_three_content'),
+                'content_type': 'image/jpeg',
+                'metadata': {
+                    'length': 12
+                }
+            },
+            {
+                '_id': 'audio_1',
+                'content': BytesIO(b'the man who sold the world'),
+                'content_type': 'audio/mp3',
+                'metadata': {
+                    'length': 12
+                }
+            },
+            {
+                '_id': 'video_1',
+                'content': BytesIO(b'czech rap xD'),
+                'content_type': 'video/mp4',
+                'metadata': {
+                    'length': 12
+                }
+            },
+            {
+                '_id': 'pdf_1',
+                'content': BytesIO(b'it is a pdf'),
+                'content_type': 'application/pdf',
+                'metadata': {
+                    'length': 40248
+                }
+            },
+        )
+        for media_item in media_items:
+            # base rendition
+            self.app.media.put(**media_item)
+
         self.article['state'] = 'published'
         self.formatter = BelgaNewsML12Formatter()
         seq, doc = self.formatter.format(self.article, self.subscriber)[0]
@@ -195,7 +901,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
-            self.formatter._package_duid
+            self.formatter._duid
         )
         revisionid = self.newsml.xpath('NewsItem/Identification/NewsIdentifier/RevisionId')[0]
         self.assertEqual(revisionid.text, '2')
@@ -234,7 +940,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_1_level.attrib),
             {
-                'Duid': 'pkg_urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
+                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -259,7 +965,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -302,7 +1007,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'AUTHOR', 'Topic': 'AUTHOR'}
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -341,6 +1046,10 @@ class BelgaNewsML12FormatterTest(TestCase):
                 attribs,
                 expected_attribs[idx]
             )
+        self.assertDictEqual(
+            dict(newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0].attrib),
+            {'FormalName': 'Belga'}
+        )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
@@ -367,7 +1076,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -391,21 +1099,14 @@ class BelgaNewsML12FormatterTest(TestCase):
             }
         )
         self.assertEqual(
-            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
-            '&lt;p&gt;Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. '
-            'Curabitur aliquet quam id dui posuere blandit. '
-            'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.&lt;/p&gt;'
-        )
-        self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '203'
+            '1566'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -449,7 +1150,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -480,7 +1180,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'AUTHOR', 'Topic': 'AUTHOR'}
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -545,7 +1245,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -581,7 +1280,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'en'
             }
         )
@@ -611,4 +1309,872 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
             '19'
+        )
+
+    def test_pictures_count(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
+        roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="Picture"]')
+        # count
+        self.assertEqual(len(roles), 6)
+
+    def test_gallery_count(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
+        roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="Gallery"]')
+        # count
+        self.assertEqual(len(roles), 2)
+
+    def test_audio_count(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
+        roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="Audio"]')
+        # count
+        self.assertEqual(len(roles), 1)
+
+    def test_video_count(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
+        roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="Video"]')
+        # count
+        self.assertEqual(len(roles), 1)
+
+    def test_related_document_count(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
+        roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="RelatedDocument"]')
+        # count
+        self.assertEqual(len(roles), 1)
+
+    def test_uploaded_picture_editor(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="tag:localhost:5000:2019:7999396b-23a7-4642-94f4-55a09624d7ec"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'Mazda MX5 retro'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CopyrightLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CopyrightLine')[0].text,
+            'Belga'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> KeywordLine
+        keywords = ('japan', 'tokyo', 'mazda')
+        for i, keywordline in enumerate(newscomponent_2_level.xpath('NewsLines/KeywordLine')):
+            self.assertEqual(
+                keywordline.text,
+                keywords[i]
+            )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Creator
+        party = newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')
+        self.assertDictEqual(
+            dict(party[0].attrib),
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[Priority]
+        priority = newscomponent_2_level.xpath('AdministrativeMetadata/Property[@FormalName="Priority"]')[0]
+        self.assertEqual(
+            priority.attrib['Value'],
+            '6'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[NewsObjectId]
+        newsobjectid = newscomponent_2_level.xpath(
+            'AdministrativeMetadata/Property[@FormalName="NewsObjectId"]'
+        )[0]
+        self.assertEqual(
+            newsobjectid.attrib['Value'],
+            'tag:localhost:5000:2019:7999396b-23a7-4642-94f4-55a09624d7ec'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Source
+        source = newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0]
+        self.assertEqual(
+            source.attrib['FormalName'],
+            'Superdesk'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata[DateAndTime]
+        descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
+        self.assertEqual(
+            descriptivemetadata.attrib['DateAndTime'],
+            '20190819T131501'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata -> Location
+        property = newscomponent_2_level.xpath('DescriptiveMetadata/Location/Property[@FormalName="City"]')[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            'Tokio'
+        )
+        property = newscomponent_2_level.xpath('DescriptiveMetadata/Location/Property[@FormalName="Country"]')[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            'Japan'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'Mazda MX5 retro'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '15'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(caption) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )
+        self.assertEqual(
+            datacontent[0].text,
+            'Mazda MX5 retro 1990'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '20'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pic_1.jpg'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Jpg'
+        )
+        mimetype = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/MimeType'
+        )[0]
+        self.assertEqual(
+            mimetype.attrib['FormalName'],
+            'image/jpeg'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )[0]
+        self.assertEqual(
+            sizeinbytes.text,
+            '15'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Width"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '3000'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Height"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '2000'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pic_1.jpg'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Preview"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pic_1.jpg'
+        )
+
+    def test_belga_picture_editor(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:belga.be:image:154620545"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            'ZUMAPRESS'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            '20190827_zap_d99_014.jpg'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CopyrightLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CopyrightLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> KeywordLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('count(NewsLines/KeywordLine)'),
+            0
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[NewsObjectId]
+        newsobjectid = newscomponent_2_level.xpath(
+            'AdministrativeMetadata/Property[@FormalName="NewsObjectId"]'
+        )[0]
+        self.assertEqual(
+            newsobjectid.attrib['Value'],
+            'urn:belga.be:image:154620545'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Source
+        source = newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0]
+        self.assertEqual(
+            source.attrib['FormalName'],
+            'ZUMAPRESS'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata[DateAndTime]
+        descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
+        self.assertEqual(
+            descriptivemetadata.attrib['DateAndTime'],
+            '20190828T092217'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            '20190827_zap_d99_014.jpg'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '24'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(caption) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )
+        self.assertEqual(
+            datacontent[0].text,
+            'August 27, 2019: Gaza, Palestine. 27 August 2019.The Al-Azza team defeats the Qalat Al-Janoub team 3-0 in '
+            'the opening match of the amputees football league. The match has been organized by the Palestine Amputee F'
+            'ootball Association under the auspices of the International Committee of the Red Cross (ICRC) and was held'
+            ' at the Palestine stadium in Gaza City. Although some of the players were either born disable or lost thei'
+            'r limbs in the three recent Israeli offensives on Gaza, many others have lost their limbs in recent months'
+            ' after being shot by Israeli forces while taking part in the Great March of Return rallies along the Gaza-'
+            'Israeli border. The ICRC in Gaza believes in the importance of supporting people with disabilities caused '
+            'by military conflicts and in reintegrating them into society through both psychological and physical rehab'
+            'ilitation.'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '858'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Width"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '5472'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Height"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '3648'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Preview"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj'
+        )
+
+    def test_uploaded_picture_related_images(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="tag:localhost:5000:2019:bb1f22ac-d33a-4b31-8ed6-2c7889373c78"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            'BIENVENIDO VELASCO'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'History'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CopyrightLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CopyrightLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> KeywordLine
+        keywords = ('one', 'two', 'three')
+        for i, keywordline in enumerate(newscomponent_2_level.xpath('NewsLines/KeywordLine')):
+            self.assertEqual(
+                keywordline.text,
+                keywords[i]
+            )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/5d553c333031e2855a2e5662.jpg'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Jpg'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Width"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '1920'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Height"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '1280'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5666.jpg'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Preview"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5668.jpg'
+        )
+
+    def test_belga_picture_related_images(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:belga.be:image:154670415"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Width"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '4288'
+        )
+        property = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/Property[@FormalName="Height"]'
+        )[0]
+        self.assertEqual(
+            property.attrib['Value'],
+            '3012'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Preview"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc'
+        )
+
+    def test_uploaded_picture_related_gallery(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="tag:localhost:5000:2019:c9d059aa-4056-4009-9e26-06cf718badaa"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pic_3.jpg'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pic_3.jpg'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Preview"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pic_3.jpg'
+        )
+
+    def test_belga_picture_related_gallery(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:belga.be:image:147832075"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://2.t.cdn.belga.be/belgaimage:147832075:1800x650:w?v=5d5aaa94&m=lhkkcgbb'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://p.cdn.belga.be/belgaimage:147832075:600x140?v=5d5aaa94&m=pmahjglh'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Preview"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://0.t.cdn.belga.be/belgaimage:147832075:800x800:w?v=5d5aaa94&m=lgmbdgan'
+        )
+
+    def test_belga_coverages(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:belga.be:coverage:6690595"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            'ITARTASS'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '55'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(caption) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )
+        self.assertEqual(
+            datacontent[0].text,
+            'STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian Paragliding Championshi'
+            'p on Mount Yutsa. Anton Podgaiko/TASS 0'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '145'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+        )
+
+    def test_belga_coverage_custom_field(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:belga.be:coverage:6666666"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            'AFP'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'JUDO   JPN   WORLD'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'JUDO   JPN   WORLD'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '18'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(caption) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )
+        self.assertEqual(
+            datacontent[0].text,
+            'Noel Van T End of Netherlands (L) celebrates after winning the gold medal.'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '74'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+        )
+
+    def test_audio_editor_and_related(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="tag:localhost:5000:2019:a0b22047-4620-435a-8042-8f9ee24c282f"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'audio head'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'audio head'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '10'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'Some desc is here'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )[0]
+        self.assertEqual(
+            sizeinbytes.text,
+            '17'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Sound"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/audio_1.mp3'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Sound"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Mp3'
+        )
+        mimetype = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Sound"]/ancestor::NewsComponent/ContentItem/MimeType'
+        )[0]
+        self.assertEqual(
+            mimetype.attrib['FormalName'],
+            'audio/mp3'
+        )
+
+    def test_video_editor_and_related(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'water'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'water'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '5'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'water'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )[0]
+        self.assertEqual(
+            sizeinbytes.text,
+            '5'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/video_1.mp4'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Mp4'
+        )
+        mimetype = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/MimeType'
+        )[0]
+        self.assertEqual(
+            mimetype.attrib['FormalName'],
+            'video/mp4'
+        )
+
+    def test_attachment(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="5d692b76c8f549e289b0270b"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'booktype pdf'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'booktype pdf'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '12'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'A pdf cover for a book'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )[0]
+        self.assertEqual(
+            sizeinbytes.text,
+            '22'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'http://localhost:5000/api/upload-raw/pdf_1?resource=attachments'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Pdf'
+        )
+        mimetype = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/MimeType'
+        )[0]
+        self.assertEqual(
+            mimetype.attrib['FormalName'],
+            'application/pdf'
         )
