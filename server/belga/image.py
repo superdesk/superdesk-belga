@@ -222,20 +222,17 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
 
-    def __init__(self, provider, **kwargs):
-        super().__init__(provider, **kwargs)
+    def __init__(self, provider):
+        super().__init__(provider)
         self.session = requests.Session()
-        self._id_token = None
-        self._auth_token = None
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip('/'))
 
     def find(self, query, params=None):
-        page_size = query.get('size', 25)
         api_params = {
-            'start': query.get('from', 0) // page_size,
-            'pageSize': page_size,
+            'start': query.get('from', 0),
+            'pageSize': query.get('size', 25),
         }
 
         try:

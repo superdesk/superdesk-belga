@@ -167,8 +167,8 @@ class Belga360ArchiveTestCase(unittest.TestCase):
     def setUp(self):
         self.provider = Belga360ArchiveSearchProvider(dict())
         self.query = {
-            'size': 20,
-            'from': 5,
+            'size': 50,
+            'from': 50,
             'query': {
                 'filtered': {
                     'query': {
@@ -190,8 +190,8 @@ class Belga360ArchiveTestCase(unittest.TestCase):
 
         url = requests.Request('GET', self.provider.base_url + 'archivenewsobjects', params={
             'searchText': 'test query',
-            'start': 0,
-            'pageSize': 20,
+            'start': 50,
+            'pageSize': 50,
         }).prepare().url
         self.provider.session.get.assert_called_with(url)
 
