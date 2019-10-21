@@ -59,13 +59,9 @@ class Belga360ArchiveTestCase(unittest.TestCase):
     def test_find_params(self):
         self.provider.session.get = MagicMock()
         self.provider.find(self.query)
-
-        url = requests.Request('GET', self.provider.base_url + 'archivenewsobjects', params={
-            'start': 50,
-            'pageSize': 50,
-            'searchText': 'test query',
-        }).prepare().url
-        self.provider.session.get.assert_called_with(url)
+        url = self.provider.base_url + 'archivenewsobjects'
+        params = {'start': 50, 'pageSize': 50, 'searchText': 'test query'}
+        self.provider.session.get.assert_called_with(url, params=params)
 
     def test_format_list_item(self):
         item = self.provider.format_list_item(get_belga360_item())
