@@ -250,8 +250,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         return self.format_list_item(data)
 
     def api_get(self, endpoint, params):
-        url = requests.Request('GET', self.url(endpoint), params=params).prepare().url
-        resp = self.session.get(url)
+        resp = self.session.get(self.url(endpoint), params=params)
         resp.raise_for_status()
         return resp.json()
 
