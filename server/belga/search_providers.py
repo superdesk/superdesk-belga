@@ -221,6 +221,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     search_endpoint = 'archivenewsobjects'
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
+    TYPE_SUPPORT = ('TEXT', 'BRIEF', 'ALERT', 'SHORT')
 
     def __init__(self, provider):
         super().__init__(provider)
@@ -241,7 +242,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             api_params['searchText'] = ''
 
         data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        docs = [self.format_list_item(item) for item in data[self.items_field]
+                if item['assetType'].upper() in self.TYPE_SUPPORT]
         return BelgaListCursor(docs, data[self.count_field])
 
     def fetch(self, guid):
@@ -269,11 +271,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
 
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
-        assets = ('picture',)
-        asset_type = get_text(data['assetType']).lower()
         created = get_datetime(datetime.datetime.now())
         return {
-            'type': asset_type if asset_type in assets else 'text',
+            'type': 'text',
             'mimetype': 'application/vnd.belga.360archive',
             'pubstatus': 'usable',
             '_id': guid,

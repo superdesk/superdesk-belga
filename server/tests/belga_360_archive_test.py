@@ -66,33 +66,33 @@ class Belga360ArchiveTestCase(unittest.TestCase):
     def test_format_list_item(self):
         item = self.provider.format_list_item(get_belga360_item())
         guid = 'urn:belga.be:360archive:39670442'
-        assert item['type'] == 'text'
-        assert item['mimetype'] == 'application/vnd.belga.360archive'
-        assert item['_id'] == guid
-        assert item['guid'] == guid
-        assert item['extra']['bcoverage'] == guid
-        assert item['headline'] == 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        assert item['name'] == ''
-        assert item['description_text'] == ''
-        assert item['creditline'] == 'BELGA'
-        assert item['source'] == 'BELGA'
-        assert item['language'] == 'fr'
-        assert item['abstract'] == (
+        self.assertEqual(item['type'], 'text')
+        self.assertEqual(item['mimetype'], 'application/vnd.belga.360archive')
+        self.assertEqual(item['_id'], guid)
+        self.assertEqual(item['guid'], guid)
+        self.assertEqual(item['extra']['bcoverage'], guid)
+        self.assertEqual(item['headline'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+        self.assertEqual(item['name'], '')
+        self.assertEqual(item['description_text'], '')
+        self.assertEqual(item['creditline'], 'BELGA')
+        self.assertEqual(item['source'], 'BELGA')
+        self.assertEqual(item['language'], 'fr')
+        self.assertEqual(item['abstract'], (
             'Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin'
             ' finibus diam in urna vehicula accumsan'
-        )
-        assert item['body_html'] == (
+        ))
+        self.assertEqual(item['body_html'], (
             'Morbi lacus ex, molestie id ullamcorper quis, scelerisque quis lectus.\n'
             ' Phasellus laoreet turpis nunc, vitae porttitor sapien ultricies non.\n'
             ' Nullam fringilla justo vitae ex commodo vulputate.\n In bibendum diam vitae condimentum scelerisque.\n'
             ' Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.'
-        )
+        ))
 
     def test_find_item(self):
         with HTTMock(archive_mock):
             items = self.provider.find(self.query)
-        assert len(items.docs) == 2
-        assert items._count == 25000
+        self.assertEqual(len(items.docs), 2)
+        self.assertEqual(items._count, 25000)
 
     def test_fetch(self):
         response = DetailResponse()
@@ -101,7 +101,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
 
         item = self.provider.fetch('urn:belga.be:360archive:39670442')
 
-        url = self.provider.base_url + 'archivenewsobjects'
+        url = self.provider.base_url + 'archivenewsobjects/39670442'
         self.provider.session.get.assert_called_with(url, params={})
 
         self.assertEqual('urn:belga.be:360archive:39670442', item['guid'])
