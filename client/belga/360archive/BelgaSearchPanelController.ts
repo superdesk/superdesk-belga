@@ -21,7 +21,9 @@ export default class BelgaSearchPanelController {
         this.types = [
             {name: 'alert', id: 'alert'},
             {name: 'text', id: 'text'},
-            {name: 'brief', id: 'brief'}
+            {name: 'brief', id: 'brief'},
+            {name: 'picture', id: 'picture'},
+            {name: 'video', id: 'video'},
         ]
 
         this.periods = [
