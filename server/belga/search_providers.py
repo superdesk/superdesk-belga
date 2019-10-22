@@ -269,7 +269,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
 
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
-        assets = ('picture')
+        assets = ('picture',)
         asset_type = get_text(data['assetType']).lower()
         created = get_datetime(datetime.datetime.now())
         return {
