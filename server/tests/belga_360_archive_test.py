@@ -101,9 +101,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
 
         item = self.provider.fetch('urn:belga.be:360archive:39670442')
 
-        url = requests.Request(
-            'GET', self.provider.base_url + 'archivenewsobjects/39670442'
-        ).prepare().url
-        self.provider.session.get.assert_called_with(url)
+        url = self.provider.base_url + 'archivenewsobjects'
+        self.provider.session.get.assert_called_with(url, params={})
 
         self.assertEqual('urn:belga.be:360archive:39670442', item['guid'])
