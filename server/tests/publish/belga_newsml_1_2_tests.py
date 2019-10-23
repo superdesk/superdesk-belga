@@ -801,7 +801,8 @@ class BelgaNewsML12FormatterTest(TestCase):
     }
 
     @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
-    @mock.patch('belga.image.BelgaCoverageSearchProvider.api_get', lambda self, endpoint, params: belga_apiget_response)
+    @mock.patch('belga.search_providers.BelgaCoverageSearchProvider.api_get', lambda self,
+                endpoint, params: belga_apiget_response)
     def setUp(self):
         init_app(self.app)
         self.app.data.insert('users', self.users)

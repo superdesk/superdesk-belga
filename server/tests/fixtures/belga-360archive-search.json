@@ -1,0 +1,122 @@
+{
+    "newsObjects": [
+        {
+            "newsObjectId": 39670442,
+            "assetType": "Short",
+            "name": "",
+            "credit": "BELGA",
+            "topic": null,
+            "headLine": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "language": "fr",
+            "source": "BELGA",
+            "newsComponents": [
+                {
+                    "newsComponentId": 0,
+                    "name": "",
+                    "assetType": "Lead",
+                    "assetFormat": "Text",
+                    "alternateComponents": [],
+                    "proxies": [
+                        {
+                            "proxyId": 0,
+                            "assetFormat": "Text",
+                            "dataFileName": "",
+                            "dataDirName": "",
+                            "physicalDataDirName": "",
+                            "ingestPath": "",
+                            "varcharData": "Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin finibus diam in urna vehicula accumsan",
+                            "clobData": "",
+                            "status": "",
+                            "protocol": "",
+                            "size": 231,
+                            "urn": null
+                        }
+                    ]
+                },
+                {
+                    "newsComponentId": 0,
+                    "name": "",
+                    "assetType": "Body",
+                    "assetFormat": "Text",
+                    "alternateComponents": [],
+                    "proxies": [
+                        {
+                            "proxyId": 0,
+                            "assetFormat": "Text",
+                            "dataFileName": "",
+                            "dataDirName": "",
+                            "physicalDataDirName": "",
+                            "ingestPath": "",
+                            "varcharData": "Morbi lacus ex, molestie id ullamcorper quis, scelerisque quis lectus.\n Phasellus laoreet turpis nunc, vitae porttitor sapien ultricies non.\n Nullam fringilla justo vitae ex commodo vulputate.\n In bibendum diam vitae condimentum scelerisque.\n Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.",
+                            "clobData": "",
+                            "status": "",
+                            "protocol": "",
+                            "size": 912,
+                            "urn": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "newsObjectId": 39670019,
+            "assetType": "Text",
+            "name": "",
+            "credit": "BELGA",
+            "topic": "BelgaService",
+            "headLine": "Aliquam ut lorem a purus ultricies interdum.",
+            "language": "fr",
+            "source": "BELGA",
+            "newsComponents": [
+                {
+                    "newsComponentId": 0,
+                    "name": "",
+                    "assetType": "Lead",
+                    "assetFormat": "Text",
+                    "alternateComponents": [],
+                    "proxies": [
+                        {
+                            "proxyId": 0,
+                            "assetFormat": "Text",
+                            "dataFileName": "",
+                            "dataDirName": "",
+                            "physicalDataDirName": "",
+                            "ingestPath": "",
+                            "varcharData": "Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin finibus diam in urna vehicula accumsan",
+                            "clobData": "",
+                            "status": "",
+                            "protocol": "",
+                            "size": 231,
+                            "urn": null
+                        }
+                    ]
+                },
+                {
+                    "newsComponentId": 0,
+                    "name": "",
+                    "assetType": "Body",
+                    "assetFormat": "Text",
+                    "alternateComponents": [],
+                    "proxies": [
+                        {
+                            "proxyId": 0,
+                            "assetFormat": "Text",
+                            "dataFileName": "",
+                            "dataDirName": "",
+                            "physicalDataDirName": "",
+                            "ingestPath": "",
+                            "varcharData": "Morbi lacus ex, molestie id ullamcorper quis, scelerisque quis lectus.\n Phasellus laoreet turpis nunc, vitae porttitor sapien ultricies non.\n Nullam fringilla justo vitae ex commodo vulputate.\n In bibendum diam vitae condimentum scelerisque.\n Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.",
+                            "clobData": "",
+                            "status": "",
+                            "protocol": "",
+                            "size": 912,
+                            "urn": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "nrNewsObjects": 25000,
+    "start": 0
+}

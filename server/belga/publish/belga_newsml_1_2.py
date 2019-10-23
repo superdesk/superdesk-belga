@@ -12,19 +12,21 @@ import html
 import logging
 from datetime import datetime
 from urllib.parse import urljoin
+
+from flask import current_app as app
+
+import superdesk
+from apps.archive.common import get_utc_schedule
+from belga.search_providers import BelgaCoverageSearchProvider
+from eve.utils import config
 from lxml import etree
 from lxml.etree import SubElement
-from eve.utils import config
-from flask import current_app as app
-import superdesk
-from superdesk.utc import utcnow
 from superdesk.errors import FormatterError
-from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
+from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
+                                     ITEM_TYPE)
 from superdesk.publish.formatters import NewsML12Formatter
-from superdesk.metadata.item import ITEM_TYPE, CONTENT_TYPE, EMBARGO, GUID_FIELD
-from apps.archive.common import get_utc_schedule
-
-from belga.image import BelgaCoverageSearchProvider
+from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
+from superdesk.utc import utcnow
 
 logger = logging.getLogger(__name__)
 
