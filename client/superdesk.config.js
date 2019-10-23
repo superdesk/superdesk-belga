@@ -47,6 +47,11 @@ module.exports = function(grunt) {
             planning: true,
             searchShortcut: true,
             editFeaturedImage: false,
+            customAuthoringTopbar: {
+                publish: true,
+                publishAndContinue: true,
+                closeAndContinue: true,
+            },
         },
         workspace: {
             analytics: true,
