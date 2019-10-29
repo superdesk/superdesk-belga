@@ -765,12 +765,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             {'FormalName': 'NewsPackage'}
         )
         for subject in item.get('subject', []):
-            if subject['scheme'] == 'news_services':
+            if subject.get('scheme') == 'news_services':
                 SubElement(
                     property_newspackage, 'Property',
                     {'FormalName': 'NewsService', 'Value': subject['qcode']}
                 )
-            elif subject['scheme'] == 'news_products':
+            elif subject.get('scheme') == 'news_products':
                 SubElement(
                     property_newspackage, 'Property',
                     {'FormalName': 'NewsProduct', 'Value': subject['qcode']}
