@@ -34,6 +34,27 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         item['firstcreated'] = local_to_utc(tz, item['firstcreated'])
         item['versioncreated'] = local_to_utc(tz, item['firstcreated'])
 
+    def parser_newsitem(self, item, newsitem_el):
+        super().parser_newsitem(item, newsitem_el)
+        # mapping news products from keywords
+        product = {}
+        if item.get('keywords'):
+            for keyword in item['keywords']:
+                qcode = self.MAPPING_PRODUCTS.get(keyword)
+                if qcode:
+                    product = {
+                        'name': qcode,
+                        'qcode': qcode,
+                        'scheme': 'news_products',
+                    }
+                    break
+        if not product:
+            product = {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'}
+        item.setdefault('subject', []).append(product)
+        # service is always equal NEWS
+        service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+        item.setdefault('subject', []).append(service)
+
     def parser_newscomponent(self, item, newscomponent_el):
         """
         Example:
@@ -53,18 +74,6 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             super().parser_newscomponent(item, third_newscomponent_el)
         if newscomponent_el.attrib.get('Duid') is not None:
             item['guid'] = newscomponent_el.attrib.get('Duid', '')
-
-        # mapping news products from keywords
-        if item.get('keywords'):
-            for keyword in item['keywords']:
-                new_product = {
-                    'name': self.MAPPING_PRODUCTS.get(keyword, 'GENERAL'),
-                    'qcode': self.MAPPING_PRODUCTS.get(keyword, 'GENERAL'),
-                    'scheme': 'news_products',
-                }
-                if new_product not in item.get('subject', []):
-                    item.setdefault('subject', []).append(new_product)
-
         # Essential is CV
         essential = newscomponent_el.attrib.get('Essential')
         if essential:

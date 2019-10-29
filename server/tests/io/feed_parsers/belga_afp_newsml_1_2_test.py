@@ -35,12 +35,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "0579")
-        self.assertEqual(item["subject"], [{'name': 'DGTE', 'qcode': 'DGTE', 'scheme': 'news_services'},
-                                           {'name': 'ELU', 'qcode': 'ELU', 'scheme': 'news_products'},
-                                           {'name': 'EUA', 'qcode': 'EUA', 'scheme': 'news_products'},
-                                           {'name': 'MOA', 'qcode': 'MOA', 'scheme': 'news_products'},
-                                           {'name': 'FEUA', 'qcode': 'FEUA', 'scheme': 'news_products'},
-                                           {'name': 'France-procès-assises-drogues-police',
+        self.assertEqual(item["subject"], [{'name': 'France-procès-assises-drogues-police',
                                             'qcode': 'France-procès-assises-drogues-police', 'scheme': 'label'},
                                            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
                                            {'qcode': '02001004', 'name': 'drug trafficking',
@@ -59,9 +54,8 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
                                             'scheme': 'of_interest_to'},
                                            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
                                             'scheme': 'of_interest_to'},
-                                           {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
                                            {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
-                                           {'name': 'POLITICS', 'qcode': 'POLITICS', 'scheme': 'news_products'}])
+                                           {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}])
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")

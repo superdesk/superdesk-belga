@@ -35,10 +35,10 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["subject"], [
-            {'name': 'Texto internacional general para España', 'qcode': 'Texto internacional general para España',
-             'scheme': 'news_products'}, {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
             {'qcode': 'GENERAL', 'name': 'GENERAL', 'scheme': 'news_products'},
+            {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}
         ])
         self.assertEqual(item['anpa_category'], [{'qcode': 'JEI'}])
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
