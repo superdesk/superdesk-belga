@@ -104,23 +104,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         if element is not None:
             item['ingest_provider_sequence'] = element.text
 
-        # news_services CV
-        for element in envelop_el.findall('NewsService'):
-            if element is not None and element.get('FormalName'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "news_services"
-                })
-
-        for element in envelop_el.findall('NewsProduct'):
-            if element is not None and element.get('FormalName'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "news_products"
-                })
-
         element = envelop_el.find('Priority')
         if element is not None:
             item['priority'] = int(element.get('FormalName', 0))

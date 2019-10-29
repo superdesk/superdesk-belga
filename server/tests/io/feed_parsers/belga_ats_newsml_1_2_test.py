@@ -34,15 +34,12 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["subject"],
-                         [{'name': 'SDA-ATS News Service', 'qcode': 'SDA-ATS News Service', 'scheme': 'news_services'},
-                          {'name': 'Basisdienst F', 'qcode': 'Basisdienst F', 'scheme': 'news_products'},
-                          {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+                         [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
                           {'name': 'Current', 'qcode': 'Current', 'scheme': 'genre'},
                           {'qcode': '04001000', 'name': 'agriculture', 'scheme': 'iptc_subject_codes'},
                           {'qcode': '04007000', 'name': 'consumer goods', 'scheme': 'iptc_subject_codes'},
                           {'qcode': '08000000', 'name': 'human interest', 'scheme': 'iptc_subject_codes'},
-                          {'qcode': '04000000', 'name': 'economy, business and finance',
-                           'scheme': 'iptc_subject_codes'}])
+                          {'qcode': '04000000', 'name': 'economy, business and finance', 'scheme': 'iptc_subject_codes'}])
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "www.sda-ats.ch")
         self.assertEqual(item["date_id"], "20190603")
