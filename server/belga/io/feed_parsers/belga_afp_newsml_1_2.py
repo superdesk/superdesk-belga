@@ -37,7 +37,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         for keyword in item.get('keywords', []):
             keyword = unicodedata.normalize('NFKD', keyword.strip(
                 '/').upper()).encode('ascii', 'ignore').decode('utf-8')
-            product_codes = [k for k, v in self.MAPPING_KEYWORDS.items() if keyword in v]
+            product_codes = [k for k, v in self.MAPPING_KEYWORDS.items() for it in v if keyword in it]
             if product_codes:
                 product = {
                     "name": product_codes[0],

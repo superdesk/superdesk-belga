@@ -33,9 +33,9 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
         self.assertTrue(BelgaANPNewsMLOneFeedParser().can_parse(self.xml_root))
 
     def test_content(self):
-        item = self.item[0]        
+        item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
-        self.assertEqual(item["subject"], [            
+        self.assertEqual(item["subject"], [
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},

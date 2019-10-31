@@ -40,11 +40,11 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         product = {}
         if item.get('keywords'):
             for keyword in item['keywords']:
-                qcode = self.MAPPING_PRODUCTS.get(keyword)
+                qcode = [self.MAPPING_PRODUCTS.get(k) for k in self.MAPPING_PRODUCTS if k in keyword]
                 if qcode:
                     product = {
-                        'name': qcode,
-                        'qcode': qcode,
+                        'name': qcode[0],
+                        'qcode': qcode[0],
                         'scheme': 'news_products',
                     }
                     break

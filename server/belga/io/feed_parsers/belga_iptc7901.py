@@ -38,11 +38,11 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
     txt_type = None
 
     MAPPING_PRODUCTS = {
-        'dpa': {
+        'ats': {
             'CL': 'CULTURE',
             'EC': 'ECONOMY',
         },
-        'ats': {
+        'dpa': {
             'F': 'ECONOMY',
             'WI': 'ECONOMY',
             'I': 'POLITICS',
