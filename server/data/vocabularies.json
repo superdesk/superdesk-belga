@@ -10,6 +10,9 @@
             "qcode": {},
             "translations": {}
         },
+        "service": {
+            "all": 1
+        },
         "items": [
             {
                 "name": "Aruba",
