@@ -37,7 +37,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
-            {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
+            {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
             {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
         ])
         self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
@@ -54,7 +54,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'city': 'MOSCOW'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["mimetype"], "text/vnd.IPTC.NITF")
-        self.assertEqual(item["keywords"], ['itartassrubric_URGENT', 'URGENT'])
+        self.assertEqual(item["keywords"], ['itartassrubric_ECONOMY', 'URGENT'])
         self.assertEqual(item["guid"], "03AE4325838900396A95")
         expected_body = \
             (

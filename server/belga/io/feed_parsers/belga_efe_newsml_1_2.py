@@ -22,7 +22,7 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     MAPPING_PRODUCTS = {
         'SPO': 'SPORTS',
-        'ECO': 'ECONOMY',
+        'POL': 'POLITICS',
     }
 
     # efe related logic goes here
