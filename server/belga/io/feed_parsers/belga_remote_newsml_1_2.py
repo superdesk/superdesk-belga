@@ -9,6 +9,8 @@
 # at https://www.appendsourcefabric.org/superdesk/license
 
 from .belga_newsml_1_2 import BelgaNewsMLOneFeedParser, SkipItemException
+import hashlib
+from lxml import etree
 
 
 class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
@@ -65,7 +67,8 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
             for news_component_2 in news_component_1.findall('NewsComponent'):
                 # create an item
-                item = {**self._item_seed, 'guid': self._item_seed.get("date_id")}
+                salt = hashlib.md5(etree.tostring(self.root)).hexdigest()
+                item = {**self._item_seed, 'guid': salt}
 
                 # NewsComponent
                 try:

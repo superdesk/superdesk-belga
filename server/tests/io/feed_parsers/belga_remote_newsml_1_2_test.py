@@ -46,7 +46,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["guid"], "20190603T160217")
+        self.assertEqual(item["guid"], "41ea2e49ec49fc735829ccc2d2670191")
         self.assertEqual(item["language"], "nl")
         self.assertEqual(item["byline"], "BELGA")
         self.assertEqual(item["headline"], "Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten")
