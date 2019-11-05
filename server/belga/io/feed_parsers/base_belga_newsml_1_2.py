@@ -70,6 +70,13 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 try:
                     item = item_envelop.copy()
                     self.parser_newsitem(item, newsitem_el)
+                    # add product is GENERAL, if product is empty
+                    if not [it for it in item.get('subject', []) if it.get('scheme') == 'news_products']:
+                        product = {"name": 'GENERAL', "qcode": 'GENERAL', "scheme": "news_products"}
+                        item.setdefault('subject', []).append(product)
+                    # add service is NEW
+                    service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                    item.setdefault('subject', []).append(service)
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue

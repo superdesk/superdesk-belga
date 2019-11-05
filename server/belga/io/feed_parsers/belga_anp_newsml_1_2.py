@@ -39,13 +39,8 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             if subject.get('scheme', '') == 'genre':
                 qcode = self.MAPPING_PRODUCTS.get(subject.get('name'))
                 product = {'name': qcode, 'qcode': qcode, 'scheme': 'news_products'} if qcode else None
+                item.setdefault('subject', []).append(product)
                 break
-        if not product:
-            product = {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'}
-        item.setdefault('subject', []).append(product)
-        # service is always equal NEWS
-        service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
-        item.setdefault('subject', []).append(service)
         return item
 
 
