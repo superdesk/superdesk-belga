@@ -32,7 +32,8 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
         self.assertEqual(item["anpa_category"], [{'qcode': 'S'}])
         self.assertEqual(item["format"], "preserved")
         self.assertEqual(item["type"], "text")
-        self.assertListEqual(item["subject"], [{'qcode': 'SPORTS', 'name': 'SPORTS', 'scheme': 'news_products'}])
+        self.assertListEqual(item["subject"], [{'qcode': 'SPORTS', 'name': 'SPORTS', 'scheme': 'news_products'},
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
         expected_body = \
             (
                 '<p>     SAITAMA, Japan, Dec. 9 Kyodo - Urawa Reds claimed their seventh </p><p>E'

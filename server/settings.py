@@ -22,7 +22,7 @@ INSTALLED_APPS.extend([
     'analytics',
     'apps.languages',
     'planning',
-    'belga.image',
+    'belga.search_providers',
     'belga.io',
     'belga.command',
     'belga.publish'

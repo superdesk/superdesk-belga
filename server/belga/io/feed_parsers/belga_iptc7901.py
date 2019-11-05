@@ -38,11 +38,11 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
     txt_type = None
 
     MAPPING_PRODUCTS = {
-        'dpa': {
+        'ats': {
             'CL': 'CULTURE',
             'EC': 'ECONOMY',
         },
-        'ats': {
+        'dpa': {
             'F': 'ECONOMY',
             'WI': 'ECONOMY',
             'I': 'POLITICS',
@@ -99,11 +99,13 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['ingest_provider_sequence'] = m.group(2).decode()
                 item['priority'] = self.map_priority(m.group(3).decode())
                 item['anpa_category'] = [{'qcode': self.map_category(qcode)}]
-                item['subject'] = [{
-                    'qcode': self.MAPPING_PRODUCTS['ats'].get(qcode, 'GENERAL'),
-                    'name': self.MAPPING_PRODUCTS['ats'].get(qcode, 'GENERAL'),
-                    'scheme': 'news_products'
-                }]
+                qcode = self.MAPPING_PRODUCTS['ats'].get(qcode, 'GENERAL')
+                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+
+                # service is always equal NEWS
+                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                item.setdefault('subject', []).append(service)
+
                 item['word_count'] = int(m.group(5).decode())
 
             inHeader = False
@@ -163,11 +165,12 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['ingest_provider_sequence'] = m.group(2).decode()
                 item['priority'] = self.map_priority(m.group(3).decode())
                 item['anpa_category'] = [{'qcode': self.map_category(qcode)}]
-                item['subject'] = [{
-                    'qcode': self.MAPPING_PRODUCTS['dpa'].get(qcode, 'GENERAL'),
-                    'name': self.MAPPING_PRODUCTS['dpa'].get(qcode, 'GENERAL'),
-                    'scheme': 'news_products'
-                }]
+                # mapping product
+                qcode = self.MAPPING_PRODUCTS['dpa'].get(qcode, 'GENERAL')
+                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+                # service is always equal NEWS
+                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                item.setdefault('subject', []).append(service)
                 item['word_count'] = int(m.group(5).decode())
 
             inHeader = False

@@ -24,7 +24,7 @@ function getImageUrl(image: IBelgaImage, rendition: IProps['rendition']): string
     }
 }
 
-export default class BelgaCoverage extends React.Component<IProps, IState> {
+export default class BelgaCoverage extends React.PureComponent<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);

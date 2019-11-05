@@ -33,12 +33,12 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["subject"], [
-            {'name': 'FILE_MROUTER', 'qcode': 'FILE_MROUTER', 'scheme': 'news_products'},
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
+            {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
+            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
         ])
         self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")
@@ -54,7 +54,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'city': 'MOSCOW'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["mimetype"], "text/vnd.IPTC.NITF")
-        self.assertEqual(item["keywords"], ['itartassrubric_URGENT', 'URGENT'])
+        self.assertEqual(item["keywords"], ['itartassrubric_ECONOMY', 'URGENT'])
         self.assertEqual(item["guid"], "03AE4325838900396A95")
         expected_body = \
             (

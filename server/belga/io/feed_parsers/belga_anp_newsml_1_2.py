@@ -32,22 +32,16 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
         item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
 
-    def parse(self, xml, provider=None):
-        items = super().parse(xml, provider)
-        for item in items:
-            news_products = []
-            for subject in item.get('subject', []):
-                if subject.get('scheme', '') == 'genre':
-                    qcode = subject.get('name')
-                    product = {
-                        'name': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
-                        'qcode': self.MAPPING_PRODUCTS.get(qcode, 'GENERAL'),
-                        'scheme': 'news_products',
-                    }
-                    if product not in item.get('subject', []):
-                        news_products.append(product)
-            item.setdefault('subject', []).extend(news_products)
-        return items
+    def parser_newsitem(self, item, newsitem_el):
+        super().parser_newsitem(item, newsitem_el)
+        product = {}
+        for subject in item.get('subject', []):
+            if subject.get('scheme', '') == 'genre':
+                qcode = self.MAPPING_PRODUCTS.get(subject.get('name'))
+                product = {'name': qcode, 'qcode': qcode, 'scheme': 'news_products'} if qcode else None
+                item.setdefault('subject', []).append(product)
+                break
+        return item
 
 
 register_feed_parser(BelgaANPNewsMLOneFeedParser.NAME, BelgaANPNewsMLOneFeedParser())

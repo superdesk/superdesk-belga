@@ -9,7 +9,7 @@ from flask import json
 from httmock import all_requests, HTTMock
 from unittest.mock import MagicMock
 
-from belga.image import BelgaImageSearchProvider
+from belga.search_providers import BelgaImageSearchProvider
 
 
 def fixture(filename):
