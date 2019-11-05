@@ -39,8 +39,10 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
                           {'qcode': '04001000', 'name': 'agriculture', 'scheme': 'iptc_subject_codes'},
                           {'qcode': '04007000', 'name': 'consumer goods', 'scheme': 'iptc_subject_codes'},
                           {'qcode': '08000000', 'name': 'human interest', 'scheme': 'iptc_subject_codes'},
-                          {'qcode': '04000000', 'name': 'economy, business and finance', 'scheme': 'iptc_subject_codes'
-                           }])
+                          {'qcode': '04000000', 'name': 'economy, business and finance',
+                           'scheme': 'iptc_subject_codes'},
+                          {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
+                          {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}])
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "www.sda-ats.ch")
         self.assertEqual(item["date_id"], "20190603")
