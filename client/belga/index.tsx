@@ -4,6 +4,9 @@ import {IUser} from 'superdesk-api'
 import {startApp} from 'superdesk-core/scripts/index';
 import belgaImage from './image';
 import belga360Archive from './360archive';
+import planningExtension from '../node_modules/superdesk-planning/client/planning-extension/dist/src/extension';
+import markForUserExtension from '../node_modules/superdesk-core/scripts/extensions/markForUser/dist/src/extension';
+import belgaCoverageExtension from '../extensions/belgaCoverage/dist/index';
 
 class UserAvatar extends React.Component<{user: IUser}> {
     render() {
@@ -18,7 +21,11 @@ class UserAvatar extends React.Component<{user: IUser}> {
 }
 
 setTimeout(() => {
-    startApp({UserAvatar});
+    startApp([
+        planningExtension,
+        markForUserExtension,
+        belgaCoverageExtension,
+    ],{UserAvatar});
 });
 
 export default angular.module('belga', [
