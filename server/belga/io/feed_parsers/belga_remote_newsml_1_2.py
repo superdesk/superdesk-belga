@@ -10,7 +10,7 @@
 
 from .belga_newsml_1_2 import BelgaNewsMLOneFeedParser, SkipItemException
 import hashlib
-from lxml import etree
+from xml.etree import ElementTree
 
 
 class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
@@ -67,7 +67,7 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
             for news_component_2 in news_component_1.findall('NewsComponent'):
                 # create an item
-                salt = hashlib.md5(etree.tostring(self.root)).hexdigest()
+                salt = hashlib.md5(ElementTree.tostring(news_component_2)).hexdigest()
                 item = {**self._item_seed, 'guid': salt}
 
                 # NewsComponent

@@ -24,8 +24,8 @@ class BelgaNewsMLOneTestCase(TestCase):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
-        parser = BelgaNewsMLOneFeedParser()
         with open(fixture, 'rb') as f:
+            parser = BelgaNewsMLOneFeedParser()
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
 

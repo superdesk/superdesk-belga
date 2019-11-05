@@ -1,4 +1,6 @@
 import logging
+import hashlib
+from xml.etree import ElementTree
 from .belga_newsml_1_2 import BelgaNewsMLOneFeedParser
 from superdesk.io.registry import register_feed_parser
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
@@ -63,7 +65,8 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
             for news_component_2 in news_component_1.findall('NewsComponent'):
                 # create an item
-                item = {**self._item_seed, 'guid': self._item_seed.get("date_id")}
+                salt = hashlib.md5(ElementTree.tostring(news_component_2)).hexdigest()
+                item = {**self._item_seed, 'guid': salt}
 
                 # NewsComponent
                 try:
