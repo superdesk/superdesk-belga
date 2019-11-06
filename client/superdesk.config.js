@@ -47,6 +47,11 @@ module.exports = function(grunt) {
             planning: true,
             searchShortcut: true,
             editFeaturedImage: false,
+            customAuthoringTopbar: {
+                publish: true,
+                publishAndContinue: true,
+                closeAndContinue: true,
+            },
         },
         workspace: {
             analytics: true,
@@ -91,7 +96,16 @@ module.exports = function(grunt) {
                 'fetchedDesk',
                 'nestedlink',
                 'associatedItems',
+                'translations',
             ]
+        },
+        monitoring: {
+            scheduled: {
+                sort: {
+                    default: { field: 'publish_schedule', order: 'asc' },
+                    allowed_fields_to_sort: [ 'publish_schedule' ]
+                }
+            },
         },
     };
 };

@@ -500,6 +500,34 @@ class BelgaNewsML12FormatterTest(TestCase):
             "belga-related-audio--2": {
                 "_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
                 "type": "video"
+            },
+            "belga_related_articles--1": {
+                "_id": "urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413",
+                "type": "text"
+            },
+            "belga_related_articles--2": {
+                "extra": {
+                    "bcoverage": "urn:belga.be:360archive:77777777"
+                },
+                "type": "text",
+                "mimetype": "application/vnd.belga.360archive",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:360archive:77777777",
+                "guid": "urn:belga.be:360archive:77777777",
+                "headline": "Vasil Kiryienka (38) doet ondanks hartproblemen verder bij INEOS",
+                "name": "",
+                "description_text": "",
+                "versioncreated": "2019-10-23T09:30:14+0000",
+                "firstcreated": "2019-10-23T09:30:14+0000",
+                "creditline": "BELGA",
+                "source": "BELGA",
+                "language": "nl",
+                "abstract": "Vasil Kiryienka zal ook in 2020 deel uitmaken van het peloton.",
+                "body_html": "Kiryienka werd dit jaar opgeschrikt door een hartprobleem.",
+                "_type": "externalsource",
+                "fetch_endpoint": "search_providers_proxy",
+                "ingest_provider": "5da8572a9e7cb98d13ce1d7b",
+                "selected": False
             }
         },
         'authors': [
@@ -749,6 +777,65 @@ class BelgaNewsML12FormatterTest(TestCase):
                 "country": "CZ"
             },
             "headline": "audio head",
+        },
+        {
+            "_id": "urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413",
+            "family_id": "urn:newsml:localhost:5000:2019-09-10T16:16:39.458119:923d24ac-7075-413b-a164-701a4e9b2e06",
+            "event_id": "tag:localhost:5000:2019:2bd05833-e4d7-482f-bf78-5afde4b980c5",
+            "language": "nl",
+            "extra": {
+                "country": "nn"
+            },
+            "source": "Belga",
+            "authors": [
+                {
+                    "_id": [
+                        "5d385f31fe985ec67a0ca583",
+                        "AUTHOR"
+                    ],
+                    "role": "AUTHOR",
+                    "name": "AUTHOR",
+                    "parent": "5d385f31fe985ec67a0ca583",
+                    "sub_label": "John Smith"
+                }
+            ],
+            "headline": "100 let",
+            "sign_off": "ADM",
+            "slugline": "Citroen 100 let",
+            "urgency": 2,
+            "ednote": "100 let of citroen",
+            "profile": "belga_text",
+            "rewrite_of": "urn:newsml:localhost:5000:2019-09-10T16:16:39.458119:923d24ac-7075-413b-a164-701a4e9b2e06",
+            "rewrite_sequence": 1,
+            "task": {
+                "desk": ObjectId("5d76113ab3af37dea3a2eb9e"),
+                "stage": ObjectId("5d76113ab3af37dea3a2eb9c"),
+                "user": ObjectId("5d385f31fe985ec67a0ca583")
+            },
+            "expiry": None,
+            "body_html": "100 let of citroen in body",
+            "state": "in_progress",
+            "anpa_take_key": "update",
+            "_current_version": 1,
+            "type": "text",
+            "pubstatus": "usable",
+            "format": "HTML",
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "original_creator": "5d385f31fe985ec67a0ca583",
+            "guid": "urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413",
+            "unique_id": 71,
+            "unique_name": "#71",
+            "priority": 6,
+            "genre": [
+                {
+                    "qcode": "Article",
+                    "name": "Article (news)"
+                }
+            ],
+            "place": [],
+            "operation": "create",
+            "version_creator": "5d385f31fe985ec67a0ca583"
         }
     )
 
@@ -801,7 +888,8 @@ class BelgaNewsML12FormatterTest(TestCase):
     }
 
     @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
-    @mock.patch('belga.image.BelgaCoverageSearchProvider.api_get', lambda self, endpoint, params: belga_apiget_response)
+    @mock.patch('belga.search_providers.BelgaCoverageSearchProvider.api_get', lambda self,
+                endpoint, params: belga_apiget_response)
     def setUp(self):
         init_app(self.app)
         self.app.data.insert('users', self.users)
@@ -864,10 +952,6 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.article['state'] = 'published'
         self.formatter = BelgaNewsML12Formatter()
         seq, doc = self.formatter.format(self.article, self.subscriber)[0]
-
-        with open('/Users/olegpshenichniy/PycharmProjects/superdesk_belga/_playground/output/dummy.xml', 'w') as f:
-            f.write(doc)
-
         self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
 
     def test_catalog(self):
@@ -1344,7 +1428,13 @@ class BelgaNewsML12FormatterTest(TestCase):
         # count
         self.assertEqual(len(roles), 1)
 
-    def test_uploaded_picture_editor(self):
+    def test_related_article_count(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
+        roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="RelatedArticle"]')
+        # count
+        self.assertEqual(len(roles), 2)
+
+    def test_uploaded_picture_in_editor(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         newscomponent_2_level = self.newsml.xpath(
             'NewsItem/NewsComponent/NewsComponent'
@@ -1511,7 +1601,7 @@ class BelgaNewsML12FormatterTest(TestCase):
             'http://localhost:5000/api/upload-raw/pic_1.jpg'
         )
 
-    def test_belga_picture_editor(self):
+    def test_belga_picture_in_editor(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         newscomponent_2_level = self.newsml.xpath(
             'NewsItem/NewsComponent/NewsComponent'
@@ -1966,7 +2056,7 @@ class BelgaNewsML12FormatterTest(TestCase):
             'Belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
         )
 
-    def test_audio_editor_and_related(self):
+    def test_audio_in_editor_and_related(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         newscomponent_2_level = self.newsml.xpath(
             'NewsItem/NewsComponent/NewsComponent'
@@ -2038,7 +2128,7 @@ class BelgaNewsML12FormatterTest(TestCase):
             'audio/mp3'
         )
 
-    def test_video_editor_and_related(self):
+    def test_video_in_editor_and_related(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         newscomponent_2_level = self.newsml.xpath(
             'NewsItem/NewsComponent/NewsComponent'
@@ -2180,4 +2270,120 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertEqual(
             mimetype.attrib['FormalName'],
             'application/pdf'
+        )
+
+    def test_related_article_internal(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            None
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            '100 let'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            '100 let'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '7'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            '100 let of citroen in body'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )[0]
+        self.assertEqual(
+            sizeinbytes.text,
+            '26'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Text'
+        )
+
+    def test_related_article_belga_archive_text(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        newscomponent_2_level = self.newsml.xpath(
+            'NewsItem/NewsComponent/NewsComponent'
+            '[@Duid="urn:belga.be:360archive:77777777"]'
+        )[0]
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            'BELGA'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
+            'Vasil Kiryienka (38) doet ondanks hartproblemen verder bij INEOS'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'Vasil Kiryienka (38) doet ondanks hartproblemen verder bij INEOS'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )
+        self.assertEqual(
+            sizeinbytes[0].text,
+            '64'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        datacontent = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+        )[0]
+        self.assertEqual(
+            datacontent.text,
+            'Kiryienka werd dit jaar opgeschrikt door een hartprobleem.'
+        )
+        sizeinbytes = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            '/ContentItem/Characteristics/SizeInBytes'
+        )[0]
+        self.assertEqual(
+            sizeinbytes.text,
+            '58'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Text'
         )

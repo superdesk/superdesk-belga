@@ -22,7 +22,7 @@ INSTALLED_APPS.extend([
     'analytics',
     'apps.languages',
     'planning',
-    'belga.image',
+    'belga.search_providers',
     'belga.io',
     'belga.command',
     'belga.publish'
@@ -214,3 +214,5 @@ PLANNING_EXPORT_BODY_TEMPLATE = '''
 {% endif %}
 {% endfor %}
 '''
+
+PLANNING_EVENT_TEMPLATES_ENABLED = True

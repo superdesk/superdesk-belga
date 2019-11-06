@@ -70,6 +70,13 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 try:
                     item = item_envelop.copy()
                     self.parser_newsitem(item, newsitem_el)
+                    # add product is GENERAL, if product is empty
+                    if not [it for it in item.get('subject', []) if it.get('scheme') == 'news_products']:
+                        product = {"name": 'GENERAL', "qcode": 'GENERAL', "scheme": "news_products"}
+                        item.setdefault('subject', []).append(product)
+                    # add service is NEW
+                    service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                    item.setdefault('subject', []).append(service)
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue
@@ -103,23 +110,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         element = envelop_el.find('TransmissionId')
         if element is not None:
             item['ingest_provider_sequence'] = element.text
-
-        # news_services CV
-        for element in envelop_el.findall('NewsService'):
-            if element is not None and element.get('FormalName'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "news_services"
-                })
-
-        for element in envelop_el.findall('NewsProduct'):
-            if element is not None and element.get('FormalName'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "news_products"
-                })
 
         element = envelop_el.find('Priority')
         if element is not None:

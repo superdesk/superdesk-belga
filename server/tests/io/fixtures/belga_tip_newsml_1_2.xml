@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><NewsML>
+	    <Catalog Href="http://www.belga.be/dtd/BelgaCatalog.xml"/>
+	    <NewsEnvelope>
+	        <DateAndTime>20190928T074132</DateAndTime>
+	        <NewsService FormalName=""/>
+	        <NewsProduct FormalName=""/>
+	    </NewsEnvelope>
+	    <NewsItem>
+	        <Identification>
+	            <NewsIdentifier>
+	                <ProviderId>belga.be</ProviderId>
+	                <DateId>20190928T074132</DateId>
+	                <NewsItemId/>
+	                <RevisionId PreviousRevision="0" Update="N">0</RevisionId>
+	                <PublicIdentifier>urn:newsml:www.belga.be</PublicIdentifier>
+	            </NewsIdentifier>
+	        </Identification>
+	        <NewsManagement>
+	            <NewsItemType FormalName="NEWS"/>
+	            <FirstCreated>20190928T074132</FirstCreated>
+	            <ThisRevisionCreated>20190928T074132</ThisRevisionCreated>
+	            <Status FormalName="USABLE"/>
+	        </NewsManagement>
+	        <NewsComponent Duid="0" xml:lang="NL">
+	            <NewsLines>
+	                <HeadLine><![CDATA[cor 446 - BRAND GEBOUW, hemiksem]]></HeadLine>
+					  <Test>cor 446 - BRAND GEBOUW, hemiksem</Test>
+	            </NewsLines>
+	            <AdministrativeMetadata/>
+	            <DescriptiveMetadata>
+	                <Genre FormalName=""/>
+	            </DescriptiveMetadata>
+	            <NewsComponent Duid="0" xml:lang="NL">
+	                <Role FormalName="Tip"/>
+	                <NewsLines>
+	                    <DateLine/>
+	                    <CreditLine>BELGA</CreditLine>
+	                    <HeadLine><![CDATA[cor 446 - BRAND GEBOUW, hemiksem]]></HeadLine>
+	                    <CopyrightLine>Belga</CopyrightLine>
+	                    <NewsLine>
+	                        <NewsLineType FormalName="1"/>
+	                        <NewsLineText/>
+	                    </NewsLine>
+						<KeywordLine>SMS</KeywordLine>
+	                </NewsLines>
+	                <AdministrativeMetadata>
+	                    <Provider>
+	                        <Party FormalName="belga.be"/>
+	                    </Provider>
+	                    <Creator>
+	                        <Party FormalName="" Topic="AUTHOR"/>
+	                    </Creator>
+	                    <Source>
+	                        <Party FormalName="BELGA"/>
+	                    </Source>
+	                    <Contributor>
+	                        <Party FormalName=""/>
+	                    </Contributor>
+	                    <Property FormalName="Validator" Value=""/>
+	                    <Property FormalName="NewsPackage">
+	                        <Property FormalName="NewsService" Value="BIN"/>
+	                        <Property FormalName="NewsProduct" Value="ALG"/>
+	                    </Property>
+	                    <Property FormalName="NewsObjectId" Value=""/>
+	                    <Property FormalName="ForeignId" Value=""/>
+	                    <Property FormalName="Priority" Value="3"/>
+	                    <Property FormalName="Label" Value=""/>
+	                    <Property FormalName="Topic" Value=""/>
+	                </AdministrativeMetadata>
+	                <DescriptiveMetadata DateAndTime="20190928T074132">
+	                    <SubjectCode/>
+	                    <Location>
+	                        <Property FormalName="City" Value=""/>
+	                        <Property FormalName="Country" Value="BELGIUM"/>
+	                        <Property FormalName="CountryArea" Value=""/>
+	                        <Property FormalName="SubLocation" Value=""/>
+	                        <Property FormalName="WorldRegion" Value=""/>
+	                    </Location>
+	                </DescriptiveMetadata>
+	                <NewsComponent Duid="0" xml:lang="NL">
+	                    <Role FormalName="Title"/>
+	                    <DescriptiveMetadata>
+	                        <Property FormalName="ComponentClass" Value="Text"/>
+	                    </DescriptiveMetadata>
+	                    <ContentItem>
+	                        <Format FormalName=""/>
+	                        <Characteristics>
+	                            <SizeInBytes>9</SizeInBytes>
+	                            <Property FormalName="maxCharCount" Value="0"/>
+	                        </Characteristics>
+	                        <DataContent><![CDATA[cor 446 - BRAND GEBOUW, hemiksem]]></DataContent>
+	                    </ContentItem>
+	                </NewsComponent>
+	                <NewsComponent Duid="0" xml:lang="NL">
+	                    <Role FormalName="Lead"/>
+	                    <DescriptiveMetadata>
+	                        <Property FormalName="ComponentClass" Value="Text"/>
+	                    </DescriptiveMetadata>
+	                    <ContentItem>
+	                        <Format FormalName=""/>
+	                        <Characteristics>
+	                            <SizeInBytes>0</SizeInBytes>
+	                            <Property FormalName="maxCharCount" Value="0"/>
+	                        </Characteristics>
+	                        <DataContent/>
+	                    </ContentItem>
+	                </NewsComponent>
+	                <NewsComponent Duid="0" xml:lang="NL">
+	                    <Role FormalName="Body"/>
+	                    <DescriptiveMetadata>
+	                        <Property FormalName="ComponentClass" Value="Text"/>
+	                    </DescriptiveMetadata>
+	                    <ContentItem>
+	                        <Format FormalName=""/>
+	                        <Characteristics>
+	                            <SizeInBytes>0</SizeInBytes>
+	                            <Property FormalName="maxCharCount" Value="0"/>
+	                        </Characteristics>
+	                        <DataContent/>
+	                    </ContentItem>
+	                </NewsComponent>
+	            </NewsComponent>
+	        </NewsComponent>
+	    </NewsItem>
+	</NewsML>

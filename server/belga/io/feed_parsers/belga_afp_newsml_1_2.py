@@ -13,6 +13,7 @@ from lxml import etree
 from superdesk.io.registry import register_feed_parser
 
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
+import unicodedata
 
 
 class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -29,44 +30,30 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         'POL': 'POLITICS',
     }
 
-    def parse(self, xml, provider=None):
-        def add_unique_item_to_list(data, _list):
-            if data not in _list:
-                _list.append(data)
-
-        items = super().parse(xml, provider)
-        # mapping data follow xsl file
-        for item in items:
-            # mapping from keyword
-            for keyword in item.get('keywords', []):
-                keyword = keyword.strip('/').upper()
-                product_code = [k if keyword in v else 'GENERAL' for k, v in self.MAPPING_KEYWORDS.items()][0]
+    def parser_newsitem(self, item, newsitem_el):
+        super().parser_newsitem(item, newsitem_el)
+        # mapping product from keyword, and have only one product
+        product = {}
+        for keyword in item.get('keywords', []):
+            keyword = unicodedata.normalize('NFKD', keyword.strip(
+                '/').upper()).encode('ascii', 'ignore').decode('utf-8')
+            product_codes = [k for k, v in self.MAPPING_KEYWORDS.items() for it in v if keyword in it]
+            if product_codes:
                 product = {
-                    "name": product_code,
-                    "qcode": product_code,
+                    "name": product_codes[0],
+                    "qcode": product_codes[0],
                     "scheme": "news_products"
                 }
-                add_unique_item_to_list(product, item.get('subject', []))
-            # mapping from anpa_category
-            for category in item.get('anpa_category', []):
-                qcode = category.get('qcode')
-                product = {
-                    "name": self.MAPPING_CATEGORY.get(qcode, 'GENERAL'),
-                    "qcode": self.MAPPING_CATEGORY.get(qcode, 'GENERAL'),
-                    "scheme": "news_products"
-                }
-                add_unique_item_to_list(product, item.get('subject', []))
-        return items
+                item.setdefault('subject', []).append(product)
+                break
 
-    def parse(self, xml, provider=None):
-        items = super().parse(xml, provider)
-        for item in items:
-            if item.get('urgency') in ('1', '2') and not item.get('headline'):
-                first_line = item.get('body_html', '').strip().split('\n')[0]
-                first_line = etree.fromstring(first_line).text
-                headline = 'URGENT: ' + first_line.strip()
-                item['headline'] = headline
-        return items
+        # add content for headline when it is empty
+        if item.get('urgency') in ('1', '2') and not item.get('headline'):
+            first_line = item.get('body_html', '').strip().split('\n')[0]
+            first_line = etree.fromstring(first_line).text
+            headline = 'URGENT: ' + first_line.strip()
+            item['headline'] = headline
+        return item
 
 
 register_feed_parser(BelgaAFPNewsMLOneFeedParser.NAME, BelgaAFPNewsMLOneFeedParser())
