@@ -23,10 +23,8 @@ cache:
     - $HOME/.npm
 
 before_install:
-    - nvm install 6.10
-    - nvm use 6.10
-    - node --version
-    - npm install -g npm@3
+    - nvm install 6.11
+    - nvm use 6.11
     - npm install -g grunt-cli
 
 install:
