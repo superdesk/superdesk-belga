@@ -5,8 +5,9 @@
         "postinstall": "cd extensions/belgaCoverage && npm install && npm run compile"
     },
     "dependencies": {
-        "superdesk-analytics": "superdesk/superdesk-analytics#master",
-        "superdesk-core": "superdesk/superdesk-client-core#develop",
-        "superdesk-planning": "superdesk/superdesk-planning#master"
+        "superdesk-core": "github:superdesk/superdesk-client-core#develop",
+        "superdesk-analytics": "github:superdesk/superdesk-analytics#master",
+        "superdesk-planning-extension": "1.0.1",
+        "superdesk-planning": "github:tomaskikutis/superdesk-planning#move-planning-extension-from-core"
     }
 }
