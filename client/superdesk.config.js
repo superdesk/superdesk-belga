@@ -58,10 +58,6 @@ module.exports = function(grunt) {
             planning: true,
             assignments: true
         },
-        enabledExtensions: {
-            markForUser: 1,
-            belgaCoverage: 1,
-        },
         list: {
             priority: [
                 'priority',
