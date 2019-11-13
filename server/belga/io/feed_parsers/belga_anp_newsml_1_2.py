@@ -41,6 +41,8 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 product = {'name': qcode, 'qcode': qcode, 'scheme': 'news_products'} if qcode else None
                 item.setdefault('subject', []).append(product)
                 break
+            item['credits'] = 'ANP'
+            item['distribution'] = 'default'
         return item
 
 

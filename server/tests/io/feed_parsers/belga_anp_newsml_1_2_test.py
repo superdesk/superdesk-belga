@@ -44,6 +44,8 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
         ])
         self.assertEqual(item["priority"], 3)
+        self.assertEqual(item["credits"], 'ANP')
+        self.assertEqual(item["distribution"], 'default')
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["provider_id"], "ANP")
         self.assertEqual(item["date_id"], "20181210")

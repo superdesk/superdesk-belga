@@ -37,7 +37,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         for keyword in item.get('keywords', []):
             keyword = unicodedata.normalize('NFKD', keyword.strip(
                 '/').upper()).encode('ascii', 'ignore').decode('utf-8')
-            product_codes = [k for k, v in self.MAPPING_KEYWORDS.items() for it in v if keyword in it]
+            product_codes = [k for k, v in self.MAPPING_KEYWORDS.items() for key in v if key in keyword]
             if product_codes:
                 product = {
                     "name": product_codes[0],
@@ -53,6 +53,11 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             first_line = etree.fromstring(first_line).text
             headline = 'URGENT: ' + first_line.strip()
             item['headline'] = headline
+
+        # label must be empty
+        item['subject'] = [i for i in item['subject'] if i.get('scheme') != 'label']
+        item['credits'] = 'AFP'
+        item['distribution'] = 'default'
         return item
 
 

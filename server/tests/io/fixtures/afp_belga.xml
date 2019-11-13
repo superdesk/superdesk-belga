@@ -94,7 +94,7 @@
 <Property FormalName="Keyword" Value="assises"/>
 <Property FormalName="Keyword" Value="drogues"/>
 <Property FormalName="Keyword" Value="police"/>
-<Property FormalName="Keyword" Value="marches"/>
+<Property FormalName="Keyword" Value="marches_test"/>
 </DescriptiveMetadata>
 <ContentItem>
 <MediaType FormalName="Text"/>

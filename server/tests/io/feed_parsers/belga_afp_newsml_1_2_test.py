@@ -35,9 +35,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "0579")
-        self.assertEqual(item["subject"], [{'name': 'France-procès-assises-drogues-police',
-                                            'qcode': 'France-procès-assises-drogues-police', 'scheme': 'label'},
-                                           {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+        self.assertEqual(item["subject"], [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
                                            {'qcode': '02001004', 'name': 'drug trafficking',
                                             'scheme': 'iptc_subject_codes'},
                                            {'qcode': '02008000', 'name': 'trials', 'scheme': 'iptc_subject_codes'},
@@ -57,6 +55,8 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
                                            {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
                                            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}])
         self.assertEqual(item["priority"], 4)
+        self.assertEqual(item["credits"], 'AFP')
+        self.assertEqual(item["distribution"], 'default')
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")
         self.assertEqual(item["item_id"], "TX-PAR-RHO61")
@@ -79,7 +79,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["anpa_category"], [{'qcode': 'CLJ'}, {'qcode': 'POL'}])
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'FRA', 'city': 'Paris'})
         self.assertEqual(item["generator_software"], "libg2")
-        self.assertEqual(item["keywords"], ['France', 'procès', 'assises', 'drogues', 'police', 'marches'])
+        self.assertEqual(item["keywords"], ['France', 'procès', 'assises', 'drogues', 'police', 'marches_test'])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF3.1")
         self.assertEqual(item["characteristics"], {'size_bytes': '1620', 'word_count': '269'})
