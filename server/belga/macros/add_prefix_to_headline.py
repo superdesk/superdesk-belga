@@ -1,5 +1,6 @@
 """This macro adds a prefix string 'BELG' to headline of the item"""
 
+
 def add_prefix_to_headline(item, **kwargs):
     """Add a prefix string to headline"""
 

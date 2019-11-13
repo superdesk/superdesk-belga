@@ -9,4 +9,4 @@ class AddBelgToHeadlineTestCase(unittest.TestCase):
         headline = 'BELG ' + item.get('headline', '')
         add_prefix_to_headline(item)
         self.assertEqual(item.get('headline'),
-                            headline)
+                         headline)
