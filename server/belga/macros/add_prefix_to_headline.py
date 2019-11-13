@@ -10,8 +10,8 @@ def add_prefix_to_headline(item, **kwargs):
     return item
 
 
-name = 'add_prefix_to_headline_macro'
-label = 'add prefix BELG to headline'
+name = 'Add prefix BELG to headline macro'
+label = 'Add prefix BELG to headline'
 callback = add_prefix_to_headline
 access_type = 'backend'
 action_type = 'direct'
