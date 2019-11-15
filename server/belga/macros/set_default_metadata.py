@@ -17,14 +17,20 @@ SUBJECT_SCHEMES = ('news_services', 'news_products', 'distribution')
 
 def get_default_content_template(item, **kwargs):
     if 'dest_desk_id' in kwargs:
+        desk = None
         desk_id = kwargs['dest_desk_id']
+    elif 'desk' in kwargs:
+        desk = kwargs['desk']
+        desk_id = kwargs['desk']['_id']
     elif 'task' in item and 'desk' in item['task']:
+        desk = None
         desk_id = item['task'].get('desk')
     else:
         logger.warning("Can't set default data, no desk identifier found")
         return
 
-    desk = get_resource_service('desks').find_one(req=None, _id=desk_id)
+    if desk is None:
+        desk = get_resource_service('desks').find_one(req=None, _id=desk_id)
     if not desk:
         logger.warning('Can\'t find desk with id "{desk_id}"'.format(desk_id=desk_id))
         return
