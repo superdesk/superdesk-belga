@@ -26,7 +26,7 @@ INSTALLED_APPS.extend([
     'belga.io',
     'belga.command',
     'belga.publish',
-    'belga.macros',
+    'belga.macros'
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -219,4 +219,5 @@ PLANNING_EXPORT_BODY_TEMPLATE = '''
 PLANNING_EVENT_TEMPLATES_ENABLED = True
 
 KEYWORDS_ADD_MISSING_ON_PUBLISH = True
+MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
