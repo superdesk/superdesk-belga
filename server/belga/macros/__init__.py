@@ -14,4 +14,3 @@ from superdesk.macros import load_macros
 
 macros_folder = os.path.realpath(os.path.dirname(__file__))
 load_macros(macros_folder, package_prefix="belga.macros")
-
