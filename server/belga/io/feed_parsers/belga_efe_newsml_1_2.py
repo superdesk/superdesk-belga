@@ -36,6 +36,9 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 item.setdefault('anpa_category', []).append({'qcode': qcode})
                 qcode = self.MAPPING_PRODUCTS.get(qcode)
                 item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+        # credit is EFE
+        credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "credits"}
+        item.setdefault('subject', []).append(credit)
         return item
 
 

@@ -27,7 +27,10 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["slugline"], "/politics/Britain/EU/Brexit/justice")
         self.assertEqual(item["anpa_category"], [{'qcode': 'I'}])
         self.assertListEqual(item["subject"], [{'qcode': 'POLITICS', 'name': 'POLITICS', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'},
+                                               {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+                                               ])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["byline"], "Helen Maguire, dpa")
         expected_body = \
@@ -93,7 +96,10 @@ class ATSBelgaFeedParserTestCase(DPABelgaFeedParserTestCase):
         # self.assertEqual(item["slugline"], "Notes de frais GE")
         self.assertEqual(item["anpa_category"], [{'qcode': 'EC'}])
         self.assertListEqual(item["subject"], [{'qcode': 'ECONOMY', 'name': 'ECONOMY', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'},
+                                               {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
+                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+                                               ])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["original_source"], "bsf")
         expected_headline = \

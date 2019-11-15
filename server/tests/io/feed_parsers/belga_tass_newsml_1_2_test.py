@@ -38,7 +38,10 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
-            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
+            {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'credits'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
+            
         ])
         self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")

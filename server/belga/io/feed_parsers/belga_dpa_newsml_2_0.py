@@ -37,6 +37,15 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
     SUBJ_QCODE_PREFIXES = {
         'subj': 'iptc_subject_code'
     }
+    MAPPING_CATEGORY = {
+        'F': 'ECONOMY',
+        'WI': 'ECONOMY',
+        'I': 'POLITICS',
+        'PL': 'POLITICS',
+        'KU': 'CULTURE',
+        'S': 'SPORTS',
+        'SP': 'SPORTS'
+    }
 
     def can_parse(self, xml):
         return xml.tag.endswith('newsMessage')
@@ -58,6 +67,27 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                         item['firstcreated'] = dateutil.parser.parse(published)
                     item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
                     item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
+                    # mapping service
+                    service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                    item.setdefault('subject', []).append(service)
+                    # mapping product
+                    product = {}
+                    for cat in item.get('anpa_category', []):
+                        qcode = self.MAPPING_CATEGORY.get(cat.get('qcode', '').upper())
+                        if qcode:
+                            product = {'name': qcode, 'qcode': qcode, 'scheme': 'news_products'}
+                            break
+                    if product:
+                        item.setdefault('subject', []).append(product)
+                    else:
+                        product = {"name": 'GENERAL', "qcode": 'GENERAL', "scheme": "news_products"}
+                        item.setdefault('subject', []).append(product)
+                    # Credits is DPA
+                    credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
+                    item.setdefault('subject', []).append(credit)
+                    # Distribution is default
+                    dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}
+                    item.setdefault('subject', []).append(dist)
                     items.append(item)
             return items
         except Exception as ex:
@@ -103,22 +133,34 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         elem = meta.find(self.qname('creditline'))
         if elem is not None:
             item['credit_line'] = elem.text
+        elem = meta.find(self.qname('located'))
+        if elem is not None:
+            name_elt = elem.find(self.qname('name'))
+            if name_elt is not None:
+                item.setdefault('extra', {})['city'] = name_elt.text
         return meta
 
     def parse_content_subject(self, tree, item):
         """Parse subj type subjects into subject list."""
         item['subject'] = []
+        item['extra'] = {}
         for subject_elt in tree.findall(self.qname('subject')):
-            subject_data = self._get_data_subject(subject_elt)
-            if subject_data:
-                item['subject'].append(subject_data)
-            else:
+            sub_type = subject_elt.get('type', '')
+            if sub_type == 'dpatype:dpasubject':
                 same_as_elts = subject_elt.findall(self.qname('sameAs'))
                 for same_as_elt in same_as_elts:
                     subject_data = self._get_data_subject(same_as_elt)
                     if subject_data:
-                        item['subject'].append(subject_data)
+                        item.setdefault('subject', []).append(subject_data)
                         break
+            if sub_type == 'dpatype:category':
+                qcode_parts = subject_elt.get('qcode', '').split(':')
+                if qcode_parts:
+                    item.setdefault('anpa_category', []).append({"qcode": qcode_parts[1]})
+            if sub_type == 'cpnat:geoArea':
+                name_elt = subject_elt.find(self.qname('name'))
+                if name_elt is not None and not item['extra'].get('country'):
+                    item.setdefault('extra', {})['country'] = name_elt.text
 
     def parse_authors(self, meta, item):
         item['authors'] = []

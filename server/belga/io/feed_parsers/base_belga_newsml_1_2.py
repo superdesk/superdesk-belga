@@ -74,9 +74,11 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     if not [it for it in item.get('subject', []) if it.get('scheme') == 'news_products']:
                         product = {"name": 'GENERAL', "qcode": 'GENERAL', "scheme": "news_products"}
                         item.setdefault('subject', []).append(product)
-                    # add service is NEW
-                    service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
-                    item.setdefault('subject', []).append(service)
+                    item['subject'].extend([
+                        {"name": 'default', "qcode": 'default', "scheme": "distribution"},  # Distribution is default
+                        {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}  # add service is NEW
+                        
+                    ])
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue

@@ -28,36 +28,35 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     MAPPING_CATEGORY = {
         'SPO': 'SPORT',
         'POL': 'POLITICS',
+        'ECO': 'ECONOMY'
     }
 
     def parser_newsitem(self, item, newsitem_el):
         super().parser_newsitem(item, newsitem_el)
         # mapping product from keyword, and have only one product
         product = {}
-        for keyword in item.get('keywords', []):
-            keyword = unicodedata.normalize('NFKD', keyword.strip(
-                '/').upper()).encode('ascii', 'ignore').decode('utf-8')
-            product_codes = [k for k, v in self.MAPPING_KEYWORDS.items() for key in v if key in keyword]
-            if product_codes:
+        for category in item.get('anpa_category', []):
+            qcode = self.MAPPING_CATEGORY.get(category.get('qcode'))
+            if qcode:
                 product = {
-                    "name": product_codes[0],
-                    "qcode": product_codes[0],
+                    "name": qcode,
+                    "qcode": qcode,
                     "scheme": "news_products"
                 }
                 item.setdefault('subject', []).append(product)
                 break
-
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
             first_line = item.get('body_html', '').strip().split('\n')[0]
             first_line = etree.fromstring(first_line).text
             headline = 'URGENT: ' + first_line.strip()
             item['headline'] = headline
-
-        # label must be empty
+        # Label must be empty
         item['subject'] = [i for i in item['subject'] if i.get('scheme') != 'label']
-        item['credits'] = 'AFP'
-        item['distribution'] = 'default'
+        # Credits is AFP
+        credit = {"name": 'AFP', "qcode": 'AFP', "scheme": "credits"}
+        item.setdefault('subject', []).append(credit)
+
         return item
 
 

@@ -52,11 +52,12 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
                                             'scheme': 'of_interest_to'},
                                            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
                                             'scheme': 'of_interest_to'},
-                                           {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
-                                           {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}])
+                                           {'name': 'POLITICS', 'qcode': 'POLITICS', 'scheme': 'news_products'},
+                                           {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
+                                           {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+                                           {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
+                                           ])
         self.assertEqual(item["priority"], 4)
-        self.assertEqual(item["credits"], 'AFP')
-        self.assertEqual(item["distribution"], 'default')
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")
         self.assertEqual(item["item_id"], "TX-PAR-RHO61")
@@ -76,7 +77,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["line_text"], "(Croquis d'audience+Photo+Video)")
         self.assertEqual(item["administrative"], {'provider': 'AFP'})
         self.assertEqual(item["language"], "fr")
-        self.assertEqual(item["anpa_category"], [{'qcode': 'CLJ'}, {'qcode': 'POL'}])
+        self.assertEqual(item["anpa_category"], [{'qcode': 'POL'}, {'qcode': 'CLJ'}, {'qcode': 'ECO'}])
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'FRA', 'city': 'Paris'})
         self.assertEqual(item["generator_software"], "libg2")
         self.assertEqual(item["keywords"], ['France', 'procès', 'assises', 'drogues', 'police', 'marches_test'])

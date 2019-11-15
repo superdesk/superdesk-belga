@@ -105,6 +105,12 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 # service is always equal NEWS
                 service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
                 item.setdefault('subject', []).append(service)
+                # Credits is DPA
+                credit = {"name": 'ATS', "qcode": 'ATS', "scheme": "credits"}
+                item.setdefault('subject', []).append(credit)
+                # Distribution is default
+                dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}
+                item.setdefault('subject', []).append(dist)
 
                 item['word_count'] = int(m.group(5).decode())
 
@@ -169,8 +175,14 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 qcode = self.MAPPING_PRODUCTS['dpa'].get(qcode, 'GENERAL')
                 item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
                 # service is always equal NEWS
-                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}                
                 item.setdefault('subject', []).append(service)
+                # Credits is DPA
+                credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
+                item.setdefault('subject', []).append(credit)
+                # Distribution is default
+                dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}                
+                item.setdefault('subject', []).append(dist)
                 item['word_count'] = int(m.group(5).decode())
 
             inHeader = False
