@@ -417,7 +417,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             element = newslines_el.find('KeywordLine')
             if element is not None:
                 item['keyword_line'] = element.text
-                # ANP
 
         admin_el = component_el.find('AdministrativeMetadata')
         if admin_el is not None:

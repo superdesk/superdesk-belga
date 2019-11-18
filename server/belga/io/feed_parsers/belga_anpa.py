@@ -61,15 +61,17 @@ class BelgaANPAFeedParser(ANPAFeedParser):
                 b'([0-9]{1,2})-([0-9]{1,2}) ([0-9]{4})',
                 lines[1], flags=re.I)
             if m:
+                item['priority'] = 2 if m.group(1).decode() == 'u' else 3
                 qcode = m.group(2).decode().upper()
-                item['priority'] = self.map_priority(m.group(1).decode())
                 item['anpa_category'] = [{'qcode': qcode}]
                 # Mapping product
                 qcode = self.MAPPING_PRODUCTS.get(qcode, 'GENERAL')
-                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
-                # service is always equal NEWS
-                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
-                item.setdefault('subject', []).append(service)
+                item.setdefault('subject', []).extend([
+                    {'qcode': qcode, 'name': qcode, 'scheme': 'news_products'},
+                    {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"},
+                    {"name": 'KYODO', "qcode": 'KYODO', "scheme": "credits"},
+                    {"name": 'default', "qcode": 'default', "scheme": "distribution"},
+                ])
                 item['slugline'] = m.group(6).decode('latin-1', 'replace')
                 item['anpa_take_key'] = m.group(7).decode('latin-1', 'replace').strip()
                 item['word_count'] = int(m.group(10).decode())
@@ -89,6 +91,9 @@ class BelgaANPAFeedParser(ANPAFeedParser):
             m = re.match(b'\x02(.*)\x03', body, flags=re.M + re.S)
             if m:
                 text = m.group(1).decode('latin-1', 'replace').split('\n')
+                item['keywords'] = text[0].strip('\r').split("-")
+                item['abstract'] = re.split("\\..?", ("".join(line.strip() for line in text[2:-1])))[0] + '.'
+                item.setdefault('extra', {})['city'] = item.get('abstract', '').split(',')[0]
                 is_header = True
                 for line in text:
                     if line == text[0]:
