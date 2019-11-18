@@ -33,7 +33,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     def parser_newsitem(self, item, newsitem_el):
         super().parser_newsitem(item, newsitem_el)
-        # mapping product from keyword, and have only one product
+        # mapping product from category, and have only one product
         product = {}
         for category in item.get('anpa_category', []):
             qcode = self.MAPPING_CATEGORY.get(category.get('qcode'))
