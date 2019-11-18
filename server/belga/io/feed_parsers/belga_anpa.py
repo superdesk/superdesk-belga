@@ -61,6 +61,7 @@ class BelgaANPAFeedParser(ANPAFeedParser):
                 b'([0-9]{1,2})-([0-9]{1,2}) ([0-9]{4})',
                 lines[1], flags=re.I)
             if m:
+                item['language'] = 'en'
                 item['priority'] = 2 if m.group(1).decode() == 'u' else 3
                 qcode = m.group(2).decode().upper()
                 item['anpa_category'] = [{'qcode': qcode}]
