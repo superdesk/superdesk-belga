@@ -76,8 +76,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                         item.setdefault('subject', []).append(product)
                     item['subject'].extend([
                         {"name": 'default', "qcode": 'default', "scheme": "distribution"},  # Distribution is default
-                        {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}  # add service is NEW
-                        
+                        {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"},  # add service is NEW
                     ])
                     item = self.populate_fields(item)
                 except SkipItemException:
