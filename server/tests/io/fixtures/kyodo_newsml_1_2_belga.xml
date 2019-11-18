@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE NewsML PUBLIC "urn:newsml:iptc.org:20001006:NewsMLv1.0.dtd:1" "../DTD/NewsMLv1.0.dtd" [
+	<!ENTITY % nitf SYSTEM "../nitf/dtd/nitf-3-0.dtd">
+	%nitf;
+]>
+<NewsML>
+	<Catalog Href="../catalogKWS/KWSMasterCatalog_v1.0.xml"/>
+	<NewsEnvelope>
+		<TransmissionId>20190723KWS0125</TransmissionId>
+		<SentFrom>
+			<Party FormalName="KYODONEWS" Scheme="NskParty"/>
+		</SentFrom>
+		<DateAndTime>20190723T202119+0900</DateAndTime>
+		<NewsService FormalName="KWS Wire Service" Scheme="KwsNewsServices"/>
+		<Priority FormalName="9" Scheme="IptcPriority"/>
+	</NewsEnvelope>
+	<NewsItem>
+		<Catalog Href="../catalogKWS/KWSMasterCatalog_v1.0.xml"/>
+		<Identification>
+			<NewsIdentifier>
+				<ProviderId>kyodonews.jp</ProviderId>
+				<DateId>20190723</DateId>
+				<NewsItemId>20161021KW___0003800010</NewsItemId>
+				<RevisionId PreviousRevision="0" Update="N">1</RevisionId>
+				<PublicIdentifier>urn:newsml:kyodonews.jp:20190723:20161021KW___0003800010:1</PublicIdentifier>
+			</NewsIdentifier>
+		</Identification>
+		<NewsManagement>
+			<NewsItemType FormalName="News" Scheme="IptcNewsItemType"/>
+			<FirstCreated>20190723T202119+0900</FirstCreated>
+			<ThisRevisionCreated>20190723T202119+0900</ThisRevisionCreated>
+			<Status FormalName="Usable" Scheme="IptcStatus"/>
+		</NewsManagement>
+		<NewsComponent Duid="NC0001" EquivalentsList="no" Essential="no" xml:lang="en-US">
+			<Catalog Href="../catalogKWS/KWSMasterCatalog_v1.0.xml"/>
+			<Role FormalName="Main" Scheme="IptcRole"/>
+			<NewsLines>
+				<HeadLine>Ex-Chinese Premier Li Peng dies aged 90: Xinhua</HeadLine>
+				<DateLine>BEIJING, July 23</DateLine>
+				<CreditLine>Kyodo</CreditLine>
+				<SeriesLine>Asia</SeriesLine>
+				<SlugLine>Obit-Li Peng</SlugLine>
+			</NewsLines>
+			<AdministrativeMetadata>
+				<Provider>
+					<Party FormalName="KYODONEWS" Scheme="NskParty"/>
+				</Provider>
+			</AdministrativeMetadata>
+			<DescriptiveMetadata>
+				<Language FormalName="en" Scheme="ISO639"/>
+				<SubjectCode>
+					<SubjectMatter FormalName="14023000" Scheme="IptcSubjectCodes"/>
+					<SubjectMatter FormalName="11006000" Scheme="IptcSubjectCodes"/>
+				</SubjectCode>
+			</DescriptiveMetadata>
+			<Metadata>
+				<Catalog Href="../catalogKWS/KWSMasterCatalog_v1.0.xml"/>
+				<MetadataType FormalName="KwsSerialNumbers" Scheme="KwsMetadataTypes"/>
+				<Property FormalName="KwsSerial" Scheme="KwsProperty" Value="0125"/>
+			</Metadata>
+			<ContentItem>
+				<Catalog Href="../catalogKWS/KWSMasterCatalog_v1.0.xml"/>
+				<MediaType FormalName="Text" Scheme="IptcMediaTypes"/>
+				<Format FormalName="Nitf_v3.0" Scheme="KwsNewsFormats"/>
+				<MimeType FormalName="text/xml" Scheme="IptcMimeTypes"/>
+				<DataContent>
+					<nitf>
+						<body>
+							<body.head>
+								<hedline>
+									<hl1>Ex-Chinese Premier Li Peng dies aged 90: Xinhua</hl1>
+								</hedline>
+								<dateline>
+									<location>BEIJING</location>
+									<story.date>July 23</story.date>
+								</dateline>
+							</body.head>
+							<body.content>
+								<p>     Former Chinese Premier Li Peng, who led a military crackdown on the pro-democracy movement at Beijing's Tiananmen Square in 1989, died Monday of illness in the capital, the official Xinhua News Agency reported Tuesday. He was 90.</p>
+								<p>     Li served as premier, from 1988 to 1998, and chairman of the Standing Committee of the National People's Congress, China's top legislative body, between 1998 and 2003.</p>
+								<p>     A native of Shanghai, he was ranked second in the Communist Party of China behind then General Secretary Jiang Zemin for much of the 1990s.</p>
+								<p>     As premier, Li was believed to have taken a hard-line stance on the Tiananmen Square pro-democracy protests in 1989, including declaring martial law and ordering a military crackdown against student demonstrators in June that year.</p>
+								<p>     China has never released an official death toll from the crackdown on protesters in Tiananmen Square and elsewhere around the country, but estimates from human rights groups and witnesses range from several hundred to several thousand.</p>
+								<p>     Li traveled to Japan in 1989 and 1997 while he was premier. He also visited the country in 2002, which marked the 30th anniversary of normalized relations between Beijing and Tokyo, and held talks with then Japanese Prime Minister Junichiro Koizumi.</p>
+								<p>==Kyodo</p>
+							</body.content>
+						</body>
+					</nitf>
+				</DataContent>
+			</ContentItem>
+		</NewsComponent>
+	</NewsItem>
+</NewsML>

@@ -28,6 +28,13 @@ class BelgaANPAFeedParser(ANPAFeedParser):
     NAME = 'belgaanpa1312'
     label = 'Belga anpa1312'
 
+    MAPPING_PRODUCTS = {
+        'F': 'ECONOMY',
+        'P': 'POLITICS',
+        'E': 'CULTURE',
+        'S': 'SPORTS',
+    }
+
     def can_parse(self, file_path):
         try:
             with open(file_path, 'rb') as f:
@@ -54,8 +61,15 @@ class BelgaANPAFeedParser(ANPAFeedParser):
                 b'([0-9]{1,2})-([0-9]{1,2}) ([0-9]{4})',
                 lines[1], flags=re.I)
             if m:
+                qcode = m.group(2).decode().upper()
                 item['priority'] = self.map_priority(m.group(1).decode())
-                item['anpa_category'] = [{'qcode': m.group(2).decode()}]
+                item['anpa_category'] = [{'qcode': qcode}]
+                # Mapping product
+                qcode = self.MAPPING_PRODUCTS.get(qcode, 'GENERAL')
+                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+                # service is always equal NEWS
+                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
+                item.setdefault('subject', []).append(service)
                 item['slugline'] = m.group(6).decode('latin-1', 'replace')
                 item['anpa_take_key'] = m.group(7).decode('latin-1', 'replace').strip()
                 item['word_count'] = int(m.group(10).decode())

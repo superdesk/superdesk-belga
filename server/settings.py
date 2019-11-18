@@ -22,11 +22,13 @@ INSTALLED_APPS.extend([
     'analytics',
     'apps.languages',
     'planning',
-    'belga.image',
+    'belga.search_providers',
     'belga.io',
     'belga.command',
     'belga.publish',
+    'belga.macros',
     'belga.auth',
+
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -113,6 +115,16 @@ SCHEMA = {
         'country': {'required': False},
         'sign_off': {'required': False},
     },
+    'graphic': {
+        'headline': {'required': False},
+        'description_text': {'required': True},
+        'credit': {'required': False},
+        'keywords': {'required': False},
+        'city': {'required': False},
+        'country': {'required': False},
+        'sign_off': {'required': False},
+        'bcoverage': {'required': False},
+    },
 }
 
 # editor for images, video, audio
@@ -150,6 +162,18 @@ EDITOR = {
         'time': {'displayOnMediaEditor': False},
         'duration': {'displayOnMediaEditor': False},
         'unique_id': {'displayOnMediaEditor': False}
+    },
+    'graphic': {
+        'headline': {'order': 1, 'sdWidth': 'full'},
+        'description_text': {'order': 2, 'sdWidth': 'full', 'textarea': True},
+        'credit': {'order': 3, 'sdWidth': 'full'},
+        'keywords': {'order': 4, 'sdWidth': 'full'},
+        'city': {'order': 5, 'sdWidth': 'full'},
+        'country': {'order': 6, 'sdWidth': 'full'},
+        'sign_off': {'order': 7, 'sdWidth': 'half'},
+        'byline': {'displayOnMediaEditor': False},
+        'copyrightnotice': {'displayOnMediaEditor': False},
+        'bcoverage': {'displayOnMediaEditor': False},
     },
 }
 
@@ -193,6 +217,11 @@ PLANNING_EXPORT_BODY_TEMPLATE = '''
 {% endif %}
 {% endfor %}
 '''
+
+PLANNING_EVENT_TEMPLATES_ENABLED = True
+
+KEYWORDS_ADD_MISSING_ON_PUBLISH = True
+MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
 SECRET_KEY = 'SomethingNotEntirelySecret'
 OIDC_CLIENT_SECRETS = env('OIDC_CLIENT_SECRETS', 'client_secrets1.json')

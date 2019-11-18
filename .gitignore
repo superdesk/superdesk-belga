@@ -1,4 +1,5 @@
 .env
+.python-version
 /.project
 /.pydevproject
 *.pyc
@@ -19,7 +20,6 @@ env/
 bin/
 lib/
 man/
-src/
 dist/
 node_modules
 .settings

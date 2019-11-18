@@ -25,7 +25,9 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["anpa_take_key"], "2ND LEAD 3RD NET")
         self.assertEqual(item["slugline"], "/politics/Britain/EU/Brexit/justice")
-        self.assertEqual(item["anpa_category"], [{'qcode': 'i'}])
+        self.assertEqual(item["anpa_category"], [{'qcode': 'I'}])
+        self.assertListEqual(item["subject"], [{'qcode': 'POLITICS', 'name': 'POLITICS', 'scheme': 'news_products'},
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["byline"], "Helen Maguire, dpa")
         expected_body = \
@@ -89,7 +91,9 @@ class ATSBelgaFeedParserTestCase(DPABelgaFeedParserTestCase):
         item = self.item
         self.assertEqual(item["ingest_provider_sequence"], "037")
         # self.assertEqual(item["slugline"], "Notes de frais GE")
-        self.assertEqual(item["anpa_category"], [{'qcode': 'su'}])
+        self.assertEqual(item["anpa_category"], [{'qcode': 'EC'}])
+        self.assertListEqual(item["subject"], [{'qcode': 'ECONOMY', 'name': 'ECONOMY', 'scheme': 'news_products'},
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["original_source"], "bsf")
         expected_headline = \

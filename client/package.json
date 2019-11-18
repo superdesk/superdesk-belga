@@ -1,9 +1,13 @@
 {
     "name": "superdesk",
     "license": "GPL-3.0",
+    "scripts": {
+        "postinstall": "cd extensions/belgaCoverage && npm install && npm run compile"
+    },
     "dependencies": {
-        "superdesk-analytics": "superdesk/superdesk-analytics#master",
-        "superdesk-core": "superdesk/superdesk-client-core#master",
-        "superdesk-planning": "superdesk/superdesk-planning#master"
+        "superdesk-analytics": "github:tomaskikutis/superdesk-analytics#next",
+        "superdesk-core": "github:superdesk/superdesk-client-core#develop",
+        "superdesk-planning-extension": "1.0.1",
+        "superdesk-planning": "github:tomaskikutis/superdesk-planning#move-planning-extension-from-core"
     }
 }
