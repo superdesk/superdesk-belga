@@ -224,7 +224,7 @@ KEYWORDS_ADD_MISSING_ON_PUBLISH = True
 MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
 SECRET_KEY = 'SomethingNotEntirelySecret'
-OIDC_CLIENT_SECRETS = env('OIDC_CLIENT_SECRETS', 'client_secrets1.json')
+OIDC_CLIENT_SECRETS = env('OIDC_CLIENT_SECRETS', 'client_secrets.json')
 OIDC_USER_INFO_ENABLED = env('OIDC_USER_INFO_ENABLED', True)
 OIDC_SCOPES = ['openid', 'email', 'profile']
 OIDC_INTROSPECTION_AUTH_METHOD = env('OIDC_INTROSPECTION_AUTH_METHOD', 'client_secret_post')
