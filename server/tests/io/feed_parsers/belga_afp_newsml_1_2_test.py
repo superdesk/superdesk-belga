@@ -35,28 +35,34 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "0579")
-        self.assertEqual(item["subject"], [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-                                           {'qcode': '02001004', 'name': 'drug trafficking',
-                                            'scheme': 'iptc_subject_codes'},
-                                           {'qcode': '02008000', 'name': 'trials', 'scheme': 'iptc_subject_codes'},
-                                           {'qcode': '02003000', 'name': 'police', 'scheme': 'iptc_subject_codes'},
-                                           {'qcode': '02000000', 'name': 'crime, law and justice',
-                                            'scheme': 'iptc_subject_codes'},
-                                           {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB',
-                                            'scheme': 'of_interest_to'},
-                                           {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW',
-                                            'scheme': 'of_interest_to'},
-                                           {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU',
-                                            'scheme': 'of_interest_to'},
-                                           {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA',
-                                            'scheme': 'of_interest_to'},
-                                           {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
-                                            'scheme': 'of_interest_to'},
-                                           {'name': 'POLITICS', 'qcode': 'POLITICS', 'scheme': 'news_products'},
-                                           {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
-                                           {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-                                           {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
-                                           ])
+        self.assertEqual(item["subject"].sort(key=lambda i: i['name']),
+                         [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+                          {'qcode': '02001004', 'name': 'drug trafficking',
+                           'scheme': 'iptc_subject_codes'},
+                          {'qcode': '02008000', 'name': 'trials',
+                             'scheme': 'iptc_subject_codes'},
+                          {'qcode': '02003000', 'name': 'police',
+                             'scheme': 'iptc_subject_codes'},
+                          {'qcode': '02000000', 'name': 'crime, law and justice',
+                             'scheme': 'iptc_subject_codes'},
+                          {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB',
+                             'scheme': 'of_interest_to'},
+                          {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW',
+                             'scheme': 'of_interest_to'},
+                          {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU',
+                             'scheme': 'of_interest_to'},
+                          {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA',
+                             'scheme': 'of_interest_to'},
+                          {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
+                             'scheme': 'of_interest_to'},
+                          {'name': 'POLITICS', 'qcode': 'POLITICS',
+                             'scheme': 'news_products'},
+                          {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
+                          {'name': 'default', 'qcode': 'default',
+                             'scheme': 'distribution'},
+                          {'name': 'NEWS', 'qcode': 'NEWS',
+                             'scheme': 'news_services'}
+                          ].sort(key=lambda i: i['name']))
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")

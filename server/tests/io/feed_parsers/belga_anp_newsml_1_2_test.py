@@ -35,7 +35,7 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
-        self.assertEqual(item["subject"], [
+        self.assertEqual(item["subject"].sort(key=lambda i: i['name']), [
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
@@ -44,7 +44,7 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
-        ])
+        ].sort(key=lambda i: i['name']))
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["provider_id"], "ANP")
