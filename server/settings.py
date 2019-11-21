@@ -10,7 +10,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 from pathlib import Path
-from superdesk.default_settings import INSTALLED_APPS, env
+from superdesk.default_settings import INSTALLED_APPS, env, strtobool
 
 ABS_PATH = str(Path(__file__).resolve().parent)
 
@@ -225,9 +225,9 @@ MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
 SECRET_KEY = 'SomethingNotEntirelySecret'
 OIDC_CLIENT_SECRETS = env('OIDC_CLIENT_SECRETS', 'client_secrets.json')
-OIDC_USER_INFO_ENABLED = env('OIDC_USER_INFO_ENABLED', True)
+OIDC_USER_INFO_ENABLED = strtobool(env('OIDC_USER_INFO_ENABLED', 'true'))
 OIDC_SCOPES = ['openid', 'email', 'profile']
 OIDC_INTROSPECTION_AUTH_METHOD = env('OIDC_INTROSPECTION_AUTH_METHOD', 'client_secret_post')
 OIDC_BROWSER_ID = 'web-client'
 OIDC_BROWSER_REDIRECT_URI = env('OIDC_CLIENT_REDIRECT_URI', 'http://localhost:9000')
-OIDC_SSO_ENABLE = env('OIDC_SSO_ENABLE', False)
+OIDC_SSO_ENABLE = strtobool(env('OIDC_SSO_ENABLE', 'false'))
