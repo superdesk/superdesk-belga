@@ -8,14 +8,11 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import superdesk
-from apps.auth import AuthResource
-
-from apps.auth.service import AuthService
-from superdesk import get_resource_service
-
 from flask import g
 from flask_oidc import OpenIDConnect
+
+from apps.auth.service import AuthService
+from superdesk import get_backend, get_resource_service
 from superdesk.resource import Resource
 
 
@@ -78,5 +75,5 @@ def init_app(app):
 
                 return user
 
-        service = OIDCAuthService('auth', backend=superdesk.get_backend())
+        service = OIDCAuthService('auth', backend=get_backend())
         AuthResource(endpoint_name, app=app, service=service)
