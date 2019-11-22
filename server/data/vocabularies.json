@@ -7017,10 +7017,6 @@
                         "qcode": "email"
                     },
                     {
-                        "name": "NTB Event",
-                        "qcode": "ntb_event"
-                    },
-                    {
                         "name": "JSON Event",
                         "qcode": "json_event"
                     },
@@ -7060,10 +7056,6 @@
                         "qcode": "email"
                     },
                     {
-                        "name": "NTB Event",
-                        "qcode": "ntb_event"
-                    },
-                    {
                         "name": "JSON Event",
                         "qcode": "json_event"
                     },
@@ -7097,10 +7089,6 @@
                     {
                         "name": "Email",
                         "qcode": "email"
-                    },
-                    {
-                        "name": "NTB Event",
-                        "qcode": "ntb_event"
                     },
                     {
                         "name": "JSON Event",
