@@ -22,18 +22,23 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
 
     def test_content(self):
         item = self.item
+        self.assertEqual(item["language"], 'en')
         self.assertEqual(item["slugline"], "Soccer-Emperor's-Cup")
         self.assertEqual(item["anpa_take_key"], "'s-Cup")
         self.assertEqual(item["word_count"], 344)
         self.assertEqual(item["firstcreated"].isoformat(), "2018-12-09T12:18:00+00:00")
         self.assertEqual(item["headline"], "Soccer: Urawa Reds claim 7th Emperor's Cup by beating Vegalta Sendai")
         self.assertEqual(item["versioncreated"].isoformat(), "2018-12-09T12:18:00+00:00")
-        self.assertEqual(item["priority"], 6)
-        self.assertEqual(item["anpa_category"], [{'qcode': 'S'}])
+        self.assertEqual(item["priority"], 2)
+        self.assertEqual(item["anpa_category"], [{'qcode': "S"}])
         self.assertEqual(item["format"], "preserved")
         self.assertEqual(item["type"], "text")
-        self.assertListEqual(item["subject"], [{'qcode': 'SPORTS', 'name': 'SPORTS', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
+        self.assertEqual(item["extra"], {"city": "SAITAMA"})
+        self.assertListEqual(item["subject"], [{'name': 'SPORTS', 'qcode': 'SPORTS', 'scheme': 'news_products'},
+                                               {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
+                                               {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
+                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}])
+        self.assertEqual(item["priority"], 2)
         expected_body = \
             (
                 '<p>     SAITAMA, Japan, Dec. 9 Kyodo - Urawa Reds claimed their seventh </p><p>E'

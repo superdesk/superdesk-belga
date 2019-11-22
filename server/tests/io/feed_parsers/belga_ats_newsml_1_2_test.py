@@ -33,8 +33,9 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
 
     def test_content(self):
         item = self.item[0]
-        self.assertEqual(item["subject"],
+        self.assertEqual(item["subject"].sort(key=lambda i: i['name']),
                          [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+                          {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
                           {'name': 'Current', 'qcode': 'Current', 'scheme': 'genre'},
                           {'qcode': '04001000', 'name': 'agriculture', 'scheme': 'iptc_subject_codes'},
                           {'qcode': '04007000', 'name': 'consumer goods', 'scheme': 'iptc_subject_codes'},
@@ -42,7 +43,9 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
                           {'qcode': '04000000', 'name': 'economy, business and finance',
                            'scheme': 'iptc_subject_codes'},
                           {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
-                          {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}])
+                          {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+                          {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
+                          ].sort(key=lambda i: i['name']))
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "www.sda-ats.ch")
         self.assertEqual(item["date_id"], "20190603")

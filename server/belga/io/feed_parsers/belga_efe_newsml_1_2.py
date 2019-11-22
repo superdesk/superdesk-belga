@@ -30,11 +30,15 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         super().parser_contentitem(item, content_el)
         categoria = content_el.find('DataContent/nitf/head/meta[@name="categoria"]')
         if categoria is not None:
-            qcode = categoria.attrib.get('content').upper() if categoria is not None else None
+            content = categoria.attrib.get('content')
+            qcode = content.upper() if content is not None else None
             if qcode:
                 item.setdefault('anpa_category', []).append({'qcode': qcode})
                 qcode = self.MAPPING_PRODUCTS.get(qcode)
                 item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+        # credit is EFE
+        credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "credits"}
+        item.setdefault('subject', []).append(credit)
         return item
 
 

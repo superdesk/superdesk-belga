@@ -1,5 +1,6 @@
-from superdesk.tests import TestCase
 import os
+
+from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_iptc7901 import BelgaIPTC7901FeedParser
 
 
@@ -27,7 +28,10 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["slugline"], "/politics/Britain/EU/Brexit/justice")
         self.assertEqual(item["anpa_category"], [{'qcode': 'I'}])
         self.assertListEqual(item["subject"], [{'qcode': 'POLITICS', 'name': 'POLITICS', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'},
+                                               {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+                                               ])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["byline"], "Helen Maguire, dpa")
         expected_body = \
@@ -84,44 +88,40 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["body_html"], expected_body)
 
 
-class ATSBelgaFeedParserTestCase(DPABelgaFeedParserTestCase):
+class ATSBelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
     filename = 'ats.txt'
 
     def test_content(self):
         item = self.item
-        self.assertEqual(item["ingest_provider_sequence"], "037")
-        # self.assertEqual(item["slugline"], "Notes de frais GE")
+        self.assertEqual(item["ingest_provider_sequence"], "025")
         self.assertEqual(item["anpa_category"], [{'qcode': 'EC'}])
         self.assertListEqual(item["subject"], [{'qcode': 'ECONOMY', 'name': 'ECONOMY', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}])
+                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'},
+                                               {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
+                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+                                               ])
         self.assertEqual(item["type"], "text")
+        self.assertEqual(item["language"], "fr")
+        self.assertEqual(item["extra"], {'city': 'Paris'})
         self.assertEqual(item["original_source"], "bsf")
-        expected_headline = \
-            (
-                "Notes de frais GE: \r\nL'affaire des notes de frais a marquÃ© l'exÃ©cutif de la Vi"
-                'lle'
-            )
-        self.assertEqual(item["headline"], expected_headline)
-        self.assertEqual(item["priority"], 4)
-        self.assertEqual(item["word_count"], 174)
+        self.assertEqual(item["headline"], 'Gilets jaunes: une «catastrophe pour notre économie» (Le Maire) =')
+        self.assertEqual(item["priority"], 3)
+        self.assertEqual(item["word_count"], 121)
         expected_body = \
             (
-                '<p> GenÃ¨ve (ats) Le scandale causÃ© par les notes de frais  considÃ©rables de c'
-                'ertains conseillers administratifs de la Ville de  GenÃ¨ve a provoquÃ© un sÃ©ism'
-                "e au sein de l'exÃ©cutif municipal. Â«Le  rapport de confiance a Ã©tÃ© Ã©branlÃ©"
-                'Â», a admis le maire de la Ville  de GenÃ¨ve Sami Kanaan, dans une interview lun'
-                'di Ã\xa0 la Tribune de  GenÃ¨ve.   Â«Il y aura un avant et un aprÃ¨s rapport de la '
-                "Cour des comptesÂ»,  souligne l'Ã©lu socialiste. Ce dernier dit avoir Â«Ã©tÃ© ch"
-                'oquÃ© de  dÃ©couvrir certaines pratiques trÃ¨s discutablesÂ». Le magistrat  appe'
-                'lle maintenant Ã\xa0 tourner la page, afin de Â«repartir sur des  bases sainesÂ».  '
-                " Une quinzaine de textes liÃ©s Ã\xa0 l'affaire ont Ã©tÃ© dÃ©posÃ©s au  Conseil muni"
-                'cipal. Le dÃ©libÃ©ratif devra les traiter le plus  rapidement, estime M. Kanaan,'
-                " dans le but Â«de ne pas handicaper  d'autres dossiers importantsÂ». Selon le ma"
-                'ire de GenÃ¨ve, ce travail  devrait Ãªtre fait Â«dans les quatre Ã\xa0 six prochain'
-                'es semainesÂ».   Des mesures ont dÃ©jÃ\xa0 Ã©tÃ© prises. Un dispositif des frais a '
-                'Ã©tÃ©  crÃ©Ã©. Une charte des valeurs sera instaurÃ©e, qui complÃ©tera une  vers'
-                "ion actualisÃ©e de la rÃ©glementation sur les frais. Â«L'enjeu, ce  ne sont pas "
-                'seulement les rÃ¨gles, mais aussi les attitudes et les  comportements face Ã\xa0 el'
-                'lesÂ», note le maire.   (SDA\\/mf ba)   </p>'
+                "<p>«gilets jaunes» sont une «catastrophe» pour l'économie, a estimé  </p>"
+                "<p>dimanche le ministre de l'Economie. Bruno Le Maire a été jusqu'à  </p>"
+                "<p>parler d'une «crise de la nation».  </p><p>  </p>"
+                "<p>   «C'est une catastrophe pour le commerce, c'est une catastrophe  </p>"
+                "<p>pour notre économie», a déclaré à la presse le ministre, lors d'une  </p>"
+                "<p>visite aux commerçants à Paris au lendemain de nouvelles violences  </p>"
+                "<p>lors de la quatrième journée de mobilisation. Il a énuméré «une  </p>"
+                "<p>crise sociale», «une crise démocratique» et «une crise de la  </p><p>nation».  </p><p>  </p>"
+                "<p>   De son côté, Ségolène Royal, ancienne finaliste de la  </p>"
+                "<p>présidentielle de 2007, a fustigé dimanche des «décisions mal  </p>"
+                "<p>préparées» par le gouvernement ayant conduit, selon elle, à la  </p>"
+                "<p>crise des «gilets jaunes» en raison de leur impact sur le pouvoir  </p>"
+                "<p>d'achat.  </p><p>  </p><p>(SDA\\/sj)  </p><p>  </p>"
+                "<p>\x03091223 dec 18 </p><p> </p><p> </p><p>\x04 </p>"
             )
         self.assertEqual(item["body_html"], expected_body)

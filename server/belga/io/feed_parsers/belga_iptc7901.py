@@ -31,10 +31,10 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
 
     label = 'Belga IPTC 7901 Parser'
 
-    types = [
-        ('dpa', b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', [' =\n']),
-        ('ats', b'(\x7f\x7f|\x7f)', [' = \r\n'])
-    ]
+    types = {
+        'dpa': (b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', [' =\n']),
+        'ats': (b'(\x7f\x7f|\x7f)', [' = \r\n']),
+    }
     txt_type = None
 
     MAPPING_PRODUCTS = {
@@ -57,40 +57,49 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         try:
             BelgaIPTC7901FeedParser.txt_type = None
             with open(file_path, 'rb') as f:
-                lines = [line for line in f]
-                for item in self.types:
-                    check_type = re.match(item[1], lines[0], flags=re.I)
+                lines = list(f)
+                for _type, regex in self.types.items():
+                    check_type = re.match(regex[0], lines[0], flags=re.I)
                     if check_type:
-                        BelgaIPTC7901FeedParser.txt_type = item
+                        BelgaIPTC7901FeedParser.txt_type = _type
                         return check_type
-
         except Exception:
             return False
 
     def parse(self, file_path, provider=None):
         item = {}
-        if BelgaIPTC7901FeedParser.txt_type[0] == 'dpa':
+        _type = BelgaIPTC7901FeedParser.txt_type
+        if _type == 'dpa':
             item = self.parse_content_dpa(file_path, provider)
-            item = self.dpa_derive_dateline(item)
-            # Markup the text and set the content type
-            item['body_html'] = '<p>' + item['body_html'].replace('\r\n', ' ').replace('\n', '</p><p>') + '</p>'
-            item[ITEM_TYPE] = CONTENT_TYPE.TEXT
-        if BelgaIPTC7901FeedParser.txt_type[0] == 'ats':
+        if _type == 'ats':
             item = self.parse_content_ats(file_path, provider)
-            item = self.dpa_derive_dateline(item)
-            # Markup the text and set the content type
-            item['body_html'] = '<p>' + item['body_html'].replace('\r\n', ' ').replace('\n', '</p><p>') + '</p>'
-            item[ITEM_TYPE] = CONTENT_TYPE.TEXT
+        item = self.dpa_derive_dateline(item)
+        # Markup the text and set the content type
+        item['body_html'] = '<p>' + item['body_html'].replace('\r\n', ' ').replace('\n', '</p><p>') + '</p>'
 
+        invalid_xmlchars = {
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '\u0007': ' ', '\u0003': ' ', '\u0004': ' ', '\u001f': ' '
+        }
+        for char, replace_char in invalid_xmlchars.items():
+            item['body_html'].replace(char, replace_char)
+            item['headline'].replace(char, replace_char)
+            item.get('lead', '').replace(char, replace_char)
+
+        item[ITEM_TYPE] = CONTENT_TYPE.TEXT
         return item
 
     def parse_content_ats(self, file_path, provider=None):
         try:
-            item = {ITEM_TYPE: CONTENT_TYPE.TEXT, 'guid': generate_guid(type=GUID_TAG),
-                    'versioncreated': utcnow()}
+            item = {
+                ITEM_TYPE: CONTENT_TYPE.TEXT,
+                'guid': generate_guid(type=GUID_TAG),
+                'versioncreated': utcnow(),
+                'language': 'fr',
+            }
 
             with open(file_path, 'rb') as f:
-                lines = [line for line in f]
+                lines = list(f)
+
             # parse first header line
             m = re.match(b'\x7f\x01([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', lines[1], flags=re.I)
             if m:
@@ -101,51 +110,27 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['anpa_category'] = [{'qcode': self.map_category(qcode)}]
                 qcode = self.MAPPING_PRODUCTS['ats'].get(qcode, 'GENERAL')
                 item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
-
-                # service is always equal NEWS
-                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
-                item.setdefault('subject', []).append(service)
-
+                item['subject'].extend([
+                    {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"},  # service is always NEWS
+                    {"name": 'ATS', "qcode": 'ATS', "scheme": "credits"},
+                    {"name": 'default', "qcode": 'default', "scheme": "distribution"},
+                ])
                 item['word_count'] = int(m.group(5).decode())
 
-            inHeader = False
-            inBody = False
-            line_count = 0
-            item['headline'] = ''
-            item['body_html'] = ''
-            # start check each line for get information
-            for bline in lines[1:]:
-                line = bline.decode('latin-1', 'replace')
-                line_count += 1
+            content = b'\n'.join(lines[1:]).decode('latin-1', 'replace')
+            header = re.search(r'.*=', content)
+            item['headline'] = header.group(0).strip() if header else ''
 
-                # dpa start header when line number is 3
-                if bline[0:1] == b'\x02':
-                    line = line[1:]
-                    inHeader = True
-
-                # dpa end at especially characters
-                if bline[0:1] == b'\x03':
-                    break
-
-                if inHeader is True:
-                    # dpa end header when line end with especially characters (ex '=\r\n')
-                    end_string = self.check_mendwith(line, BelgaIPTC7901FeedParser.txt_type[2])
-                    if end_string:
-                        if line.startswith('By '):
-                            item['byline'] = line.replace('By ', '').rstrip(end_string)
-                        else:
-                            item['headline'] += line.rstrip(end_string)
-                        inHeader = False
-                        # set flag inBody when header is end
-                        inBody = True
-                    else:
-                        item['headline'] += line
-                        inHeader = True
-                    continue
-                # dpa start body when the header is end
-                if inBody:
-                    item['body_html'] += line
-                    continue
+            body = re.search(r'(?s)=\s{2,}(.*)', content)
+            if body:
+                body = re.split(r'(?s)\s{3,}', body.group(1), 1)
+                if len(body) == 2:
+                    item['abstract'], item['body_html'] = body
+                    city = re.search(r'^(\S*)', item['abstract'])
+                    if city:
+                        item.setdefault('extra', {})['city'] = city.group(0).strip()
+                else:
+                    item['body_html'] = body[0]
             return item
         except Exception as ex:
             raise ParserError.IPTC7901ParserError(exception=ex, provider=provider)
@@ -156,7 +141,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     'versioncreated': utcnow()}
 
             with open(file_path, 'rb') as f:
-                lines = [line for line in f]
+                lines = list(f)
             # parse first header line
             m = re.match(b'([a-zA-Z]*)([0-9]*) (.) ([A-Z]{1,3}) ([0-9]*) ([a-zA-Z0-9 ]*)', lines[0], flags=re.I)
             if m:
@@ -171,6 +156,12 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 # service is always equal NEWS
                 service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
                 item.setdefault('subject', []).append(service)
+                # Credits is DPA
+                credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
+                item.setdefault('subject', []).append(credit)
+                # Distribution is default
+                dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}
+                item.setdefault('subject', []).append(dist)
                 item['word_count'] = int(m.group(5).decode())
 
             inHeader = False
@@ -206,7 +197,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                             item['anpa_header'] = line
                         continue
                     # dpa end header when line end with especially characters (ex '=\r\n')
-                    end_string = self.check_mendwith(line, BelgaIPTC7901FeedParser.txt_type[2])
+                    end_string = self.check_mendwith(line, self.types[BelgaIPTC7901FeedParser.txt_type][1])
                     if end_string:
                         if line.startswith('By '):
                             item['byline'] = line.replace('By ', '').rstrip(end_string)
@@ -248,7 +239,10 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         :return:
         """
         item['headline'] = ''
-        headers, divider, the_rest = self.mpartition(item.get('body_html', ''), BelgaIPTC7901FeedParser.txt_type[2])
+        headers, divider, the_rest = self.mpartition(
+            item.get('body_html', ''),
+            self.types[BelgaIPTC7901FeedParser.txt_type][1]
+        )
         # If no divider then there was only one line and that is the headline so clean up the stray '='
         if not divider:
             item['headline'] = item.get('headline').replace(' =', '')

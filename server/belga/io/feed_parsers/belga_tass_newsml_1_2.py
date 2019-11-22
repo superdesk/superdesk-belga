@@ -49,6 +49,8 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     }
                     item.setdefault('subject', []).append(product)
                     break
+        credit = {"name": 'TASS', "qcode": 'TASS', "scheme": "credits"}
+        item['subject'].append(credit)
 
     def parser_newscomponent(self, item, newscomponent_el):
         """

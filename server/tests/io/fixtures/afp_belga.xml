@@ -55,13 +55,13 @@
 <SubjectMatter FormalName="02008000" cat="CLJ"/>
 </SubjectCode>
 <SubjectCode>
-<SubjectDetail FormalName="02001004" cat="CLJ"/>
+<SubjectDetail FormalName="02001004" cat="POL"/>
 </SubjectCode>
 <SubjectCode>
 <SubjectMatter FormalName="02003000" cat="CLJ"/>
 </SubjectCode>
 <SubjectCode>
-<SubjectMatter FormalName="02001000" cat="POL"/>
+<SubjectMatter FormalName="02001000" cat="ECO"/>
 </SubjectCode>
 <SubjectCode>
 <Subject FormalName="02000000" cat="CLJ"/>
@@ -82,6 +82,7 @@
 <OfInterestTo FormalName="AMN-TFG-1=AMW"/>
 <OfInterestTo FormalName="ARC-TFG-1=ELU"/>
 <OfInterestTo FormalName="EUA-TFG-1=EUA"/>
+<OfInterestTo FormalName="EUA-TFG-1=EUA"/>
 <OfInterestTo FormalName="MOA-TFG-1=MOA"/>
 <DateLineDate>20190121T104233+0000</DateLineDate>
 <Location HowPresent="Origin">
@@ -94,7 +95,7 @@
 <Property FormalName="Keyword" Value="assises"/>
 <Property FormalName="Keyword" Value="drogues"/>
 <Property FormalName="Keyword" Value="police"/>
-<Property FormalName="Keyword" Value="marches"/>
+<Property FormalName="Keyword" Value="marches_test"/>
 </DescriptiveMetadata>
 <ContentItem>
 <MediaType FormalName="Text"/>
