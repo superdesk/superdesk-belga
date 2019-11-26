@@ -47,6 +47,7 @@ module.exports = function(grunt) {
             planning: true,
             searchShortcut: true,
             editFeaturedImage: false,
+            hideCreatePackage: true,
             customAuthoringTopbar: {
                 publish: true,
                 publishAndContinue: true,
