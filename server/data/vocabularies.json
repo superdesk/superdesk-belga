@@ -1,5 +1,421 @@
 [
     {
+        "_id": "services-products",
+        "display_name": "Packages",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "init_version": 2,
+	"unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": 
+        [
+            {
+                "name": "BIN",
+                "qcode": "BIN",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "BTL",
+                "qcode": "BTL",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "EXT",
+                "qcode": "EXT",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "INT",
+                "qcode": "INT",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "NEWS",
+                "qcode": "NEWS",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "SPECIAL",
+                "qcode": "SPECIAL",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "SPF",
+                "qcode": "SPF",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "SPN",
+                "qcode": "SPN",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "THEMA",
+                "qcode": "THEMA",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name":	"BIN/ALG",
+				"qcode": "BIN/ALG",
+				"is_active": true,
+				"parent": "BIN"
+			},
+			{
+                "name":	"BIN/ECO",
+				"qcode": "BIN/ECO",
+				"is_active": true,
+				"parent": "BIN"
+			},
+			{
+                "name":	"BIN/POL",
+				"qcode": "BIN/POL",
+				"is_active": true,
+				"parent": "BIN"
+			},
+			{
+                "name":	"BIN/POD",
+				"qcode": "BIN/POD",
+				"is_active": true,
+				"parent": "BIN"
+			},
+			{
+                "name":	"BIN/PRV",
+				"qcode": "BIN/PRV",
+				"is_active": true,
+				"parent": "BIN"
+			},
+			{
+                "name":	"BIN/SPORTS",
+				"qcode": "BIN/SPORTS",
+				"is_active": true,
+				"parent": "BIN"
+			},
+			{
+                "name":	"BTL/ALG",
+				"qcode": "BTL/ALG",
+				"is_active": true,
+				"parent": "BTL"
+			},
+			{
+                "name":	"BTL/ECO",
+				"qcode": "BTL/ECO",
+				"is_active": true,
+				"parent": "BTL"
+			},
+			{
+                "name":	"BTL/POL",
+				"qcode": "BTL/POL",
+				"is_active": true,
+				"parent": "BTL"
+			},
+			{
+                "name":	"BTL/EUR",
+				"qcode": "BTL/EUR",
+				"is_active": true,
+				"parent": "BTL"
+			},
+			{
+                "name":	"EXT/GENERAL",
+				"qcode": "EXT/GENERAL",
+				"is_active": true,
+				"parent": "EXT"
+			},
+			{
+                "name":	"EXT/EUR",
+				"qcode": "EXT/EUR",
+				"is_active": true,
+				"parent": "EXT"
+			},
+			{
+                "name":	"EXT/ECO",
+				"qcode": "EXT/ECO",
+				"is_active": true,
+				"parent": "EXT"
+			},
+			{
+                "name":	"EXT/GEN",
+				"qcode": "EXT/GEN",
+				"is_active": true,
+				"parent": "EXT"
+			},
+			{
+                "name":	"EXT/POL",
+				"qcode": "EXT/POL",
+				"is_active": true,
+				"parent": "EXT"
+			},
+			{
+                "name":	"INT/POL",
+				"qcode": "INT/POL",
+				"is_active": true,
+				"parent": "INT"
+			},
+			{
+                "name":	"INT/ALG",
+				"qcode": "INT/ALG",
+				"is_active": true,
+				"parent": "INT"
+			},
+			{
+                "name":	"INT/GENERAL",
+				"qcode": "INT/GENERAL",
+				"is_active": true,
+				"parent": "INT"
+			},
+			{
+                "name":	"INT/ECO",
+				"qcode": "INT/ECO",
+				"is_active": true,
+				"parent": "INT"
+			},
+			{
+                "name":	"INT/PRV",
+				"qcode": "INT/PRV",
+				"is_active": true,
+				"parent": "INT"
+			},
+			{
+                "name":	"INT/GEN",
+				"qcode": "INT/GEN",
+				"is_active": true,
+				"parent": "INT"
+			},
+			{
+                "name":	"NEWS/CULTURE_LIFESTYLE",
+				"qcode": "NEWS/CULTURE_LIFESTYLE",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/POLITICS",
+				"qcode": "NEWS/POLITICS",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/AUDIO_SPEECH",
+				"qcode": "NEWS/AUDIO_SPEECH",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/SPORTS",
+				"qcode": "NEWS/SPORTS",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/ENTERTAINMENT",
+				"qcode": "NEWS/ENTERTAINMENT",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/CULTURE",
+				"qcode": "NEWS/CULTURE",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/GENERAL",
+				"qcode": "NEWS/GENERAL",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"NEWS/ECONOMY",
+				"qcode": "NEWS/ECONOMY",
+				"is_active": true,
+				"parent": "NEWS"
+			},
+			{
+                "name":	"SPECIAL/PHARMA",
+				"qcode": "SPECIAL/PHARMA",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/CARS",
+				"qcode": "SPECIAL/CARS",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/INFO",
+				"qcode": "SPECIAL/INFO",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/CROSS",
+				"qcode": "SPECIAL/CROSS",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/ALG",
+				"qcode": "SPECIAL/ALG",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/BV",
+				"qcode": "SPECIAL/BV",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/FINANCE",
+				"qcode": "SPECIAL/FINANCE",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/ECONOMY",
+				"qcode": "SPECIAL/ECONOMY",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/ENTERTAINMENT_PLUS",
+				"qcode": "SPECIAL/ENTERTAINMENT_PLUS",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPECIAL/CULTURE_LIFESTYLE",
+				"qcode": "SPECIAL/CULTURE_LIFESTYLE",
+				"is_active": true,
+				"parent": "SPECIAL"
+			},
+			{
+                "name":	"SPF/HIP",
+				"qcode": "SPF/HIP",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPF/RES",
+				"qcode": "SPF/RES",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPF/POL",
+				"qcode": "SPF/POL",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPF/REB",
+				"qcode": "SPF/REB",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPF/SPORTS",
+				"qcode": "SPF/SPORTS",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPF/OLY",
+				"qcode": "SPF/OLY",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPF/GEN",
+				"qcode": "SPF/GEN",
+				"is_active": true,
+				"parent": "SPF"
+			},
+			{
+                "name":	"SPN/RAN",
+				"qcode": "SPN/RAN",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/HFR",
+				"qcode": "SPN/HFR",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/ALG",
+				"qcode": "SPN/ALG",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/REB",
+				"qcode": "SPN/REB",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/UIT",
+				"qcode": "SPN/UIT",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/HIP",
+				"qcode": "SPN/HIP",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/SPORTS",
+				"qcode": "SPN/SPORTS",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"SPN/OLY",
+				"qcode": "SPN/OLY",
+				"is_active": true,
+				"parent": "SPN"
+			},
+			{
+                "name":	"THEMA/ENTERTAINMENT",
+				"qcode": "THEMA/ENTERTAINMENT",
+				"is_active": true,
+				"parent": "THEMA"
+			},
+			{
+                "name":	"THEMA/ENTERTAINMENT_PLUS",
+				"qcode": "THEMA/ENTERTAINMENT_PLUS",
+				"is_active": true,
+				"parent": "THEMA"
+			},
+			{
+                "name":	"THEMA/BIZAR",
+				"qcode": "THEMA/BIZAR",
+				"is_active": true,
+				"parent": "THEMA"
+			},
+			{
+                "name":	"THEMA/CULTURE_LIFESTYLE",
+				"qcode": "THEMA/CULTURE_LIFESTYLE",
+				"is_active": true,
+				"parent": "THEMA"
+			}
+        ]
+    },
+    {
         "_id": "countries",
         "display_name": "Countries",
         "type": "manageable",
