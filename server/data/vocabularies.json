@@ -4,7 +4,11 @@
         "display_name": "Packages",
         "type": "manageable",
         "selection_type": "multi selection",
-        "init_version": 1,
+        "init_version": 2,
+	"unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
         "items": 
         [
             {
