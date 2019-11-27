@@ -45,7 +45,7 @@ class BelgaTipNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-09-28 05:41:32+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-09-28 05:41:32+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["guid"], "20190928T074132")
+        self.assertEqual(item["guid"], "f0d56ae3bcf30abfdf064b943c52fbe5")
         self.assertEqual(item["language"], "NL")
         self.assertEqual(item["byline"], "BELGA")
         self.assertEqual(item["headline"], "cor 446 - BRAND GEBOUW, hemiksem")
