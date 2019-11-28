@@ -61,37 +61,32 @@ module.exports = function(grunt) {
         },
         list: {
             priority: [
-                'priority',
                 'urgency'
             ],
             firstLine: [
-                'wordcount',
                 'slugline',
+                'headline',
+                'wordcount',
                 'highlights',
                 'markedDesks',
                 'associations',
                 'publish_queue_errors',
-                'headline',
                 'versioncreated'
             ],
             secondLine: [
-                'language',
                 'profile',
                 'state',
+                'update',
                 'scheduledDateTime',
                 'embargo',
-                'update',
                 'takekey',
                 'signal',
                 'broadcast',
                 'flags',
                 'updated',
-                'category',
                 'provider',
-                'expiry',
                 'desk',
                 'fetchedDesk',
-                'nestedlink',
                 'associatedItems',
                 'translations',
             ]
