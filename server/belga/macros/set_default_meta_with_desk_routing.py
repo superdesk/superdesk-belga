@@ -11,6 +11,7 @@ def set_default_meta_with_desk_routing(item, **kwargs):
     new_item = set_default_metadata(item, **kwargs)
     desk_routing_macro['callback'](new_item, **kwargs)
 
+
 name = 'set_default_meta_with_desk_routing'
 label = 'Set Default Metadata With Desk Routing'
 callback = set_default_meta_with_desk_routing
