@@ -12,7 +12,7 @@ from superdesk import get_resource_service
 
 
 logger = logging.getLogger(__name__)
-SUBJECT_SCHEMES = ('news_services', 'news_products', 'distribution')
+SUBJECT_SCHEMES = ('services-products', 'news_services', 'news_products', 'distribution')
 
 
 def get_default_content_template(item, **kwargs):
@@ -52,9 +52,10 @@ def get_default_content_template(item, **kwargs):
 def set_default_metadata(item, **kwargs):
     """Replace some metadata from default content template
 
-    The following metadata: ``News Services``, ``News Products``, ``Language``,
-    ``Distribution``, and ``Storytags (keywords)`` will be replaced (or created if they
-    don't already exist) by the value set in desk's default content template
+    The following metadata: ``Packages (services-products)``, ``News Services``, ``News
+    Products``, ``Language``, ``Distribution``, and ``Storytags (keywords)`` will be
+    replaced (or created if they don't already exist) by the value set in desk's default
+    content template
     """
     content_template = get_default_content_template(item, **kwargs)
     if not content_template:
