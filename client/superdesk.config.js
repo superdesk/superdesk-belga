@@ -59,6 +59,28 @@ module.exports = function(grunt) {
             planning: true,
             assignments: true
         },
+        
+        search_cvs: [
+            {id: 'belga-keywords', name:'Belga keywords', field: 'subject', list: 'belga-keywords'},
+            {id: 'services-products', name:'Packages', field: 'subject', list: 'services-products'}
+        ],
+
+        search: {
+            'slugline': 1,
+            'headline': 1,
+            'unique_name': 1,
+            'story_text': 1,
+            'byline': 0,
+            'keywords': 1,
+            'creator': 1,
+            'from_desk': 1,
+            'to_desk': 1,
+            'spike': 1,
+            'ingest_provider': 1,
+            'marked_desks': 1,
+            'scheduled': 1
+        },
+        
         list: {
             priority: [
                 'urgency'
