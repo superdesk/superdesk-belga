@@ -64,11 +64,11 @@ module.exports = function(grunt) {
                 'urgency'
             ],
             firstLine: [
-                'slugline',
-                'headline',
-                'wordcount',
+                'slugline',                
                 'highlights',
                 'markedDesks',
+                'headline',
+                'wordcount',
                 'associations',
                 'publish_queue_errors',
                 'versioncreated'
