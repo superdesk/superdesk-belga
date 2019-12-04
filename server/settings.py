@@ -229,5 +229,5 @@ OIDC_USER_INFO_ENABLED = strtobool(env('OIDC_USER_INFO_ENABLED', 'true'))
 OIDC_SCOPES = ['openid', 'email', 'profile']
 OIDC_INTROSPECTION_AUTH_METHOD = env('OIDC_INTROSPECTION_AUTH_METHOD', 'client_secret_post')
 OIDC_BROWSER_ID = 'web-client'
-OIDC_BROWSER_REDIRECT_URI = env('OIDC_CLIENT_REDIRECT_URI', 'http://localhost:9000')
+OIDC_BROWSER_REDIRECT_URI = env('OIDC_BROWSER_REDIRECT_URI', 'http://localhost:9000')
 OIDC_SSO_ENABLE = strtobool(env('OIDC_SSO_ENABLE', 'false'))
