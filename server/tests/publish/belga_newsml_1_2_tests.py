@@ -598,17 +598,20 @@ class BelgaNewsML12FormatterTest(TestCase):
         'headline': 'New Skoda Scala',
         'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
         'slugline': 'skoda scala',
-        'subject': [{'name': 'bilingual', 'qcode': 'bilingual', 'scheme': 'distribution'},
-                    {'name': 'ANALYSIS', 'qcode': 'ANALYSIS', 'scheme': 'genre'},
-                    {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-                    {'name': 'FORECAST', 'qcode': 'FORECAST', 'scheme': 'genre'},
-                    {'name': 'A1', 'qcode': 'A1', 'scheme': 'label'}, {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
-                    {'name': 'R1', 'qcode': 'R1', 'scheme': 'label'},
-                    {'name': 'CARS', 'qcode': 'CARS', 'scheme': 'news_products'},
-                    {'name': 'CULTURE', 'qcode': 'CULTURE', 'scheme': 'news_products'},
-                    {'name': 'BIN', 'qcode': 'BIN', 'scheme': 'news_services'},
-                    {'name': 'BRN', 'qcode': 'BRN', 'scheme': 'news_services'},
-                    {'name': 'BTL', 'qcode': 'BTL', 'scheme': 'news_services'}],
+        'subject': [
+            {'name': 'bilingual', 'qcode': 'bilingual', 'scheme': 'distribution'},
+            {'name': 'ANALYSIS', 'qcode': 'ANALYSIS', 'scheme': 'genre'},
+            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
+            {'name': 'FORECAST', 'qcode': 'FORECAST', 'scheme': 'genre'},
+            {'name': 'A1', 'qcode': 'A1', 'scheme': 'label'}, {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
+            {'name': 'R1', 'qcode': 'R1', 'scheme': 'label'},
+            {"name": "BIN/ALG", "qcode": "BIN/ALG", "parent": "BIN", "scheme": "services-products"},
+            {"name": "EXT/ECO", "qcode": "EXT/ECO", "parent": "EXT", "scheme": "services-products"},
+            {"name": "BIN", "qcode": "BIN", "parent": None, "scheme": "services-products"},
+            {"name": "NEWS/ENTERTAINMENT", "qcode": "NEWS/ENTERTAINMENT", "parent": "NEWS",
+             "scheme": "services-products"},
+            {"name": "NEWS/SPORTS", "qcode": "NEWS/SPORTS", "parent": "NEWS", "scheme": "services-products"}
+        ],
         'word_count': 28,
         'byline': 'BELGA',
         'administrative': {
@@ -1111,7 +1114,10 @@ class BelgaNewsML12FormatterTest(TestCase):
             {'FormalName': 'Priority', 'Value': '6'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
-            {'FormalName': 'NewsPackage'}
+            {'FormalName': 'NewsPackage'},
+            {'FormalName': 'NewsPackage'},
+            {'FormalName': 'NewsPackage'},
+            {'FormalName': 'NewsPackage'},
         )
         for idx, attribs in enumerate(
                 [dict(p.attrib) for p in newscomponent_2_level.xpath('AdministrativeMetadata/Property')]):
@@ -1121,11 +1127,14 @@ class BelgaNewsML12FormatterTest(TestCase):
             )
 
         expected_attribs = (
-            {'FormalName': 'NewsProduct', 'Value': 'CARS'},
-            {'FormalName': 'NewsProduct', 'Value': 'CULTURE'},
             {'FormalName': 'NewsService', 'Value': 'BIN'},
-            {'FormalName': 'NewsService', 'Value': 'BRN'},
-            {'FormalName': 'NewsService', 'Value': 'BTL'}
+            {'FormalName': 'NewsProduct', 'Value': 'ALG'},
+            {'FormalName': 'NewsService', 'Value': 'EXT'},
+            {'FormalName': 'NewsProduct', 'Value': 'ECO'},
+            {'FormalName': 'NewsService', 'Value': 'NEWS'},
+            {'FormalName': 'NewsProduct', 'Value': 'ENTERTAINMENT'},
+            {'FormalName': 'NewsService', 'Value': 'NEWS'},
+            {'FormalName': 'NewsProduct', 'Value': 'SPORTS'}
         )
         for idx, attribs in enumerate(
                 [dict(p.attrib) for p in newscomponent_2_level.xpath('AdministrativeMetadata/Property/Property')]):
@@ -1284,7 +1293,10 @@ class BelgaNewsML12FormatterTest(TestCase):
             {'FormalName': 'Priority', 'Value': '6'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
-            {'FormalName': 'NewsPackage'}
+            {'FormalName': 'NewsPackage'},
+            {'FormalName': 'NewsPackage'},
+            {'FormalName': 'NewsPackage'},
+            {'FormalName': 'NewsPackage'},
         )
         for idx, attribs in enumerate(
                 [dict(p.attrib) for p in newscomponent_2_level.xpath('AdministrativeMetadata/Property')]):
@@ -1294,11 +1306,14 @@ class BelgaNewsML12FormatterTest(TestCase):
             )
 
         expected_attribs = (
-            {'FormalName': 'NewsProduct', 'Value': 'CARS'},
-            {'FormalName': 'NewsProduct', 'Value': 'CULTURE'},
             {'FormalName': 'NewsService', 'Value': 'BIN'},
-            {'FormalName': 'NewsService', 'Value': 'BRN'},
-            {'FormalName': 'NewsService', 'Value': 'BTL'}
+            {'FormalName': 'NewsProduct', 'Value': 'ALG'},
+            {'FormalName': 'NewsService', 'Value': 'EXT'},
+            {'FormalName': 'NewsProduct', 'Value': 'ECO'},
+            {'FormalName': 'NewsService', 'Value': 'NEWS'},
+            {'FormalName': 'NewsProduct', 'Value': 'ENTERTAINMENT'},
+            {'FormalName': 'NewsService', 'Value': 'NEWS'},
+            {'FormalName': 'NewsProduct', 'Value': 'SPORTS'}
         )
         for idx, attribs in enumerate(
                 [dict(p.attrib) for p in newscomponent_2_level.xpath('AdministrativeMetadata/Property/Property')]):

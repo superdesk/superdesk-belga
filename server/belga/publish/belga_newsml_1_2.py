@@ -762,21 +762,27 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             'Property',
             {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
         )
-        property_newspackage = SubElement(
-            administrative_metadata, 'Property',
-            {'FormalName': 'NewsPackage'}
-        )
+
         for subject in item.get('subject', []):
-            if subject.get('scheme') == 'news_services':
+            if subject.get('scheme') == 'services-products':
+                try:
+                    news_service_value, news_product_value = subject.get('qcode').split('/')
+                except ValueError:
+                    # ignore
+                    continue
+                property_newspackage = SubElement(
+                    administrative_metadata, 'Property',
+                    {'FormalName': 'NewsPackage'}
+                )
                 SubElement(
                     property_newspackage, 'Property',
-                    {'FormalName': 'NewsService', 'Value': subject['qcode']}
+                    {'FormalName': 'NewsService', 'Value': news_service_value}
                 )
-            elif subject.get('scheme') == 'news_products':
                 SubElement(
                     property_newspackage, 'Property',
-                    {'FormalName': 'NewsProduct', 'Value': subject['qcode']}
+                    {'FormalName': 'NewsProduct', 'Value': news_product_value}
                 )
+
         if 'source' in item:
             SubElement(
                 SubElement(administrative_metadata, 'Source'),
