@@ -13,8 +13,8 @@ function getData(event: DragEvent) {
     return event.dataTransfer ? event.dataTransfer.getData(ALLOWED) : '';
 }
 
-export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessComponent<IEditorComponentProps> {
-    return function BelgaCoverageEditor(props: IEditorComponentProps) {
+export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessComponent<IEditorComponentProps<string | null, never>> {
+    return function BelgaCoverageEditor(props: IEditorComponentProps<string | null, never>) {
         if (props.value) {
             return (
                 <div>
