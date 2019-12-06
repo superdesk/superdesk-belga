@@ -8,10 +8,10 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 import logging
-from .set_default_metadata import get_default_content_template, set_default_metadata
+from copy import deepcopy
 from superdesk import get_resource_service
 from superdesk.errors import StopDuplication
-from copy import deepcopy
+from .set_default_metadata import get_default_content_template, set_default_metadata
 
 
 logger = logging.getLogger(__name__)

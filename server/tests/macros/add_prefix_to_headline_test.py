@@ -1,5 +1,5 @@
-from .add_prefix_to_headline import add_prefix_to_headline
 import unittest
+from belga.macros.add_prefix_to_headline import add_prefix_to_headline
 
 
 class AddBelgToHeadlineTestCase(unittest.TestCase):
