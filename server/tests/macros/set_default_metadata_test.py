@@ -1,5 +1,5 @@
-from .set_default_metadata import set_default_metadata
 from superdesk.tests import TestCase
+from belga.macros.set_default_metadata import set_default_metadata
 
 
 class SetDefaultMetadataTestCase(TestCase):

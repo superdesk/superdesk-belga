@@ -8,10 +8,11 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 import logging
-from .set_default_metadata import get_default_content_template, set_default_metadata
+from copy import deepcopy
 from superdesk import get_resource_service
 from superdesk.errors import StopDuplication
-from copy import deepcopy
+from apps.archive.common import ITEM_DUPLICATE
+from .set_default_metadata import get_default_content_template, set_default_metadata
 
 
 logger = logging.getLogger(__name__)
@@ -38,18 +39,19 @@ def set_default_metadata_with_translate(item, **kwargs):
 
     # we first do the translation, we need destination language for that
     content_template = get_default_content_template(item, **kwargs)
-    language = content_template['data'].get('language')
-    if not language:
+    template_language = content_template['data'].get('language')
+    if not template_language:
         logger.warning("no language set in default content template")
-        return
+        new_id = archive_service.duplicate_item(original_doc=original_item, operation=ITEM_DUPLICATE)
+    elif template_language == original_item.get('language'):
+        new_id = archive_service.duplicate_item(original_doc=original_item, operation=ITEM_DUPLICATE)
+    else:
+        new_item = deepcopy(original_item)
+        new_item['language'] = template_language
+        translate_service = get_resource_service('translate')
+        new_id = translate_service.create([new_item])[0]
 
-    new_item = deepcopy(original_item)
-    new_item['language'] = language
-
-    translate_service = get_resource_service('translate')
-    new_id = translate_service.create([new_item])[0]
-
-    # translation is done, we now move the item to the new desk
+    # translation/duplication is done, we now move the item to the new desk
     dest = {"task": {"desk": desk_id, "stage": stage_id}}
     move_service.move_content(new_id, dest)
 
