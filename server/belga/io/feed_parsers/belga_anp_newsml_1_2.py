@@ -44,6 +44,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # Credits is ANP
         credit = {"name": 'ANP', "qcode": 'ANP', "scheme": "credits"}
         item.setdefault('subject', []).append(credit)
+        item['slugline'] = ''
         return item
 
 
