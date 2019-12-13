@@ -35,14 +35,13 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # mapping services-products from category, and have only one product
         for category in item.get('anpa_category', []):
             qcode = self.MAPPING_CATEGORY.get(category.get('qcode'), 'NEWS/GENERAL')
-            if qcode:
-                item.setdefault('subject', []).append({
-                    'name': qcode,
-                    'qcode': qcode,
-                    'parent': 'NEWS',
-                    'scheme': 'services-products'
-                })
-                break
+            item.setdefault('subject', []).append({
+                'name': qcode,
+                'qcode': qcode,
+                'parent': 'NEWS',
+                'scheme': 'services-products'
+            })
+            break
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
             first_line = item.get('body_html', '').strip().split('\n')[0]

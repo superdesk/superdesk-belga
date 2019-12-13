@@ -11,7 +11,6 @@
 
 import os
 from lxml import etree
-from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_anp_newsml_1_2 import BelgaANPNewsMLOneFeedParser
 from . import BelgaTestCase
 
@@ -35,16 +34,18 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
-        self.assertEqual(item["subject"].sort(key=lambda i: i['name']), [
+        item["subject"].sort(key=lambda i: i['scheme'])
+        expected_subjects = [
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
-            {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
-            {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
-        ].sort(key=lambda i: i['name']))
+            {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'}
+        ]
+        expected_subjects.sort(key=lambda i: i['scheme'])
+        self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
         self.assertEqual(item["provider_id"], "ANP")
