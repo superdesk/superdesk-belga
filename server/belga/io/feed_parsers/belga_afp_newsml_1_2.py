@@ -13,7 +13,6 @@ from lxml import etree
 from superdesk.io.registry import register_feed_parser
 
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
-import unicodedata
 
 
 class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -26,24 +25,23 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         'SPORTS': ['HIPPISME', 'SPORT', 'SPORTS']
     }
     MAPPING_CATEGORY = {
-        'SPO': 'SPORT',
-        'POL': 'POLITICS',
-        'ECO': 'ECONOMY'
+        'SPO': 'NEWS/SPORT',
+        'POL': 'NEWS/POLITICS',
+        'ECO': 'NEWS/ECONOMY'
     }
 
     def parser_newsitem(self, item, newsitem_el):
         super().parser_newsitem(item, newsitem_el)
-        # mapping product from category, and have only one product
-        product = {}
+        # mapping services-products from category, and have only one product
         for category in item.get('anpa_category', []):
-            qcode = self.MAPPING_CATEGORY.get(category.get('qcode'))
+            qcode = self.MAPPING_CATEGORY.get(category.get('qcode'), 'NEWS/GENERAL')
             if qcode:
-                product = {
-                    "name": qcode,
-                    "qcode": qcode,
-                    "scheme": "news_products"
-                }
-                item.setdefault('subject', []).append(product)
+                item.setdefault('subject', []).append({
+                    'name': qcode,
+                    'qcode': qcode,
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
                 break
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
