@@ -42,6 +42,13 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 'scheme': 'services-products'
             })
             break
+        else:
+            item.setdefault('subject', []).append({
+                'name': 'NEWS/GENERAL',
+                'qcode': 'NEWS/GENERAL',
+                'parent': 'NEWS',
+                'scheme': 'services-products'
+            })
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
             first_line = item.get('body_html', '').strip().split('\n')[0]
