@@ -9,17 +9,15 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import pytz
+import logging
+import dateutil.parser
+from xml.etree import ElementTree
 
+from superdesk import etree as sd_etree
 from superdesk.io.feed_parsers.newsml_2_0 import NewsMLTwoFeedParser
 from superdesk.io.registry import register_feed_parser
 from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
-from superdesk import etree as sd_etree, get_resource_service
-from xml.etree import ElementTree
-import re
-
-import dateutil.parser
-import logging
 
 logger = logging.getLogger(__name__)
 NS = {'xhtml': 'http://www.w3.org/1999/xhtml',
@@ -38,13 +36,13 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         'subj': 'iptc_subject_code'
     }
     MAPPING_CATEGORY = {
-        'F': 'ECONOMY',
-        'WI': 'ECONOMY',
-        'I': 'POLITICS',
-        'PL': 'POLITICS',
-        'KU': 'CULTURE',
-        'S': 'SPORTS',
-        'SP': 'SPORTS'
+        'F': 'NEWS/ECONOMY',
+        'WI': 'NEWS/ECONOMY',
+        'I': 'NEWS/POLITICS',
+        'PL': 'NEWS/POLITICS',
+        'KU': 'NEWS/CULTURE',
+        'S': 'NEWS/SPORTS',
+        'SP': 'NEWS/SPORTS'
     }
 
     def can_parse(self, xml):
@@ -67,21 +65,28 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                         item['firstcreated'] = dateutil.parser.parse(published)
                     item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
                     item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
-                    # mapping service
-                    service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
-                    item.setdefault('subject', []).append(service)
-                    # mapping product
-                    product = {}
+
+                    # mapping services-products
                     for cat in item.get('anpa_category', []):
-                        qcode = self.MAPPING_CATEGORY.get(cat.get('qcode', '').upper())
-                        if qcode:
-                            product = {'name': qcode, 'qcode': qcode, 'scheme': 'news_products'}
-                            break
-                    if product:
-                        item.setdefault('subject', []).append(product)
+                        qcode = self.MAPPING_CATEGORY.get(
+                            cat.get('qcode', '').upper(),
+                            'NEWS/GENERAL'
+                        )
+                        item.setdefault('subject', []).append({
+                            'name': qcode,
+                            'qcode': qcode,
+                            'parent': 'NEWS',
+                            'scheme': 'services-products'
+                        })
+                        break
                     else:
-                        product = {"name": 'GENERAL', "qcode": 'GENERAL', "scheme": "news_products"}
-                        item.setdefault('subject', []).append(product)
+                        item.setdefault('subject', []).append({
+                            'name': 'NEWS/GENERAL',
+                            'qcode': 'NEWS/GENERAL',
+                            'parent': 'NEWS',
+                            'scheme': 'services-products'
+                        })
+
                     # Credits is DPA
                     credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
                     item.setdefault('subject', []).append(credit)
