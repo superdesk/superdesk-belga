@@ -20,8 +20,8 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     label = 'Belga specific TASS News ML 1.2 Parser'
 
     MAPPING_PRODUCTS = {
-        'POLITICS': 'POLITICS',
-        'ECONOMY': 'ECONOMY',
+        'POLITICS': 'NEWS/POLITICS',
+        'ECONOMY': 'NEWS/ECONOMY',
     }
 
     def can_parse(self, xml):
@@ -36,19 +36,25 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     def parser_newsitem(self, item, newsitem_el):
         super().parser_newsitem(item, newsitem_el)
-        # mapping news products from keywords
-        product = {}
+        # mapping news services-products from keywords
         if item.get('keywords'):
             for keyword in item['keywords']:
                 qcode = [self.MAPPING_PRODUCTS.get(k) for k in self.MAPPING_PRODUCTS if k in keyword]
                 if qcode:
-                    product = {
+                    item.setdefault('subject', []).append({
                         'name': qcode[0],
                         'qcode': qcode[0],
-                        'scheme': 'news_products',
-                    }
-                    item.setdefault('subject', []).append(product)
+                        'parent': 'NEWS',
+                        'scheme': 'services-products'
+                    })
                     break
+            else:
+                item.setdefault('subject', []).append({
+                    'name': 'NEWS/GENERAL',
+                    'qcode': 'NEWS/GENERAL',
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
         credit = {"name": 'TASS', "qcode": 'TASS', "scheme": "credits"}
         item['subject'].append(credit)
 

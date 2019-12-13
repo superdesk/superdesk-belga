@@ -32,16 +32,18 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
 
     def test_content(self):
         item = self.item[0]
-        self.assertEqual(item["subject"].sort(key=lambda i: i['name']), [
-            {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
-            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
-            {'name': 'ECONOMY', 'qcode': 'ECONOMY', 'scheme': 'news_products'},
+            {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'credits'},
+            {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
-        ].sort(key=lambda i: i['name']))
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'}
+        ]
+        expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 04:27:08+00:00")
