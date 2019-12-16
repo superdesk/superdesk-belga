@@ -39,17 +39,17 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
 
     MAPPING_PRODUCTS = {
         'ats': {
-            'CL': 'CULTURE',
-            'EC': 'ECONOMY',
+            'CL': 'NEWS/CULTURE',
+            'EC': 'NEWS/ECONOMY',
         },
         'dpa': {
-            'F': 'ECONOMY',
-            'WI': 'ECONOMY',
-            'I': 'POLITICS',
-            'PL': 'POLITICS',
-            'KU': 'CULTURE',
-            'S': 'SPORTS',
-            'SP': 'SPORTS',
+            'F': 'NEWS/ECONOMY',
+            'WI': 'NEWS/ECONOMY',
+            'I': 'NEWS/POLITICS',
+            'PL': 'NEWS/POLITICS',
+            'KU': 'NEWS/CULTURE',
+            'S': 'NEWS/SPORTS',
+            'SP': 'NEWS/SPORTS',
         },
     }
 
@@ -108,10 +108,14 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['ingest_provider_sequence'] = m.group(2).decode()
                 item['priority'] = self.map_priority(m.group(3).decode())
                 item['anpa_category'] = [{'qcode': self.map_category(qcode)}]
-                qcode = self.MAPPING_PRODUCTS['ats'].get(qcode, 'GENERAL')
-                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+                qcode = self.MAPPING_PRODUCTS['ats'].get(qcode, 'NEWS/GENERAL')
+                item.setdefault('subject', []).append({
+                    'name': qcode,
+                    'qcode': qcode,
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
                 item['subject'].extend([
-                    {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"},  # service is always NEWS
                     {"name": 'ATS', "qcode": 'ATS', "scheme": "credits"},
                     {"name": 'default', "qcode": 'default', "scheme": "distribution"},
                 ])
@@ -151,11 +155,13 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                 item['priority'] = self.map_priority(m.group(3).decode())
                 item['anpa_category'] = [{'qcode': self.map_category(qcode)}]
                 # mapping product
-                qcode = self.MAPPING_PRODUCTS['dpa'].get(qcode, 'GENERAL')
-                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
-                # service is always equal NEWS
-                service = {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"}
-                item.setdefault('subject', []).append(service)
+                qcode = self.MAPPING_PRODUCTS['dpa'].get(qcode, 'NEWS/GENERAL')
+                item.setdefault('subject', []).append({
+                    'name': qcode,
+                    'qcode': qcode,
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
                 # Credits is DPA
                 credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
                 item.setdefault('subject', []).append(credit)

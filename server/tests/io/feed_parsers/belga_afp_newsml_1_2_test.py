@@ -8,11 +8,10 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import settings
 import os
+import datetime
 from lxml import etree
 from belga.io.feed_parsers.belga_afp_newsml_1_2 import BelgaAFPNewsMLOneFeedParser
-import datetime
 from . import BelgaTestCase
 
 
@@ -35,34 +34,24 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "0579")
-        self.assertEqual(item["subject"].sort(key=lambda i: i['name']),
-                         [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-                          {'qcode': '02001004', 'name': 'drug trafficking',
-                           'scheme': 'iptc_subject_codes'},
-                          {'qcode': '02008000', 'name': 'trials',
-                             'scheme': 'iptc_subject_codes'},
-                          {'qcode': '02003000', 'name': 'police',
-                             'scheme': 'iptc_subject_codes'},
-                          {'qcode': '02000000', 'name': 'crime, law and justice',
-                             'scheme': 'iptc_subject_codes'},
-                          {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB',
-                             'scheme': 'of_interest_to'},
-                          {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW',
-                             'scheme': 'of_interest_to'},
-                          {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU',
-                             'scheme': 'of_interest_to'},
-                          {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA',
-                             'scheme': 'of_interest_to'},
-                          {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA',
-                             'scheme': 'of_interest_to'},
-                          {'name': 'POLITICS', 'qcode': 'POLITICS',
-                             'scheme': 'news_products'},
-                          {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
-                          {'name': 'default', 'qcode': 'default',
-                             'scheme': 'distribution'},
-                          {'name': 'NEWS', 'qcode': 'NEWS',
-                             'scheme': 'news_services'}
-                          ].sort(key=lambda i: i['name']))
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
+            {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB', 'scheme': 'of_interest_to'},
+            {'name': 'drug trafficking', 'qcode': '02001004', 'scheme': 'iptc_subject_codes'},
+            {'name': 'trials', 'qcode': '02008000', 'scheme': 'iptc_subject_codes'},
+            {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW', 'scheme': 'of_interest_to'},
+            {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
+            {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
+            {'name': 'crime, law and justice', 'qcode': '02000000', 'scheme': 'iptc_subject_codes'},
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU', 'scheme': 'of_interest_to'},
+            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
+            {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
+            {'name': 'NEWS/POLITICS', 'parent': 'NEWS', 'qcode': 'NEWS/POLITICS', 'scheme': 'services-products'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+        ]
+        expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "afp.com")
         self.assertEqual(item["date_id"], "20190121T104233Z")

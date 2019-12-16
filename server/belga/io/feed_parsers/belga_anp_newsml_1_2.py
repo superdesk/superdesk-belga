@@ -22,8 +22,8 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     label = 'Belga specific ANP News ML 1.2 Parser'
 
     MAPPING_PRODUCTS = {
-        'SPO': 'SPORTS',
-        'ECO': 'ECONOMY',
+        'SPO': 'NEWS/SPORTS',
+        'ECO': 'NEWS/ECONOMY',
     }
 
     # anp related logic goes here
@@ -34,13 +34,23 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     def parser_newsitem(self, item, newsitem_el):
         super().parser_newsitem(item, newsitem_el)
-        product = {}
         for subject in item.get('subject', []):
             if subject.get('scheme', '') == 'genre':
-                qcode = self.MAPPING_PRODUCTS.get(subject.get('name'))
-                product = {'name': qcode, 'qcode': qcode, 'scheme': 'news_products'} if qcode else None
-                item.setdefault('subject', []).append(product)
+                qcode = self.MAPPING_PRODUCTS.get(subject.get('name'), 'NEWS/GENERAL')
+                item.setdefault('subject', []).append({
+                    'name': qcode,
+                    'qcode': qcode,
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
                 break
+        else:
+            item.setdefault('subject', []).append({
+                'name': 'NEWS/GENERAL',
+                'qcode': 'NEWS/GENERAL',
+                'parent': 'NEWS',
+                'scheme': 'services-products'
+            })
         # Credits is ANP
         credit = {"name": 'ANP', "qcode": 'ANP', "scheme": "credits"}
         item.setdefault('subject', []).append(credit)

@@ -75,10 +75,11 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['subject'], [
             {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_item_types'},
             {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-            {'name': 'BIN', 'qcode': 'BIN', 'scheme': 'news_services'},
-            {'name': 'ALG', 'qcode': 'ALG', 'scheme': 'news_products'},
-            {'name': 'INT', 'qcode': 'INT', 'scheme': 'news_services'},
-            {'name': 'GEN', 'qcode': 'GEN', 'scheme': 'news_products'}
+            {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products', 'parent': 'BIN'},
+            {'name': 'BIN/ECO', 'qcode': 'BIN/ECO', 'scheme': 'services-products', 'parent': 'BIN'},
+            {'name': 'NEWS/CULTURE_LIFESTYLE', 'qcode': 'NEWS/CULTURE_LIFESTYLE', 'scheme': 'services-products',
+             'parent': 'NEWS'},
+
         ])
         self.assertEqual(item['type'], 'text')
         self.assertEqual(item['version'], 4)

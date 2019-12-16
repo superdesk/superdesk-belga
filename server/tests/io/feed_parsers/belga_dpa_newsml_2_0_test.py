@@ -63,15 +63,16 @@ class BelgaDPANewsMLTwoTestCase(BelgaTestCase):
         self.assertEqual(item["headline"], "Mehr als 200 Migranten in der Ägäis aufgegriffen")
         self.assertEqual(item["slugline"], "")
         self.assertEqual(item["language"], "de")
-        self.assertEqual(item["subject"].sort(key=lambda i: i['name']),
-                         [{'qcode': '11017000', 'name': 'Migration', 'scheme': 'iptc_subject_code'},
-                          {'qcode': '11011000', 'name': 'Flüchtling, Asyl',
-                           'scheme': 'iptc_subject_code'},
-                          {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
-                          {'name': 'POLITICS', 'qcode': 'POLITICS', 'scheme': 'news_products'},
-                          {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
-                          {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
-                          ].sort(key=lambda i: i['name']))
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
+            {'qcode': '11017000', 'name': 'Migration', 'scheme': 'iptc_subject_code'},
+            {'qcode': '11011000', 'name': 'Flüchtling, Asyl', 'scheme': 'iptc_subject_code'},
+            {'name': 'NEWS/POLITICS', 'qcode': 'NEWS/POLITICS', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+        ]
+        expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["extra"], {'city': 'Athen', 'country': 'Griechenland'})
         self.assertEqual(item["genre"], [])
         self.assertEqual(item["authors"], [{'uri': None, 'role': 'tsafos'}])

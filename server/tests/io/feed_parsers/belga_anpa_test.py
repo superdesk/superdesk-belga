@@ -1,8 +1,8 @@
-from superdesk.tests import TestCase
 import os
-from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
-from superdesk import config
 import settings
+from superdesk.tests import TestCase
+from superdesk import config
+from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
 
 
 class BaseBelgaANPAFeedParserTestCase(TestCase):
@@ -34,10 +34,11 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
         self.assertEqual(item["format"], "preserved")
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["extra"], {"city": "SAITAMA"})
-        self.assertListEqual(item["subject"], [{'name': 'SPORTS', 'qcode': 'SPORTS', 'scheme': 'news_products'},
-                                               {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'},
-                                               {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
-                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}])
+        self.assertListEqual(item["subject"], [
+            {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
+            {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+        ])
         self.assertEqual(item["priority"], 2)
         expected_body = \
             (

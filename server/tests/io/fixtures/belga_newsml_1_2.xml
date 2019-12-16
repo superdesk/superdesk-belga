@@ -65,6 +65,20 @@
                         <Property FormalName="NewsService" Value="BIN"/>
                         <Property FormalName="NewsProduct" Value="ALG"/>
                     </Property>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="BIN"/>
+                        <Property FormalName="NewsProduct" Value="ECO"/>
+                    </Property>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="NEWS"/>
+                        <Property FormalName="NewsProduct" Value="CULTURE_LIFESTYLE"/>
+                    </Property>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="EXT"/>
+                    </Property>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsProduct" Value="GEN"/>
+                    </Property>
                     <Property FormalName="NewsObjectId" Value="98055801"/>
                     <Property FormalName="ForeignId" Value="BIN118"/>
                     <Property FormalName="Priority" Value="3"/>

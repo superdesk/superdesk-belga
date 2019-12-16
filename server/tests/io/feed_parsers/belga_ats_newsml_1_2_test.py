@@ -33,19 +33,20 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
 
     def test_content(self):
         item = self.item[0]
-        self.assertEqual(item["subject"].sort(key=lambda i: i['name']),
-                         [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-                          {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
-                          {'name': 'Current', 'qcode': 'Current', 'scheme': 'genre'},
-                          {'qcode': '04001000', 'name': 'agriculture', 'scheme': 'iptc_subject_codes'},
-                          {'qcode': '04007000', 'name': 'consumer goods', 'scheme': 'iptc_subject_codes'},
-                          {'qcode': '08000000', 'name': 'human interest', 'scheme': 'iptc_subject_codes'},
-                          {'qcode': '04000000', 'name': 'economy, business and finance',
-                           'scheme': 'iptc_subject_codes'},
-                          {'name': 'GENERAL', 'qcode': 'GENERAL', 'scheme': 'news_products'},
-                          {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-                          {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_services'}
-                          ].sort(key=lambda i: i['name']))
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
+            {'name': 'Current', 'qcode': 'Current', 'scheme': 'genre'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+            {'qcode': '08000000', 'name': 'human interest', 'scheme': 'iptc_subject_codes'},
+            {'name': 'NEWS/GENERAL', 'qcode': 'NEWS/GENERAL', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'qcode': '04007000', 'name': 'consumer goods', 'scheme': 'iptc_subject_codes'},
+            {'qcode': '04001000', 'name': 'agriculture', 'scheme': 'iptc_subject_codes'},
+            {'qcode': '04000000', 'name': 'economy, business and finance', 'scheme': 'iptc_subject_codes'},
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'}
+        ]
+        expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "www.sda-ats.ch")
         self.assertEqual(item["date_id"], "20190603")

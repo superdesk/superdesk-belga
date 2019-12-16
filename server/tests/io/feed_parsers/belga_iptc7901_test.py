@@ -27,11 +27,12 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["anpa_take_key"], "2ND LEAD 3RD NET")
         self.assertEqual(item["slugline"], "/politics/Britain/EU/Brexit/justice")
         self.assertEqual(item["anpa_category"], [{'qcode': 'I'}])
-        self.assertListEqual(item["subject"], [{'qcode': 'POLITICS', 'name': 'POLITICS', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'},
-                                               {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
-                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
-                                               ])
+        self.assertListEqual(
+            item["subject"],
+            [{'name': 'NEWS/POLITICS', 'parent': 'NEWS', 'qcode': 'NEWS/POLITICS', 'scheme': 'services-products'},
+             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}]
+        )
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["byline"], "Helen Maguire, dpa")
         expected_body = \
@@ -95,11 +96,12 @@ class ATSBelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         item = self.item
         self.assertEqual(item["ingest_provider_sequence"], "025")
         self.assertEqual(item["anpa_category"], [{'qcode': 'EC'}])
-        self.assertListEqual(item["subject"], [{'qcode': 'ECONOMY', 'name': 'ECONOMY', 'scheme': 'news_products'},
-                                               {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'},
-                                               {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
-                                               {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
-                                               ])
+        self.assertListEqual(
+            item["subject"],
+            [{'name': 'NEWS/ECONOMY', 'parent': 'NEWS', 'qcode': 'NEWS/ECONOMY', 'scheme': 'services-products'},
+             {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
+             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}]
+        )
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["language"], "fr")
         self.assertEqual(item["extra"], {'city': 'Paris'})

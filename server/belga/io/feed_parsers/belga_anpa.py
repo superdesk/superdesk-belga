@@ -29,10 +29,10 @@ class BelgaANPAFeedParser(ANPAFeedParser):
     label = 'Belga anpa1312'
 
     MAPPING_PRODUCTS = {
-        'F': 'ECONOMY',
-        'P': 'POLITICS',
-        'E': 'CULTURE',
-        'S': 'SPORTS',
+        'F': 'NEWS/ECONOMY',
+        'P': 'NEWS/POLITICS',
+        'E': 'NEWS/CULTURE',
+        'S': 'NEWS/SPORTS',
     }
 
     def can_parse(self, file_path):
@@ -66,12 +66,11 @@ class BelgaANPAFeedParser(ANPAFeedParser):
                 qcode = m.group(2).decode().upper()
                 item['anpa_category'] = [{'qcode': qcode}]
                 # Mapping product
-                qcode = self.MAPPING_PRODUCTS.get(qcode, 'GENERAL')
+                qcode = self.MAPPING_PRODUCTS.get(qcode, 'NEWS/GENERAL')
                 item.setdefault('subject', []).extend([
-                    {'qcode': qcode, 'name': qcode, 'scheme': 'news_products'},
-                    {"name": 'NEWS', "qcode": 'NEWS', "scheme": "news_services"},
-                    {"name": 'KYODO', "qcode": 'KYODO', "scheme": "credits"},
-                    {"name": 'default', "qcode": 'default', "scheme": "distribution"},
+                    {'name': qcode, 'qcode': qcode, 'parent': 'NEWS', 'scheme': 'services-products'},
+                    {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
+                    {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
                 ])
                 item['slugline'] = m.group(6).decode('latin-1', 'replace')
                 item['anpa_take_key'] = m.group(7).decode('latin-1', 'replace').strip()

@@ -34,14 +34,16 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
 
     def test_content(self):
         item = self.item[0]
-        self.assertEqual(item["subject"].sort(key=lambda i: i['name']),
-                         [{'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-                          {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
-                          {'qcode': 'POLITICS', 'name': 'POLITICS', 'scheme': 'news_products'},
-                          {'name': 'EFE', 'qcode': 'EFE', 'scheme': 'credits'},
-                          {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-                          {'qcode': 'NEWS', 'name': 'NEWS', 'scheme': 'news_services'}
-                          ].sort(key=lambda i: i['name']))
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
+            {'name': 'NEWS/POLITICS', 'qcode': 'NEWS/POLITICS', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'EFE', 'qcode': 'EFE', 'scheme': 'credits'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+        ]
+        expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item['anpa_category'], [{'qcode': 'POL'}])
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})
         self.assertEqual(item["duid"], "text_25413502")

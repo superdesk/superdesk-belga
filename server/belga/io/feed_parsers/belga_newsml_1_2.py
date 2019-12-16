@@ -9,6 +9,7 @@
 # at https://www.appendsourcefabric.org/superdesk/license
 
 import logging
+from copy import deepcopy
 from superdesk.errors import ParserError
 from superdesk.io.registry import register_feed_parser
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
@@ -162,7 +163,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     continue
 
                 # create an item
-                item = {**self._item_seed, 'guid': guid}
+                # deepcopy to avoid having a pointer to `subject`
+                item = deepcopy({**self._item_seed, 'guid': guid})
 
                 # NewsComponent
                 try:
@@ -459,21 +461,17 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get('FormalName'):
             item['source'] = element.get('FormalName')
 
-        # news_services CV
-        for element in admin_el.findall('Property/Property[@FormalName="NewsService"]'):
-            if element is not None and element.get('Value'):
+        # services-products CV
+        for news_package_elem in admin_el.findall('Property[@FormalName="NewsPackage"]'):
+            news_service = news_package_elem.find('Property[@FormalName="NewsService"]')
+            news_product = news_package_elem.find('Property[@FormalName="NewsProduct"]')
+            if news_service is not None and news_product is not None:
+                qcode = '{}/{}'.format(news_service.get('Value'), news_product.get('Value'))
                 item.setdefault('subject', []).append({
-                    "name": element.get('Value'),
-                    "qcode": element.get('Value'),
-                    "scheme": "news_services"
-                })
-        # news_products CV
-        for element in admin_el.findall('Property/Property[@FormalName="NewsProduct"]'):
-            if element is not None and element.get('Value'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('Value'),
-                    "qcode": element.get('Value'),
-                    "scheme": "news_products"
+                    'name': qcode,
+                    'qcode': qcode,
+                    'parent': news_service.get('Value'),
+                    'scheme': 'services-products'
                 })
 
         # label CV

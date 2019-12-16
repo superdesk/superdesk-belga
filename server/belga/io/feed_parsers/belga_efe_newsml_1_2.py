@@ -21,8 +21,8 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     label = 'Belga specific EFE News ML 1.2 Parser'
 
     MAPPING_PRODUCTS = {
-        'SPO': 'SPORTS',
-        'POL': 'POLITICS',
+        'SPO': 'NEWS/SPORTS',
+        'POL': 'NEWS/POLITICS',
     }
 
     # efe related logic goes here
@@ -34,8 +34,20 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             qcode = content.upper() if content is not None else None
             if qcode:
                 item.setdefault('anpa_category', []).append({'qcode': qcode})
-                qcode = self.MAPPING_PRODUCTS.get(qcode)
-                item.setdefault('subject', []).append({'qcode': qcode, 'name': qcode, 'scheme': 'news_products'})
+                qcode = self.MAPPING_PRODUCTS.get(qcode, 'NEWS/GENERAL')
+                item.setdefault('subject', []).append({
+                    'name': qcode,
+                    'qcode': qcode,
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
+            else:
+                item.setdefault('subject', []).append({
+                    'name': 'NEWS/GENERAL',
+                    'qcode': 'NEWS/GENERAL',
+                    'parent': 'NEWS',
+                    'scheme': 'services-products'
+                })
         # credit is EFE
         credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "credits"}
         item.setdefault('subject', []).append(credit)
