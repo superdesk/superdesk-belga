@@ -32,17 +32,17 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
 
     def test_content(self):
         item = self.item[0]
-        item["subject"].sort(key=lambda i: i['name'])
+        item["subject"].sort(key=lambda i: i['scheme'])
         expected_subjects = [
+            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'credits'},
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'}
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'}
         ]
-        expected_subjects.sort(key=lambda i: i['name'])
+        expected_subjects.sort(key=lambda i: i['scheme'])
         self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["provider_id"], "\nwww.itar-tass.com\n")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 07:27:08+00:00")
@@ -52,13 +52,13 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
         self.assertEqual(item["role"], "Main")
         self.assertEqual(item["dateline"], {'text': 'January 21'})
         self.assertEqual(item["headline"], "Kremlin has 'negative reaction' to upcoming EU sanctions")
-        self.assertEqual(item["slugline"], "URGENT")
         self.assertEqual(item["language"], "en")
         self.assertEqual(item["descriptive_guid"], "16AAC34CE1C503AE4325838900396A95")
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'city': 'MOSCOW'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["mimetype"], "text/vnd.IPTC.NITF")
-        self.assertEqual(item["keywords"], ['itartassrubric_ECONOMY', 'URGENT'])
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["guid"], "03AE4325838900396A95")
         expected_body = \
             (
