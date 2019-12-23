@@ -60,6 +60,7 @@ class BelgaImageTestCase(unittest.TestCase):
         self.assertEqual('MAXPPP', item['creditline'])
         self.assertEqual('MAXPPP', item['source'])
         self.assertEqual('MEFYJJ', item['byline'])
+        self.assertFalse(item['_fetchable'])
 
         renditions = item['renditions']
         self.assertIn('original', renditions)

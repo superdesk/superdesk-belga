@@ -87,6 +87,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
             ' Nullam fringilla justo vitae ex commodo vulputate.\n In bibendum diam vitae condimentum scelerisque.\n'
             ' Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.'
         ))
+        self.assertFalse(item['_fetchable'])
 
     def test_find_item(self):
         with HTTMock(archive_mock):
