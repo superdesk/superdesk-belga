@@ -162,7 +162,8 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
                 'baseImage': {
                     'href': data['detailUrl'],
                 },
-            }
+            },
+            '_fetchable': False,
         }
 
 
@@ -209,6 +210,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
             'extra': {
                 'bcoverage': guid,
             },
+            '_fetchable': False,
         }
 
 
@@ -291,6 +293,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'extra': {
                 'bcoverage': guid,
             },
+            '_fetchable': False,
         }
 
 
