@@ -120,23 +120,6 @@ module.exports = function(grunt) {
                     allowed_fields_to_sort: [ 'publish_schedule' ]
                 }
             },
-        },
-        metadataToChangeOnProfileChange: {
-            profiles: [
-                {
-                    profile: 'ALERT',
-                    fields: {
-                        'urgency': {qcode: 1, name: '1'},
-                        'distribution': {qcode: 'bilingual', name: 'bilingual'},
-                    }
-                }
-            ],
-            default: {
-                fields: {
-                    'urgency': {qcode: 3, name: '3'},
-                    'distribution': {qcode: 'default', name: 'default'},
-                }
-            }
         }
     };
 };
