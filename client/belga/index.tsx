@@ -8,6 +8,7 @@ import planningExtension from 'superdesk-planning-extension';
 import markForUserExtension from 'superdesk-core/scripts/extensions/markForUser/dist/src/extension';
 import datetimeFieldExtension from 'superdesk-core/scripts/extensions/datetimeField/dist/src/extension';
 import belgaCoverageExtension from '../extensions/belgaCoverage/dist/index';
+import updateArticleExtension from '../extensions/updateArticle/dist/src/extension';
 
 class UserAvatar extends React.Component<{user: IUser}> {
     render() {
@@ -27,6 +28,7 @@ setTimeout(() => {
         markForUserExtension,
         datetimeFieldExtension,
         belgaCoverageExtension,
+        updateArticleExtension,
     ],{UserAvatar});
 });
 
