@@ -73,6 +73,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.assertEqual(item['extra']['bcoverage'], guid)
         self.assertEqual(item['headline'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
         self.assertEqual(item['name'], '')
+        self.assertEqual(item['slugline'], 'Belga 360 slugline')
         self.assertEqual(item['description_text'], '')
         self.assertEqual(item['creditline'], 'BELGA')
         self.assertEqual(item['source'], 'BELGA')
