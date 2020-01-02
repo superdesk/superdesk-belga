@@ -281,6 +281,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             '_id': guid,
             'guid': guid,
             'headline': get_text(data['headLine']),
+            'slugline': get_text(data['topic']),
             'name': get_text(data['name']),
             'description_text': get_text(data.get('description')),
             'versioncreated': created,
