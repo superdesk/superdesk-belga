@@ -13,6 +13,7 @@ import logging
 from datetime import datetime
 from urllib.parse import urljoin
 
+from eve.utils import ParsedRequest
 from flask import current_app as app
 
 import superdesk
@@ -40,6 +41,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     XML_ROOT = '<?xml version="1.0" encoding="{}"?>'.format(ENCODING)
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
+    CP_NAME_ROLE_MAP = {
+        'belga_text': 'Text'
+    }
 
     def format(self, article, subscriber, codes=None):
         """
@@ -191,9 +195,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
-        _type = self._article.get('type')
-        _profile = self._article.get('profile')
-
         self._format_text(newscomponent_1_level)
         self._format_belga_urls(newscomponent_1_level)
         self._format_media(newscomponent_1_level)
@@ -212,7 +213,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
 
         # Role
-        SubElement(newscomponent_2_level, 'Role', {'FormalName': self.BELGA_TEXT_PROFILE})
+        if self._article.get('profile') in self.CP_NAME_ROLE_MAP:
+            role_formal_name = self.CP_NAME_ROLE_MAP[self._article.get('profile')]
+        else:
+            role_formal_name = self._get_content_profile_name()
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': role_formal_name})
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=self._article)
         # AdministrativeMetadata
@@ -891,3 +896,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             return datetime.strptime(_datetime, '%Y-%m-%dT%H:%M:%S+0000').strftime(self.DATETIME_FORMAT)
         else:
             return _datetime.strftime(self.DATETIME_FORMAT)
+
+    def _get_content_profile_name(self):
+        content_types_service = superdesk.get_resource_service('content_types')
+        req = ParsedRequest()
+        req.args = {}
+        req.projection = '{"label": 1}'
+        content_type = content_types_service.find_one(
+            req=req,
+            _id=self._article.get('profile')
+        )
+        return content_type['label']

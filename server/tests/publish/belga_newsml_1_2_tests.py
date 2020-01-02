@@ -1061,7 +1061,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('Role')[0].attrib),
-            {'FormalName': 'belga_text'}
+            {'FormalName': 'Text'}
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines
         self.assertIsNone(
