@@ -43,6 +43,8 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item['anpa_category'], [{'qcode': 'POL'}])
         self.assertEqual(item["sentfrom"], {'party': 'EFE', 'organization': 'Agencia EFE'})

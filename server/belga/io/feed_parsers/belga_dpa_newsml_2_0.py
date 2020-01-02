@@ -93,6 +93,9 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                     # Distribution is default
                     dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}
                     item.setdefault('subject', []).append(dist)
+                    # Slugline and keywords is epmty
+                    item['slugline'] = None
+                    item['keywords'] = []
                     items.append(item)
             return items
         except Exception as ex:

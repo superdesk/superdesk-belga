@@ -122,6 +122,9 @@ class BelgaANPAFeedParser(ANPAFeedParser):
                         item['body_html'] = '<p>' + line + '</p>'
 
                 self._parse_ednote(item['headline'], item)
+            # Slugline and keywords is epmty
+            item['slugline'] = None
+            item['keywords'] = []
             return item
         except Exception as ex:
             raise ParserError.anpaParseFileError(file_path, ex)

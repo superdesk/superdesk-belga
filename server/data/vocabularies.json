@@ -3484,6 +3484,103 @@
         ]
     },
     {
+        "items": [
+            {
+                "name": "#",
+                "qcode": "#",
+                "is_active": true
+            },
+            {
+                "name": "#containerparkbullies",
+                "qcode": "#containerparkbullies",
+                "is_active": true
+            },
+            {
+                "name": "#zwartepiet",
+                "qcode": "#zwartepiet",
+                "is_active": true
+            },
+            {
+                "name": "#blackfriday",
+                "qcode": "#blackfriday",
+                "is_active": true
+            },
+            {
+                "name": "#julianassange",
+                "qcode": "#julianassange",
+                "is_active": true
+            },
+            {
+                "name": "#phd",
+                "qcode": "#phd",
+                "is_active": true
+            },
+            {
+                "name": "#bocoolsaet",
+                "qcode": "#bocoolsaet",
+                "is_active": true
+            },
+            {
+                "name": "#tulancesquelquechosecommetuveux",
+                "qcode": "#tulancesquelquechosecommetuveux",
+                "is_active": true
+            },
+            {
+                "name": "#Remcoco",
+                "qcode": "#Remcoco",
+                "is_active": true
+            },
+            {
+                "name": "#herstructureringProximus",
+                "qcode": "#herstructureringProximus",
+                "is_active": true
+            },
+            {
+                "name": "proc\u00e8s",
+                "qcode": "proc\u00e8s",
+                "is_active": true
+            },
+            {
+                "name": "agression",
+                "qcode": "agression",
+                "is_active": true
+            },
+            {
+                "name": "politique",
+                "qcode": "politique",
+                "is_active": true
+            },
+            {
+                "name": "ultradroite",
+                "qcode": "ultradroite",
+                "is_active": true
+            },
+            {
+                "name": "ultragauche",
+                "qcode": "ultragauche",
+                "is_active": true
+            },
+            {
+                "name": "assises91",
+                "qcode": "assises91",
+                "is_active": true
+            },
+            {
+                "name": "Cl\u00e9ment M\u00e9ric",
+                "qcode": "Cl\u00e9ment M\u00e9ric",
+                "is_active": true
+            }
+        ],
+        "type": "manageable",
+        "unique_field": "name",
+        "schema": {
+            "name": {},
+            "qcode": {}
+        },
+        "display_name": "Storytags",
+        "_id": "keywords"
+    },    
+    {
         "_id": "genre",
         "display_name": "Genre",
         "type": "manageable",

@@ -21,7 +21,8 @@ class BelgaKyodoNewsMLTestCase(BelgaTestCase):
         item = self.item[0]
 
         self.assertEqual(item['headline'], 'Ex-Chinese Premier Li Peng dies aged 90: Xinhua')
-        self.assertEqual(item['slugline'], 'Obit-Li Peng')
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item['date_id'], '20190723')
         self.assertEqual(item['format'], 'Nitf_v3.0')
         self.assertEqual(item['guid'], 'NC0001')
