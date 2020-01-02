@@ -194,15 +194,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         _type = self._article.get('type')
         _profile = self._article.get('profile')
 
-        self._format_belga_text(newscomponent_1_level)
+        self._format_text(newscomponent_1_level)
         self._format_belga_urls(newscomponent_1_level)
         self._format_media(newscomponent_1_level)
         self._format_attachments(newscomponent_1_level)
         self._format_related_text_item(newscomponent_1_level)
 
-    def _format_belga_text(self, newscomponent_1_level):
+    def _format_text(self, newscomponent_1_level):
         """
-        Creates a `<NewsComponent>` of a 2nd level with information related to `belga_text` content profile.
+        Creates a `<NewsComponent>` of a 2nd level with information related to content profile.
         :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
@@ -304,7 +304,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(contentitem, 'DataContent').text = belga_url.get(key)
                 characteristics = SubElement(contentitem, 'Characteristics')
                 # string's length is used in original belga's newsml
-                SubElement(characteristics, 'SizeInBytes').text = str(len(belga_url.get(key)))
+                SubElement(
+                    characteristics, 'SizeInBytes'
+                ).text = str(len(belga_url[key])) if belga_url.get(key) else '0'
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
     def _format_attachments(self, newscomponent_1_level):
@@ -429,7 +431,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = picture.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(picture.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(picture[key])) if picture.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # original, thumbnail, preview
@@ -481,7 +483,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = coverage.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(coverage.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(coverage[key])) if coverage.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
@@ -530,7 +532,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = audio.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(audio.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(audio[key])) if audio.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # sound
@@ -580,7 +582,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = video.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(video.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(video[key])) if video.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # sound
@@ -631,7 +633,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = attachment.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment[key])) if attachment.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # Component
