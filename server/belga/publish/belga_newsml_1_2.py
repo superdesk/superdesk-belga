@@ -705,11 +705,48 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, 'CreditLine').text = item.get('creditline', item.get('byline'))
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-        for keyword in item.get('keywords', []):
-            SubElement(newslines, 'KeywordLine').text = keyword
+
+        # KeywordLine from country
+        for subject in item.get('subject', []):
+            if subject['scheme'] == 'country':
+                try:
+                    SubElement(
+                        newslines, 'KeywordLine'
+                    ).text = subject['translations']['name'][item.get('language')]
+                except KeyError:
+                    logger.warning(
+                        'There is no "{}" translation for country cv. Subject: {}'.format(
+                            item.get('language'), subject
+                        )
+                    )
+                    SubElement(newslines, 'KeywordLine').text = subject['name']
+                break
+
+        # KeywordLine from belga-keywords
+        for subject in item.get('subject', []):
+            if subject['scheme'] == 'belga-keywords':
+                try:
+                    SubElement(
+                        newslines, 'KeywordLine'
+                    ).text = subject['translations']['name'][item.get('language')]
+                except KeyError:
+                    logger.warning(
+                        'There is no "{}" translation for belga-keywords cv. Subject: {}'.format(
+                            item.get('language'), subject
+                        )
+                    )
+                    SubElement(newslines, 'KeywordLine').text = subject['name']
+
+        # KeywordLine from belga-keywords custom field
+        # just in case if old custom belga-keywords field is used or item has data from it
         if item.get('extra', {}).get('belga-keywords'):
             for keyword in [i.strip() for i in item['extra']['belga-keywords'].split(',')]:
                 SubElement(newslines, 'KeywordLine').text = keyword
+
+        # KeywordLine from keywords
+        for keyword in item.get('keywords', []):
+            SubElement(newslines, 'KeywordLine').text = keyword
+
         newsline = SubElement(newslines, 'NewsLine')
         SubElement(newsline, 'NewsLineType', {'FormalName': item.get('line_type', '')})
         SubElement(newsline, 'NewsLineText').text = item.get('line_text')
