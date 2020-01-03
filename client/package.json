@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "superdesk-analytics": "github:tomaskikutis/superdesk-analytics#next",
-        "superdesk-core": "github:superdesk/superdesk-client-core#bba50fe92",
+        "superdesk-core": "github:superdesk/superdesk-client-core#f33b275cb",
         "superdesk-planning-extension": "1.0.1",
         "superdesk-planning": "github:tomaskikutis/superdesk-planning#move-planning-extension-from-core"
     }
