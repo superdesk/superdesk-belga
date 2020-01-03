@@ -179,7 +179,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         descriptivemetadata = SubElement(newscomponent_1_level, 'DescriptiveMetadata')
         genre_formalname = ''
         for subject in self._article.get('subject', []):
-            if subject['scheme'] == 'genre':
+            if subject.get('scheme') == 'genre':
                 genre_formalname = subject['qcode']
                 break
         SubElement(
@@ -708,7 +708,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         # KeywordLine from country
         for subject in item.get('subject', []):
-            if subject['scheme'] == 'country':
+            if subject.get('scheme') == 'country':
                 try:
                     SubElement(
                         newslines, 'KeywordLine'
@@ -724,7 +724,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         # KeywordLine from belga-keywords
         for subject in item.get('subject', []):
-            if subject['scheme'] == 'belga-keywords':
+            if subject.get('scheme') == 'belga-keywords':
                 try:
                     SubElement(
                         newslines, 'KeywordLine'
