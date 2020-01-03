@@ -3484,6 +3484,19 @@
         ]
     },
     {
+        "_id": "keywords",
+        "init_version": 1,
+        "display_name": "Storytags",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "unique_field": "qcode",
+        "schema": {
+            "name": {},
+            "qcode": {}
+        },
+        "service": {
+            "all": 1
+        },
         "items": [
             {
                 "name": "#",
@@ -3570,16 +3583,8 @@
                 "qcode": "Cl\u00e9ment M\u00e9ric",
                 "is_active": true
             }
-        ],
-        "type": "manageable",
-        "unique_field": "name",
-        "schema": {
-            "name": {},
-            "qcode": {}
-        },
-        "display_name": "Storytags",
-        "_id": "keywords"
-    },    
+        ]
+    },
     {
         "_id": "genre",
         "display_name": "Genre",
