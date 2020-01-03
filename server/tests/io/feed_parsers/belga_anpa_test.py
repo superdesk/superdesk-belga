@@ -23,7 +23,8 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
     def test_content(self):
         item = self.item
         self.assertEqual(item["language"], 'en')
-        self.assertEqual(item["slugline"], "Soccer-Emperor's-Cup")
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["anpa_take_key"], "'s-Cup")
         self.assertEqual(item["word_count"], 344)
         self.assertEqual(item["firstcreated"].isoformat(), "2018-12-09T12:18:00+00:00")

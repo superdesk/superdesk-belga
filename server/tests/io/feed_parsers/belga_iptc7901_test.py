@@ -25,7 +25,8 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertEqual(item["ingest_provider_sequence"], "00075")
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["anpa_take_key"], "2ND LEAD 3RD NET")
-        self.assertEqual(item["slugline"], "/politics/Britain/EU/Brexit/justice")
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["anpa_category"], [{'qcode': 'I'}])
         self.assertListEqual(
             item["subject"],
@@ -94,6 +95,8 @@ class ATSBelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
 
     def test_content(self):
         item = self.item
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["ingest_provider_sequence"], "025")
         self.assertEqual(item["anpa_category"], [{'qcode': 'EC'}])
         self.assertListEqual(

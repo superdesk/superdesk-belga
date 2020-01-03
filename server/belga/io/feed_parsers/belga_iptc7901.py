@@ -73,6 +73,9 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
             item = self.parse_content_dpa(file_path, provider)
         if _type == 'ats':
             item = self.parse_content_ats(file_path, provider)
+        # Slugline and keywords is epmty
+        item['slugline'] = None
+        item['keywords'] = []
         item = self.dpa_derive_dateline(item)
         # Markup the text and set the content type
         item['body_html'] = '<p>' + item['body_html'].replace('\r\n', ' ').replace('\n', '</p><p>') + '</p>'

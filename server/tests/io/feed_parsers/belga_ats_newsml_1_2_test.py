@@ -46,6 +46,8 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
             {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["priority"], 4)
         self.assertEqual(item["provider_id"], "www.sda-ats.ch")

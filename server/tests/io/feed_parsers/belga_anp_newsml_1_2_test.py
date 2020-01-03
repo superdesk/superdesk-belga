@@ -66,12 +66,12 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["copyright_line"],
                          "© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and "
                          "database rights reserved.")
-        self.assertEqual(item["slugline"], "Huub Giesbers (iwi)")
+        self.assertEqual(item["slugline"], None)
         self.assertEqual(item["keyword_line"], "ECO/ECO10;ECO-POST-CAO")
         self.assertEqual(item["administrative"], {'provider': 'ANP'})
         self.assertEqual(item["language"], "nl-nl")
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'NL', 'city': 'UTRECHT'})
-        self.assertEqual(item["keywords"], ['POST-CAO'])
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF")
         self.assertEqual(item["characteristics"],

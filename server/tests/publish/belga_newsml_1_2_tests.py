@@ -75,7 +75,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         'genre': [{'qcode': 'Article', 'name': 'Article (news)'}],
         'place': [],
         'sign_off': 'ADM',
-        'language': 'en',
+        'language': 'nl',
         'operation': 'update',
         'version_creator': '5d385f31fe985ec67a0ca583',
         'expiry': None,
@@ -603,14 +603,26 @@ class BelgaNewsML12FormatterTest(TestCase):
             {'name': 'ANALYSIS', 'qcode': 'ANALYSIS', 'scheme': 'genre'},
             {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
             {'name': 'FORECAST', 'qcode': 'FORECAST', 'scheme': 'genre'},
-            {'name': 'A1', 'qcode': 'A1', 'scheme': 'label'}, {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
+            {'name': 'A1', 'qcode': 'A1', 'scheme': 'label'},
+            {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
             {'name': 'R1', 'qcode': 'R1', 'scheme': 'label'},
-            {"name": "BIN/ALG", "qcode": "BIN/ALG", "parent": "BIN", "scheme": "services-products"},
-            {"name": "EXT/ECO", "qcode": "EXT/ECO", "parent": "EXT", "scheme": "services-products"},
-            {"name": "BIN", "qcode": "BIN", "parent": None, "scheme": "services-products"},
-            {"name": "NEWS/ENTERTAINMENT", "qcode": "NEWS/ENTERTAINMENT", "parent": "NEWS",
-             "scheme": "services-products"},
-            {"name": "NEWS/SPORTS", "qcode": "NEWS/SPORTS", "parent": "NEWS", "scheme": "services-products"}
+            {
+                'name': 'Aruba',
+                'qcode': 'country_abw',
+                'translations': {
+                    'name': {
+                        'nl': 'Aruba',
+                        'fr': 'Aruba'
+                    }
+                },
+                'scheme': 'country'
+            },
+            {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'parent': 'BIN', 'scheme': 'services-products'},
+            {'name': 'EXT/ECO', 'qcode': 'EXT/ECO', 'parent': 'EXT', 'scheme': 'services-products'},
+            {'name': 'BIN', 'qcode': 'BIN', 'parent': None, 'scheme': 'services-products'},
+            {'name': 'NEWS/ENTERTAINMENT', 'qcode': 'NEWS/ENTERTAINMENT', 'parent': 'NEWS',
+             'scheme': 'services-products'},
+            {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'}
         ],
         'word_count': 28,
         'byline': 'BELGA',
@@ -622,9 +634,9 @@ class BelgaNewsML12FormatterTest(TestCase):
         },
         'line_type': '1',
         'line_text': 'line text is here',
-        "attachments": [
+        'attachments': [
             {
-                "attachment": ObjectId("5d692b76c8f549e289b0270b")
+                'attachment': ObjectId('5d692b76c8f549e289b0270b')
             }
         ]
     }
@@ -1031,7 +1043,7 @@ class BelgaNewsML12FormatterTest(TestCase):
             dict(newscomponent_1_level.attrib),
             {
                 'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsLines -> HeadLine
@@ -1055,13 +1067,13 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('Role')[0].attrib),
-            {'FormalName': 'belga_text'}
+            {'FormalName': 'Text'}
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines
         self.assertIsNone(
@@ -1080,7 +1092,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         )
         self.assertListEqual(
             [kw.text for kw in newscomponent_2_level.xpath('NewsLines/KeywordLine')],
-            ['europe', 'Prague', 'CZ', 'Skoda']
+            ['Aruba', 'europe', 'Prague', 'CZ', 'Skoda']
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('NewsLines/NewsLine/NewsLineType')[0].attrib),
@@ -1172,7 +1184,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         self.assertDictEqual(
@@ -1203,7 +1215,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         self.assertDictEqual(
@@ -1246,7 +1258,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
@@ -1347,7 +1359,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         self.assertDictEqual(
@@ -1382,7 +1394,7 @@ class BelgaNewsML12FormatterTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'en'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         self.assertDictEqual(
