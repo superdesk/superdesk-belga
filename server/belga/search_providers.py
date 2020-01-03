@@ -162,7 +162,8 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
                 'baseImage': {
                     'href': data['detailUrl'],
                 },
-            }
+            },
+            '_fetchable': False,
         }
 
 
@@ -209,6 +210,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
             'extra': {
                 'bcoverage': guid,
             },
+            '_fetchable': False,
         }
 
 
@@ -279,6 +281,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             '_id': guid,
             'guid': guid,
             'headline': get_text(data['headLine']),
+            'slugline': get_text(data['topic']),
             'name': get_text(data['name']),
             'description_text': get_text(data.get('description')),
             'versioncreated': created,
@@ -291,6 +294,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'extra': {
                 'bcoverage': guid,
             },
+            '_fetchable': False,
         }
 
 

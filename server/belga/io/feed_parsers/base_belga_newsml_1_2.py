@@ -82,6 +82,9 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     item.setdefault('subject', []).extend([
                         {"name": 'default', "qcode": 'default', "scheme": "distribution"},
                     ])
+                    # Slugline and keywords is epmty
+                    item['slugline'] = None
+                    item['keywords'] = []
                     # delete subject is duplicated
                     item['subject'] = [dict(t) for t in {tuple(d.items()) for d in item['subject']}]
                     item = self.populate_fields(item)

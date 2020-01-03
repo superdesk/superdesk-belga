@@ -61,7 +61,8 @@ class BelgaDPANewsMLTwoTestCase(BelgaTestCase):
         self.assertEqual(item["ednote"], expected_ednote)
         self.assertEqual(item["urgency"], 4)
         self.assertEqual(item["headline"], "Mehr als 200 Migranten in der Ägäis aufgegriffen")
-        self.assertEqual(item["slugline"], "")
+        self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["keywords"], [])
         self.assertEqual(item["language"], "de")
         item["subject"].sort(key=lambda i: i['name'])
         expected_subjects = [

@@ -73,6 +73,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.assertEqual(item['extra']['bcoverage'], guid)
         self.assertEqual(item['headline'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
         self.assertEqual(item['name'], '')
+        self.assertEqual(item['slugline'], 'Belga 360 slugline')
         self.assertEqual(item['description_text'], '')
         self.assertEqual(item['creditline'], 'BELGA')
         self.assertEqual(item['source'], 'BELGA')
@@ -87,6 +88,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
             ' Nullam fringilla justo vitae ex commodo vulputate.\n In bibendum diam vitae condimentum scelerisque.\n'
             ' Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.'
         ))
+        self.assertFalse(item['_fetchable'])
 
     def test_find_item(self):
         with HTTMock(archive_mock):

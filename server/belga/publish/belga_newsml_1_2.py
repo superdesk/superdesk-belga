@@ -13,6 +13,7 @@ import logging
 from datetime import datetime
 from urllib.parse import urljoin
 
+from eve.utils import ParsedRequest
 from flask import current_app as app
 
 import superdesk
@@ -40,6 +41,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     XML_ROOT = '<?xml version="1.0" encoding="{}"?>'.format(ENCODING)
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
+    CP_NAME_ROLE_MAP = {
+        'belga_text': 'Text'
+    }
 
     def format(self, article, subscriber, codes=None):
         """
@@ -175,7 +179,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         descriptivemetadata = SubElement(newscomponent_1_level, 'DescriptiveMetadata')
         genre_formalname = ''
         for subject in self._article.get('subject', []):
-            if subject['scheme'] == 'genre':
+            if subject.get('scheme') == 'genre':
                 genre_formalname = subject['qcode']
                 break
         SubElement(
@@ -191,18 +195,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
-        _type = self._article.get('type')
-        _profile = self._article.get('profile')
-
-        self._format_belga_text(newscomponent_1_level)
+        self._format_text(newscomponent_1_level)
         self._format_belga_urls(newscomponent_1_level)
         self._format_media(newscomponent_1_level)
         self._format_attachments(newscomponent_1_level)
         self._format_related_text_item(newscomponent_1_level)
 
-    def _format_belga_text(self, newscomponent_1_level):
+    def _format_text(self, newscomponent_1_level):
         """
-        Creates a `<NewsComponent>` of a 2nd level with information related to `belga_text` content profile.
+        Creates a `<NewsComponent>` of a 2nd level with information related to content profile.
         :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
@@ -212,7 +213,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
 
         # Role
-        SubElement(newscomponent_2_level, 'Role', {'FormalName': self.BELGA_TEXT_PROFILE})
+        if self._article.get('profile') in self.CP_NAME_ROLE_MAP:
+            role_formal_name = self.CP_NAME_ROLE_MAP[self._article.get('profile')]
+        else:
+            role_formal_name = self._get_content_profile_name()
+        SubElement(newscomponent_2_level, 'Role', {'FormalName': role_formal_name})
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=self._article)
         # AdministrativeMetadata
@@ -304,7 +309,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(contentitem, 'DataContent').text = belga_url.get(key)
                 characteristics = SubElement(contentitem, 'Characteristics')
                 # string's length is used in original belga's newsml
-                SubElement(characteristics, 'SizeInBytes').text = str(len(belga_url.get(key)))
+                SubElement(
+                    characteristics, 'SizeInBytes'
+                ).text = str(len(belga_url[key])) if belga_url.get(key) else '0'
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
     def _format_attachments(self, newscomponent_1_level):
@@ -429,7 +436,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = picture.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(picture.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(picture[key])) if picture.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # original, thumbnail, preview
@@ -481,7 +488,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = coverage.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(coverage.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(coverage[key])) if coverage.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
@@ -530,7 +537,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = audio.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(audio.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(audio[key])) if audio.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # sound
@@ -580,7 +587,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = video.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(video.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(video[key])) if video.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # sound
@@ -631,7 +638,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = attachment.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment.get(key)))
+            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment[key])) if attachment.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # Component
@@ -698,11 +705,48 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, 'CreditLine').text = item.get('creditline', item.get('byline'))
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-        for keyword in item.get('keywords', []):
-            SubElement(newslines, 'KeywordLine').text = keyword
+
+        # KeywordLine from country
+        for subject in item.get('subject', []):
+            if subject.get('scheme') == 'country':
+                try:
+                    SubElement(
+                        newslines, 'KeywordLine'
+                    ).text = subject['translations']['name'][item.get('language')]
+                except KeyError:
+                    logger.warning(
+                        'There is no "{}" translation for country cv. Subject: {}'.format(
+                            item.get('language'), subject
+                        )
+                    )
+                    SubElement(newslines, 'KeywordLine').text = subject['name']
+                break
+
+        # KeywordLine from belga-keywords
+        for subject in item.get('subject', []):
+            if subject.get('scheme') == 'belga-keywords':
+                try:
+                    SubElement(
+                        newslines, 'KeywordLine'
+                    ).text = subject['translations']['name'][item.get('language')]
+                except KeyError:
+                    logger.warning(
+                        'There is no "{}" translation for belga-keywords cv. Subject: {}'.format(
+                            item.get('language'), subject
+                        )
+                    )
+                    SubElement(newslines, 'KeywordLine').text = subject['name']
+
+        # KeywordLine from belga-keywords custom field
+        # just in case if old custom belga-keywords field is used or item has data from it
         if item.get('extra', {}).get('belga-keywords'):
             for keyword in [i.strip() for i in item['extra']['belga-keywords'].split(',')]:
                 SubElement(newslines, 'KeywordLine').text = keyword
+
+        # KeywordLine from keywords
+        for keyword in item.get('keywords', []):
+            SubElement(newslines, 'KeywordLine').text = keyword
+
         newsline = SubElement(newslines, 'NewsLine')
         SubElement(newsline, 'NewsLineType', {'FormalName': item.get('line_type', '')})
         SubElement(newsline, 'NewsLineText').text = item.get('line_text')
@@ -889,3 +933,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             return datetime.strptime(_datetime, '%Y-%m-%dT%H:%M:%S+0000').strftime(self.DATETIME_FORMAT)
         else:
             return _datetime.strftime(self.DATETIME_FORMAT)
+
+    def _get_content_profile_name(self):
+        content_types_service = superdesk.get_resource_service('content_types')
+        req = ParsedRequest()
+        req.args = {}
+        req.projection = '{"label": 1}'
+        content_type = content_types_service.find_one(
+            req=req,
+            _id=self._article.get('profile')
+        )
+        return content_type['label']
