@@ -4076,31 +4076,37 @@
         "display_name": "Urgency",
         "type": "manageable",
         "unique_field": "qcode",
+        "init_version": 1,
         "items": [
             {
                 "is_active": true,
                 "name": "1",
-                "qcode": 1
+                "qcode": 1,
+                "color" : "#ff0000"
             },
             {
                 "is_active": true,
                 "name": "2",
-                "qcode": 2
+                "qcode": 2,
+                "color" : "#ff0000"
             },
             {
                 "is_active": true,
                 "name": "3",
-                "qcode": 3
+                "qcode": 3,
+                "color" : "#808080"
             },
             {
                 "is_active": true,
                 "name": "4",
-                "qcode": 4
+                "qcode": 4,
+                "color" : "#808080"
             },
             {
                 "is_active": true,
                 "name": "5",
-                "qcode": 5
+                "qcode": 5,
+                "color" : "#808080"
             }
         ],
         "schema": {
@@ -4196,7 +4202,7 @@
     },
     {
         "_id": "country",
-        "display_name": "Country",
+        "display_name": "Countries keywords",
         "type": "manageable",
         "selection_type": "single selection",
         "unique_field": "qcode",
@@ -4208,7 +4214,7 @@
         "service": {
             "all": 1
         },
-        "init_version": 1,
+        "init_version": 2,
         "items": [
             {
                 "name": "Aruba",
