@@ -34,6 +34,6 @@ install:
     - cd client && npm install && cd ..
 
 script:
-    - cd server && flake8 && cd ..
+    - cd server && flake8 && nosetests && cd ..
     - cd client && node --max_old_space_size=4098 ./node_modules/.bin/grunt build && cd ..
     - cd server && python manage.py users:create -u test -p test -e test@localhost --admin && cd ..
