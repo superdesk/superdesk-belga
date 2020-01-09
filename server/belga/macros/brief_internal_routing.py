@@ -52,7 +52,7 @@ def _get_product_subject(subject: list):
         subject = []
     product = _find_subj(subject, PRODUCTS)
     if product:
-        name: str = product.get('name') or ''
+        name = product.get('name') or ''
         next_value = DEFAULT_PRODUCT
         for value, items in PRODUCT_MAPPING.items():
             if any([item for item in items if item in name]):
