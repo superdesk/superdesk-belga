@@ -8,6 +8,7 @@ from superdesk.errors import StopDuplication
 from superdesk.metadata.item import CONTENT_STATE
 from apps.archive.common import SCHEDULE_SETTINGS
 from belga.macros import brief_internal_routing as macro
+from belga.macros.brief_internal_routing import _get_product_subject, PRODUCTS
 
 
 class MacroMetadataTestCase(unittest.TestCase):
@@ -17,7 +18,39 @@ class MacroMetadataTestCase(unittest.TestCase):
         assert hasattr(macro, 'label')
         assert hasattr(macro, 'callback')
         assert macro.action_type == 'direct'
-        assert macro.access_type == 'backend'
+        assert macro.access_type == 'frontend'  # to make it visible in internal destinations
+
+    def test_product_rules(self):
+        test_map = {
+            'BIN/foo': 'NEWS/GENERAL',
+            'INT/foo': 'NEWS/GENERAL',
+            'SPN/foo': 'NEWS/SPORTS',
+            'SPF/foo': 'NEWS/SPORTS',
+            'foo/ALG': 'NEWS/GENERAL',
+            'foo/GEN': 'NEWS/GENERAL',
+            'foo/POL': 'NEWS/POLITICS',
+            'foo/ECO': 'NEWS/ECONOMY',
+            'other': 'NEWS/GENERAL',
+        }
+
+        for old, new in test_map.items():
+            subject = [{
+                'name': old,
+                'qcode': old,
+                'scheme': PRODUCTS,
+            }, {
+                'name': 'foo',
+                'qcode': 'country_foo',
+                'scheme': 'country',
+            }]
+            subject = _get_product_subject(subject)
+            self.assertEqual(new, subject[0]['name'])
+            if old in ('BIN/foo', 'INT/foo'):
+                self.assertIn({
+                    'name': 'Belgium',
+                    'qcode': 'country_bel',
+                    'scheme': 'country',
+                }, subject)
 
 
 class BriefInternalRoutingMacroTestCase(tests.TestCase):
