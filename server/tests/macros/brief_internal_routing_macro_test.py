@@ -28,6 +28,8 @@ class MacroMetadataTestCase(unittest.TestCase):
             'SPF/foo': 'NEWS/SPORTS',
             'foo/ALG': 'NEWS/GENERAL',
             'foo/GEN': 'NEWS/GENERAL',
+            'SPN/ALG': 'NEWS/SPORTS',
+            'SPF/GEN': 'NEWS/SPORTS',
             'foo/POL': 'NEWS/POLITICS',
             'foo/ECO': 'NEWS/ECONOMY',
             'other': 'NEWS/GENERAL',
