@@ -114,7 +114,7 @@ class BelgaImageTestCase(unittest.TestCase):
         url = requests.Request('GET', provider.base_url + 'searchImages', params={
             's': 10,
             'l': 20,
-            'c': 'belga,ansa',
+            'c': 'ansa,belga',
             'h': 'news,sports',
             'p': 'TODAY',
             't': 'test AND query',
