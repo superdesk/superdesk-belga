@@ -28,6 +28,7 @@ before_install:
     - node --version
     - npm install -g npm@3
     - npm install -g grunt-cli
+    - sudo systemctl start elasticsearch
 
 install:
     - cd server && pip install -r dev-requirements.txt && cd ..
