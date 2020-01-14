@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 class BelgaNewsML12Formatter(NewsML12Formatter):
     """
-    Belga News ML 1.2 1.2 Formatter
+    Belga News ML 1.2 Formatter
     """
 
     ENCODING = "ISO-8859-15"

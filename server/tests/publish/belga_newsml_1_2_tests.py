@@ -2577,48 +2577,11 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         # insert pictures
         media_items = (
             {
-                '_id': 'pic_1',
-                'content': BytesIO(b'pic_one_content'),
-                'content_type': 'image/jpeg',
-                'metadata': {
-                    'length': 10
-                }
-            },
-            {
-                '_id': 'pic_2',
-                'content': BytesIO(b'pic_two_content'),
-                'content_type': 'image/jpeg'
-            },
-            {
-                '_id': 'pic_3',
-                'content': BytesIO(b'pic_three_content'),
-                'content_type': 'image/jpeg',
-                'metadata': {
-                    'length': 12
-                }
-            },
-            {
-                '_id': 'audio_1',
-                'content': BytesIO(b'the man who sold the world'),
-                'content_type': 'audio/mp3',
-                'metadata': {
-                    'length': 12
-                }
-            },
-            {
                 '_id': 'video_1',
                 'content': BytesIO(b'czech rap xD'),
                 'content_type': 'video/mp4',
                 'metadata': {
                     'length': 12
-                }
-            },
-            {
-                '_id': 'pdf_1',
-                'content': BytesIO(b'it is a pdf'),
-                'content_type': 'application/pdf',
-                'metadata': {
-                    'length': 40248
                 }
             },
         )
