@@ -25,7 +25,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         'SPORTS': ['HIPPISME', 'SPORT', 'SPORTS']
     }
     MAPPING_CATEGORY = {
-        'SPO': 'NEWS/SPORT',
+        'SPO': 'NEWS/SPORTS',
         'POL': 'NEWS/POLITICS',
         'ECO': 'NEWS/ECONOMY'
     }
