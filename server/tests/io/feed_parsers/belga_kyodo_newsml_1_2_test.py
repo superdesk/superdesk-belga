@@ -36,7 +36,7 @@ class BelgaKyodoNewsMLTestCase(BelgaTestCase):
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
-            {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country', 
+            {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
              'translations': {'name': {'fr': 'France', 'nl': 'Frankrijk'}}},
             {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
