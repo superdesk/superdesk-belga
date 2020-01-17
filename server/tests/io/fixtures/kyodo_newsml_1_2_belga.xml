@@ -52,6 +52,10 @@
 					<SubjectMatter FormalName="14023000" Scheme="IptcSubjectCodes"/>
 					<SubjectMatter FormalName="11006000" Scheme="IptcSubjectCodes"/>
 				</SubjectCode>
+				<Location HowPresent="Origin">
+					<Property FormalName="Country" Value="FRA"/>
+					<Property FormalName="City" Value="Paris"/>
+				</Location>
 			</DescriptiveMetadata>
 			<Metadata>
 				<Catalog Href="../catalogKWS/KWSMasterCatalog_v1.0.xml"/>

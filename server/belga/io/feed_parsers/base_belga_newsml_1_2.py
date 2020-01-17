@@ -85,8 +85,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     # Slugline and keywords is epmty
                     item['slugline'] = None
                     item['keywords'] = []
-                    # delete subject is duplicated
-                    item['subject'] = [dict(t) for t in {tuple(d.items()) for d in item['subject']}]
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue
@@ -557,7 +555,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             elements = location_el.findall('Property')
             for element in elements:
                 if element.attrib.get('FormalName', '') == 'Country':
-                    item['extra']['country'] = element.attrib.get('Value')
+                    country = element.attrib.get('Value')
+                    item['extra']['country'] = country
+                    # country keywords is CV
+                    item.setdefault('subject', []).extend(self._get_country(country))
                 if element.attrib.get('FormalName', '') == 'City':
                     item['extra']['city'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName', '') == 'CountryArea':
@@ -718,3 +719,15 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def _get_cv(self, _id):
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
+
+    def _get_country(self, country):
+        country_keyword = [
+            c for c in self._get_cv('country').get('items', [])
+            if c.get('qcode') == 'country_' + country.lower() and c.get('is_active')
+        ]
+        # add scheme and remove is_active
+        for c in country_keyword:
+            c['scheme'] = 'country'
+            if 'is_active' in c:
+                c.pop('is_active')
+        return country_keyword

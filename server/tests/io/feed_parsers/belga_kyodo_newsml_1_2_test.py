@@ -32,6 +32,15 @@ class BelgaKyodoNewsMLTestCase(BelgaTestCase):
         self.assertEqual(item['type'], 'text')
         self.assertEqual(item['firstcreated'].isoformat(), '2019-07-23T20:21:19+09:00')
         self.assertEqual(item['versioncreated'].isoformat(), '2019-07-23T20:21:19+09:00')
+        self.assertEqual(item['subject'], [
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
+            {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
+            {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country', 
+             'translations': {'name': {'fr': 'France', 'nl': 'Frankrijk'}}},
+            {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+        ])
         body_html = (
             "<p>     Former Chinese Premier Li Peng, who led a military crackdown on the pro-democracy movement at"
             " Beijing's Tiananmen Square in 1989, died Monday of illness in the capital, the official Xinhua"

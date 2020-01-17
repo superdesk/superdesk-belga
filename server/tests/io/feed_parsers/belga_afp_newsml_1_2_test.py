@@ -41,6 +41,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'trials', 'qcode': '02008000', 'scheme': 'iptc_subject_codes'},
             {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW', 'scheme': 'of_interest_to'},
             {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
+            {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
             {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
             {'name': 'crime, law and justice', 'qcode': '02000000', 'scheme': 'iptc_subject_codes'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
@@ -48,7 +49,9 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
             {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
             {'name': 'NEWS/POLITICS', 'parent': 'NEWS', 'qcode': 'NEWS/POLITICS', 'scheme': 'services-products'},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+            {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
+             'translations': {'name': {'nl': 'Frankrijk', 'fr': 'France'}}},
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["subject"], expected_subjects)
