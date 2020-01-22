@@ -5,7 +5,7 @@ from flask import current_app as app
 from datetime import timedelta
 from superdesk.metadata.item import CONTENT_STATE, PUBLISH_SCHEDULE, SCHEDULE_SETTINGS
 from superdesk.macros.internal_destination_auto_publish import internal_destination_auto_publish
-from superdesk.editor_utils import Editor3Content, BlockSequence
+from superdesk.editor_utils import replace_text, filter_blocks
 from apps.archive.common import update_schedule_settings
 
 
@@ -71,22 +71,22 @@ def _get_product_subject(subject: list):
 
 
 def _fix_headline(item):
-    editor = Editor3Content(item, 'headline')
-    for block in editor.blocks:
-        for old in (' BELGANIGHT', 'BELGANIGHT ', 'BELGANIGHT'):
-            block.replace_text(old, '')
-    editor.update_item(True)
+    for old in (' BELGANIGHT', 'BELGANIGHT ', 'BELGANIGHT'):
+        replace_text(item, 'headline', old, '', html=False)
+
+
+class BlockFilter():
+
+    filtered = False
+
+    def __call__(self, block):
+        if not self.filtered and any([pattern in block.text for pattern in ('Disclaimer:', 'ATTENTION USERS')]):
+            self.filtered = True
+        return not self.filtered
 
 
 def _fix_body_html(item):
-    editor = Editor3Content(item)
-    blocks = []
-    for block in editor.blocks:
-        if any([pattern in block.text for pattern in ('Disclaimer:', 'ATTENTION USERS')]):
-            break
-        blocks.append(block)
-    editor.set_blocks(blocks)
-    editor.update_item()
+    filter_blocks(item, 'body_html', BlockFilter())
 
 
 def brief_internal_routing(item: dict, **kwargs):
