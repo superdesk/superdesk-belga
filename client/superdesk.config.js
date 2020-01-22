@@ -120,6 +120,6 @@ module.exports = function(grunt) {
                     allowed_fields_to_sort: [ 'publish_schedule' ]
                 }
             },
-        },
+        }
     };
 };

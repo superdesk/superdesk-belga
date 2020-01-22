@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 class BelgaNewsML12Formatter(NewsML12Formatter):
     """
-    Belga News ML 1.2 1.2 Formatter
+    Belga News ML 1.2 Formatter
     """
 
     ENCODING = "ISO-8859-15"
@@ -85,7 +85,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
 
         if format_type == 'belganewsml12':
-            if article[ITEM_TYPE] == CONTENT_TYPE.TEXT:
+            if article[ITEM_TYPE] in (CONTENT_TYPE.TEXT, CONTENT_TYPE.VIDEO):
                 return True
         return False
 
@@ -195,11 +195,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
-        self._format_text(newscomponent_1_level)
-        self._format_belga_urls(newscomponent_1_level)
-        self._format_media(newscomponent_1_level)
-        self._format_attachments(newscomponent_1_level)
-        self._format_related_text_item(newscomponent_1_level)
+        if self._article[ITEM_TYPE] == CONTENT_TYPE.TEXT:
+            self._format_text(newscomponent_1_level)
+            self._format_belga_urls(newscomponent_1_level)
+            self._format_media(newscomponent_1_level)
+            self._format_attachments(newscomponent_1_level)
+            self._format_related_text_item(newscomponent_1_level)
+        elif self._article[ITEM_TYPE] == CONTENT_TYPE.VIDEO:
+            self._format_video(newscomponent_1_level, video=self._article)
 
     def _format_text(self, newscomponent_1_level):
         """
@@ -590,7 +593,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(characteristics, 'SizeInBytes').text = str(len(video[key])) if video.get(key) else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
-        # sound
+        # clip
         newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
         if video.get(GUID_FIELD):
             newscomponent_3_level.attrib['Duid'] = video.get(GUID_FIELD)
