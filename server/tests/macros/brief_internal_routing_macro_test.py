@@ -11,58 +11,6 @@ from belga.macros import brief_internal_routing as macro
 from belga.macros.brief_internal_routing import _get_product_subject, PRODUCTS
 
 
-FIELDS_META = {
-    "headline": {
-        "draftjsState": [{
-            "blocks": [{
-                "key": "6igan",
-                "text": "foo BELGANIGHT bar",
-                "type": "unstyled",
-                "depth": 0,
-                "inlineStyleRanges": [],
-                "entityRanges": [],
-                "data": {
-                    "MULTIPLE_HIGHLIGHTS": {}
-                }
-            }],
-            "entityMap": {}
-        }]
-    },
-    "body_html": {
-        "draftjsState": [{
-            "blocks": [{
-                "key": "8na9u",
-                "text": "foo",
-                "type": "unstyled",
-                "depth": 0,
-                "inlineStyleRanges": [],
-                "entityRanges": [],
-                "data": {
-                    "MULTIPLE_HIGHLIGHTS": {}
-                }
-            }, {
-                "key": "gv7c",
-                "text": "Disclaimer:",
-                "type": "unstyled",
-                "depth": 0,
-                "inlineStyleRanges": [],
-                "entityRanges": [],
-                "data": {}
-            }, {
-                "key": "9fe84",
-                "text": "bar",
-                "type": "unstyled",
-                "depth": 0,
-                "inlineStyleRanges": [],
-                "entityRanges": [],
-                "data": {}
-            }],
-            "entityMap": {}
-        }]
-    }
-}
-
-
 class MacroMetadataTestCase(unittest.TestCase):
 
     def test_macro(self):
@@ -123,7 +71,12 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
             'state': CONTENT_STATE.PUBLISHED,
             'task': {},
             'versioncreated': now,
-            'fields_meta': FIELDS_META,
+            'headline': 'foo BELGANIGHT bar',
+            'body_html': ''.join([
+                '<p>foo</p>',
+                '<p>Disclaimer:</p>',
+                '<p>bar</p>',
+            ]),
         }
 
         with self.assertRaises(StopDuplication):
