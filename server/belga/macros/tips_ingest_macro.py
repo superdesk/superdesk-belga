@@ -11,8 +11,8 @@ def change_headline_and_urgency(item, **kwargs):
     return item
 
 
-name = 'Change Headline and Urgency Macro'
-label = 'Add prefix TIP to headline and set urgency to 5'
+name = 'TIPS ingest macro'
+label = 'TIPS ingest macro'
 callback = change_headline_and_urgency
 access_type = 'backend'
 action_type = 'direct'
