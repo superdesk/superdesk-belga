@@ -47,7 +47,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU', 'scheme': 'of_interest_to'},
             {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
             {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
-            {'name': 'NEWS/POLITICS', 'parent': 'NEWS', 'qcode': 'NEWS/POLITICS', 'scheme': 'services-products'},
+            {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
@@ -72,7 +72,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["line_text"], "(Croquis d'audience+Photo+Video)")
         self.assertEqual(item["administrative"], {'provider': 'AFP'})
         self.assertEqual(item["language"], "fr")
-        self.assertEqual(item["anpa_category"], [{'qcode': 'POL'}, {'qcode': 'CLJ'}, {'qcode': 'ECO'}])
+        self.assertEqual(item["anpa_category"], [{'qcode': 'SPO'}, {'qcode': 'CLJ'}, {'qcode': 'ECO'}])
         self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'FRA', 'city': 'Paris'})
         self.assertEqual(item["generator_software"], "libg2")
         self.assertEqual(item["keywords"], [])
