@@ -170,16 +170,13 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                 name_elt = subject_elt.find(self.qname('name'))
                 if name_elt is not None and not item['extra'].get('country'):
                     item.setdefault('extra', {})['country'] = name_elt.text
+                # avoid repeatedly calling db while finding country
+                self.country = get_resource_service('vocabularies').find_one(req=None, _id='country').get('items', [])
                 # looking for ISO 3166-1 alpha-3 code
                 for i in subject_elt.findall(self.qname('sameAs')):
                     code = i.find(self.qname('name')).text
                     if len(code) == 3:
-                        country_keyword = self._get_country_keywords(code)
-                        # add scheme remove is_active
-                        for c in country_keyword:
-                            c['scheme'] = 'country'
-                            if 'is_active' in c:
-                                c.pop('is_active')
+                        country_keyword = self._get_country(code)
                         item.setdefault('subject', []).extend(country_keyword)
                         break
 
@@ -213,11 +210,17 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                     logger.info('Subject element rejected for "{code}"'.format(code=qcode_parts[1]))
         return None
 
-    def _get_country_keywords(self, country):
-        return [
-            c for c in get_resource_service('vocabularies').find_one(req=None, _id='country').get('items', [])
-            if c.get('qcode') == 'country_' + country.lower() and c.get('is_active')
+    def _get_country(self, country_code):
+        country_keyword = [
+            c for c in self.country
+            if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
         ]
+        # add scheme remove is_active
+        for c in country_keyword:
+            c['scheme'] = 'country'
+            if 'is_active' in c:
+                c.pop('is_active')
+        return country_keyword
 
 
 register_feed_parser(BelgaDPANewsMLTwoFeedParser.NAME, BelgaDPANewsMLTwoFeedParser())

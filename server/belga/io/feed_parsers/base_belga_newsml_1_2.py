@@ -558,6 +558,8 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 item['extra']['how_present'] = how_present_el
 
             elements = location_el.findall('Property')
+            # avoid repeatedly calling db while finding country
+            self.country = self._get_cv('country').get('items', [])
             for element in elements:
                 if element.attrib.get('FormalName', '') == 'Country':
                     country = element.attrib.get('Value')
@@ -725,10 +727,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
     def _get_cv(self, _id):
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
 
-    def _get_country(self, country):
+    def _get_country(self, country_code):
         country_keyword = [
-            c for c in self._get_cv('country').get('items', [])
-            if c.get('qcode') == 'country_' + country.lower() and c.get('is_active')
+            c for c in self.country
+            if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
         ]
         # add scheme and remove is_active
         for c in country_keyword:
