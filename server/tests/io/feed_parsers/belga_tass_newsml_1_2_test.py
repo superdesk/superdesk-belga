@@ -40,7 +40,9 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
             {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'credits'},
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'}
+            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
+            {'name': 'Russian Federation', 'qcode': 'country_rus',
+             'translations': {'name': {'nl': 'Rusland', 'fr': 'Russie'}}},
         ]
         expected_subjects.sort(key=lambda i: i['scheme'])
         self.assertEqual(item["subject"], expected_subjects)
