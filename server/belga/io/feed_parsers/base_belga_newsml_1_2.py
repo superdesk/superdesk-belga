@@ -8,6 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
+import itertools
 import html
 import datetime
 import superdesk
@@ -85,6 +86,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     # Slugline and keywords is epmty
                     item['slugline'] = None
                     item['keywords'] = []
+                    # remove dupplicated subject
+                    item['subject'] = [
+                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['name']))
+                    ]
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue
