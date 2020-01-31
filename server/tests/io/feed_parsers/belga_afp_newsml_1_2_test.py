@@ -82,8 +82,8 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["characteristics"], {'size_bytes': '1620', 'word_count': '269'})
         expected_body = \
             (
-
-                "\n<p>Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisie"
+                "\n<p><br/></p><p>   </p>"
+                "\n<p> Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisie"
                 "n Roissy-Charles de Gaulle, accusés d'avoir facilité l'importation de cocaïne de retour de Républiqu"
                 "e dominicaine, s'est ouvert lundi devant un tribunal à Paris. </p>\n<p>Clément Geisse, 42 ans, et Chr"
                 'istophe Peignelin, 56 ans, comparaissent notamment pour importation de stupéfiants en bande organisé'

@@ -8,7 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from lxml import etree
+import re
 
 from superdesk.io.registry import register_feed_parser
 
@@ -51,8 +51,17 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             })
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
-            first_line = item.get('body_html', '').strip().split('\n')[0]
-            first_line = etree.fromstring(first_line).text
+            first_line = ''
+            # remove trailing whitespace in p or h2 tag and empty tag
+            body = re.sub(r'(>)(\s*)(.*?)(\s*)(<)', r'\1\3\5', item.get('body_html', ''))
+            body = body.replace('<p></p>', '').replace('<h2></h2>', '')
+            # Get inner html of the first <p> or <h2> tag which its children is not <br> tag
+            # e.g.
+            #   <p><b>abc</b></p> => <b>abc</b>
+            #   <p><br></p><p>empty line at beginning of the body</p> => empty line at beginning of the body
+            result = re.search(r'<(?:p|h2)>(?!<br/>|<br>)(.*?)</(?:p|h2)>', body)
+            if result:
+                first_line = result.group(1)
             headline = 'URGENT: ' + first_line.strip()
             item['headline'] = headline
         # Label must be empty
