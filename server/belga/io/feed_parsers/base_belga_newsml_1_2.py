@@ -27,6 +27,10 @@ class SkipItemException(Exception):
 class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
     """Base Feed Parser for NewsML format, specific AFP, ANP, .. Belga xml."""
 
+    def __init__(self):
+        super().__init__()
+        self._countries = []
+
     def parse(self, xml, provider=None):
         """
         Parser content the xml newsml file to json object.
@@ -86,7 +90,7 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     # Slugline and keywords is epmty
                     item['slugline'] = None
                     item['keywords'] = []
-                    # remove dupplicated subject
+                    # remove duplicated subject
                     item['subject'] = [
                         dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['name']))
                     ]
@@ -558,8 +562,6 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                 item['extra']['how_present'] = how_present_el
 
             elements = location_el.findall('Property')
-            # avoid repeatedly calling db while finding country
-            self.country = self._get_cv('country').get('items', [])
             for element in elements:
                 if element.attrib.get('FormalName', '') == 'Country':
                     country = element.attrib.get('Value')
@@ -728,8 +730,11 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
 
     def _get_country(self, country_code):
+        if not self._countries:
+            self._countries = self._get_cv('country').get('items', [])
+
         country_keyword = [
-            c for c in self.country
+            c for c in self._countries
             if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
         ]
         # add scheme and remove is_active

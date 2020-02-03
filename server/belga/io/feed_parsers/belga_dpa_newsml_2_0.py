@@ -46,6 +46,10 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         'SP': 'NEWS/SPORTS'
     }
 
+    def __init__(self):
+        super().__init__()
+        self._countries = []
+
     def can_parse(self, xml):
         return xml.tag.endswith('newsMessage')
 
@@ -170,8 +174,6 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                 name_elt = subject_elt.find(self.qname('name'))
                 if name_elt is not None and not item['extra'].get('country'):
                     item.setdefault('extra', {})['country'] = name_elt.text
-                # avoid repeatedly calling db while finding country
-                self.country = get_resource_service('vocabularies').find_one(req=None, _id='country').get('items', [])
                 # looking for ISO 3166-1 alpha-3 code
                 for i in subject_elt.findall(self.qname('sameAs')):
                     code = i.find(self.qname('name')).text
@@ -211,11 +213,15 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         return None
 
     def _get_country(self, country_code):
+        if not self._countries:
+            # avoid repeatedly calling db while finding country
+            self._countries = get_resource_service('vocabularies').find_one(req=None, _id='country').get('items', [])
+
         country_keyword = [
-            c for c in self.country
+            c for c in self._countries
             if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
         ]
-        # add scheme remove is_active
+        # add scheme and remove is_active
         for c in country_keyword:
             c['scheme'] = 'country'
             if 'is_active' in c:
