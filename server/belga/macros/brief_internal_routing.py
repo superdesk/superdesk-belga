@@ -72,7 +72,7 @@ def _get_product_subject(subject: list):
 
 def _fix_headline(item):
     for old in (' BELGANIGHT', 'BELGANIGHT ', 'BELGANIGHT'):
-        replace_text(item, 'headline', old, '', html=False)
+        replace_text(item, 'headline', old, '', is_html=False)
 
 
 class BlockFilter():
