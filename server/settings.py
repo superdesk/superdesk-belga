@@ -9,6 +9,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+from flask import json
 from pathlib import Path
 from superdesk.default_settings import INSTALLED_APPS, env
 
@@ -225,3 +226,18 @@ KEYWORDS_ADD_MISSING_ON_PUBLISH = True
 MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
 WORKFLOW_ALLOW_MULTIPLE_UPDATES = True
+
+with Path(__file__).parent.joinpath('picture-profile.json').open() as f:
+    picture_profile = json.load(f)
+
+EDITOR = {
+    'picture': picture_profile['editor'],
+    'video': picture_profile['editor'],
+}
+
+SCHEMA = {
+    'picture': picture_profile['schema'],
+    'video': picture_profile['schema'],
+}
+
+VALIDATOR_MEDIA_METADATA = {}
