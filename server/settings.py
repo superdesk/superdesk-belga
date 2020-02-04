@@ -26,7 +26,8 @@ INSTALLED_APPS.extend([
     'belga.io',
     'belga.command',
     'belga.publish',
-    'belga.macros'
+    'belga.macros',
+    'belga.update',
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
