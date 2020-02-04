@@ -11,14 +11,16 @@
 
 import os
 from lxml import etree
-from superdesk.tests import TestCase
+
 from belga.io.feed_parsers.belga_tass_newsml_1_2 import BelgaTASSNewsMLOneFeedParser
+from . import BelgaTestCase
 
 
-class BelgaTASSNewsMLOneTestCase(TestCase):
+class BelgaTASSNewsMLOneTestCase(BelgaTestCase):
     filename = 'tass_belga.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
@@ -41,7 +43,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'name': 'Russian Federation', 'qcode': 'country_rus',
+            {'name': 'Russian Federation', 'qcode': 'country_rus', 'scheme': 'country',
              'translations': {'name': {'nl': 'Rusland', 'fr': 'Russie'}}},
         ]
         expected_subjects.sort(key=lambda i: i['scheme'])
@@ -56,7 +58,7 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
         self.assertEqual(item["headline"], "Kremlin has 'negative reaction' to upcoming EU sanctions")
         self.assertEqual(item["language"], "en")
         self.assertEqual(item["descriptive_guid"], "16AAC34CE1C503AE4325838900396A95")
-        self.assertEqual(item["extra"], {'how_present': 'Origin', 'city': 'MOSCOW'})
+        self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'RUS', 'city': 'MOSCOW'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["mimetype"], "text/vnd.IPTC.NITF")
         self.assertEqual(item["slugline"], None)
