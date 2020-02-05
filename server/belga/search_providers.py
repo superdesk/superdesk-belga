@@ -272,9 +272,13 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     def _get_abstract(self, item):
         return self._get_newscomponent(item, 'lead')
 
+    def _get_datetime(self, date=None):
+        if not date:
+            return get_datetime(date)
+        return get_datetime(date / 1000)
+
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
-        created = get_datetime(datetime.datetime.now())
         return {
             'type': 'text',
             'mimetype': 'application/superdesk.vnd.belga.360archive',
@@ -286,8 +290,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'slugline': get_text(data['topic']),
             'name': get_text(data['name']),
             'description_text': get_text(data.get('description')),
-            'versioncreated': created,
-            'firstcreated': created,
+            'versioncreated': self._get_datetime(data.get('validateDate')),
+            'firstcreated': self._get_datetime(data.get('createDate')),
             'creditline': get_text(data['credit']),
             'source': get_text(data['source']),
             'language': get_text(data['language']),

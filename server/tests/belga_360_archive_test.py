@@ -6,7 +6,7 @@ from flask import json
 from httmock import all_requests, HTTMock
 from unittest.mock import MagicMock
 
-from belga.search_providers import Belga360ArchiveSearchProvider
+from belga.search_providers import Belga360ArchiveSearchProvider, get_datetime
 
 
 def fixture(filename):
@@ -76,6 +76,8 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.assertEqual(item['creditline'], 'BELGA')
         self.assertEqual(item['source'], 'BELGA')
         self.assertEqual(item['language'], 'fr')
+        self.assertEqual(item['firstcreated'], get_datetime(1581646440))
+        self.assertEqual(item['versioncreated'], get_datetime(1581654480))
         self.assertEqual(item['abstract'], (
             'Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin'
             ' finibus diam in urna vehicula accumsan'
