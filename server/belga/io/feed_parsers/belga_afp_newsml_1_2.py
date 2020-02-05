@@ -8,10 +8,8 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-import re
-
 from superdesk.io.registry import register_feed_parser
-
+from superdesk.text_utils import get_text
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 
 
@@ -51,19 +49,10 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             })
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
-            first_line = ''
-            # remove trailing whitespace in p or h2 tag and empty tag
-            body = re.sub(r'(>)(\s*)(.*?)(\s*)(<)', r'\1\3\5', item.get('body_html', ''))
-            body = body.replace('<p></p>', '').replace('<h2></h2>', '')
-            # Get inner html of the first <p> or <h2> tag which its children is not <br> tag
-            # e.g.
-            #   <p><b>abc</b></p> => <b>abc</b>
-            #   <p><br></p><p>empty line at beginning of the body</p> => empty line at beginning of the body
-            result = re.search(r'<(?:p|h2)>(?!<br/>|<br>)(.*?)</(?:p|h2)>', body)
-            if result:
-                first_line = result.group(1)
-            headline = 'URGENT: ' + first_line.strip()
-            item['headline'] = headline
+            for line in get_text(item.get('body_html', ''), lf_on_block=True).split('\n'):
+                if line.strip():
+                    item['headline'] = 'URGENT: ' + line.strip()
+                    break
         # Label must be empty
         item['subject'] = [i for i in item['subject'] if i.get('scheme') != 'label']
         # Credits is AFP
