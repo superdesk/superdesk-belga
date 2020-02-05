@@ -17,6 +17,8 @@ from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser
 from superdesk.io.iptc import subject_codes
 
+from .belga_newsml_mixin import BelgaNewsMLMixin
+
 
 class SkipItemException(Exception):
     """Raised when we current item must be skipped"""
@@ -24,12 +26,8 @@ class SkipItemException(Exception):
     pass
 
 
-class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
+class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
     """Base Feed Parser for NewsML format, specific AFP, ANP, .. Belga xml."""
-
-    def __init__(self):
-        super().__init__()
-        self._countries = []
 
     def parse(self, xml, provider=None):
         """
@@ -728,18 +726,3 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
 
     def _get_cv(self, _id):
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
-
-    def _get_country(self, country_code):
-        if not self._countries:
-            self._countries = self._get_cv('country').get('items', [])
-
-        country_keyword = [
-            c for c in self._countries
-            if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
-        ]
-        # add scheme and remove is_active
-        for c in country_keyword:
-            c['scheme'] = 'country'
-            if 'is_active' in c:
-                c.pop('is_active')
-        return country_keyword

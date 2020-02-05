@@ -20,12 +20,14 @@ from superdesk.io.registry import register_feed_parser
 from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
 
+from .belga_newsml_mixin import BelgaNewsMLMixin
+
 logger = logging.getLogger(__name__)
 NS = {'xhtml': 'http://www.w3.org/1999/xhtml',
       'iptc': 'http://iptc.org/std/nar/2006-10-01/'}
 
 
-class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
+class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
     """
     Feed Parser which can parse DPA variant of NewsML
     """
@@ -45,10 +47,6 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
         'S': 'NEWS/SPORTS',
         'SP': 'NEWS/SPORTS'
     }
-
-    def __init__(self):
-        super().__init__()
-        self._countries = []
 
     def can_parse(self, xml):
         return xml.tag.endswith('newsMessage')
@@ -211,22 +209,6 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                 except ValueError:
                     logger.info('Subject element rejected for "{code}"'.format(code=qcode_parts[1]))
         return None
-
-    def _get_country(self, country_code):
-        if not self._countries:
-            # avoid repeatedly calling db while finding country
-            self._countries = get_resource_service('vocabularies').find_one(req=None, _id='country').get('items', [])
-
-        country_keyword = [
-            c for c in self._countries
-            if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
-        ]
-        # add scheme and remove is_active
-        for c in country_keyword:
-            c['scheme'] = 'country'
-            if 'is_active' in c:
-                c.pop('is_active')
-        return country_keyword
 
 
 register_feed_parser(BelgaDPANewsMLTwoFeedParser.NAME, BelgaDPANewsMLTwoFeedParser())
