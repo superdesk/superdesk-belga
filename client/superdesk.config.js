@@ -8,12 +8,12 @@ module.exports = function(grunt) {
     return {
         apps: [
             'superdesk.analytics',
-            'superdesk-planning',
+            //'superdesk-planning',
             'belga',
         ],
         importApps: [
             'superdesk-analytics',
-            'superdesk-planning',
+            //'superdesk-planning',
             '../belga',
         ],
         defaultRoute: '/workspace/monitoring',
