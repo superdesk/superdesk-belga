@@ -1124,6 +1124,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '6'},
+            {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
             {'FormalName': 'NewsPackage'},
@@ -1303,6 +1304,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '6'},
+            {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
             {'FormalName': 'NewsPackage'},

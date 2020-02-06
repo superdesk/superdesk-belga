@@ -804,6 +804,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Priority', 'Value': str(item['priority'])}
             )
+        if 'slugline' in item:
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'Topic', 'Value': item['slugline']}
+            )
         SubElement(
             administrative_metadata,
             'Property',
