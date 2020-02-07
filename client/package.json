@@ -8,6 +8,6 @@
         "superdesk-analytics": "github:tomaskikutis/superdesk-analytics#next",
         "superdesk-core": "github:superdesk/superdesk-client-core#develop",
         "superdesk-planning-extension": "1.0.3",
-        "superdesk-planning": "github:tomaskikutis/superdesk-planning#move-planning-extension-from-core"
+        "superdesk-planning": "github:superdesk/superdesk-planning#next"
     }
 }

@@ -132,14 +132,6 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@16.4.9":
-  version "16.4.9"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.9.tgz#98b4dba5a0419dbd594f5dbbb2479e1e153431bb"
-  integrity sha512-hG3/RD7baE2bY3N9hRodZbl9qcpG38njeQcbLZvOFOUqDShk7dtAEq5vH2HHf/GYHw4mc3m7zuIVgLnAlTVAnA==
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^2.2.0"
-
 "@types/react@16.8.23":
   version "16.8.23"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.23.tgz#ec6be3ceed6353a20948169b6cb4c97b65b97ad2"
@@ -8579,7 +8571,7 @@ substyle@^6.0.0:
 
 "superdesk-core@github:superdesk/superdesk-client-core#develop":
   version "1.32.2"
-  resolved "https://codeload.github.com/superdesk/superdesk-client-core/tar.gz/2b5ec9770714f317707a74725660054ccb35d7ac"
+  resolved "https://codeload.github.com/superdesk/superdesk-client-core/tar.gz/28e2d6a455d5749914c0009fb36f7e018ced5acf"
   dependencies:
     "@metadata/exif" "github:superdesk/exif#431066d"
     "@types/angular" "1.6.50"
@@ -8681,12 +8673,13 @@ superdesk-planning-extension@1.0.3:
   resolved "https://registry.yarnpkg.com/superdesk-planning-extension/-/superdesk-planning-extension-1.0.3.tgz#305df961b27f67e67f1c950d3d3aab3deac7d5a3"
   integrity sha512-Qzc11/5HyYi7M5o+vgjcr3q14Q4dTdL/pP1g3FcBKFDXIjqp+keK6fmhdtwRrcOaqQ2CE4diW7r3zMg5F+2ZgQ==
 
-"superdesk-planning@github:tomaskikutis/superdesk-planning#move-planning-extension-from-core":
+"superdesk-planning@github:superdesk/superdesk-planning#next":
   version "1.6.0"
-  resolved "https://codeload.github.com/tomaskikutis/superdesk-planning/tar.gz/b6979a9a8ef73f1d0503e9ec9d4c2ed824a2b3fe"
+  resolved "https://codeload.github.com/superdesk/superdesk-planning/tar.gz/a25942e3b0c8feca8e196cca81e6350bcc247c6f"
   dependencies:
-    "@types/lodash" "4.14.116"
-    "@types/react" "16.4.9"
+    "@types/lodash" "4.14.117"
+    "@types/react" "16.8.23"
+    "@types/react-dom" "16.8.0"
     dompurify "~1.0.3"
     nominatim-browser "~2.0.2"
     promise.prototype.finally "~3.1.0"
@@ -8701,6 +8694,7 @@ superdesk-planning-extension@1.0.3:
     reselect "~3.0.1"
     rrule "~2.2.9"
     ts-loader "3.5.0"
+    typescript "3.5.2"
     whatwg-fetch "~2.0.4"
 
 superdesk-ui-framework@2.1.11:
@@ -9056,6 +9050,11 @@ typechecker@^4.9.0:
   integrity sha512-lz39Mc/d1UBcF/uQFL5P8L+oWdIn/stvkUgHf0tPRW4aEwGGErewNXo2Nb6We2WslWifn00rhcHbbRWRcTGhuw==
   dependencies:
     editions "^2.2.0"
+
+typescript@3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.2.tgz#a09e1dc69bc9551cadf17dba10ee42cf55e5d56c"
+  integrity sha512-7KxJovlYhTX5RaRbUdkAXN1KUZ8PwWlTzQdHV6xNqvuFOs7+WBo10TQUqT19Q/Jz2hk5v9TQDIhyLhhJY4p5AA==
 
 typescript@3.7.2:
   version "3.7.2"
