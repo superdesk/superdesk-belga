@@ -777,7 +777,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             author = self._get_author_info(author)
             SubElement(
                 creator, 'Party',
-                {'FormalName': author['name'], 'Topic': author['role']}
+                {'FormalName': author['initials'], 'Topic': author['role']}
             )
         if 'contributor' in item.get('administrative', {}):
             SubElement(
@@ -899,40 +899,43 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _get_author_info(self, author):
         author_info = {
-            'name': '',
+            'initials': '',
             'role': ''
         }
         users_service = superdesk.get_resource_service('users')
 
+        # get author_id
         if type(author) is str:
             author_id = author
-            try:
-                user = next(users_service.find({'_id': author_id}))
-            except StopIteration:
-                logger.warning("unknown user: {user_id}".format(user_id=author_id))
-            else:
-                if user.get('display_name'):
-                    author_info['name'] = user.get('display_name')
-                if user.get('role'):
-                    roles_service = superdesk.get_resource_service('roles')
-                    try:
-                        role = next(roles_service.find({'_id': user['role']}))
-                    except StopIteration:
-                        logger.warning("unknown role: {role_id}".format(role_id=user['role']))
-                    else:
-                        author_info['role'] = role.get('author_role', '')
         else:
-            author_info['name'] = author.get('sub_label', author['name'] if author.get('name') else '')
-            author_info['role'] = author['role'] if author.get('role') else ''
+            try:
+                author_id = author['_id'][0]
+            except (KeyError, IndexError):
+                author_id = None
 
-            if 'parent' in author:
+        # most probably that author info was ingested
+        if not author_id:
+            author_info = {
+                'initials': author.get('name', author.get('uri', '')),
+                'role': author.get('role', ''),
+            }
+            return author_info
+
+        # retrieve sd author info by id
+        try:
+            user = next(users_service.find({'_id': author_id}))
+        except StopIteration:
+            logger.warning("unknown user: {user_id}".format(user_id=author_id))
+        else:
+            if user.get('role'):
+                roles_service = superdesk.get_resource_service('roles')
                 try:
-                    user = next(users_service.find({'_id': author['parent']}))
+                    role = next(roles_service.find({'_id': user['role']}))
                 except StopIteration:
-                    logger.warning("unknown user: {user_id}".format(user_id=author['parent']))
+                    logger.warning("unknown role: {role_id}".format(role_id=user['role']))
                 else:
-                    if user.get('display_name'):
-                        author_info['name'] = user.get('display_name')
+                    author_info['role'] = role.get('author_role', '')
+            author_info['initials'] = user.get('username')
 
         return author_info
 

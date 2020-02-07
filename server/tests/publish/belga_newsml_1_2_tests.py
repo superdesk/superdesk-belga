@@ -856,7 +856,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
     users = ({
         "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-        "username": "admin",
+        "username": "adm",
         "password": "blabla",
         "email": "admin@example.com",
         "user_type": "administrator",
@@ -1109,7 +1109,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
+            {'FormalName': 'adm', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -1289,7 +1289,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
+            {'FormalName': 'adm', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -1496,7 +1496,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         party = newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')
         self.assertDictEqual(
             dict(party[0].attrib),
-            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
+            {'FormalName': 'adm', 'Topic': 'AUTHOR'}
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[Priority]
         priority = newscomponent_2_level.xpath('AdministrativeMetadata/Property[@FormalName="Priority"]')[0]
