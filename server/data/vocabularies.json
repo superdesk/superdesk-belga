@@ -11878,6 +11878,7 @@
         "_id": "media-credit",
         "display_name": "Credit",
         "type": "manageable",
+        "service": {"all": 1},
         "selection_type": "single selection",
         "helper_text": "Use 'Belga On The Spot' when Belga made the picture, use 'Belga Handout' when a third party made the picture",
         "items": [
