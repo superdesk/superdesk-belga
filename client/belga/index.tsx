@@ -1,6 +1,6 @@
 import React from 'react';
 import angular from 'angular';
-import {IUser} from 'superdesk-api'
+import {IUser} from 'superdesk-api';
 import {startApp} from 'superdesk-core/scripts/index';
 import belgaImage from './image';
 import belga360Archive from './360archive';
@@ -9,6 +9,7 @@ import markForUserExtension from 'superdesk-core/scripts/extensions/markForUser/
 import datetimeFieldExtension from 'superdesk-core/scripts/extensions/datetimeField/dist/src/extension';
 import belgaCoverageExtension from '../extensions/belgaCoverage/dist/index';
 import updateArticleOnProfileChangeExtension from '../extensions/updateArticleOnProfileChange/dist/src/extension';
+import iptcExtension from '../extensions/iptc/dist/extension'
 
 class UserAvatar extends React.Component<{user: IUser}> {
     render() {
@@ -29,6 +30,7 @@ setTimeout(() => {
         datetimeFieldExtension,
         belgaCoverageExtension,
         updateArticleOnProfileChangeExtension,
+        iptcExtension,
     ],{UserAvatar});
 });
 
