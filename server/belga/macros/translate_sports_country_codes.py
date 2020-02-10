@@ -638,8 +638,11 @@ def callback(item, **kwargs):
         for i, country in enumerate(COUNTRIES[lang]):
             replace_text(item, "body_html", tpl.format(country), tpl.format(translated[i]))
 
+    return item
+
 
 name = "translate_sports_country_codes"
 label = "Translate sports country codes"
 action_type = "direct"
 access_type = "frontend"
+replace_type = "editor_state"

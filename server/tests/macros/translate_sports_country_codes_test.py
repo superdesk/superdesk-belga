@@ -10,6 +10,7 @@ class TranslateSportsCountryCodesTestCase(unittest.TestCase):
         assert hasattr(macro, 'callback')
         assert macro.action_type == 'direct'
         assert macro.access_type == 'frontend'
+        assert macro.replace_type == 'editor_state', macro.replace_type
 
     def test_translate(self):
         item = {
@@ -17,7 +18,7 @@ class TranslateSportsCountryCodesTestCase(unittest.TestCase):
             'body_html':
                 '<p>29. Thomas Tumler (SUI) 2:00.44 ( 59.67 + 1:00.77)</p>',
         }
-        macro.callback(item)
+        item = macro.callback(item)
         self.assertEqual(
             '<p>29. Thomas Tumler (Sui) 2:00.44 ( 59.67 + 1:00.77)</p>',
             item['body_html'],
