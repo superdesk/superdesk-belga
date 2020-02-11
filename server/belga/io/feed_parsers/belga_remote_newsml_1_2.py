@@ -11,6 +11,7 @@
 from .belga_newsml_1_2 import BelgaNewsMLOneFeedParser, SkipItemException
 import hashlib
 from xml.etree import ElementTree
+from superdesk.io.registry import register_feed_parser
 
 
 class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
@@ -80,3 +81,6 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
                 self.populate_fields(item)
 
                 self._items.append(item)
+
+
+register_feed_parser(BelgaRemoteNewsMLOneFeedParser.NAME, BelgaRemoteNewsMLOneFeedParser())

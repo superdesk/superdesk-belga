@@ -9,4 +9,5 @@ from . import belga_dpa_newsml_2_0  # noqa
 from . import belga_ats_newsml_1_2  # noqa
 from . import belga_kyodo_newsml_1_2  # noqa
 from . import belga_spreadsheet  # noqa
-from . import belga_tip_newsml_1_2 # noqa
+from . import belga_tip_newsml_1_2  # noqa
+from . import belga_remote_newsml_1_2  # noqa
