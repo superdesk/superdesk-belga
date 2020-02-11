@@ -47,45 +47,52 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def format(self, article, subscriber, codes=None):
         """
-        Create article in Belga NewsML 1.2 format
+        Create output in Belga NewsML 1.2 format
 
         :param dict article:
         :param dict subscriber:
         :param list codes:
         :return [(int, str)]: return a List of tuples. A tuple consist of
-            publish sequence number and formatted article string.
+            publish sequence number and formatted output string.
         :raises FormatterError: if the formatter fails to format an article
         """
 
         try:
-            pub_seq_num = superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
+            self.arhive_service = superdesk.get_resource_service('archive')
+            self.content_types_service = superdesk.get_resource_service('content_types')
+            self.roles_service = superdesk.get_resource_service('roles')
+            self.users_service = superdesk.get_resource_service('users')
+            self.vocabularies_service = superdesk.get_resource_service('vocabularies')
+            self.attachments_service = superdesk.get_resource_service('attachments')
             self._newsml = etree.Element('NewsML')
-            self._article = article
+            self._item = article
+            self._items_chain = self.arhive_service.get_items_chain(self._item)
             self._now = utcnow()
             self._string_now = self._now.strftime(self.DATETIME_FORMAT)
-            self._duid = self._article[GUID_FIELD]
+            self._duid = self._item[GUID_FIELD]
 
             self._format_catalog()
             self._format_newsenvelope()
             self._format_newsitem()
 
             xml_string = self.XML_ROOT + '\n' + etree.tostring(self._newsml, pretty_print=True).decode('utf-8')
+            pub_seq_num = superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
 
             return [(pub_seq_num, xml_string)]
         except Exception as ex:
             raise FormatterError.newml12FormatterError(ex, subscriber)
 
-    def can_format(self, format_type, article):
+    def can_format(self, format_type, item):
         """
-        Test if the article can be formatted to Belga NewsML 1.2 or not.
+        Test if the item can be formatted to Belga NewsML 1.2 or not.
 
         :param str format_type:
-        :param dict article:
-        :return: True if article can formatted else False
+        :param dict item:
+        :return: True if item can formatted else False
         """
 
         if format_type == 'belganewsml12':
-            if article[ITEM_TYPE] in (CONTENT_TYPE.TEXT, CONTENT_TYPE.VIDEO):
+            if item[ITEM_TYPE] in (CONTENT_TYPE.TEXT, CONTENT_TYPE.VIDEO):
                 return True
         return False
 
@@ -122,13 +129,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         identification = SubElement(newsitem, 'Identification')
         news_identifier = SubElement(identification, 'NewsIdentifier')
         SubElement(news_identifier, 'ProviderId').text = app.config['NEWSML_PROVIDER_ID']
-        SubElement(news_identifier, 'DateId').text = self._get_formatted_datetime(self._article.get('firstcreated'))
+        SubElement(news_identifier, 'DateId').text = self._get_formatted_datetime(self._item.get('firstcreated'))
         SubElement(news_identifier, 'NewsItemId').text = self._duid
-        revision = self._process_revision(self._article)
-        SubElement(news_identifier, 'RevisionId', attrib=revision).text = str(self._article.get(config.VERSION, ''))
+        revision = self._process_revision(self._item)
+        SubElement(news_identifier, 'RevisionId', attrib=revision).text = str(self._item.get(config.VERSION, ''))
         SubElement(news_identifier, 'PublicIdentifier').text = self._generate_public_identifier(
-            self._article[config.ID_FIELD],
-            self._article.get(config.VERSION, ''),
+            self._item[config.ID_FIELD],
+            self._item.get(config.VERSION, ''),
             revision.get('Update', '')
         )
 
@@ -142,25 +149,25 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(news_management, 'NewsItemType', {'FormalName': 'News'})
         SubElement(
             news_management, 'FirstCreated'
-        ).text = self._get_formatted_datetime(self._article.get('firstcreated'))
+        ).text = self._get_formatted_datetime(self._item.get('firstcreated'))
         SubElement(
             news_management, 'ThisRevisionCreated'
-        ).text = self._get_formatted_datetime(self._article['versioncreated'])
+        ).text = self._get_formatted_datetime(self._item['versioncreated'])
 
-        if self._article.get(EMBARGO):
+        if self._item.get(EMBARGO):
             SubElement(news_management, 'Status', {'FormalName': 'Embargoed'})
             status_will_change = SubElement(news_management, 'StatusWillChange')
             SubElement(
                 status_will_change, 'FutureStatus',
-                {'FormalName': self._article.get('pubstatus', '').upper()}
+                {'FormalName': self._item.get('pubstatus', '').upper()}
             )
             SubElement(
                 status_will_change, 'DateAndTime'
-            ).text = get_utc_schedule(self._article, EMBARGO).isoformat()
+            ).text = get_utc_schedule(self._item, EMBARGO).isoformat()
         else:
             SubElement(
                 news_management, 'Status',
-                {'FormalName': self._article.get('pubstatus', '').upper()}
+                {'FormalName': self._item.get('pubstatus', '').upper()}
             )
 
     def _format_newscomponent_1_level(self, newsitem):
@@ -171,14 +178,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         newscomponent_1_level = SubElement(
             newsitem, 'NewsComponent',
-            {'Duid': self._duid, XML_LANG: self._article.get('language')}
+            {'Duid': self._duid, XML_LANG: self._item.get('language')}
         )
         newslines = SubElement(newscomponent_1_level, 'NewsLines')
-        SubElement(newslines, 'HeadLine').text = self._article.get('headline', '')
+        SubElement(newslines, 'HeadLine').text = self._item.get('headline', '')
         SubElement(newscomponent_1_level, 'AdministrativeMetadata')
         descriptivemetadata = SubElement(newscomponent_1_level, 'DescriptiveMetadata')
         genre_formalname = ''
-        for subject in self._article.get('subject', []):
+        for subject in self._item.get('subject', []):
             if subject.get('scheme') == 'genre':
                 genre_formalname = subject['qcode']
                 break
@@ -195,49 +202,52 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         """
 
-        if self._article[ITEM_TYPE] == CONTENT_TYPE.TEXT:
-            self._format_text(newscomponent_1_level)
-            self._format_belga_urls(newscomponent_1_level)
-            self._format_media(newscomponent_1_level)
-            self._format_attachments(newscomponent_1_level)
-            self._format_related_text_item(newscomponent_1_level)
-        elif self._article[ITEM_TYPE] == CONTENT_TYPE.VIDEO:
-            self._format_video(newscomponent_1_level, video=self._article)
+        for item in self._items_chain:
+            if self._item[ITEM_TYPE] == CONTENT_TYPE.TEXT:
+                self._format_text(newscomponent_1_level, item)
+                self._format_belga_urls(newscomponent_1_level, item)
+                self._format_media(newscomponent_1_level, item)
+                self._format_attachments(newscomponent_1_level, item)
+                self._format_related_text_item(newscomponent_1_level, item)
+            elif self._item[ITEM_TYPE] == CONTENT_TYPE.VIDEO:
+                self._format_video(newscomponent_1_level, video=self._item)
 
-    def _format_text(self, newscomponent_1_level):
+    def _format_text(self, newscomponent_1_level, item):
         """
         Creates a `<NewsComponent>` of a 2nd level with information related to content profile.
         :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict item: item
         """
 
         newscomponent_2_level = SubElement(
             newscomponent_1_level, 'NewsComponent',
-            {XML_LANG: self._article.get('language')}
+            {XML_LANG: item.get('language')}
         )
 
         # Role
-        if self._article.get('profile') in self.CP_NAME_ROLE_MAP:
-            role_formal_name = self.CP_NAME_ROLE_MAP[self._article.get('profile')]
+        if item.get('profile') in self.CP_NAME_ROLE_MAP:
+            role_formal_name = self.CP_NAME_ROLE_MAP[item.get('profile')]
         else:
             role_formal_name = self._get_content_profile_name()
         SubElement(newscomponent_2_level, 'Role', {'FormalName': role_formal_name})
         # NewsLines
-        self._format_newslines(newscomponent_2_level, item=self._article)
+        self._format_newslines(newscomponent_2_level, item=item)
         # AdministrativeMetadata
-        self._format_administrative_metadata(newscomponent_2_level, item=self._article)
+        self._format_administrative_metadata(newscomponent_2_level, item=item)
         # DescriptiveMetadata
-        self._format_descriptive_metadata(newscomponent_2_level, item=self._article)
+        self._format_descriptive_metadata(newscomponent_2_level, item=item)
         # NewsComponent 3rd level
-        self._format_newscomponent_3_level(newscomponent_2_level, item=self._article)
+        self._format_newscomponent_3_level(newscomponent_2_level, item=item)
 
-    def _format_related_text_item(self, newscomponent_1_level):
+    def _format_related_text_item(self, newscomponent_1_level, item):
         """
         Creates a `<NewsComponent>` of a 2nd level with associated related text item.
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict picture: picture item
+        :param dict item: item
         """
 
-        associations = self._article.get('associations', {})
+        associations = item.get('associations', {})
 
         # get all associated `text` items where `_type` is `externalsource`.
         items = [
@@ -253,53 +263,53 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         ]
         # fetch associated docs by _id
         if items_ids:
-            archive_service = superdesk.get_resource_service('archive')
-            items += list(archive_service.find({
+            items += list(self.arhive_service.find({
                 '_id': {'$in': items_ids}}
             ))
         # format items
-        for item in items:
+        for _item in items:
             # NewsComponent
             newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
-            if item.get(GUID_FIELD):
-                newscomponent_2_level.attrib['Duid'] = item.get(GUID_FIELD)
-            if item.get('language'):
-                newscomponent_2_level.attrib[XML_LANG] = item.get('language')
+            if _item.get(GUID_FIELD):
+                newscomponent_2_level.attrib['Duid'] = _item.get(GUID_FIELD)
+            if _item.get('language'):
+                newscomponent_2_level.attrib[XML_LANG] = _item.get('language')
             # Role
             SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedArticle'})
             # NewsLines
-            self._format_newslines(newscomponent_2_level, item=item)
+            self._format_newslines(newscomponent_2_level, item=_item)
             # AdministrativeMetadata
-            self._format_administrative_metadata(newscomponent_2_level, item=item)
+            self._format_administrative_metadata(newscomponent_2_level, item=_item)
             # DescriptiveMetadata
-            self._format_descriptive_metadata(newscomponent_2_level, item=item)
+            self._format_descriptive_metadata(newscomponent_2_level, item=_item)
             # NewsComponent 3rd level
-            self._format_newscomponent_3_level(newscomponent_2_level, item=item)
+            self._format_newscomponent_3_level(newscomponent_2_level, item=_item)
 
-    def _format_belga_urls(self, newscomponent_1_level):
+    def _format_belga_urls(self, newscomponent_1_level, item):
         """
         Creates a `NewsComponent`(s) of a 2nd level with data from custom url fields.
         :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict item: item
         """
 
-        for belga_url in self._article.get('extra', {}).get('belga-url', []):
+        for belga_url in item.get('extra', {}).get('belga-url', []):
             newscomponent_2_level = SubElement(
                 newscomponent_1_level, 'NewsComponent',
-                {XML_LANG: self._article.get('language')}
+                {XML_LANG: item.get('language')}
             )
             SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
             newslines = SubElement(newscomponent_2_level, 'NewsLines')
             SubElement(newslines, 'DateLine')
-            SubElement(newslines, 'CreditLine').text = self._article.get('byline')
+            SubElement(newslines, 'CreditLine').text = item.get('byline')
             SubElement(newslines, 'HeadLine').text = belga_url.get('description')
-            SubElement(newslines, 'CopyrightLine').text = self._article.get('copyrightholder')
-            self._format_administrative_metadata(newscomponent_2_level, item=self._article)
-            self._format_descriptive_metadata(newscomponent_2_level, item=self._article)
+            SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
+            self._format_administrative_metadata(newscomponent_2_level, item=item)
+            self._format_descriptive_metadata(newscomponent_2_level, item=item)
 
             for role, key in (('Title', 'description'), ('Locator', 'url')):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
-                    {XML_LANG: self._article.get('language')}
+                    {XML_LANG: item.get('language')}
                 )
                 SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
                 SubElement(
@@ -317,20 +327,20 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 ).text = str(len(belga_url[key])) if belga_url.get(key) else '0'
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
-    def _format_attachments(self, newscomponent_1_level):
+    def _format_attachments(self, newscomponent_1_level, item):
         """
-        Format attached to the article files.
+        Format attached to the item files.
         Creates `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
         :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict item: item
         """
 
-        attachments_ids = [i['attachment'] for i in self._article.get('attachments', [])]
-        attachments_service = superdesk.get_resource_service('attachments')
-        attachments = list(attachments_service.find({'_id': {'$in': attachments_ids}}))
+        attachments_ids = [i['attachment'] for i in item.get('attachments', [])]
+        attachments = list(self.attachments_service.find({'_id': {'$in': attachments_ids}}))
         for attachment in attachments:
             self._format_attachment(newscomponent_1_level, attachment)
 
-    def _format_media(self, newscomponent_1_level):
+    def _format_media(self, newscomponent_1_level, item):
         """
         Format media items.
         Creates `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
@@ -347,10 +357,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
           representation as an `Gallery`.
 
         :param Element newscomponent_1_level: NewsComponent of 1st level
+        :param dict item: item
         """
 
         # format media from associations
-        associations = self._article.get('associations', {})
+        associations = item.get('associations', {})
         for _type, _format in (
                 ('picture', self._format_picture),
                 ('graphic', self._format_coverage),
@@ -362,34 +373,32 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 associations[i] for i in associations
                 if associations[i]
                 and associations[i]['type'] == _type
-                and 'renditions' in self._article['associations'][i]
+                and 'renditions' in item['associations'][i]
             ]
             # get all associated items `_id`s with type `_type` where `renditions` are NOT IN the item
             items_ids = [
                 associations[i]['_id'] for i in associations
                 if associations[i]
                 and associations[i]['type'] == _type
-                and 'renditions' not in self._article['associations'][i]
+                and 'renditions' not in item['associations'][i]
             ]
 
             # fetch associated docs by _id
             if items_ids:
-                archive_service = superdesk.get_resource_service('archive')
-                items += list(archive_service.find({
+                items += list(self.arhive_service.find({
                     '_id': {'$in': items_ids}}
                 ))
             # format pictures
             formatted_ids = []
-            for item in items:
-                if item['_id'] not in formatted_ids:
-                    formatted_ids.append(item['_id'])
-                    _format(newscomponent_1_level, item)
+            for _item in items:
+                if _item['_id'] not in formatted_ids:
+                    formatted_ids.append(_item['_id'])
+                    _format(newscomponent_1_level, _item)
 
         # format media item from custom field `belga.coverage`
-        extra = self._article.get('extra', {})
-        vocabularies_service = superdesk.get_resource_service('vocabularies')
+        extra = item.get('extra', {})
         belga_coverage_field_ids = [
-            i['_id'] for i in vocabularies_service.find({'custom_field_type': 'belga.coverage'})
+            i['_id'] for i in self.vocabularies_service.find({'custom_field_type': 'belga.coverage'})
         ]
         for belga_coverage_field_id in belga_coverage_field_ids:
             if belga_coverage_field_id in extra:
@@ -610,7 +619,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _format_attachment(self, newscomponent_1_level, attachment):
         """
-        Creates a `<NewsComponent>` of a 2nd level with file attached to the article.
+        Creates a `<NewsComponent>` of a 2nd level with file attached to the item.
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict attachment: attachment
         """
@@ -902,7 +911,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             'initials': '',
             'role': ''
         }
-        users_service = superdesk.get_resource_service('users')
 
         # get author_id
         if type(author) is str:
@@ -923,14 +931,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         # retrieve sd author info by id
         try:
-            user = next(users_service.find({'_id': author_id}))
+            user = next(self.users_service.find({'_id': author_id}))
         except StopIteration:
             logger.warning("unknown user: {user_id}".format(user_id=author_id))
         else:
             if user.get('role'):
-                roles_service = superdesk.get_resource_service('roles')
                 try:
-                    role = next(roles_service.find({'_id': user['role']}))
+                    role = next(self.roles_service.find({'_id': user['role']}))
                 except StopIteration:
                     logger.warning("unknown role: {role_id}".format(role_id=user['role']))
                 else:
@@ -946,12 +953,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             return _datetime.strftime(self.DATETIME_FORMAT)
 
     def _get_content_profile_name(self):
-        content_types_service = superdesk.get_resource_service('content_types')
         req = ParsedRequest()
         req.args = {}
         req.projection = '{"label": 1}'
-        content_type = content_types_service.find_one(
+        content_type = self.content_types_service.find_one(
             req=req,
-            _id=self._article.get('profile')
+            _id=self._item.get('profile')
         )
         return content_type['label']
