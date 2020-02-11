@@ -63,7 +63,8 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         Example:
         <NewsComponent Duid="03AE4325838900396A95" Essential="no" EquivalentsList="no">
             NewsComponent Duid="03AE4325838900396A95">
-                <NewsComponent xml:lang="en"><Role FormalName="Main" />
+                <NewsComponent xml:lang="en">
+                    <Role FormalName="Main" />
                     ....
                 </NewsComponent>
             </NewsComponent>
@@ -72,9 +73,7 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param newscomponent_el:
         :return:
         """
-        third_newscomponent_el = newscomponent_el.find('NewsComponent/NewsComponent')
-        if third_newscomponent_el is not None:
-            super().parser_newscomponent(item, third_newscomponent_el)
+        super().parser_newscomponent(item, newscomponent_el.find('NewsComponent/NewsComponent'))
         if newscomponent_el.attrib.get('Duid') is not None:
             item['guid'] = newscomponent_el.attrib.get('Duid', '')
         # Essential is CV

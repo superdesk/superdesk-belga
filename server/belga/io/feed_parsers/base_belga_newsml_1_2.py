@@ -8,6 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
+import itertools
 import html
 import datetime
 import superdesk
@@ -16,6 +17,8 @@ from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser
 from superdesk.io.iptc import subject_codes
 
+from .belga_newsml_mixin import BelgaNewsMLMixin
+
 
 class SkipItemException(Exception):
     """Raised when we current item must be skipped"""
@@ -23,7 +26,7 @@ class SkipItemException(Exception):
     pass
 
 
-class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
+class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
     """Base Feed Parser for NewsML format, specific AFP, ANP, .. Belga xml."""
 
     def parse(self, xml, provider=None):
@@ -85,8 +88,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
                     # Slugline and keywords is epmty
                     item['slugline'] = None
                     item['keywords'] = []
-                    # delete subject is duplicated
-                    item['subject'] = [dict(t) for t in {tuple(d.items()) for d in item['subject']}]
+                    # remove duplicated subject
+                    item['subject'] = [
+                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['name']))
+                    ]
                     item = self.populate_fields(item)
                 except SkipItemException:
                     continue
@@ -557,7 +562,10 @@ class BaseBelgaNewsMLOneFeedParser(NewsMLOneFeedParser):
             elements = location_el.findall('Property')
             for element in elements:
                 if element.attrib.get('FormalName', '') == 'Country':
-                    item['extra']['country'] = element.attrib.get('Value')
+                    country = element.attrib.get('Value')
+                    item['extra']['country'] = country
+                    # country keywords is CV
+                    item.setdefault('subject', []).extend(self._get_country(country))
                 if element.attrib.get('FormalName', '') == 'City':
                     item['extra']['city'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName', '') == 'CountryArea':

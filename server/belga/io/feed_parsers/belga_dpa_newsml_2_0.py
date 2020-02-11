@@ -14,17 +14,20 @@ import dateutil.parser
 from xml.etree import ElementTree
 
 from superdesk import etree as sd_etree
+from superdesk import get_resource_service
 from superdesk.io.feed_parsers.newsml_2_0 import NewsMLTwoFeedParser
 from superdesk.io.registry import register_feed_parser
 from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
+
+from .belga_newsml_mixin import BelgaNewsMLMixin
 
 logger = logging.getLogger(__name__)
 NS = {'xhtml': 'http://www.w3.org/1999/xhtml',
       'iptc': 'http://iptc.org/std/nar/2006-10-01/'}
 
 
-class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
+class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
     """
     Feed Parser which can parse DPA variant of NewsML
     """
@@ -169,6 +172,13 @@ class BelgaDPANewsMLTwoFeedParser(NewsMLTwoFeedParser):
                 name_elt = subject_elt.find(self.qname('name'))
                 if name_elt is not None and not item['extra'].get('country'):
                     item.setdefault('extra', {})['country'] = name_elt.text
+                # looking for ISO 3166-1 alpha-3 code
+                for i in subject_elt.findall(self.qname('sameAs')):
+                    code = i.find(self.qname('name')).text
+                    if len(code) == 3:
+                        country_keyword = self._get_country(code)
+                        item.setdefault('subject', []).extend(country_keyword)
+                        break
 
     def parse_authors(self, meta, item):
         item['authors'] = []
