@@ -11875,6 +11875,26 @@
         ]
     },
     {
+        "_id": "media-credit",
+        "display_name": "Credit",
+        "type": "manageable",
+        "service": {"all": 1},
+        "selection_type": "single selection",
+        "helper_text": "Use 'Belga On The Spot' when Belga made the picture, use 'Belga Handout' when a third party made the picture",
+        "items": [
+            {
+                "is_active": true,
+                "name": "Belga On The Spot",
+                "qcode": "Belga_on_the_spot"
+            },
+            {
+                "is_active": true,
+                "name": "Belga Handout",
+                "qcode": "Belga_handout"
+            }
+        ]
+    },
+    {
         "_id": "iptc_subject_codes",
         "display_name": "Subject",
         "type": "manageable",
@@ -12113,5 +12133,68 @@
             {"is_active": true, "name": "statistic", "qcode": "17004000", "parent": "17000000"},
             {"is_active": true, "name": "warning", "qcode": "17005000", "parent": "17000000"}
         ]
+    },
+    {
+        "_id": "people",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "People in the picture/video",
+        "description": "",
+        "helper_text": "",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
+    },
+    {
+        "_id": "event_description",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Event description",
+        "description": "",
+        "helper_text": "",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
+    },
+    {
+        "_id": "transcription",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Event description",
+        "description": "",
+        "helper_text": "",
+        "field_options": {
+            "single": false
+        },
+        "unique_field": "qcode"
     }
 ]
