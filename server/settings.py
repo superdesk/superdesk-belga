@@ -124,6 +124,9 @@ MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
 WORKFLOW_ALLOW_MULTIPLE_UPDATES = True
 
+CELERY_WORKER_LOG_FORMAT = '%(asctime)s %(message)s level=%(levelname)s process=%(processName)s'
+CELERY_WORKER_TASK_LOG_FORMAT = '{} task=%(task_name)s task_id=%(task_id)s'.format(CELERY_WORKER_LOG_FORMAT)
+
 with Path(__file__).parent.joinpath('picture-profile.json').open() as f:
     picture_profile = json.load(f)
 
