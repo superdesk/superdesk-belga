@@ -48,6 +48,8 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
             {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
             {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
+            {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
+             'translations': {'name': {'fr': 'France', 'nl': 'Frankrijk'}}},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
@@ -82,8 +84,8 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
         self.assertEqual(item["characteristics"], {'size_bytes': '1620', 'word_count': '269'})
         expected_body = \
             (
-
-                "\n<p>Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisie"
+                "\n<p><br/></p><p>   </p>"
+                "\n<p> Le procès de deux anciens fonctionnaires de la police aux frontières (PAF) de l'aéroport parisie"
                 "n Roissy-Charles de Gaulle, accusés d'avoir facilité l'importation de cocaïne de retour de Républiqu"
                 "e dominicaine, s'est ouvert lundi devant un tribunal à Paris. </p>\n<p>Clément Geisse, 42 ans, et Chr"
                 'istophe Peignelin, 56 ans, comparaissent notamment pour importation de stupéfiants en bande organisé'

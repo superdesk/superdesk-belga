@@ -70,7 +70,11 @@ class BelgaDPANewsMLTwoTestCase(BelgaTestCase):
             {'qcode': '11011000', 'name': 'Flüchtling, Asyl', 'scheme': 'iptc_subject_code'},
             {'name': 'NEWS/POLITICS', 'qcode': 'NEWS/POLITICS', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+            {'name': 'Greece', 'qcode': 'country_grc', 'scheme': 'country',
+             'translations': {'name': {'nl': 'Griekenland', 'fr': 'Grèce'}}},
+            {'name': 'Turkey', 'qcode': 'country_tur', 'scheme': 'country',
+             'translations': {'name': {'nl': 'Turkije', 'fr': 'Turquie'}}},
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["subject"], expected_subjects)

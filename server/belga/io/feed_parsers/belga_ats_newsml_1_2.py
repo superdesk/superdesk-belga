@@ -39,7 +39,7 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         super().parser_newsmanagement(item, manage_el)
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
         item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
-        # Credits is AFP
+        # Credits is ATS
         credit = {"name": 'ATS', "qcode": 'ATS', "scheme": "credits"}
         item.setdefault('subject', []).append(credit)
 
