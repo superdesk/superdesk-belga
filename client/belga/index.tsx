@@ -15,7 +15,7 @@ class UserAvatar extends React.Component<{user: IUser}> {
     render() {
         return (
             <div className="user-avatar" data-test-id="user-avatar">
-                <figure className="avatar avatar--no-margin initials">
+                <figure className="avatar avatar--no-margin initials" style={{float: 'none'}}>
                     {this.props.user.sign_off}
                 </figure>
             </div>
