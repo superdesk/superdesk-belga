@@ -4,7 +4,7 @@
             "sdWidth": "half",
             "order": 3,
             "section": "header",
-            "required": false
+            "required": true
         },
         "priority": null,
         "news_item_types": null,
@@ -21,7 +21,7 @@
         "services-products": {
             "order": 1,
             "section": "header",
-            "required": false
+            "required": true
         },
         "byline": null,
         "sms": null,
@@ -38,7 +38,7 @@
         "distribution": {
             "order": 2,
             "section": "header",
-            "required": false
+            "required": true
         },
         "belga-url": null,
         "credits": null,
@@ -110,7 +110,7 @@
         "language": {
             "enabled": true,
             "type": "string",
-            "required": false,
+            "required": true,
             "nullable": true
         },
         "priority": null,
@@ -137,6 +137,12 @@
         },
         "subject": {
             "type": "list",
+            "mandatory_in_list": {
+                "scheme": {
+                    "distribution": "distribution",
+                    "services-products": "services-products"
+                }
+            },
             "schema": {
                 "type": "dict",
                 "schema": {
