@@ -9,6 +9,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+from flask import json
 from pathlib import Path
 from superdesk.default_settings import INSTALLED_APPS, env
 
@@ -94,109 +95,6 @@ ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
 
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 
-# schema for images, video, audio
-SCHEMA = {
-    'picture': {
-        'headline': {'required': False},
-        'description_text': {'required': True},
-        'credit': {'required': False},
-        'belga-keywords': {'required': False},
-        'city': {'required': False},
-        'country': {'required': False},
-        'sign_off': {'required': False},
-    },
-    'video': {
-        'slugline': {'required': False},
-        'headline': {'required': False},
-        'description_text': {'required': True},
-        'media_type': {'required': False},
-        'credit': {'required': False},
-        'belga-keywords': {'required': False},
-        'city': {'required': False},
-        'country': {'required': False},
-        'sign_off': {'required': False},
-    },
-    'graphic': {
-        'headline': {'required': False},
-        'description_text': {'required': True},
-        'credit': {'required': False},
-        'keywords': {'required': False},
-        'city': {'required': False},
-        'country': {'required': False},
-        'sign_off': {'required': False},
-        'bcoverage': {'required': False},
-    },
-}
-
-# editor for images, video, audio
-EDITOR = {
-    'picture': {
-        'headline': {'order': 1, 'sdWidth': 'full'},
-        'description_text': {'order': 2, 'sdWidth': 'full', 'textarea': True},
-        'credit': {'order': 3, 'sdWidth': 'full'},
-        'belga-keywords': {'order': 4, 'sdWidth': 'full'},
-        'city': {'order': 5, 'sdWidth': 'full'},
-        'country': {'order': 6, 'sdWidth': 'full'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
-        'byline': {'displayOnMediaEditor': False},
-        'copyrightnotice': {'displayOnMediaEditor': False},
-        'source': {'displayOnMediaEditor': False},
-        'date': {'displayOnMediaEditor': False},
-        'time': {'displayOnMediaEditor': False},
-        'dimensions': {'displayOnMediaEditor': False},
-        'unique_id': {'displayOnMediaEditor': False},
-    },
-    'video': {
-        'slugline': {'order': 1, 'sdWidth': 'full'},
-        'headline': {'order': 2, 'sdWidth': 'full'},
-        'description_text': {'order': 3, 'sdWidth': 'full', 'textarea': True},
-        'media_type': {'order': 4, 'sdWidth': 'full'},
-        'credit': {'order': 5, 'sdWidth': 'full'},
-        'belga-keywords': {'order': 6, 'sdWidth': 'full'},
-        'city': {'order': 7, 'sdWidth': 'full'},
-        'country': {'order': 8, 'sdWidth': 'full'},
-        'sign_off': {'order': 9, 'sdWidth': 'half'},
-        'byline': {'displayOnMediaEditor': False},
-        'copyrightnotice': {'displayOnMediaEditor': False},
-        'source': {'displayOnMediaEditor': False},
-        'date': {'displayOnMediaEditor': False},
-        'time': {'displayOnMediaEditor': False},
-        'duration': {'displayOnMediaEditor': False},
-        'unique_id': {'displayOnMediaEditor': False}
-    },
-    'graphic': {
-        'headline': {'order': 1, 'sdWidth': 'full'},
-        'description_text': {'order': 2, 'sdWidth': 'full', 'textarea': True},
-        'credit': {'order': 3, 'sdWidth': 'full'},
-        'keywords': {'order': 4, 'sdWidth': 'full'},
-        'city': {'order': 5, 'sdWidth': 'full'},
-        'country': {'order': 6, 'sdWidth': 'full'},
-        'sign_off': {'order': 7, 'sdWidth': 'half'},
-        'byline': {'displayOnMediaEditor': False},
-        'copyrightnotice': {'displayOnMediaEditor': False},
-        'bcoverage': {'displayOnMediaEditor': False},
-    },
-}
-
-SCHEMA['audio'] = SCHEMA['video']
-EDITOR['audio'] = EDITOR['video']
-
-# media required fields for upload
-VALIDATOR_MEDIA_METADATA = {
-    "headline": {
-        "required": False,
-    },
-    "description_text": {
-        "required": True,
-    },
-    "byline": {
-        "required": False,
-    },
-    "copyrightnotice": {
-        "required": False,
-    },
-}
-
 # noqa
 PLANNING_EXPORT_BODY_TEMPLATE = '''
 {% for item in items %}
@@ -228,3 +126,18 @@ WORKFLOW_ALLOW_MULTIPLE_UPDATES = True
 
 CELERY_WORKER_LOG_FORMAT = '%(asctime)s %(message)s level=%(levelname)s process=%(processName)s'
 CELERY_WORKER_TASK_LOG_FORMAT = '{} task=%(task_name)s task_id=%(task_id)s'.format(CELERY_WORKER_LOG_FORMAT)
+
+with Path(__file__).parent.joinpath('picture-profile.json').open() as f:
+    picture_profile = json.load(f)
+
+EDITOR = {
+    'picture': picture_profile['editor'],
+    'video': picture_profile['editor'],
+}
+
+SCHEMA = {
+    'picture': picture_profile['schema'],
+    'video': picture_profile['schema'],
+}
+
+VALIDATOR_MEDIA_METADATA = {}

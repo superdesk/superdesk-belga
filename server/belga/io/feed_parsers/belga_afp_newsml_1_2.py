@@ -8,10 +8,8 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from lxml import etree
-
 from superdesk.io.registry import register_feed_parser
-
+from superdesk.text_utils import get_text
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 
 
@@ -51,10 +49,10 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             })
         # add content for headline when it is empty
         if item.get('urgency') in ('1', '2') and not item.get('headline'):
-            first_line = item.get('body_html', '').strip().split('\n')[0]
-            first_line = etree.fromstring(first_line).text
-            headline = 'URGENT: ' + first_line.strip()
-            item['headline'] = headline
+            for line in get_text(item.get('body_html', ''), lf_on_block=True).split('\n'):
+                if line.strip():
+                    item['headline'] = 'URGENT: ' + line.strip()
+                    break
         # Label must be empty
         item['subject'] = [i for i in item['subject'] if i.get('scheme') != 'label']
         # Credits is AFP
