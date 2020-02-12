@@ -2,20 +2,18 @@ language: python
 
 python: "3.5"
 
-sudo: false
-dist: trusty
-
 services:
     - mongodb
-    - elasticsearch
     - redis-server
 
 addons:
   apt:
     sources:
     - mongodb-3.0-precise
+    - elasticsearch-2.x
     packages:
     - mongodb-org-server
+    - elasticsearch
 
 cache:
   directories:
@@ -23,17 +21,20 @@ cache:
     - $HOME/.npm
 
 before_install:
+    - sudo apt-get purge elasticsearch
+    - sudo apt-get install -t stable elasticsearch
     - nvm install 6.10
     - nvm use 6.10
     - node --version
     - npm install -g npm@3
     - npm install -g grunt-cli
+    - sudo systemctl start elasticsearch
 
 install:
     - cd server && pip install -r dev-requirements.txt && cd ..
     - cd client && npm install && cd ..
 
 script:
-    - cd server && flake8 && cd ..
+    - cd server && flake8 && nosetests && cd ..
     - cd client && node --max_old_space_size=4098 ./node_modules/.bin/grunt build && cd ..
     - cd server && python manage.py users:create -u test -p test -e test@localhost --admin && cd ..

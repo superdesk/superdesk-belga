@@ -40,7 +40,9 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
             {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'EFE', 'qcode': 'EFE', 'scheme': 'credits'},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+            {'name': 'India', 'qcode': 'country_ind', 'scheme': 'country',
+             'translations': {'name': {'fr': 'Inde', 'nl': 'India'}}},
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["slugline"], None)
