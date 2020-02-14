@@ -29,7 +29,7 @@ www.itar-tass.com
 <DescriptiveMetada>
 <Language FormalName="en"/>
 <guid>16AAC34CE1C503AE4325838900396A95</guid>
-<Location HowPresent="Origin"><Property FormalName="City" Value="MOSCOW"/></Location></DescriptiveMetada>
+<Location HowPresent="Origin"><Property FormalName="Country" Value="RUS"/><Property FormalName="City" Value="MOSCOW"/></Location></DescriptiveMetada>
 <ContentItem><MediaType FormalName="ComplexData" /><MimeType FormalName="text/vnd.IPTC.NITF" />
 <DataContent><nitf><body><body.head><hedline>
 <hl1>Kremlin has 'negative reaction' to upcoming EU sanctions</hl1>
