@@ -150,3 +150,21 @@ class BelgaImageTestCase(unittest.TestCase):
                 ).hexdigest(),
             )
         )
+
+    def test_auth_search_criteria(self):
+        provider = BelgaImageSearchProvider({})
+        provider.provider['config'] = {'username': 'test'}
+        provider._id_token = "25222473406"
+        provider._auth_token = "339824739329"
+        nonce = "Thu, 13 Feb 2020 13:19:05 GMT"
+        url = (
+            "/searchImages?s=0&l=200&t="
+            "(test) AND (BELGAPORTRAIT OR HEADSHOT)&r=2&c=AFP,BELGA&h=news&l=BELGAPORTRAIT,HEADSHOT"
+        )
+        headers = provider.auth_headers(url, nonce=nonce)
+        self.assertEqual(
+            "test:30f35157e8da2015c069af6a814ab30ee0121b2ce22d4f060140e32cce013af6",
+            headers['X-Identification'])
+        self.assertEqual(
+            "test:da70d29ee4703023f27b6af5cbad9fb267de50e02332ec4359d860c5d5b98253",
+            headers['X-Authorization'])
