@@ -445,10 +445,31 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             )
             contentitem = SubElement(newscomponent_3_level, 'ContentItem')
             SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-            SubElement(contentitem, 'DataContent').text = picture.get(key)
+
+            if key == 'description_text' \
+                    and picture.get('extra', {}).get('people') \
+                    and picture.get('extra', {}).get('event_description'):
+                # format caption using `people` and `event_description` fields
+                data_content = '{} on the picture regarding {}'.format(
+                    picture['extra']['people'], picture['extra']['event_description']
+                )
+            elif key == 'description_text' \
+                    and picture.get('extra', {}).get('people') \
+                    and not picture.get('extra', {}).get('event_description'):
+                # format caption using `people` field
+                data_content = 'Picture showing {}'.format(picture['extra']['people'])
+            elif key == 'description_text' \
+                    and not picture.get('extra', {}).get('people') \
+                    and picture.get('extra', {}).get('event_description'):
+                # format caption using `event_description` field
+                data_content = 'Picture showing {}'.format(picture['extra']['event_description'])
+            else:
+                data_content = picture.get(key)
+
+            SubElement(contentitem, 'DataContent').text = data_content
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(picture[key])) if picture.get(key) else '0'
+            SubElement(characteristics, 'SizeInBytes').text = str(len(data_content)) if data_content else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # original, thumbnail, preview
@@ -596,10 +617,31 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             )
             contentitem = SubElement(newscomponent_3_level, 'ContentItem')
             SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-            SubElement(contentitem, 'DataContent').text = video.get(key)
+
+            if key == 'description_text' \
+                    and video.get('extra', {}).get('people') \
+                    and video.get('extra', {}).get('event_description'):
+                # format caption using `people` and `event_description` fields
+                data_content = '{} on the video regarding {}'.format(
+                    video['extra']['people'], video['extra']['event_description']
+                )
+            elif key == 'description_text' \
+                    and video.get('extra', {}).get('people') \
+                    and not video.get('extra', {}).get('event_description'):
+                # format caption using `people` field
+                data_content = 'Video showing {}'.format(video['extra']['people'])
+            elif key == 'description_text' \
+                    and not video.get('extra', {}).get('people') \
+                    and video.get('extra', {}).get('event_description'):
+                # format caption using `event_description` field
+                data_content = 'Video showing {}'.format(video['extra']['event_description'])
+            else:
+                data_content = video.get(key)
+
+            SubElement(contentitem, 'DataContent').text = data_content
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(video[key])) if video.get(key) else '0'
+            SubElement(characteristics, 'SizeInBytes').text = str(len(data_content)) if data_content else '0'
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # clip
