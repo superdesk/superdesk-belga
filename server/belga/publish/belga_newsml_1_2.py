@@ -453,14 +453,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 data_content = '{} on the picture regarding {}'.format(
                     picture['extra']['people'], picture['extra']['event_description']
                 )
-            elif key == 'description_text' \
-                    and picture.get('extra', {}).get('people') \
-                    and not picture.get('extra', {}).get('event_description'):
+            elif key == 'description_text' and picture.get('extra', {}).get('people'):
                 # format caption using `people` field
                 data_content = 'Picture showing {}'.format(picture['extra']['people'])
-            elif key == 'description_text' \
-                    and not picture.get('extra', {}).get('people') \
-                    and picture.get('extra', {}).get('event_description'):
+            elif key == 'description_text' and picture.get('extra', {}).get('event_description'):
                 # format caption using `event_description` field
                 data_content = 'Picture showing {}'.format(picture['extra']['event_description'])
             else:
@@ -625,14 +621,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 data_content = '{} on the video regarding {}'.format(
                     video['extra']['people'], video['extra']['event_description']
                 )
-            elif key == 'description_text' \
-                    and video.get('extra', {}).get('people') \
-                    and not video.get('extra', {}).get('event_description'):
+            elif key == 'description_text' and video.get('extra', {}).get('people'):
                 # format caption using `people` field
                 data_content = 'Video showing {}'.format(video['extra']['people'])
-            elif key == 'description_text' \
-                    and not video.get('extra', {}).get('people') \
-                    and video.get('extra', {}).get('event_description'):
+            elif key == 'description_text' and video.get('extra', {}).get('event_description'):
                 # format caption using `event_description` field
                 data_content = 'Video showing {}'.format(video['extra']['event_description'])
             else:
@@ -830,32 +822,32 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 creator, 'Party',
                 {'FormalName': author['initials'], 'Topic': author['role']}
             )
-        if 'contributor' in item.get('administrative', {}):
+        if item.get('administrative', {}).get('contributor'):
             SubElement(
                 SubElement(administrative_metadata, 'Contributor'), 'Party',
                 {'FormalName': item['administrative']['contributor']}
             )
-        if 'validator' in item.get('administrative', {}):
+        if item.get('administrative', {}).get('validator'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'Validator', 'Value': item['administrative']['validator']}
             )
-        if 'validation_date' in item.get('administrative', {}):
+        if item.get('administrative', {}).get('validation_date'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'ValidationDate', 'Value': item['administrative']['validation_date']}
             )
-        if 'foreign_id' in item.get('administrative', {}):
+        if item.get('administrative', {}).get('foreign_id'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'ForeignId', 'Value': item['administrative']['foreign_id']}
             )
-        if 'priority' in item:
+        if item.get('priority'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'Priority', 'Value': str(item['priority'])}
             )
-        if 'slugline' in item:
+        if item.get('slugline'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'Topic', 'Value': item['slugline']}
@@ -886,7 +878,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     {'FormalName': 'NewsProduct', 'Value': news_product_value}
                 )
 
-        if 'source' in item:
+        if item.get('source'):
             SubElement(
                 SubElement(administrative_metadata, 'Source'),
                 'Party',
