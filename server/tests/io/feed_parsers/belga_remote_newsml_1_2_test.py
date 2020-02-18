@@ -35,7 +35,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["provider_id"], "belga.be")
         self.assertEqual(item["date_id"], "20190603T160217")
         self.assertEqual(item["item_id"], "0")
-        self.assertEqual(item["version"], 0)
+        self.assertEqual(item["version"], 1)
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
         self.assertEqual(item["subject"], [{'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_item_types'},
                                            {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products',
