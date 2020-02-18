@@ -223,7 +223,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             element = newsident_el.find('RevisionId')
             if element is not None and element.text:
                 # version
-                identification['version'] = int(element.text)
+                version = int(element.text)
+                if version == 0:
+                    version = 1
+                identification['version'] = version
 
             element = newsident_el.find('PublicIdentifier')
             if element is not None:
