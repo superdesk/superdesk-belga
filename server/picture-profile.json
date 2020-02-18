@@ -10,7 +10,6 @@
         "news_item_types": null,
         "headline": {
             "order": 5,
-            "required": false,
             "formatOptions": [],
             "section": "header"
         },
@@ -87,7 +86,7 @@
             "order": 12,
             "section": "header"
         },
-        "countries": {
+        "country": {
             "order": 13,
             "section": "header"
         },
@@ -100,7 +99,7 @@
             "section": "header"
         },
         "transcription": {
-            "order": 10,
+            "order": 16,
             "sdWidth": "full",
             "textarea": true,
             "section": "content"
@@ -118,7 +117,7 @@
         "headline": {
             "nullable": true,
             "type": "string",
-            "required": true
+            "required": false
         },
         "usageterms": null,
         "anpa_take_key": null,
@@ -170,7 +169,9 @@
         "sms": null,
         "attachments": null,
         "belga-url": null,
-        "keywords": null,
+        "keywords": {
+            "type": "list"
+        },
         "body_html": null,
         "slugline": {
             "nullable": true,
