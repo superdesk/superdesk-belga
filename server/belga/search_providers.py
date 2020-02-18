@@ -57,10 +57,11 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         if self.provider.get('config') and self.provider['config'].get('username'):
             self.auth()
 
-    def auth_headers(self, url, secret=None):
+    def auth_headers(self, url, secret=None, nonce=None):
         if not secret and not self._id_token:
             return {}
-        nonce = uuid.uuid4().hex
+        if not nonce:
+            nonce = uuid.uuid4().hex
         return {
             'X-Date': nonce,
             'X-Identification': '{}:{}'.format(
@@ -121,7 +122,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 
     def api_get(self, endpoint, params):
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
-        headers = self.auth_headers(url)
+        headers = self.auth_headers(url.replace('%2C', ','))  # decode spaces
         resp = self.session.get(self.url(url), headers=headers)
         resp.raise_for_status()
         return resp.json()

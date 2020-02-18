@@ -35,7 +35,7 @@ class BelgaTipNewsMLOneTestCase(TestCase):
         self.assertEqual(item["provider_id"], "belga.be")
         self.assertEqual(item["date_id"], "20190928T074132")
         self.assertEqual(item["item_id"], None)
-        self.assertEqual(item["version"], 0)
+        self.assertEqual(item["version"], 1)
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
         self.assertEqual(
             item["subject"], [
