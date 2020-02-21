@@ -1,4 +1,5 @@
 
+import logging
 import superdesk
 
 from flask import current_app as app
@@ -7,6 +8,9 @@ from superdesk.metadata.item import CONTENT_STATE, PUBLISH_SCHEDULE, SCHEDULE_SE
 from superdesk.macros.internal_destination_auto_publish import internal_destination_auto_publish
 from superdesk.editor_utils import replace_text, filter_blocks
 from apps.archive.common import update_schedule_settings
+from superdesk.errors import StopDuplication, ValidationError
+from superdesk.text_utils import get_word_count
+from superdesk.utc import utcnow, utc_to_local
 
 
 CREDITS = 'credits'
@@ -21,9 +25,14 @@ PRODUCT_MAPPING = {
     'NEWS/ECONOMY': ('/ECO', ),
 }
 
+TEXT_PROFILE = 'TEXT'
+BRIEF_PROFILE = 'Brief'
 
-def _get_brief_profile():
-    profile = superdesk.get_resource_service('content_types').find_one(req=None, label='Brief')
+logger = logging.getLogger(__name__)
+
+
+def _get_profile_id(label):
+    profile = superdesk.get_resource_service('content_types').find_one(req=None, label=label)
     if profile:
         return profile['_id']
     return None
@@ -90,9 +99,22 @@ def _fix_body_html(item):
 
 
 def brief_internal_routing(item: dict, **kwargs):
+    guid = item.get('guid', 'unknown')
+    logger.info('macro started item=%s', guid)
+
+    try:
+        assert str(item['profile']) == str(_get_profile_id(TEXT_PROFILE)), 'profile is not text'
+        assert get_word_count(item['body_html']) < 301, 'body is too long'
+    except AssertionError as err:
+        logger.info('macro stop on assert item=%s error=%s', guid, err)
+        raise StopDuplication()
+    except KeyError as err:
+        logger.error(err)
+        raise StopDuplication()
+
     item.setdefault('subject', [])
     item['urgency'] = 2
-    item['profile'] = _get_brief_profile()
+    item['profile'] = _get_profile_id(BRIEF_PROFILE)
     item['subject'] = _get_product_subject(_get_brief_subject(item.get('subject')))
     item['status'] = CONTENT_STATE.SCHEDULED
     item['operation'] = 'publish'
@@ -101,12 +123,30 @@ def brief_internal_routing(item: dict, **kwargs):
     _fix_body_html(item)
 
     # schedule +30m
-    item[PUBLISH_SCHEDULE] = item['versioncreated'] + timedelta(minutes=30)
-    item[SCHEDULE_SETTINGS] = {'time_zone': None}
+    UTC_FIELD = 'utc_{}'.format(PUBLISH_SCHEDULE)
+    try:
+        published_at = item[SCHEDULE_SETTINGS][UTC_FIELD]
+    except KeyError:
+        published_at = utcnow()
+    item[SCHEDULE_SETTINGS] = {
+        'time_zone': 'Europe/Brussels',
+    }
+    item[PUBLISH_SCHEDULE] = utc_to_local(item[SCHEDULE_SETTINGS]['time_zone'], published_at + timedelta(minutes=30))
     update_schedule_settings(item, PUBLISH_SCHEDULE, item[PUBLISH_SCHEDULE])
+    item[PUBLISH_SCHEDULE] = item[PUBLISH_SCHEDULE].replace(tzinfo=None)
 
     # publish
-    internal_destination_auto_publish(item)
+    try:
+        internal_destination_auto_publish(item)
+    except StopDuplication:
+        logger.info('macro done item=%s', guid)
+    except ValidationError as err:
+        logger.error('validation error when creating brief item=%s error=%s', guid, err)
+    except Exception as err:
+        logger.exception(err)
+
+    # avoid another item to be created
+    raise StopDuplication()
 
 
 name = 'Brief internal routing'
