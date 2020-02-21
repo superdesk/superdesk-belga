@@ -26,8 +26,14 @@ const extension: IExtension = {
                     CVS.map((id) => superdesk.entities.vocabulary.getVocabulary(id)),
                 ).then((cvItems) => {
                     const subject: Array<ISubject> = [];
+                    const nextItem = Object.assign({}, item);
 
                     CVS.forEach((scheme, index) => {
+                        if (cvItems[index] == null) {
+                            console.warn('missing CV', scheme);
+                            return;
+                        }
+
                         cvItems[index]
                             .filter((subj) => DEFAULT_SUBJECT[scheme].includes(subj.qcode.toUpperCase()))
                             .forEach((subj) => {
@@ -40,7 +46,7 @@ const extension: IExtension = {
                             });
                     });
 
-                    Object.assign(item, {
+                    Object.assign(nextItem, {
                         language: 'nl',
                         source: 'Belga',
                         subject: subject,
@@ -61,7 +67,7 @@ const extension: IExtension = {
                             }
                         }
 
-                        Object.assign(item, {
+                        Object.assign(nextItem, {
                             language: parent.language,
                             slugline: parent.slugline,
                             headline: parent.headline,
@@ -70,7 +76,7 @@ const extension: IExtension = {
                         });
                     }
 
-                    return item;
+                    return nextItem;
                 }),
             },
         };
