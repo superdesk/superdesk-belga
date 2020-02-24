@@ -832,7 +832,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(administrative_metadata, 'Contributor'), 'Party',
                 {'FormalName': item['administrative']['contributor']}
             )
-        if item.get('administrative', {}).get('validator'):
+        # initials of user who published an item is `Validator`
+        if item.get('version_creator'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {
+                    'FormalName': 'Validator',
+                    'Value': self._get_author_info(str(item['version_creator']))['initials']
+                }
+            )
+        elif item.get('administrative', {}).get('validator'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'Validator', 'Value': item['administrative']['validator']}

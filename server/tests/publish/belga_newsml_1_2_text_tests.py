@@ -1120,7 +1120,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'John'}
         )
         expected_attribs = (
-            {'FormalName': 'Validator', 'Value': 'John the validator'},
+            {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '6'},
@@ -1300,7 +1300,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'John'}
         )
         expected_attribs = (
-            {'FormalName': 'Validator', 'Value': 'John the validator'},
+            {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '6'},
