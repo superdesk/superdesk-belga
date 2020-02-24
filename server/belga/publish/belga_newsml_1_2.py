@@ -42,7 +42,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
     CP_NAME_ROLE_MAP = {
-        'belga_text': 'Text'
+        'belga_text': 'Belga text'
     }
 
     def format(self, article, subscriber, codes=None):
@@ -228,7 +228,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if item.get('profile') in self.CP_NAME_ROLE_MAP:
             role_formal_name = self.CP_NAME_ROLE_MAP[item.get('profile')]
         else:
-            role_formal_name = self._get_content_profile_name()
+            role_formal_name = self._get_content_profile_name(item)
         SubElement(newscomponent_2_level, 'Role', {'FormalName': role_formal_name})
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=item)
@@ -986,12 +986,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         else:
             return _datetime.strftime(self.DATETIME_FORMAT)
 
-    def _get_content_profile_name(self):
+    def _get_content_profile_name(self, item):
         req = ParsedRequest()
         req.args = {}
         req.projection = '{"label": 1}'
         content_type = self.content_types_service.find_one(
             req=req,
-            _id=self._item.get('profile')
+            _id=item.get('profile')
         )
         return content_type['label']
