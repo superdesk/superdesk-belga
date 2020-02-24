@@ -67,9 +67,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._newsml = etree.Element('NewsML')
             self._item = article
             self._items_chain = self.arhive_service.get_items_chain(self._item)
-            self._now = utcnow()
-            self._string_now = self._now.strftime(self.DATETIME_FORMAT)
             self._duid = self._item[GUID_FIELD]
+            self._now = utcnow()
+            # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
+            # Theoretically it may happen
+            if self._item.get('firstpublished'):
+                self._string_now = self._get_formatted_datetime(self._item['firstpublished'])
+            else:
+                self._string_now = self._now.strftime(self.DATETIME_FORMAT)
 
             self._format_catalog()
             self._format_newsenvelope()
@@ -832,11 +837,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Validator', 'Value': item['administrative']['validator']}
             )
-        if item.get('administrative', {}).get('validation_date'):
-            SubElement(
-                administrative_metadata, 'Property',
-                {'FormalName': 'ValidationDate', 'Value': item['administrative']['validation_date']}
-            )
+        # SDBELGA-322
+        validation_date = self._string_now
+        if item.get('firstpublished'):
+            validation_date = self._get_formatted_datetime(item['firstpublished'])
+        elif item.get('administrative', {}).get('validation_date'):
+            validation_date = item['administrative']['validation_date']
+        SubElement(
+            administrative_metadata, 'Property',
+            {'FormalName': 'ValidationDate', 'Value': validation_date}
+        )
         if item.get('administrative', {}).get('foreign_id'):
             SubElement(
                 administrative_metadata, 'Property',
