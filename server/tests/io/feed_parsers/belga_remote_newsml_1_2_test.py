@@ -64,7 +64,28 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["extra"], {'city': 'ANTWERPEN', 'country': 'BELGIUM'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(
+            item['abstract'],
+            'In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en Sla'
+            'chthuislaan in juli en augustus volledig afgesloten worden voor nutswerken. Er w'
+            'orden waterleidingen en gasleidingen onder het kruispunt geplaatst en de afwater'
+            'ing van de Antwerpse ring en de Schijn-Scheldeverbinding krijgen nieuwe kokers, '
+            'zo meldt de Beheersmaatschappij Antwerpen Mobiel (BAM) vrijdag. Na die werken wo'
+            'rdt bovendien ook het kruispunt zelf heraangelegd. De BAM hoopt de hinder zoveel'
+            ' mogelijk te beperken door de werken in de zomermaanden uit te voeren, wanneer e'
+            'r sowieso minder verkeer is en bovendien de naburige concertzalen geen evenement'
+            'en organiseren.'
+        )
+        self.assertEqual(
             item['body_html'],
+            '<p>In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en '
+            'Slachthuislaan in juli en augustus volledig afgesloten worden voor nutswerken. E'
+            'r worden waterleidingen en gasleidingen onder het kruispunt geplaatst en de afwa'
+            'tering van de Antwerpse ring en de Schijn-Scheldeverbinding krijgen nieuwe koker'
+            's, zo meldt de Beheersmaatschappij Antwerpen Mobiel (BAM) vrijdag. Na die werken'
+            ' wordt bovendien ook het kruispunt zelf heraangelegd. De BAM hoopt de hinder zov'
+            'eel mogelijk te beperken door de werken in de zomermaanden uit te voeren, wannee'
+            'r er sowieso minder verkeer is en bovendien de naburige concertzalen geen evenem'
+            'enten organiseren.</p>'
             '<p>Auto&#x27;s, vrachtverkeer en het openbaar vervoer zullen het kruispunt twee '
             'maanden lang niet kunnen passeren, fietsers en voetgangers wel via een gemengde '
             'doorgang langs de werf. Lokaal verkeer kan de Noordersingel en Slachthuislaan in'

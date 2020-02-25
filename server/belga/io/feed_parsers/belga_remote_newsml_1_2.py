@@ -100,6 +100,9 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
                 # NewsComponent
                 try:
                     self.parser_newscomponent(item, news_component_2)
+                    if item.get('abstract'):
+                        abstract = '<p>' + item['abstract'] + '</p>'
+                        item['body_html'] = abstract + item['body_html']
                 except SkipItemException:
                     continue
 
