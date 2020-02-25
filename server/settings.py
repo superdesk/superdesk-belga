@@ -134,11 +134,27 @@ with Path(__file__).parent.joinpath('picture-profile.json').open() as f:
 EDITOR = {
     'picture': picture_profile['editor'],
     'video': picture_profile['editor'],
+    'graphic': picture_profile['editor'],
 }
+
+EDITOR['graphic'].update({
+    'bcoverage': {
+        'order': 5,
+        'section': 'content',
+    },
+})
 
 SCHEMA = {
     'picture': picture_profile['schema'],
     'video': picture_profile['schema'],
+    'graphic': picture_profile['schema'],
 }
 
+SCHEMA['graphic'].update({
+    'bcoverage': {
+        'type': 'string',
+    },
+})
+
 VALIDATOR_MEDIA_METADATA = {}
+ALLOW_UPDATING_SCHEDULED_ITEMS = True
