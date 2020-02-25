@@ -42,7 +42,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
     CP_NAME_ROLE_MAP = {
-        'belga_text': 'Text'
+        'belga_text': 'Belga text'
     }
 
     def format(self, article, subscriber, codes=None):
@@ -67,9 +67,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._newsml = etree.Element('NewsML')
             self._item = article
             self._items_chain = self.arhive_service.get_items_chain(self._item)
-            self._now = utcnow()
-            self._string_now = self._now.strftime(self.DATETIME_FORMAT)
             self._duid = self._item[GUID_FIELD]
+            self._now = utcnow()
+            # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
+            # Theoretically it may happen
+            if self._item.get('firstpublished'):
+                self._string_now = self._get_formatted_datetime(self._item['firstpublished'])
+            else:
+                self._string_now = self._now.strftime(self.DATETIME_FORMAT)
 
             self._format_catalog()
             self._format_newsenvelope()
@@ -228,7 +233,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if item.get('profile') in self.CP_NAME_ROLE_MAP:
             role_formal_name = self.CP_NAME_ROLE_MAP[item.get('profile')]
         else:
-            role_formal_name = self._get_content_profile_name()
+            role_formal_name = self._get_content_profile_name(item)
         SubElement(newscomponent_2_level, 'Role', {'FormalName': role_formal_name})
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=item)
@@ -827,16 +832,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(administrative_metadata, 'Contributor'), 'Party',
                 {'FormalName': item['administrative']['contributor']}
             )
-        if item.get('administrative', {}).get('validator'):
+        # initials of user who published an item is `Validator`
+        if item.get('version_creator'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {
+                    'FormalName': 'Validator',
+                    'Value': self._get_author_info(str(item['version_creator']))['initials']
+                }
+            )
+        elif item.get('administrative', {}).get('validator'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'Validator', 'Value': item['administrative']['validator']}
             )
-        if item.get('administrative', {}).get('validation_date'):
-            SubElement(
-                administrative_metadata, 'Property',
-                {'FormalName': 'ValidationDate', 'Value': item['administrative']['validation_date']}
-            )
+        # SDBELGA-322
+        validation_date = self._string_now
+        if item.get('firstpublished'):
+            validation_date = self._get_formatted_datetime(item['firstpublished'])
+        elif item.get('administrative', {}).get('validation_date'):
+            validation_date = item['administrative']['validation_date']
+        SubElement(
+            administrative_metadata, 'Property',
+            {'FormalName': 'ValidationDate', 'Value': validation_date}
+        )
         if item.get('administrative', {}).get('foreign_id'):
             SubElement(
                 administrative_metadata, 'Property',
@@ -986,12 +1005,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         else:
             return _datetime.strftime(self.DATETIME_FORMAT)
 
-    def _get_content_profile_name(self):
+    def _get_content_profile_name(self, item):
         req = ParsedRequest()
         req.args = {}
         req.projection = '{"label": 1}'
         content_type = self.content_types_service.find_one(
             req=req,
-            _id=self._item.get('profile')
+            _id=item.get('profile')
         )
         return content_type['label']
