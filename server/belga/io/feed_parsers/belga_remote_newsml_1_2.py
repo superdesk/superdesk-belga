@@ -8,10 +8,23 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from .belga_newsml_1_2 import BelgaNewsMLOneFeedParser, SkipItemException
 import hashlib
+import logging
+import os
+from io import BytesIO
+from tempfile import gettempdir
 from xml.etree import ElementTree
+
+from flask import current_app as app
+
+from superdesk import get_resource_service
+from superdesk.ftp import ftp_connect
 from superdesk.io.registry import register_feed_parser
+from superdesk.media.media_operations import process_file_from_stream
+
+from .belga_newsml_1_2 import BelgaNewsMLOneFeedParser, SkipItemException
+
+logger = logging.getLogger(__name__)
 
 
 class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
@@ -22,6 +35,14 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
     label = 'Belga Remote News ML 1.2 Parser'
 
     SUPPORTED_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
+
+    def __init__(self):
+        super().__init__()
+        self.provider = {}
+
+    def parse(self, xml, provider=None):
+        self.provider = provider
+        return super().parse(xml, provider)
 
     def parser_newsitem(self, newsitem_el):
         """
@@ -64,6 +85,11 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
                         "scheme": "genre"
                     })
 
+            # parse attachment
+            self._item_seed.update(
+                self.parse_attachments(news_component_1)
+            )
+
             # NewsComponent 2nd level
             # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
             for news_component_2 in news_component_1.findall('NewsComponent'):
@@ -81,6 +107,110 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
                 self.populate_fields(item)
 
                 self._items.append(item)
+
+    def parse_attachments(self, news_component_1):
+        attachments = []
+        for news_component_2 in news_component_1.findall('NewsComponent'):
+            role_name = self._get_role(news_component_2)
+            if role_name and role_name.upper() not in self.SUPPORTED_ASSET_TYPES:
+                for newscomponent in news_component_2.findall('NewsComponent'):
+                    component_role = self._get_role(newscomponent)
+                    if component_role and component_role not in ('Caption', 'Title'):
+                        attachment = self.parse_attachment(newscomponent)
+                        if attachment:
+                            attachments.append(attachment)
+                            # remove element to avoid parsing it as news item
+                            news_component_1.remove(news_component_2)
+
+        if attachments:
+            return {
+                'attachments': attachments,
+                'ednote': 'The story has {} attachment(s)'.format(len(attachments)),
+            }
+        return {}
+
+    def parse_attachment(self, newscomponent_el):
+        """
+        Parse attachment component, save it to storage and return attachment id
+
+        <NewsComponent Duid="0" xml:lang="nl">
+            <Role FormalName="Image"/>
+            <DescriptiveMetadata>
+                <Property FormalName="ComponentClass" Value="Image"/>
+            </DescriptiveMetadata>
+            <ContentItem Href="IMG_0182.jpg">
+                <Format FormalName="Jpeg"/>
+                <Characteristics>
+                    <SizeInBytes>2267043</SizeInBytes>
+                    <Property FormalName="Width" Value="4032"/>
+                    <Property FormalName="Height" Value="3024"/>
+                </Characteristics>
+            </ContentItem>
+        </NewsComponent>
+        """
+        content_item = newscomponent_el.find('ContentItem')
+        if content_item is None:
+            return {}
+
+        # avoid re-adding media even item is ingested
+        guid = hashlib.md5(ElementTree.tostring(content_item)).hexdigest()
+        attachment_service = get_resource_service('attachments')
+        old_attachment = attachment_service.find_one(req=None, guid=guid)
+        if old_attachment:
+            return {'attachment': old_attachment['_id']}
+
+        filename = content_item.attrib.get('Href')
+        if filename is None:
+            return {}
+
+        format_name = None
+        format_el = content_item.find('Format')
+        if format_el is not None:
+            format_name = format_el.attrib.get('FormalName')
+
+        content = self._get_file(filename)
+        _, content_type, metadata = process_file_from_stream(content, 'application/' + format_name)
+        content.seek(0)
+        media_id = app.media.put(content,
+                                 filename=filename,
+                                 content_type=content_type,
+                                 metadata=metadata,
+                                 resource='attachments')
+        try:
+            ids = attachment_service.post([{
+                'media': media_id,
+                'filename': filename,
+                'title': filename,
+                'description': 'belga remote attachment',
+                'guid': guid,
+            }])
+            return {'attachment': next(iter(ids), None)}
+        except Exception as ex:
+            app.media.delete(media_id)
+        return {}
+
+    def _get_role(self, newscomponent_el):
+        role = newscomponent_el.find('Role')
+        if role is not None:
+            return role.attrib.get('FormalName')
+
+    def _get_file(self, filename):
+        config = self.provider.get('config', {})
+        path = config.get('path', '')
+        file_path = os.path.join(path, filename)
+        try:
+            if self.provider.get('feeding_service') == 'ftp':
+                file_path = self._download_file(filename, file_path, config)
+            with open(file_path, 'rb') as f:
+                return BytesIO(f.read())
+        except FileNotFoundError as e:
+            logger.warning('File %s not found', file_path)
+
+    def _download_file(self, filename, file_path, config):
+        tmp_dir = os.path.join(gettempdir(), filename)
+        with ftp_connect(config) as ftp, open(tmp_dir, 'wb') as f:
+            ftp.retrbinary('RETR ' + file_path, f.write)
+            return tmp_dir
 
 
 register_feed_parser(BelgaRemoteNewsMLOneFeedParser.NAME, BelgaRemoteNewsMLOneFeedParser())

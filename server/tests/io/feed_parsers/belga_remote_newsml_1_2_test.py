@@ -10,6 +10,8 @@
 
 
 import os
+from unittest.mock import MagicMock, patch
+from superdesk import get_resource_service
 from lxml import etree
 from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_remote_newsml_1_2 import BelgaRemoteNewsMLOneFeedParser
@@ -21,8 +23,11 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
-        provider = {'name': 'test'}
+        provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
         parser = BelgaRemoteNewsMLOneFeedParser()
+        attachment_service = get_resource_service('attachments')
+        attachment_service.post = MagicMock()
+        attachment_service.post.return_value = ['abc']
         with open(fixture, 'rb') as f:
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
@@ -44,7 +49,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["guid"], "4717cf36012e91f8a7012ba0e0420848")
+        self.assertEqual(item["guid"], "d7131990f7f288f4ca0981d2d7530b64")
         self.assertEqual(item["language"], "nl")
         self.assertEqual(item["byline"], "BELGA")
         self.assertEqual(item["headline"], "Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten")
@@ -74,3 +79,6 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
             ' dat afgescheiden is van de rijweg door een groenstrook of vergroende parkeerstr'
             'ook. Ook de kruispunten worden veiliger gemaakt.</p>'
         )
+
+        self.assertEqual(item['attachments'], [{'attachment': 'abc'}])
+        self.assertEqual(item['ednote'], 'The story has 1 attachment(s)')

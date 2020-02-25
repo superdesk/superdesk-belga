@@ -128,6 +128,102 @@
                     </ContentItem>
                 </NewsComponent>
             </NewsComponent>
+            <NewsComponent Duid="0" xml:lang="nl">
+                <Role FormalName="Picture"/>
+                <NewsLines>
+                    <DateLine></DateLine>
+                    <CreditLine>BELGA</CreditLine>
+                    <HeadLine>Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten</HeadLine>
+                    <CopyrightLine>Belga</CopyrightLine>
+                    <NewsLine>
+                        <NewsLineType FormalName="1"/>
+                        <NewsLineText/>
+                    </NewsLine>
+                    <KeywordLine>LANDBOUW</KeywordLine>
+                    <KeywordLine>EUROPA</KeywordLine>
+                    <KeywordLine>BHG</KeywordLine>
+                    <KeywordLine>BRIEF</KeywordLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName=""/>
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="COR 360" Topic="CORRESPONDENT"/>
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA"/>
+                    </Source>
+                    <Contributor>
+                        <Party FormalName=""/>
+                    </Contributor>
+                    <Property FormalName="Validator" Value=""/>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="BIN"/>
+                        <Property FormalName="NewsProduct" Value="ALG"/>
+                    </Property>
+                    <Property FormalName="NewsObjectId" Value="0"/>
+                    <Property FormalName="ForeignId" Value="0"/>
+                    <Property FormalName="Priority" Value="3"/>
+                    <Property FormalName="AverageWordCount" Value="0"/>
+                    <Property FormalName="MaxWordCount" Value="0"/>
+                    <Property FormalName="Label" Value="S1"/>
+                    <Property FormalName="Topic" Value=""/>
+                </AdministrativeMetadata>
+                <DescriptiveMetadata DateAndTime="20190603T160217">
+                    <SubjectCode/>
+                    <Location>
+                        <Property FormalName="City" Value="ANTWERPEN"/>
+                        <Property FormalName="Country" Value="BELGIUM"/>
+                        <Property FormalName="CountryArea" Value=""/>
+                        <Property FormalName="SubLocation" Value=""/>
+                        <Property FormalName="WorldRegion" Value=""/>
+                    </Location>
+                </DescriptiveMetadata>
+                <NewsComponent Duid="0" xml:lang="nl">
+                    <Role FormalName="Title"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>64</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="0" xml:lang="nl">
+                    <Role FormalName="Caption"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent></DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="0" xml:lang="nl">
+                    <Role FormalName="Image"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Image"/>
+                    </DescriptiveMetadata>
+                    <!-- From Unsplash. LICENSE: https://unsplash.com/license -->
+                    <ContentItem Href="belga_remote_newsml_1_2.jpeg">
+                        <Format FormalName="Jpeg"/>
+                        <Characteristics>
+                            <SizeInBytes>2727052</SizeInBytes>
+                            <Property FormalName="Width" Value="200"/>
+                            <Property FormalName="Height" Value="200"/>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
         </NewsComponent>
     </NewsItem>
 </NewsML>
