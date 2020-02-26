@@ -12,7 +12,7 @@ class UnmarkFromUserTestCase(unittest.TestCase):
         assert hasattr(macro, 'callback')
 
     def test_callback(self):
-        item = {'marked_for_user': 'foo'}
+        item = {'marked_for_user': 'foo', 'guid': 'test'}
         orig = item.copy()
         item = macro.callback(item)
         self.assertIsNone(item['marked_for_user'])
