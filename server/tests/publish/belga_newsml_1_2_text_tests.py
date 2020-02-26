@@ -622,7 +622,9 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'name': 'BIN', 'qcode': 'BIN', 'parent': None, 'scheme': 'services-products'},
             {'name': 'NEWS/ENTERTAINMENT', 'qcode': 'NEWS/ENTERTAINMENT', 'parent': 'NEWS',
              'scheme': 'services-products'},
-            {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'}
+            {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'}
         ],
         'word_count': 28,
         'byline': 'BELGA',
@@ -1081,7 +1083,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'DPA/ANP'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1273,7 +1275,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'DPA/ANP'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1773,9 +1775,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
-        self.assertEqual(
-            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BIENVENIDO VELASCO'
+        self.assertIsNone(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
