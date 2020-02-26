@@ -12,6 +12,7 @@ import hashlib
 import logging
 import os
 from datetime import datetime
+from ftplib import error_perm
 from io import BytesIO
 from tempfile import gettempdir
 from xml.etree import ElementTree
@@ -174,6 +175,8 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             format_name = format_el.attrib.get('FormalName')
 
         content = self._get_file(filename)
+        if not content:
+            return {}
         _, content_type, metadata = process_file_from_stream(content, 'application/' + format_name)
         content.seek(0)
         media_id = app.media.put(content,
@@ -211,8 +214,10 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
                 content = f.read()
                 self._move_file(file_dir, filename, config)
                 return BytesIO(content)
-        except FileNotFoundError as e:
+        except (FileNotFoundError, error_perm) as e:
             logger.warning('File %s not found', file_path)
+        except Exception as e:
+            logger.error(e)
 
     def _download_file(self, filename, file_path, config):
         tmp_dir = os.path.join(gettempdir(), filename)
