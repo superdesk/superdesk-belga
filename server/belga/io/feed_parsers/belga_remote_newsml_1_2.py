@@ -11,6 +11,7 @@
 import hashlib
 import logging
 import os
+from datetime import datetime
 from io import BytesIO
 from tempfile import gettempdir
 from xml.etree import ElementTree
@@ -19,6 +20,7 @@ from flask import current_app as app
 
 from superdesk import get_resource_service
 from superdesk.ftp import ftp_connect
+from superdesk.io.feeding_services import FileFeedingService, FTPFeedingService
 from superdesk.io.registry import register_feed_parser
 from superdesk.media.media_operations import process_file_from_stream
 
@@ -200,12 +202,15 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
     def _get_file(self, filename):
         config = self.provider.get('config', {})
         path = config.get('path', '')
-        file_path = os.path.join(path, filename)
+        file_dir = os.path.join(path, 'attachments')
+        file_path = os.path.join(file_dir, filename)
         try:
             if self.provider.get('feeding_service') == 'ftp':
                 file_path = self._download_file(filename, file_path, config)
             with open(file_path, 'rb') as f:
-                return BytesIO(f.read())
+                content = f.read()
+                self._move_file(file_dir, filename, config)
+                return BytesIO(content)
         except FileNotFoundError as e:
             logger.warning('File %s not found', file_path)
 
@@ -214,6 +219,22 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
         with ftp_connect(config) as ftp, open(tmp_dir, 'wb') as f:
             ftp.retrbinary('RETR ' + file_path, f.write)
             return tmp_dir
+
+    def _move_file(self, file_dir, filename, config):
+        if self.provider.get('feeding_service') == 'ftp':
+            with ftp_connect(config) as ftp:
+                if config.get('move', False):
+                    ftp_service = FTPFeedingService()
+                    move_path, _ = ftp_service._create_move_folders(config, ftp)
+                    ftp_service._move(
+                        ftp, os.path.join(file_dir, filename), os.path.join(move_path, filename),
+                        datetime.now(), False
+                    )
+        else:
+            file_service = FileFeedingService()
+            # move processed attachments to the same folder with XML
+            file_dir = os.path.dirname(file_dir)
+            file_service.move_file(file_dir, '/attachments/' + filename, self.provider)
 
 
 register_feed_parser(BelgaRemoteNewsMLOneFeedParser.NAME, BelgaRemoteNewsMLOneFeedParser())

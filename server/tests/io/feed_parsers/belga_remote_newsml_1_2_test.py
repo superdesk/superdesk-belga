@@ -10,7 +10,8 @@
 
 
 import os
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
+from io import BytesIO
 from superdesk import get_resource_service
 from lxml import etree
 from superdesk.tests import TestCase
@@ -26,9 +27,10 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
         parser = BelgaRemoteNewsMLOneFeedParser()
         attachment_service = get_resource_service('attachments')
-        attachment_service.post = MagicMock()
-        attachment_service.post.return_value = ['abc']
+        attachment_service.post = MagicMock(return_value=['abc'])
         with open(fixture, 'rb') as f:
+            parser._get_file = MagicMock(return_value=BytesIO(f.read()))
+            f.seek(0)
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
 
