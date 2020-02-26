@@ -20,17 +20,17 @@ from belga.io.feed_parsers.belga_remote_newsml_1_2 import BelgaRemoteNewsMLOneFe
 
 class BelgaRemoteNewsMLOneTestCase(TestCase):
     filename = 'belga_remote_newsml_1_2.xml'
+    media_file = 'belga_remote_newsml_1_2.jpeg'
 
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
+        media_fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.media_file))
         provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
         parser = BelgaRemoteNewsMLOneFeedParser()
-        attachment_service = get_resource_service('attachments')
-        attachment_service.post = MagicMock(return_value=['abc'])
-        with open(fixture, 'rb') as f:
+        with open(media_fixture, 'rb') as f:
             parser._get_file = MagicMock(return_value=BytesIO(f.read()))
-            f.seek(0)
+        with open(fixture, 'rb') as f:
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
 
@@ -103,5 +103,12 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
             'ook. Ook de kruispunten worden veiliger gemaakt.</p>'
         )
 
-        self.assertEqual(item['attachments'], [{'attachment': 'abc'}])
         self.assertEqual(item['ednote'], 'The story has 1 attachment(s)')
+
+        attachment_id = item['attachments'][0]['attachment']
+        data = get_resource_service('attachments').find_one(req=None, _id=attachment_id)
+        self.assertEqual(data["title"], "belga_remote_newsml_1_2.jpeg")
+        self.assertEqual(data["filename"], "belga_remote_newsml_1_2.jpeg")
+        self.assertEqual(data["description"], "belga remote attachment")
+        self.assertEqual(data["mimetype"], "image/jpeg")
+        self.assertEqual(data["length"], 4680)
