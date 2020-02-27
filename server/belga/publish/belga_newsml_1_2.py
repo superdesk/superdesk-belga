@@ -1017,13 +1017,22 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _get_creditline(self, item):
         """
-        Fill CreditLine from "credits" vocabulary joined with "/"
+        Return a creditline for an `item`
         :param item: item
         :type item: dict
         :return: creditnline
         :rtype: str
         """
 
+        # internal text item
         creditline = '/'.join([subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'credits'])
-        # internal items have `credits` subject, external items may have `creditline` attr
-        return creditline if creditline else item.get('creditline')
+        if creditline:
+            return creditline
+
+        # internal picture/video/audio item
+        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-credit']
+        if creditline:
+            return creditline[0]
+
+        # external item i.e ingested, belga 360 archive, belga coverage or belga image
+        return item.get('creditline')
