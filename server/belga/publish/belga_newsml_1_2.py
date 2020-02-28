@@ -305,9 +305,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
             newslines = SubElement(newscomponent_2_level, 'NewsLines')
             SubElement(newslines, 'DateLine')
-            SubElement(newslines, 'CreditLine').text = item.get('byline')
             SubElement(newslines, 'HeadLine').text = belga_url.get('description')
             SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
+            SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
             self._format_administrative_metadata(newscomponent_2_level, item=item)
             self._format_descriptive_metadata(newscomponent_2_level, item=item)
 
@@ -753,9 +753,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
         newslines = SubElement(newscomponent_2_level, 'NewsLines')
         SubElement(newslines, 'DateLine')
-        SubElement(newslines, 'CreditLine').text = item.get('creditline', item.get('byline'))
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
+        SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
 
         # KeywordLine from country
         for subject in item.get('subject', []):
@@ -1014,3 +1014,25 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             _id=item.get('profile')
         )
         return content_type['label']
+
+    def _get_creditline(self, item):
+        """
+        Return a creditline for an `item`
+        :param item: item
+        :type item: dict
+        :return: creditnline
+        :rtype: str
+        """
+
+        # internal text item
+        creditline = '/'.join([subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'credits'])
+        if creditline:
+            return creditline
+
+        # internal picture/video/audio item
+        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-credit']
+        if creditline:
+            return creditline[0]
+
+        # external item i.e ingested, belga 360 archive, belga coverage or belga image
+        return item.get('creditline')
