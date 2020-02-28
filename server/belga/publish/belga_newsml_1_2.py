@@ -273,6 +273,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ))
         # format items
         for _item in items:
+            # TODO: remove _format_related_text_item method and handle all items independently from
+            #  the self._items_chain including associations, since every item in association is a
+            #  standalone newscomponent of a 2nd level
+            # SDBELGA-322
+            # this is a case when _item is an external belga 360 archive.
+            # parent's firstpublished is used in this case
+            if not _item.get('firstpublished'):
+                _item['firstpublished'] = item['firstpublished'] if item.get('firstpublished') else self._now
+
             # NewsComponent
             newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
             if _item.get(GUID_FIELD):
@@ -396,6 +405,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # format pictures
             formatted_ids = []
             for _item in items:
+                # TODO: remove _format_media method and handle all items independently from
+                #  the self._items_chain including associations, since every item in association is a
+                #  standalone newscomponent of a 2nd level
+                # SDBELGA-322
+                # this is a case when _item is an external belga image or coverage.
+                # parent's firstpublished is used in this case
+                if not _item.get('firstpublished'):
+                    _item['firstpublished'] = item['firstpublished'] if item.get('firstpublished') else self._now
+
                 if _item['_id'] not in formatted_ids:
                     formatted_ids.append(_item['_id'])
                     _format(newscomponent_1_level, _item)
