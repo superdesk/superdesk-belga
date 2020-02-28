@@ -3,7 +3,7 @@ import BelgaCoverageInfo from './belga-coverage-info';
 import BelgaCoverageImages from './belga-coverage-images';
 import {IEditorComponentProps, ISuperdesk} from 'superdesk-api';
 
-const ALLOWED = 'application/superdesk.item.graphic';
+const ALLOWED = 'application/vnd.belga.coverage';
 
 function isAllowedType(event: DragEvent) {
     return !!event.dataTransfer && event.dataTransfer.types.includes(ALLOWED);
