@@ -29,6 +29,7 @@ INSTALLED_APPS.extend([
     'belga.publish',
     'belga.macros',
     'belga.update',
+    'belga.unmark_user_when_moved_to_incoming_stage',
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -93,6 +94,9 @@ DEFAULT_SOURCE_VALUE_FOR_MANUAL_ARTICLES = "Belga"
 NEWSML_PROVIDER_ID = 'belga.be'
 ORGANIZATION_NAME = env('ORGANIZATION_NAME', 'Belga')
 ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
+
+# publishing of associated and related items
+PUBLISH_ASSOCIATED_ITEMS = True
 
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 
