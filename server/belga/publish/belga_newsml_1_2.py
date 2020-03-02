@@ -419,6 +419,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 if not _item.get('firstpublished'):
                     _item['firstpublished'] = item['firstpublished'] if item.get('firstpublished') else self._now
 
+                # if media does not have a language (search provider) it inherits language from the main item
+                if not _item.get('language'):
+                    _item['language'] = item['language']
+
                 if _item['_id'] not in formatted_ids:
                     formatted_ids.append(_item['_id'])
                     _format(newscomponent_1_level, _item)
@@ -438,6 +442,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     logger.warning("Failed to fetch belga coverage: {}".format(e))
                 else:
                     data = belga_cov_search_provider.format_list_item(data)
+
+                    # if belga coverage does not have a language it inherits language from the main item
+                    # NOTE: `belga.coverage` field is deprecated
+                    if not data.get('language'):
+                        data['language'] = item['language']
+
                     self._format_coverage(newscomponent_1_level, data)
 
     def _format_picture(self, newscomponent_1_level, picture):
