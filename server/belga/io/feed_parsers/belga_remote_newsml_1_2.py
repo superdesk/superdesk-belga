@@ -39,6 +39,8 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
     SUPPORTED_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
 
+    ASSET_TYPES_WITH_ATTACHMENTS = ('IMAGE',)
+
     def __init__(self):
         super().__init__()
         self.provider = None
@@ -123,7 +125,7 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             if role_name and role_name.upper() not in self.SUPPORTED_ASSET_TYPES:
                 for newscomponent in news_component_2.findall('NewsComponent'):
                     component_role = self._get_role(newscomponent)
-                    if component_role and component_role not in ('Caption', 'Title'):
+                    if component_role and component_role.upper() in self.ASSET_TYPES_WITH_ATTACHMENTS:
                         attachment = self.parse_attachment(newscomponent)
                         if attachment:
                             attachments.append(attachment)
