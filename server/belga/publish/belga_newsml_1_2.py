@@ -1031,7 +1031,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             req=req,
             _id=item.get('profile')
         )
-        return content_type['label']
+        return content_type['label'].capitalize()
 
     def _get_creditline(self, item):
         """
