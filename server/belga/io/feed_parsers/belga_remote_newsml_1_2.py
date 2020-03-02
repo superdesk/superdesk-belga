@@ -156,9 +156,9 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
         """
         content_item = newscomponent_el.find('ContentItem')
         if content_item is None:
-            return {}
+            return
 
-        # avoid re-adding media even item is ingested
+        # avoid re-adding media after item is ingested
         guid = hashlib.md5(ElementTree.tostring(content_item)).hexdigest()
         attachment_service = get_resource_service('attachments')
         old_attachment = attachment_service.find_one(req=None, guid=guid)
@@ -167,16 +167,16 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
         filename = content_item.attrib.get('Href')
         if filename is None:
-            return {}
+            return
 
-        format_name = None
+        format_name = ''
         format_el = content_item.find('Format')
         if format_el is not None:
             format_name = format_el.attrib.get('FormalName')
 
         content = self._get_file(filename)
         if not content:
-            return {}
+            return
         _, content_type, metadata = process_file_from_stream(content, 'application/' + format_name)
         content.seek(0)
         media_id = app.media.put(content,
@@ -195,7 +195,6 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             return {'attachment': next(iter(ids), None)}
         except Exception as ex:
             app.media.delete(media_id)
-        return {}
 
     def _get_role(self, newscomponent_el):
         role = newscomponent_el.find('Role')
