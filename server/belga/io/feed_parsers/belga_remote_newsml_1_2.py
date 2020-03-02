@@ -41,10 +41,12 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
     def __init__(self):
         super().__init__()
-        self.provider = {}
+        self.provider = None
 
     def parse(self, xml, provider=None):
         self.provider = provider
+        if self.provider is None:
+            self.provider = {}
         return super().parse(xml, provider)
 
     def parser_newsitem(self, newsitem_el):
