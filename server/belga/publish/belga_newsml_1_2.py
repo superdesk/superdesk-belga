@@ -228,6 +228,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_1_level, 'NewsComponent',
             {XML_LANG: item.get('language')}
         )
+        if item.get(GUID_FIELD):
+            newscomponent_2_level.attrib['Duid'] = item[GUID_FIELD]
 
         # Role
         if item.get('profile') in self.CP_NAME_ROLE_MAP:
@@ -311,6 +313,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 newscomponent_1_level, 'NewsComponent',
                 {XML_LANG: item.get('language')}
             )
+            if item.get(GUID_FIELD):
+                newscomponent_2_level.attrib['Duid'] = item[GUID_FIELD]
+
             SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
             newslines = SubElement(newscomponent_2_level, 'NewsLines')
             SubElement(newslines, 'DateLine')
@@ -889,11 +894,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Topic', 'Value': item['slugline']}
             )
-        SubElement(
-            administrative_metadata,
-            'Property',
-            {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
-        )
+        if item.get(GUID_FIELD):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
+            )
 
         for subject in item.get('subject', []):
             if subject.get('scheme') == 'services-products':
