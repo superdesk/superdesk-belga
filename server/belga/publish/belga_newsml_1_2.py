@@ -703,6 +703,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
         attachment['description_text'] = attachment.pop('description')
+        attachment['firstcreated'] = attachment['_created']
 
         newscomponent_2_level = SubElement(
             newscomponent_1_level, 'NewsComponent',
