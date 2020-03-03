@@ -1069,6 +1069,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
+                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
@@ -1261,6 +1262,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
+                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
