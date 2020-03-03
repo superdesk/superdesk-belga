@@ -39,7 +39,7 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
     SUPPORTED_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
 
-    ASSET_TYPES_WITH_ATTACHMENTS = ('IMAGE',)
+    ASSET_TYPES_WITH_ATTACHMENTS = ('IMAGE', 'SOUND', 'CLIP', 'COMPONENT')
 
     def __init__(self):
         super().__init__()
