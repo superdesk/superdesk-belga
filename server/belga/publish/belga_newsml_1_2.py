@@ -357,6 +357,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachments_ids = [i['attachment'] for i in item.get('attachments', [])]
         attachments = list(self.attachments_service.find({'_id': {'$in': attachments_ids}}))
         for attachment in attachments:
+            # attachment does not have a language, it inherits language from the main item
+            if item.get('language'):
+                attachment['language'] = item['language']
             self._format_attachment(newscomponent_1_level, attachment)
 
     def _format_media(self, newscomponent_1_level, item):
@@ -419,6 +422,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 if not _item.get('firstpublished'):
                     _item['firstpublished'] = item['firstpublished'] if item.get('firstpublished') else self._now
 
+                # if media does not have a language (search provider) it inherits language from the main item
+                if not _item.get('language'):
+                    _item['language'] = item['language']
+
                 if _item['_id'] not in formatted_ids:
                     formatted_ids.append(_item['_id'])
                     _format(newscomponent_1_level, _item)
@@ -438,6 +445,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     logger.warning("Failed to fetch belga coverage: {}".format(e))
                 else:
                     data = belga_cov_search_provider.format_list_item(data)
+
+                    # if belga coverage does not have a language it inherits language from the main item
+                    # NOTE: `belga.coverage` field is deprecated
+                    if not data.get('language'):
+                        data['language'] = item['language']
+
                     self._format_coverage(newscomponent_1_level, data)
 
     def _format_picture(self, newscomponent_1_level, picture):
@@ -690,9 +703,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
         attachment['description_text'] = attachment.pop('description')
+        attachment['firstcreated'] = attachment['_created']
 
-        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
-        newscomponent_2_level.attrib['Duid'] = str(attachment.get('_id'))
+        newscomponent_2_level = SubElement(
+            newscomponent_1_level, 'NewsComponent',
+            {
+                XML_LANG: attachment.get('language'),
+                'Duid': str(attachment.get('_id'))
+            }
+        )
 
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedDocument'})
         self._format_newslines(newscomponent_2_level, item=attachment)
