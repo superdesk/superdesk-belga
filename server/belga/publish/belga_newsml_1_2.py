@@ -357,6 +357,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachments_ids = [i['attachment'] for i in item.get('attachments', [])]
         attachments = list(self.attachments_service.find({'_id': {'$in': attachments_ids}}))
         for attachment in attachments:
+            # attachment does not have a language, it inherits language from the main item
+            if item.get('language'):
+                attachment['language'] = item['language']
             self._format_attachment(newscomponent_1_level, attachment)
 
     def _format_media(self, newscomponent_1_level, item):
@@ -701,8 +704,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment['headline'] = attachment.pop('title')
         attachment['description_text'] = attachment.pop('description')
 
-        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
-        newscomponent_2_level.attrib['Duid'] = str(attachment.get('_id'))
+        newscomponent_2_level = SubElement(
+            newscomponent_1_level, 'NewsComponent',
+            {
+                XML_LANG: attachment.get('language'),
+                'Duid': str(attachment.get('_id'))
+            }
+        )
 
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedDocument'})
         self._format_newslines(newscomponent_2_level, item=attachment)
