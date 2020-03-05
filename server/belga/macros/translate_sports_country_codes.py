@@ -630,13 +630,14 @@ def callback(item, **kwargs):
         return
 
     translated = COUNTRIES[item["language"]]
-    tpl = '({})'
+    tpls = ('({})', '({}/')
 
     for lang in COUNTRIES:
         if lang == item["language"]:
             continue
         for i, country in enumerate(COUNTRIES[lang]):
-            replace_text(item, "body_html", tpl.format(country), tpl.format(translated[i]))
+            for tpl in tpls:
+                replace_text(item, "body_html", tpl.format(country), tpl.format(translated[i]))
 
     return item
 

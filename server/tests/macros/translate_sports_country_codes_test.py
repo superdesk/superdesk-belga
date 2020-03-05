@@ -29,3 +29,27 @@ class TranslateSportsCountryCodesTestCase(unittest.TestCase):
             '<p>29. Thomas Tumler (Zwi) 2:00.44 ( 59.67 + 1:00.77)</p>',
             item['body_html'],
         )
+
+    def test_template_slash(self):
+        item = {
+            'language': 'fr',
+            'body_html':
+                '<p>29. Thomas Tumler (SUI/549) 2:00.44 ( 59.67 + 1:00.77)</p>'
+                '<p>29. Thomas Tumler (SUI/) 2:00.44 ( 59.67 + 1:00.77)</p>'
+                '<p>29. Thomas Tumler (SUI) 2:00.44 ( 59.67 + 1:00.77)</p>'
+        }
+        item = macro.callback(item)
+        self.assertEqual(
+            '<p>29. Thomas Tumler (Sui/549) 2:00.44 ( 59.67 + 1:00.77)</p>'
+            '<p>29. Thomas Tumler (Sui/) 2:00.44 ( 59.67 + 1:00.77)</p>'
+            '<p>29. Thomas Tumler (Sui) 2:00.44 ( 59.67 + 1:00.77)</p>',
+            item['body_html'],
+        )
+        item['language'] = 'nl'
+        macro.callback(item)
+        self.assertEqual(
+            '<p>29. Thomas Tumler (Zwi/549) 2:00.44 ( 59.67 + 1:00.77)</p>'
+            '<p>29. Thomas Tumler (Zwi/) 2:00.44 ( 59.67 + 1:00.77)</p>'
+            '<p>29. Thomas Tumler (Zwi) 2:00.44 ( 59.67 + 1:00.77)</p>',
+            item['body_html'],
+        )
