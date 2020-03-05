@@ -28,6 +28,7 @@ from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.utc import utcnow
+from ..search_providers import BelgaImageSearchProvider
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     BELGA_TEXT_PROFILE = 'belga_text'
     CP_NAME_ROLE_MAP = {
         'belga_text': 'Belga text'
+    }
+    SD_BELGA_IMAGE_RENDITIONS_MAP = {
+        'original': 'full',
+        'thumbnail': 'thumbnail',
+        'viewImage': 'preview'
     }
 
     def format(self, article, subscriber, codes=None):
@@ -523,6 +529,19 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'Property',
                 {'FormalName': 'ComponentClass', 'Value': 'Image'}
             )
+
+            # SDBELGA-345
+            # if image is from "belga image", URN schema should be exported instead of URL
+            if BelgaImageSearchProvider.GUID_PREFIX in picture.get(GUID_FIELD, ''):
+                belga_image_id = picture[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
+                picture['renditions'][key]['href'] = 'urn:www.belga.be:picturestore:' \
+                                                     '{belga_image_id}:' \
+                                                     '{belga_image_rendition}:true'.format(
+                    belga_image_id=belga_image_id,
+                    belga_image_rendition=self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
+                )
+                picture['renditions'][key]['filename'] = '{}.jpeg'.format(belga_image_id)
+
             self._format_media_contentitem(newscomponent_3_level, rendition=picture['renditions'][key])
 
     def _format_coverage(self, newscomponent_1_level, coverage):

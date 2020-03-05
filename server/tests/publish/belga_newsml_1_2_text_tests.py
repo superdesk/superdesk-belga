@@ -1727,14 +1727,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo'
+            'urn:www.belga.be:picturestore:154620545:full:true'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo'
+            'Jpeg'
         )
         property = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
@@ -1758,7 +1758,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom'
+            'urn:www.belga.be:picturestore:154620545:thumbnail:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1766,7 +1766,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj'
+            'urn:www.belga.be:picturestore:154620545:preview:true'
         )
 
     def test_uploaded_picture_related_images(self):
@@ -1858,7 +1858,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf'
+            'urn:www.belga.be:picturestore:154670415:full:true'
         )
         property = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
@@ -1882,7 +1882,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh'
+            'urn:www.belga.be:picturestore:154670415:thumbnail:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1890,7 +1890,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc'
+            'urn:www.belga.be:picturestore:154670415:preview:true'
         )
 
     def test_uploaded_picture_related_gallery(self):
@@ -1938,7 +1938,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:147832075:1800x650:w?v=5d5aaa94&m=lhkkcgbb'
+            'urn:www.belga.be:picturestore:147832075:full:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1946,7 +1946,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://p.cdn.belga.be/belgaimage:147832075:600x140?v=5d5aaa94&m=pmahjglh'
+            'urn:www.belga.be:picturestore:147832075:thumbnail:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1954,7 +1954,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://0.t.cdn.belga.be/belgaimage:147832075:800x800:w?v=5d5aaa94&m=lgmbdgan'
+            'urn:www.belga.be:picturestore:147832075:preview:true'
         )
 
     def test_belga_coverages(self):
