@@ -70,10 +70,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self.users_service = superdesk.get_resource_service('users')
             self.vocabularies_service = superdesk.get_resource_service('vocabularies')
             self.attachments_service = superdesk.get_resource_service('attachments')
+
             self._newsml = etree.Element('NewsML')
+            # current item
             self._item = article
+            # the whole items chain including updates and translations
             self._items_chain = self.arhive_service.get_items_chain(self._item)
-            self._duid = self._item[GUID_FIELD]
+            # original/initial item
+            self._original_item = self._items_chain[0]
+            self._duid = self._original_item[GUID_FIELD]
             self._now = utcnow()
             # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
             # Theoretically it may happen
