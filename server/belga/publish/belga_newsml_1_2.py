@@ -24,7 +24,7 @@ from lxml import etree
 from lxml.etree import SubElement
 from superdesk.errors import FormatterError
 from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
-                                     ITEM_TYPE)
+                                     ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.utc import utcnow
@@ -74,8 +74,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._newsml = etree.Element('NewsML')
             # current item
             self._item = article
-            # the whole items chain including updates and translations
-            self._items_chain = self.arhive_service.get_items_chain(self._item)
+            # the whole items chain including updates and translations with `published` state
+            self._items_chain = [
+                i for i in self.arhive_service.get_items_chain(self._item)
+                if i.get(ITEM_STATE) == CONTENT_STATE.PUBLISHED
+            ]
             # original/initial item
             self._original_item = self._items_chain[0]
             self._duid = self._original_item[GUID_FIELD]
