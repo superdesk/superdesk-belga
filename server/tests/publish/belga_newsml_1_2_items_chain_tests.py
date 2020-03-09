@@ -37,7 +37,7 @@ belga_apiget_response = {
 }
 
 
-class BelgaNewsML12FormatterTextTest(TestCase):
+class BelgaNewsML12FormatterItemsChainTest(TestCase):
     article = {
         '_id': 'update-2',
         'guid': 'update-2',
@@ -52,7 +52,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
         'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
         'original_creator': '5d385f31fe985ec67a0ca583',
-        'state': 'in_progress',
+        'state': 'corrected',
         'source': 'Belga',
         'priority': 6,
         'urgency': 4,
@@ -80,7 +80,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
             'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
             'original_creator': '5d385f31fe985ec67a0ca583',
-            'state': 'in_progress',
+            'state': 'corrected',
             'source': 'Belga',
             'priority': 6,
             'urgency': 4,
@@ -89,7 +89,37 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
             'slugline': 'skoda scala',
             'byline': 'BELGA',
-            'rewritten_by': 'update-1'
+            'rewritten_by': 'update-1',
+            "translation_id": "original",
+            "translations": [
+                "original-fr"
+            ],
+        },
+        {
+            '_id': 'original-fr',
+            'guid': 'original-fr',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'published',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'fr',
+            'headline': 'Old my beer',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            "translation_id": "original",
+            "translated_from": "original",
         },
         {
             '_id': 'update-1',
@@ -105,7 +135,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
             'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
             'original_creator': '5d385f31fe985ec67a0ca583',
-            'state': 'in_progress',
+            'state': 'published',
             'source': 'Belga',
             'priority': 6,
             'urgency': 4,
@@ -117,6 +147,35 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'rewritten_by': 'update-2',
             "rewrite_of": "original",
             "rewrite_sequence": 1,
+            "translations": [
+                "update-1-fr"
+            ],
+        },
+        {
+            '_id': 'update-1-fr',
+            'guid': 'update-1-fr',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'in_progress',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'fr',
+            'headline': 'Old my beer',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            "translation_id": "update-1",
+            "translated_from": "update-1",
         },
         {
             '_id': 'update-2',
@@ -132,7 +191,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
             'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
             'original_creator': '5d385f31fe985ec67a0ca583',
-            'state': 'in_progress',
+            'state': 'published',
             'source': 'Belga',
             'priority': 6,
             'urgency': 4,
@@ -227,16 +286,17 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
     def test_belga_text_newscomponent(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
-        ids = (
-            'original',
-            'update-1',
-            'update-2',
+        expected = (
+            ('original', 'nl'),
+            ('original-fr', 'fr'),
+            ('update-1', 'nl'),
+            ('update-2', 'nl')
         )
         for i, newscomponent_2_level in enumerate(self.newsml.xpath('NewsItem/NewsComponent/NewsComponent')):
             self.assertDictEqual(
                 dict(newscomponent_2_level.attrib),
                 {
-                    'Duid': ids[i],
-                    '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                    'Duid': expected[i][0],
+                    '{http://www.w3.org/XML/1998/namespace}lang': expected[i][1]
                 }
             )
