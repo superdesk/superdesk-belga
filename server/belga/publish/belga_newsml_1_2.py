@@ -77,7 +77,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # the whole items chain including updates and translations with `published` state
             self._items_chain = [
                 i for i in self.arhive_service.get_items_chain(self._item)
-                if i.get(ITEM_STATE) == CONTENT_STATE.PUBLISHED
+                if i.get(ITEM_STATE) in (CONTENT_STATE.PUBLISHED, CONTENT_STATE.CORRECTED)
             ]
             # original/initial item
             self._original_item = self._items_chain[0]
