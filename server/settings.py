@@ -9,6 +9,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+import copy
 from flask import json
 from pathlib import Path
 from superdesk.default_settings import INSTALLED_APPS, env
@@ -29,6 +30,7 @@ INSTALLED_APPS.extend([
     'belga.publish',
     'belga.macros',
     'belga.update',
+    'belga.unmark_user_when_moved_to_incoming_stage',
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -94,6 +96,9 @@ NEWSML_PROVIDER_ID = 'belga.be'
 ORGANIZATION_NAME = env('ORGANIZATION_NAME', 'Belga')
 ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
 
+# publishing of associated and related items
+PUBLISH_ASSOCIATED_ITEMS = True
+
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 
 # noqa
@@ -131,14 +136,34 @@ CELERY_WORKER_TASK_LOG_FORMAT = '{} task=%(task_name)s task_id=%(task_id)s'.form
 with Path(__file__).parent.joinpath('picture-profile.json').open() as f:
     picture_profile = json.load(f)
 
+video_profile = copy.deepcopy(picture_profile)
+video_profile['schema']['headline']['required'] = True
+video_profile['editor']['headline']['required'] = True
+
 EDITOR = {
     'picture': picture_profile['editor'],
-    'video': picture_profile['editor'],
+    'video': video_profile['editor'],
+    'graphic': picture_profile['editor'],
 }
+
+EDITOR['graphic'].update({
+    'bcoverage': {
+        'order': 5,
+        'section': 'content',
+    },
+})
 
 SCHEMA = {
     'picture': picture_profile['schema'],
-    'video': picture_profile['schema'],
+    'video': video_profile['schema'],
+    'graphic': picture_profile['schema'],
 }
 
+SCHEMA['graphic'].update({
+    'bcoverage': {
+        'type': 'string',
+    },
+})
+
 VALIDATOR_MEDIA_METADATA = {}
+ALLOW_UPDATING_SCHEDULED_ITEMS = True

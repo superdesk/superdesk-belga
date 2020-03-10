@@ -1,34 +1,16 @@
 language: python
 
-python: "3.5"
+python: 3.6
 
 services:
-    - mongodb
-    - redis-server
-
-addons:
-  apt:
-    sources:
-    - mongodb-3.0-precise
-    - elasticsearch-2.x
-    packages:
-    - mongodb-org-server
-    - elasticsearch
+    - docker
 
 cache:
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/.npm
+    - pip
+    - npm
 
 before_install:
-    - sudo apt-get purge elasticsearch
-    - sudo apt-get install -t stable elasticsearch
-    - nvm install 6.10
-    - nvm use 6.10
-    - node --version
-    - npm install -g npm@3
-    - npm install -g grunt-cli
-    - sudo systemctl start elasticsearch
+    - docker-compose -f .travis-docker-compose.yml up -d
 
 install:
     - cd server && pip install -r dev-requirements.txt && cd ..

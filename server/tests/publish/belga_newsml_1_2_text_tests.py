@@ -622,7 +622,9 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'name': 'BIN', 'qcode': 'BIN', 'parent': None, 'scheme': 'services-products'},
             {'name': 'NEWS/ENTERTAINMENT', 'qcode': 'NEWS/ENTERTAINMENT', 'parent': 'NEWS',
              'scheme': 'services-products'},
-            {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'}
+            {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'}
         ],
         'word_count': 28,
         'byline': 'BELGA',
@@ -1067,13 +1069,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
+                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('Role')[0].attrib),
-            {'FormalName': 'Text'}
+            {'FormalName': 'Belga text'}
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines
         self.assertIsNone(
@@ -1081,7 +1084,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'DPA/ANP'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1120,7 +1123,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'John'}
         )
         expected_attribs = (
-            {'FormalName': 'Validator', 'Value': 'John the validator'},
+            {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '6'},
@@ -1259,6 +1262,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
+                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
@@ -1273,7 +1277,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'DPA/ANP'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1300,7 +1304,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'John'}
         )
         expected_attribs = (
-            {'FormalName': 'Validator', 'Value': 'John the validator'},
+            {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '6'},
@@ -1573,7 +1577,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pic_1.jpg'
+            'urn:www.belga.be:superdesk:pic_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
@@ -1619,7 +1623,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pic_1.jpg'
+            'urn:www.belga.be:superdesk:pic_1'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1627,7 +1631,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pic_1.jpg'
+            'urn:www.belga.be:superdesk:pic_1'
         )
 
     def test_belga_picture_in_editor(self):
@@ -1723,14 +1727,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo'
+            'urn:www.belga.be:picturestore:154620545:full:true'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo'
+            'Jpeg'
         )
         property = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
@@ -1754,7 +1758,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom'
+            'urn:www.belga.be:picturestore:154620545:thumbnail:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1762,7 +1766,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj'
+            'urn:www.belga.be:picturestore:154620545:preview:true'
         )
 
     def test_uploaded_picture_related_images(self):
@@ -1773,9 +1777,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
-        self.assertEqual(
-            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BIENVENIDO VELASCO'
+        self.assertIsNone(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1800,7 +1803,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/5d553c333031e2855a2e5662.jpg'
+            'urn:www.belga.be:superdesk:pic_2'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
@@ -1831,7 +1834,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5666.jpg'
+            'urn:www.belga.be:superdesk:pic_2'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1839,7 +1842,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5668.jpg'
+            'urn:www.belga.be:superdesk:pic_2'
         )
 
     def test_belga_picture_related_images(self):
@@ -1855,7 +1858,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf'
+            'urn:www.belga.be:picturestore:154670415:full:true'
         )
         property = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
@@ -1879,7 +1882,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh'
+            'urn:www.belga.be:picturestore:154670415:thumbnail:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1887,7 +1890,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc'
+            'urn:www.belga.be:picturestore:154670415:preview:true'
         )
 
     def test_uploaded_picture_related_gallery(self):
@@ -1903,7 +1906,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pic_3.jpg'
+            'urn:www.belga.be:superdesk:pic_3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1911,7 +1914,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pic_3.jpg'
+            'urn:www.belga.be:superdesk:pic_3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1919,7 +1922,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pic_3.jpg'
+            'urn:www.belga.be:superdesk:pic_3'
         )
 
     def test_belga_picture_related_gallery(self):
@@ -1935,7 +1938,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:147832075:1800x650:w?v=5d5aaa94&m=lhkkcgbb'
+            'urn:www.belga.be:picturestore:147832075:full:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1943,7 +1946,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://p.cdn.belga.be/belgaimage:147832075:600x140?v=5d5aaa94&m=pmahjglh'
+            'urn:www.belga.be:picturestore:147832075:thumbnail:true'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1951,7 +1954,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://0.t.cdn.belga.be/belgaimage:147832075:800x800:w?v=5d5aaa94&m=lgmbdgan'
+            'urn:www.belga.be:picturestore:147832075:preview:true'
         )
 
     def test_belga_coverages(self):
@@ -2140,7 +2143,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/audio_1.mp3'
+            'urn:www.belga.be:superdesk:audio_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Sound"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2212,7 +2215,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/video_1.mp4'
+            'urn:www.belga.be:superdesk:video_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/Format'

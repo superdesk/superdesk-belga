@@ -18,16 +18,16 @@ from flask import current_app as app
 
 import superdesk
 from apps.archive.common import get_utc_schedule
-from belga.search_providers import BelgaCoverageSearchProvider
 from eve.utils import config
 from lxml import etree
 from lxml.etree import SubElement
 from superdesk.errors import FormatterError
 from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
-                                     ITEM_TYPE)
+                                     ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.utc import utcnow
+from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
     CP_NAME_ROLE_MAP = {
-        'belga_text': 'Text'
+        'belga_text': 'Belga text'
+    }
+    SD_BELGA_IMAGE_RENDITIONS_MAP = {
+        'original': 'full',
+        'thumbnail': 'thumbnail',
+        'viewImage': 'preview'
     }
 
     def format(self, article, subscriber, codes=None):
@@ -64,12 +69,25 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self.users_service = superdesk.get_resource_service('users')
             self.vocabularies_service = superdesk.get_resource_service('vocabularies')
             self.attachments_service = superdesk.get_resource_service('attachments')
+
             self._newsml = etree.Element('NewsML')
+            # current item
             self._item = article
-            self._items_chain = self.arhive_service.get_items_chain(self._item)
+            # the whole items chain including updates and translations with `published` state
+            self._items_chain = [
+                i for i in self.arhive_service.get_items_chain(self._item)
+                if i.get(ITEM_STATE) in (CONTENT_STATE.PUBLISHED, CONTENT_STATE.CORRECTED)
+            ]
+            # original/initial item
+            self._original_item = self._items_chain[0]
+            self._duid = self._original_item[GUID_FIELD]
             self._now = utcnow()
-            self._string_now = self._now.strftime(self.DATETIME_FORMAT)
-            self._duid = self._item[GUID_FIELD]
+            # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
+            # Theoretically it may happen
+            if self._item.get('firstpublished'):
+                self._string_now = self._get_formatted_datetime(self._item['firstpublished'])
+            else:
+                self._string_now = self._now.strftime(self.DATETIME_FORMAT)
 
             self._format_catalog()
             self._format_newsenvelope()
@@ -223,12 +241,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_1_level, 'NewsComponent',
             {XML_LANG: item.get('language')}
         )
+        if item.get(GUID_FIELD):
+            newscomponent_2_level.attrib['Duid'] = item[GUID_FIELD]
 
         # Role
         if item.get('profile') in self.CP_NAME_ROLE_MAP:
             role_formal_name = self.CP_NAME_ROLE_MAP[item.get('profile')]
         else:
-            role_formal_name = self._get_content_profile_name()
+            role_formal_name = self._get_content_profile_name(item)
         SubElement(newscomponent_2_level, 'Role', {'FormalName': role_formal_name})
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=item)
@@ -268,6 +288,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ))
         # format items
         for _item in items:
+            # TODO: remove _format_related_text_item method and handle all items independently from
+            #  the self._items_chain including associations, since every item in association is a
+            #  standalone newscomponent of a 2nd level
+            # SDBELGA-322
+            # this is a case when _item is an external belga 360 archive.
+            # parent's firstpublished is used in this case
+            if not _item.get('firstpublished'):
+                _item['firstpublished'] = item['firstpublished'] if item.get('firstpublished') else self._now
+
             # NewsComponent
             newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
             if _item.get(GUID_FIELD):
@@ -297,12 +326,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 newscomponent_1_level, 'NewsComponent',
                 {XML_LANG: item.get('language')}
             )
+            if item.get(GUID_FIELD):
+                newscomponent_2_level.attrib['Duid'] = item[GUID_FIELD]
+
             SubElement(newscomponent_2_level, 'Role', {'FormalName': 'URL'})
             newslines = SubElement(newscomponent_2_level, 'NewsLines')
             SubElement(newslines, 'DateLine')
-            SubElement(newslines, 'CreditLine').text = item.get('byline')
             SubElement(newslines, 'HeadLine').text = belga_url.get('description')
             SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
+            SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
             self._format_administrative_metadata(newscomponent_2_level, item=item)
             self._format_descriptive_metadata(newscomponent_2_level, item=item)
 
@@ -338,6 +370,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachments_ids = [i['attachment'] for i in item.get('attachments', [])]
         attachments = list(self.attachments_service.find({'_id': {'$in': attachments_ids}}))
         for attachment in attachments:
+            # attachment does not have a language, it inherits language from the main item
+            if item.get('language'):
+                attachment['language'] = item['language']
             self._format_attachment(newscomponent_1_level, attachment)
 
     def _format_media(self, newscomponent_1_level, item):
@@ -391,8 +426,24 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # format pictures
             formatted_ids = []
             for _item in items:
+                # TODO: remove _format_media method and handle all items independently from
+                #  the self._items_chain including associations, since every item in association is a
+                #  standalone newscomponent of a 2nd level
+                # SDBELGA-322
+                # this is a case when _item is an external belga image or coverage.
+                # parent's firstpublished is used in this case
+                if not _item.get('firstpublished'):
+                    _item['firstpublished'] = item['firstpublished'] if item.get('firstpublished') else self._now
+
+                # if media does not have a language (search provider) it inherits language from the main item
+                if not _item.get('language'):
+                    _item['language'] = item['language']
+
                 if _item['_id'] not in formatted_ids:
                     formatted_ids.append(_item['_id'])
+                    # All media items, uploaded and external should use belga's internal URN as media reference
+                    # SDBELGA-345, SDBELGA-352
+                    self._set_belga_urn(media_item=_item)
                     _format(newscomponent_1_level, _item)
 
         # format media item from custom field `belga.coverage`
@@ -410,6 +461,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     logger.warning("Failed to fetch belga coverage: {}".format(e))
                 else:
                     data = belga_cov_search_provider.format_list_item(data)
+
+                    # if belga coverage does not have a language it inherits language from the main item
+                    # NOTE: `belga.coverage` field is deprecated
+                    if not data.get('language'):
+                        data['language'] = item['language']
+
+                    # All media items, uploaded and external should use belga's internal URN as media reference
+                    # SDBELGA-345, SDBELGA-352
+                    self._set_belga_urn(media_item=data)
                     self._format_coverage(newscomponent_1_level, data)
 
     def _format_picture(self, newscomponent_1_level, picture):
@@ -482,6 +542,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'Property',
                 {'FormalName': 'ComponentClass', 'Value': 'Image'}
             )
+
             self._format_media_contentitem(newscomponent_3_level, rendition=picture['renditions'][key])
 
     def _format_coverage(self, newscomponent_1_level, coverage):
@@ -647,7 +708,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(
             SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
             'Property',
-            {'FormalName': 'ComponentClass', 'Value': 'Audio'}
+            {'FormalName': 'ComponentClass', 'Value': 'Video'}
         )
         self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
 
@@ -662,9 +723,15 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
         attachment['description_text'] = attachment.pop('description')
+        attachment['firstcreated'] = attachment['_created']
 
-        newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
-        newscomponent_2_level.attrib['Duid'] = str(attachment.get('_id'))
+        newscomponent_2_level = SubElement(
+            newscomponent_1_level, 'NewsComponent',
+            {
+                XML_LANG: attachment.get('language'),
+                'Duid': str(attachment.get('_id'))
+            }
+        )
 
         SubElement(newscomponent_2_level, 'Role', {'FormalName': 'RelatedDocument'})
         self._format_newslines(newscomponent_2_level, item=attachment)
@@ -708,6 +775,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             }
         )
 
+    def _set_belga_urn(self, media_item):
+        """
+        Set internal Belga URN media reference to all `media_item` renditions
+        :param media_item: media item
+        :type media_item: dict
+        """
+
+        for key, rendition in media_item.get('renditions', {}).items():
+            # rendition is from Belga image search provider
+            if BelgaImageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+                if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
+                    belga_id = media_item[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
+                    rendition['belga-urn'] = 'urn:www.belga.be:picturestore:{}:{}:true'.format(
+                        belga_id, self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
+                    )
+                    rendition['filename'] = '{}.jpeg'.format(belga_id)
+            # rendition is from Belga coverage search provider
+            elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+                # ignore coverage for now
+                pass
+            # the rest are internaly uploaded media: pictures, video and audio
+            else:
+                rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}'.format(rendition['media'])
+
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
         """
         Creates a ContentItem for provided rendition.
@@ -716,7 +807,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
-            {'Href': r'{}'.format(rendition['href'])}
+            {'Href': r'{}'.format(rendition.get('belga-urn', rendition['href']))}
         )
 
         filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
@@ -748,9 +839,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
         newslines = SubElement(newscomponent_2_level, 'NewsLines')
         SubElement(newslines, 'DateLine')
-        SubElement(newslines, 'CreditLine').text = item.get('creditline', item.get('byline'))
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
+        SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
 
         # KeywordLine from country
         for subject in item.get('subject', []):
@@ -827,16 +918,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(administrative_metadata, 'Contributor'), 'Party',
                 {'FormalName': item['administrative']['contributor']}
             )
-        if item.get('administrative', {}).get('validator'):
+        # initials of user who published an item is `Validator`
+        if item.get('version_creator'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {
+                    'FormalName': 'Validator',
+                    'Value': self._get_author_info(str(item['version_creator']))['initials']
+                }
+            )
+        elif item.get('administrative', {}).get('validator'):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'Validator', 'Value': item['administrative']['validator']}
             )
-        if item.get('administrative', {}).get('validation_date'):
-            SubElement(
-                administrative_metadata, 'Property',
-                {'FormalName': 'ValidationDate', 'Value': item['administrative']['validation_date']}
-            )
+        # SDBELGA-322
+        validation_date = self._string_now
+        if item.get('firstpublished'):
+            validation_date = self._get_formatted_datetime(item['firstpublished'])
+        elif item.get('administrative', {}).get('validation_date'):
+            validation_date = item['administrative']['validation_date']
+        SubElement(
+            administrative_metadata, 'Property',
+            {'FormalName': 'ValidationDate', 'Value': validation_date}
+        )
         if item.get('administrative', {}).get('foreign_id'):
             SubElement(
                 administrative_metadata, 'Property',
@@ -852,11 +957,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Topic', 'Value': item['slugline']}
             )
-        SubElement(
-            administrative_metadata,
-            'Property',
-            {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
-        )
+        if item.get(GUID_FIELD):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
+            )
 
         for subject in item.get('subject', []):
             if subject.get('scheme') == 'services-products':
@@ -986,12 +1091,34 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         else:
             return _datetime.strftime(self.DATETIME_FORMAT)
 
-    def _get_content_profile_name(self):
+    def _get_content_profile_name(self, item):
         req = ParsedRequest()
         req.args = {}
         req.projection = '{"label": 1}'
         content_type = self.content_types_service.find_one(
             req=req,
-            _id=self._item.get('profile')
+            _id=item.get('profile')
         )
-        return content_type['label']
+        return content_type['label'].capitalize()
+
+    def _get_creditline(self, item):
+        """
+        Return a creditline for an `item`
+        :param item: item
+        :type item: dict
+        :return: creditnline
+        :rtype: str
+        """
+
+        # internal text item
+        creditline = '/'.join([subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'credits'])
+        if creditline:
+            return creditline
+
+        # internal picture/video/audio item
+        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-credit']
+        if creditline:
+            return creditline[0]
+
+        # external item i.e ingested, belga 360 archive, belga coverage or belga image
+        return item.get('creditline')

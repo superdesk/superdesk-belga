@@ -7113,7 +7113,7 @@
     },
     {
         "_id": "belga-keywords",
-        "init_version": 1,
+        "init_version": 2,
         "display_name": "Belga Keywords",
         "type": "manageable",
         "selection_type": "multi selection",
@@ -11260,6 +11260,17 @@
                     "name": {
                         "nl": "BELGASILENTVIDEO2018",
                         "fr": "BELGASILENTVIDEO2018"
+                    }
+                }
+            },
+            {
+                "name": "RUSHES",
+                "qcode": "RUSHES",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "RUSHES",
+                        "fr": "RUSHES"
                     }
                 }
             }
