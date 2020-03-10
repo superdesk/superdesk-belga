@@ -18,7 +18,6 @@ from flask import current_app as app
 
 import superdesk
 from apps.archive.common import get_utc_schedule
-from belga.search_providers import BelgaCoverageSearchProvider
 from eve.utils import config
 from lxml import etree
 from lxml.etree import SubElement
@@ -28,7 +27,7 @@ from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.utc import utcnow
-from ..search_providers import BelgaImageSearchProvider
+from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider
 
 logger = logging.getLogger(__name__)
 
@@ -442,6 +441,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
                 if _item['_id'] not in formatted_ids:
                     formatted_ids.append(_item['_id'])
+                    # All media items, uploaded and external should use belga's internal URN as media reference
+                    # SDBELGA-345, SDBELGA-352
+                    self._set_belga_urn(media_item=_item)
                     _format(newscomponent_1_level, _item)
 
         # format media item from custom field `belga.coverage`
@@ -465,6 +467,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     if not data.get('language'):
                         data['language'] = item['language']
 
+                    # All media items, uploaded and external should use belga's internal URN as media reference
+                    # SDBELGA-345, SDBELGA-352
+                    self._set_belga_urn(media_item=data)
                     self._format_coverage(newscomponent_1_level, data)
 
     def _format_picture(self, newscomponent_1_level, picture):
@@ -537,18 +542,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'Property',
                 {'FormalName': 'ComponentClass', 'Value': 'Image'}
             )
-
-            # SDBELGA-345
-            # if image is from "belga image", URN schema should be exported instead of URL
-            if BelgaImageSearchProvider.GUID_PREFIX in picture.get(GUID_FIELD, ''):
-                belga_image_id = picture[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
-                picture['renditions'][key]['href'] = 'urn:www.belga.be:picturestore:' \
-                                                     '{belga_image_id}:' \
-                                                     '{belga_image_rendition}:true'.format(
-                    belga_image_id=belga_image_id,
-                    belga_image_rendition=self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
-                )
-                picture['renditions'][key]['filename'] = '{}.jpeg'.format(belga_image_id)
 
             self._format_media_contentitem(newscomponent_3_level, rendition=picture['renditions'][key])
 
@@ -715,7 +708,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(
             SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
             'Property',
-            {'FormalName': 'ComponentClass', 'Value': 'Audio'}
+            {'FormalName': 'ComponentClass', 'Value': 'Video'}
         )
         self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
 
@@ -782,6 +775,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             }
         )
 
+    def _set_belga_urn(self, media_item):
+        """
+        Set internal Belga URN media reference to all `media_item` renditions
+        :param media_item: media item
+        :type media_item: dict
+        """
+
+        for key, rendition in media_item.get('renditions', {}).items():
+            # rendition is from Belga image search provider
+            if BelgaImageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+                if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
+                    belga_id = media_item[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
+                    rendition['belga-urn'] = 'urn:www.belga.be:picturestore:{}:{}:true'.format(
+                        belga_id, self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
+                    )
+                    rendition['filename'] = '{}.jpeg'.format(belga_id)
+            # rendition is from Belga coverage search provider
+            elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+                # ignore coverage for now
+                pass
+            # the rest are internaly uploaded media: pictures, video and audio
+            else:
+                rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}'.format(rendition['media'])
+
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
         """
         Creates a ContentItem for provided rendition.
@@ -790,7 +807,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
-            {'Href': r'{}'.format(rendition['href'])}
+            {'Href': r'{}'.format(rendition.get('belga-urn', rendition['href']))}
         )
 
         filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
