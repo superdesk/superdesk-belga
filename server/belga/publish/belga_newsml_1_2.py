@@ -18,16 +18,16 @@ from flask import current_app as app
 
 import superdesk
 from apps.archive.common import get_utc_schedule
-from belga.search_providers import BelgaCoverageSearchProvider
 from eve.utils import config
 from lxml import etree
 from lxml.etree import SubElement
 from superdesk.errors import FormatterError
 from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
-                                     ITEM_TYPE)
+                                     ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.utc import utcnow
+from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     BELGA_TEXT_PROFILE = 'belga_text'
     CP_NAME_ROLE_MAP = {
         'belga_text': 'Belga text'
+    }
+    SD_BELGA_IMAGE_RENDITIONS_MAP = {
+        'original': 'full',
+        'thumbnail': 'thumbnail',
+        'viewImage': 'preview'
     }
 
     def format(self, article, subscriber, codes=None):
@@ -64,10 +69,18 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self.users_service = superdesk.get_resource_service('users')
             self.vocabularies_service = superdesk.get_resource_service('vocabularies')
             self.attachments_service = superdesk.get_resource_service('attachments')
+
             self._newsml = etree.Element('NewsML')
+            # current item
             self._item = article
-            self._items_chain = self.arhive_service.get_items_chain(self._item)
-            self._duid = self._item[GUID_FIELD]
+            # the whole items chain including updates and translations with `published` state
+            self._items_chain = [
+                i for i in self.arhive_service.get_items_chain(self._item)
+                if i.get(ITEM_STATE) in (CONTENT_STATE.PUBLISHED, CONTENT_STATE.CORRECTED)
+            ]
+            # original/initial item
+            self._original_item = self._items_chain[0]
+            self._duid = self._original_item[GUID_FIELD]
             self._now = utcnow()
             # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
             # Theoretically it may happen
@@ -428,6 +441,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
                 if _item['_id'] not in formatted_ids:
                     formatted_ids.append(_item['_id'])
+                    # All media items, uploaded and external should use belga's internal URN as media reference
+                    # SDBELGA-345, SDBELGA-352
+                    self._set_belga_urn(media_item=_item)
                     _format(newscomponent_1_level, _item)
 
         # format media item from custom field `belga.coverage`
@@ -451,6 +467,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     if not data.get('language'):
                         data['language'] = item['language']
 
+                    # All media items, uploaded and external should use belga's internal URN as media reference
+                    # SDBELGA-345, SDBELGA-352
+                    self._set_belga_urn(media_item=data)
                     self._format_coverage(newscomponent_1_level, data)
 
     def _format_picture(self, newscomponent_1_level, picture):
@@ -523,6 +542,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'Property',
                 {'FormalName': 'ComponentClass', 'Value': 'Image'}
             )
+
             self._format_media_contentitem(newscomponent_3_level, rendition=picture['renditions'][key])
 
     def _format_coverage(self, newscomponent_1_level, coverage):
@@ -688,7 +708,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(
             SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
             'Property',
-            {'FormalName': 'ComponentClass', 'Value': 'Audio'}
+            {'FormalName': 'ComponentClass', 'Value': 'Video'}
         )
         self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
 
@@ -755,6 +775,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             }
         )
 
+    def _set_belga_urn(self, media_item):
+        """
+        Set internal Belga URN media reference to all `media_item` renditions
+        :param media_item: media item
+        :type media_item: dict
+        """
+
+        for key, rendition in media_item.get('renditions', {}).items():
+            # rendition is from Belga image search provider
+            if BelgaImageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+                if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
+                    belga_id = media_item[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
+                    rendition['belga-urn'] = 'urn:www.belga.be:picturestore:{}:{}:true'.format(
+                        belga_id, self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
+                    )
+                    rendition['filename'] = '{}.jpeg'.format(belga_id)
+            # rendition is from Belga coverage search provider
+            elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+                # ignore coverage for now
+                pass
+            # the rest are internaly uploaded media: pictures, video and audio
+            else:
+                rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}'.format(rendition['media'])
+
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
         """
         Creates a ContentItem for provided rendition.
@@ -763,7 +807,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
-            {'Href': r'{}'.format(rendition['href'])}
+            {'Href': r'{}'.format(rendition.get('belga-urn', rendition['href']))}
         )
 
         filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
