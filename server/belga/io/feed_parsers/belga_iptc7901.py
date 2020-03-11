@@ -119,7 +119,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     'scheme': 'services-products'
                 })
                 item['subject'].extend([
-                    {"name": 'ATS', "qcode": 'ATS', "scheme": "credits"},
+                    {"name": 'ATS', "qcode": 'ATS', "scheme": "sources"},
                     {"name": 'default', "qcode": 'default', "scheme": "distribution"},
                 ])
                 item['word_count'] = int(m.group(5).decode())
@@ -165,8 +165,8 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     'parent': 'NEWS',
                     'scheme': 'services-products'
                 })
-                # Credits is DPA
-                credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
+                # source is DPA
+                credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "sources"}
                 item.setdefault('subject', []).append(credit)
                 # Distribution is default
                 dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}

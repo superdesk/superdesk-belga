@@ -48,8 +48,8 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     'parent': 'NEWS',
                     'scheme': 'services-products'
                 })
-        # credit is EFE
-        credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "credits"}
+        # source is EFE
+        credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
         return item
 

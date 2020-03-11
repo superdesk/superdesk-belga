@@ -41,6 +41,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     XML_ROOT = '<?xml version="1.0" encoding="{}"?>'.format(ENCODING)
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
+    DEFAULT_CREDITLINE = 'BELGA'
     CP_NAME_ROLE_MAP = {
         'belga_text': 'Belga text'
     }
@@ -334,7 +335,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(newslines, 'DateLine')
             SubElement(newslines, 'HeadLine').text = belga_url.get('description')
             SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-            SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
+            SubElement(newslines, 'CreditLine').text = self.DEFAULT_CREDITLINE
             self._format_administrative_metadata(newscomponent_2_level, item=item)
             self._format_descriptive_metadata(newscomponent_2_level, item=item)
 
@@ -841,7 +842,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, 'DateLine')
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-        SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
+        SubElement(newslines, 'CreditLine').text = self.DEFAULT_CREDITLINE
 
         # KeywordLine from country
         for subject in item.get('subject', []):
@@ -1101,13 +1102,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         return content_type['label'].capitalize()
 
-    def _get_creditline(self, item):
+    def _get_sources(self, item):
         """
-        Return a creditline for an `item`
+        Return a sources for an `item`
         :param item: item
         :type item: dict
-        :return: creditnline
-        :rtype: str
+        :return: sources
         """
 
         # internal text item
@@ -1116,7 +1116,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             return creditline
 
         # internal picture/video/audio item
-        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-credit']
+        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-source']
         if creditline:
             return creditline[0]
 
