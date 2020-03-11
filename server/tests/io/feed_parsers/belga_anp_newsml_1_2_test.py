@@ -38,7 +38,7 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
         expected_subjects = [
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'},
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},

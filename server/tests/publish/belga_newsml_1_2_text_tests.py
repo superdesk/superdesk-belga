@@ -88,6 +88,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'annotations': [],
         "associations": {
             "editor_0": {
+                "type": "picture",
                 "renditions": {
                     "original": {
                         "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
@@ -126,7 +127,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "_id": "urn:newsml:localhost:5000:2019-08-19T15:15:01.015742:0976acf1-6956-4e03-beb1-e1c84833df45",
                 "guid": "tag:localhost:5000:2019:7999396b-23a7-4642-94f4-55a09624d7ec",
                 "media": "pic_1",
-                "type": "picture",
                 "pubstatus": "usable",
                 "format": "HTML",
                 "firstcreated": "2019-08-19T13:15:01+0000",
@@ -156,9 +156,15 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "description_text": "Mazda MX5 retro 1990",
                 "expiry": "2047-01-03T13:15:01+0000",
                 "headline": "Mazda MX5 retro",
-                "subject": [],
                 "usageterms": "",
-                "version": 2
+                "version": 2,
+                "subject": [
+                    {
+                        "name": "Belga On The Spot",
+                        "qcode": "Belga_on_the_spot",
+                        "scheme": "media-source"
+                    }
+                ]
             },
             "editor_1": {
                 "renditions": {
@@ -623,8 +629,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'name': 'NEWS/ENTERTAINMENT', 'qcode': 'NEWS/ENTERTAINMENT', 'parent': 'NEWS',
              'scheme': 'services-products'},
             {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'},
-            {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'}
+            {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'sources'},
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'}
         ],
         'word_count': 28,
         'byline': 'BELGA',
@@ -1084,7 +1090,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'DPA/ANP'
+            'BELGA'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1160,7 +1166,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0].attrib),
-            {'FormalName': 'Belga'}
+            {'FormalName': 'DPA'}
+        )
+        self.assertDictEqual(
+            dict(newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[1].attrib),
+            {'FormalName': 'ANP'}
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
@@ -1277,7 +1287,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'DPA/ANP'
+            'BELGA'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1477,7 +1487,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            None
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1520,7 +1530,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         source = newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0]
         self.assertEqual(
             source.attrib['FormalName'],
-            'Superdesk'
+            'Belga_on_the_spot'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata[DateAndTime]
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
@@ -1644,7 +1654,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'ZUMAPRESS'
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1777,8 +1787,9 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
-        self.assertIsNone(
-            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text
+        self.assertEqual(
+            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1967,7 +1978,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'ITARTASS'
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2033,7 +2044,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'AFP'
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2098,7 +2109,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            None
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2170,7 +2181,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            None
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2242,7 +2253,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            None
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2314,7 +2325,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            None
+            'BELGA'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(

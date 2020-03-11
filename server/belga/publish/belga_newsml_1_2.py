@@ -984,12 +984,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     {'FormalName': 'NewsProduct', 'Value': news_product_value}
                 )
 
-        if item.get('source'):
-            SubElement(
-                SubElement(administrative_metadata, 'Source'),
-                'Party',
-                {'FormalName': item['source']}
-            )
+        sources = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'sources']
+        sources += [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-source']
+        sources += [item['creditline']] if item.get('creditline') else []
+        if sources:
+            source_element = SubElement(administrative_metadata, 'Source')
+            for source in sources:
+                SubElement(
+                    source_element,
+                    'Party', {'FormalName': source}
+                )
 
     def _format_descriptive_metadata(self, newscomponent_2_level, item):
         """
@@ -1101,24 +1105,3 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             _id=item.get('profile')
         )
         return content_type['label'].capitalize()
-
-    def _get_sources(self, item):
-        """
-        Return a sources for an `item`
-        :param item: item
-        :type item: dict
-        :return: sources
-        """
-
-        # internal text item
-        creditline = '/'.join([subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'credits'])
-        if creditline:
-            return creditline
-
-        # internal picture/video/audio item
-        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-source']
-        if creditline:
-            return creditline[0]
-
-        # external item i.e ingested, belga 360 archive, belga coverage or belga image
-        return item.get('creditline')

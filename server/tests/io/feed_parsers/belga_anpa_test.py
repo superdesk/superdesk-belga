@@ -37,7 +37,7 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
         self.assertEqual(item["extra"], {"city": "SAITAMA"})
         self.assertListEqual(item["subject"], [
             {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
-            {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
+            {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'sources'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
         ])
         self.assertEqual(item["priority"], 2)

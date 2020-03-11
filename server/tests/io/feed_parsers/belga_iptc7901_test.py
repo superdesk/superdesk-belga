@@ -31,7 +31,7 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertListEqual(
             item["subject"],
             [{'name': 'NEWS/POLITICS', 'parent': 'NEWS', 'qcode': 'NEWS/POLITICS', 'scheme': 'services-products'},
-             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'credits'},
+             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'sources'},
              {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}]
         )
         self.assertEqual(item["type"], "text")
@@ -102,7 +102,7 @@ class ATSBelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
         self.assertListEqual(
             item["subject"],
             [{'name': 'NEWS/ECONOMY', 'parent': 'NEWS', 'qcode': 'NEWS/ECONOMY', 'scheme': 'services-products'},
-             {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'},
+             {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'sources'},
              {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}]
         )
         self.assertEqual(item["type"], "text")
