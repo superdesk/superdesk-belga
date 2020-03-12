@@ -2298,7 +2298,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/pdf_1?resource=attachments'
+            'urn:www.belga.be:superdesk:pdf_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'

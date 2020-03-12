@@ -772,7 +772,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'filename': attachment['filename'],
                 'media': attachment['media'],
                 'mimetype': attachment['mimetype'],
-                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}?resource=attachments'.format(attachment['media']))
+                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}'.format(attachment['media'])),
+                'belga-urn': 'urn:www.belga.be:superdesk:{}'.format(attachment['media'])
             }
         )
 
