@@ -773,7 +773,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'media': attachment['media'],
                 'mimetype': attachment['mimetype'],
                 'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}'.format(attachment['media'])),
-                'belga-urn': 'urn:www.belga.be:superdesk:{}'.format(attachment['media'])
+                'belga-urn': 'urn:www.belga.be:superdesk:{}:{}'.format(
+                    app.config['OUTPUT_BELGA_URN_SUFFIX'],
+                    attachment['media']
+                )
             }
         )
 
@@ -790,7 +793,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
                     belga_id = media_item[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
                     rendition['belga-urn'] = 'urn:www.belga.be:picturestore:{}:{}:true'.format(
-                        belga_id, self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
+                        belga_id,
+                        self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
                     )
                     rendition['filename'] = '{}.jpeg'.format(belga_id)
             # rendition is from Belga coverage search provider
@@ -799,7 +803,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 pass
             # the rest are internaly uploaded media: pictures, video and audio
             else:
-                rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}'.format(rendition['media'])
+                rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(
+                    app.config['OUTPUT_BELGA_URN_SUFFIX'],
+                    rendition['media']
+                )
 
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
         """

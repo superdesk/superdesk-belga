@@ -8,15 +8,15 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-from io import BytesIO
 import datetime
 from lxml import etree
 from unittest import mock
 from bson.objectid import ObjectId
 
-from superdesk.tests import TestCase
 from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
+from .. import TestCase
+
 
 belga_apiget_response = {
     'galleryId': 6666666,

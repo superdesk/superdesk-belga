@@ -14,9 +14,9 @@ from lxml import etree
 from unittest import mock
 from bson.objectid import ObjectId
 
-from superdesk.tests import TestCase
 from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
+from .. import TestCase
 
 
 class BelgaNewsML12FormatterTextTest(TestCase):

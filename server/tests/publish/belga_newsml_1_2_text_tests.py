@@ -14,9 +14,9 @@ from lxml import etree
 from unittest import mock
 from bson.objectid import ObjectId
 
-from superdesk.tests import TestCase
 from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
+from .. import TestCase
 
 belga_apiget_response = {
     'galleryId': 6666666,
@@ -1587,7 +1587,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_1'
+            'urn:www.belga.be:superdesk:tst:pic_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
@@ -1633,7 +1633,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_1'
+            'urn:www.belga.be:superdesk:tst:pic_1'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1641,7 +1641,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_1'
+            'urn:www.belga.be:superdesk:tst:pic_1'
         )
 
     def test_belga_picture_in_editor(self):
@@ -1814,7 +1814,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_2'
+            'urn:www.belga.be:superdesk:tst:pic_2'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
@@ -1845,7 +1845,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_2'
+            'urn:www.belga.be:superdesk:tst:pic_2'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1853,7 +1853,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_2'
+            'urn:www.belga.be:superdesk:tst:pic_2'
         )
 
     def test_belga_picture_related_images(self):
@@ -1917,7 +1917,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_3'
+            'urn:www.belga.be:superdesk:tst:pic_3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1925,7 +1925,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_3'
+            'urn:www.belga.be:superdesk:tst:pic_3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Preview) -> ContentItem
         contentitem = newscomponent_2_level.xpath(
@@ -1933,7 +1933,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pic_3'
+            'urn:www.belga.be:superdesk:tst:pic_3'
         )
 
     def test_belga_picture_related_gallery(self):
@@ -2154,7 +2154,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:audio_1'
+            'urn:www.belga.be:superdesk:tst:audio_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Sound"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2226,7 +2226,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:video_1'
+            'urn:www.belga.be:superdesk:tst:video_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2298,7 +2298,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:pdf_1'
+            'urn:www.belga.be:superdesk:tst:pdf_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'

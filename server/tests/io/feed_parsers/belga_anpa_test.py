@@ -1,8 +1,10 @@
 import os
+
 import settings
-from superdesk.tests import TestCase
 from superdesk import config
+
 from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
+from tests import TestCase
 
 
 class BaseBelgaANPAFeedParserTestCase(TestCase):

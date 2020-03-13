@@ -4,7 +4,8 @@ import json
 from httmock import HTTMock, urlmatch
 
 from belga.io.feeding_services.twitter_belga import TwitterBelgaFeedingService
-from superdesk.tests import TestCase
+from tests import TestCase
+
 
 items = [{
     'source': 'twitter',
