@@ -69,7 +69,7 @@ class BelgaANPAFeedParser(ANPAFeedParser):
                 qcode = self.MAPPING_PRODUCTS.get(qcode, 'NEWS/GENERAL')
                 item.setdefault('subject', []).extend([
                     {'name': qcode, 'qcode': qcode, 'parent': 'NEWS', 'scheme': 'services-products'},
-                    {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
+                    {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'sources'},
                     {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
                 ])
                 item['slugline'] = m.group(6).decode('latin-1', 'replace')

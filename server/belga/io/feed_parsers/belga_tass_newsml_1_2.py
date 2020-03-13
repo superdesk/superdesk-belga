@@ -55,7 +55,8 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     'parent': 'NEWS',
                     'scheme': 'services-products'
                 })
-        credit = {"name": 'TASS', "qcode": 'TASS', "scheme": "credits"}
+        # source is TASS
+        credit = {"name": 'TASS', "qcode": 'TASS', "scheme": "sources"}
         item['subject'].append(credit)
 
     def parser_newscomponent(self, item, newscomponent_el):

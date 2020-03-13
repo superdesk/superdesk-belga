@@ -41,6 +41,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     XML_ROOT = '<?xml version="1.0" encoding="{}"?>'.format(ENCODING)
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
+    DEFAULT_CREDITLINE = 'BELGA'
     CP_NAME_ROLE_MAP = {
         'belga_text': 'Belga text'
     }
@@ -334,7 +335,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(newslines, 'DateLine')
             SubElement(newslines, 'HeadLine').text = belga_url.get('description')
             SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-            SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
+            SubElement(newslines, 'CreditLine').text = self.DEFAULT_CREDITLINE
             self._format_administrative_metadata(newscomponent_2_level, item=item)
             self._format_descriptive_metadata(newscomponent_2_level, item=item)
 
@@ -771,7 +772,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 'filename': attachment['filename'],
                 'media': attachment['media'],
                 'mimetype': attachment['mimetype'],
-                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}?resource=attachments'.format(attachment['media']))
+                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}'.format(attachment['media'])),
+                'belga-urn': 'urn:www.belga.be:superdesk:{}'.format(attachment['media'])
             }
         )
 
@@ -841,7 +843,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, 'DateLine')
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-        SubElement(newslines, 'CreditLine').text = self._get_creditline(item)
+        SubElement(newslines, 'CreditLine').text = self.DEFAULT_CREDITLINE
 
         # KeywordLine from country
         for subject in item.get('subject', []):
@@ -983,12 +985,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     {'FormalName': 'NewsProduct', 'Value': news_product_value}
                 )
 
-        if item.get('source'):
-            SubElement(
-                SubElement(administrative_metadata, 'Source'),
-                'Party',
-                {'FormalName': item['source']}
-            )
+        sources = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'sources']
+        sources += [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-source']
+        sources += [item['creditline']] if item.get('creditline') else []
+        if sources:
+            source_element = SubElement(administrative_metadata, 'Source')
+            for source in sources:
+                SubElement(
+                    source_element,
+                    'Party', {'FormalName': source}
+                )
 
     def _format_descriptive_metadata(self, newscomponent_2_level, item):
         """
@@ -1100,25 +1106,3 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             _id=item.get('profile')
         )
         return content_type['label'].capitalize()
-
-    def _get_creditline(self, item):
-        """
-        Return a creditline for an `item`
-        :param item: item
-        :type item: dict
-        :return: creditnline
-        :rtype: str
-        """
-
-        # internal text item
-        creditline = '/'.join([subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'credits'])
-        if creditline:
-            return creditline
-
-        # internal picture/video/audio item
-        creditline = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-credit']
-        if creditline:
-            return creditline[0]
-
-        # external item i.e ingested, belga 360 archive, belga coverage or belga image
-        return item.get('creditline')

@@ -43,7 +43,7 @@ class BelgaATSNewsMLOneTestCase(BelgaTestCase):
             {'qcode': '04001000', 'name': 'agriculture', 'scheme': 'iptc_subject_codes'},
             {'qcode': '04000000', 'name': 'economy, business and finance', 'scheme': 'iptc_subject_codes'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'credits'}
+            {'name': 'ATS', 'qcode': 'ATS', 'scheme': 'sources'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["slugline"], None)

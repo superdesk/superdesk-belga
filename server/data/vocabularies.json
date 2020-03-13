@@ -3352,8 +3352,8 @@
         ]
     },
     {
-        "_id": "credits",
-        "display_name": "Credits",
+        "_id": "sources",
+        "display_name": "Sources",
         "type": "manageable",
         "unique_field": "qcode",
         "service": {
@@ -11868,26 +11868,8 @@
         ]
     },
     {
-        "_id": "credit",
-        "display_name": "Credit",
-        "type": "manageable",
-        "selection_type": "single selection",
-        "items": [
-            {
-                "is_active": true,
-                "name": "Belga",
-                "qcode": "Belga"
-            },
-            {
-                "is_active": true,
-                "name": "Belga handout",
-                "qcode": "Belga_handout"
-            }
-        ]
-    },
-    {
-        "_id": "media-credit",
-        "display_name": "Credit",
+        "_id": "media-source",
+        "display_name": "Media source",
         "type": "manageable",
         "service": {"all": 1},
         "selection_type": "single selection",
