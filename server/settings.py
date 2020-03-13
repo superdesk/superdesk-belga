@@ -167,3 +167,13 @@ SCHEMA['graphic'].update({
 
 VALIDATOR_MEDIA_METADATA = {}
 ALLOW_UPDATING_SCHEDULED_ITEMS = True
+
+GRAMMALECTE_CONFIG = {
+    # disable typographic apostrophes (SDBELGA-326)
+    "apos": False,
+    # disable typographic quotation marks (SDBELGA-326)
+    "ignore_rules": {
+        "typo_guillemets_typographiques_doubles_ouvrants",
+        "typo_guillemets_typographiques_doubles_fermants",
+    },
+}
