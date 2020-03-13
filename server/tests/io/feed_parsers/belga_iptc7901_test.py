@@ -1,7 +1,7 @@
 import os
 
-from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_iptc7901 import BelgaIPTC7901FeedParser
+from tests import TestCase
 
 
 class BaseBelgaIPTC7901FeedParserTestCase(TestCase):

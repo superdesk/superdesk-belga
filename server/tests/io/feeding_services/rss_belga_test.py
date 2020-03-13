@@ -1,5 +1,7 @@
-from superdesk.tests import TestCase
 import time
+
+from tests import TestCase
+
 
 dataset = {
     'title': "'Duizenden banen weg bij Britse super Tesco'",

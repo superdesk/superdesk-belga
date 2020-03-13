@@ -13,8 +13,9 @@ import os
 import pytz
 import datetime
 from lxml import etree
-from superdesk.tests import TestCase
+
 from belga.io.feed_parsers.belga_newsml_1_2 import BelgaNewsMLOneFeedParser
+from tests import TestCase
 
 
 class BelgaNewsMLOneTestCase(TestCase):

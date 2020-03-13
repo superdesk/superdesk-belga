@@ -11,12 +11,12 @@
 
 import os
 from lxml import etree
-from superdesk.tests import TestCase
+
 from belga.io.feed_parsers.belga_efe_newsml_1_2 import BelgaEFENewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaEFENewsMLOneTestCase(BelgaTestCase):
+class BelgaEFENewsMLOneTestCase(TestCase):
     filename = 'efe_belga.xml'
 
     def setUp(self):

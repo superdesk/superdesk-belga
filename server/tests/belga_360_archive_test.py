@@ -1,8 +1,5 @@
 import os
-import hmac
-import hashlib
 import unittest
-import requests
 import superdesk
 
 from flask import json

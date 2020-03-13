@@ -8,9 +8,9 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 import os
-from superdesk.tests import TestCase
+
 from belga.command.contacts_import import import_contacts_via_json_file
-from superdesk import get_resource_service
+from .. import TestCase
 
 
 class BelgaContactImportTestCase(TestCase):

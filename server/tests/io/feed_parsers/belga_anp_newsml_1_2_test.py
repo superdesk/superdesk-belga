@@ -11,11 +11,12 @@
 
 import os
 from lxml import etree
+
 from belga.io.feed_parsers.belga_anp_newsml_1_2 import BelgaANPNewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaANPNewsMLOneTestCase(BelgaTestCase):
+class BelgaANPNewsMLOneTestCase(TestCase):
     filename = 'anp_belga.xml'
 
     def setUp(self):

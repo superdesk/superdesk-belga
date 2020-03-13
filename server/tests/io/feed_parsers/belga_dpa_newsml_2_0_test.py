@@ -11,11 +11,12 @@
 
 import os
 from lxml import etree
+
 from belga.io.feed_parsers.belga_dpa_newsml_2_0 import BelgaDPANewsMLTwoFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaDPANewsMLTwoTestCase(BelgaTestCase):
+class BelgaDPANewsMLTwoTestCase(TestCase):
     filename = 'dpa_newsml_2_0_belga.xml'
 
     def setUp(self):

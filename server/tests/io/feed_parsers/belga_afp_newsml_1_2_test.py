@@ -11,11 +11,12 @@
 import os
 import datetime
 from lxml import etree
+
 from belga.io.feed_parsers.belga_afp_newsml_1_2 import BelgaAFPNewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
+class BelgaAFPNewsMLOneTestCase(TestCase):
     filename = 'afp_belga.xml'
 
     def setUp(self):

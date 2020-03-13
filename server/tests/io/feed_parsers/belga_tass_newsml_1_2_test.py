@@ -13,10 +13,10 @@ import os
 from lxml import etree
 
 from belga.io.feed_parsers.belga_tass_newsml_1_2 import BelgaTASSNewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaTASSNewsMLOneTestCase(BelgaTestCase):
+class BelgaTASSNewsMLOneTestCase(TestCase):
     filename = 'tass_belga.xml'
 
     def setUp(self):
