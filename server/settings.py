@@ -88,8 +88,11 @@ TIMEZONE_CODE = {
     'wst': 'America/Indiana/Indianapolis'
 }
 
-#: Default value for Source to be set for manually created items
+# Default value for Source to be set for manually created items
 DEFAULT_SOURCE_VALUE_FOR_MANUAL_ARTICLES = "Belga"
+
+# Generating short GUID for items
+GENERATE_SHORT_GUID = True
 
 # This value gets injected into NewsML 1.2 and G2 output documents.
 NEWSML_PROVIDER_ID = 'belga.be'
