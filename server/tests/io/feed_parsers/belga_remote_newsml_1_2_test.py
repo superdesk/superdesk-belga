@@ -10,6 +10,9 @@
 
 
 import os
+from unittest.mock import MagicMock
+from io import BytesIO
+from superdesk import get_resource_service
 from lxml import etree
 
 from belga.io.feed_parsers.belga_remote_newsml_1_2 import BelgaRemoteNewsMLOneFeedParser
@@ -18,12 +21,16 @@ from tests import TestCase
 
 class BelgaRemoteNewsMLOneTestCase(TestCase):
     filename = 'belga_remote_newsml_1_2.xml'
+    media_file = 'belga_remote_newsml_1_2.jpeg'
 
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
-        provider = {'name': 'test'}
+        media_fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.media_file))
+        provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
         parser = BelgaRemoteNewsMLOneFeedParser()
+        with open(media_fixture, 'rb') as f:
+            parser._get_file = MagicMock(return_value=BytesIO(f.read()))
         with open(fixture, 'rb') as f:
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
@@ -45,7 +52,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["guid"], "4717cf36012e91f8a7012ba0e0420848")
+        self.assertEqual(item["guid"], "d7131990f7f288f4ca0981d2d7530b64")
         self.assertEqual(item["language"], "nl")
         self.assertEqual(item["byline"], "BELGA")
         self.assertEqual(item["headline"], "Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten")
@@ -60,7 +67,28 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["extra"], {'city': 'ANTWERPEN', 'country': 'BELGIUM'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(
+            item['abstract'],
+            'In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en Sla'
+            'chthuislaan in juli en augustus volledig afgesloten worden voor nutswerken. Er w'
+            'orden waterleidingen en gasleidingen onder het kruispunt geplaatst en de afwater'
+            'ing van de Antwerpse ring en de Schijn-Scheldeverbinding krijgen nieuwe kokers, '
+            'zo meldt de Beheersmaatschappij Antwerpen Mobiel (BAM) vrijdag. Na die werken wo'
+            'rdt bovendien ook het kruispunt zelf heraangelegd. De BAM hoopt de hinder zoveel'
+            ' mogelijk te beperken door de werken in de zomermaanden uit te voeren, wanneer e'
+            'r sowieso minder verkeer is en bovendien de naburige concertzalen geen evenement'
+            'en organiseren.'
+        )
+        self.assertEqual(
             item['body_html'],
+            '<p>In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en '
+            'Slachthuislaan in juli en augustus volledig afgesloten worden voor nutswerken. E'
+            'r worden waterleidingen en gasleidingen onder het kruispunt geplaatst en de afwa'
+            'tering van de Antwerpse ring en de Schijn-Scheldeverbinding krijgen nieuwe koker'
+            's, zo meldt de Beheersmaatschappij Antwerpen Mobiel (BAM) vrijdag. Na die werken'
+            ' wordt bovendien ook het kruispunt zelf heraangelegd. De BAM hoopt de hinder zov'
+            'eel mogelijk te beperken door de werken in de zomermaanden uit te voeren, wannee'
+            'r er sowieso minder verkeer is en bovendien de naburige concertzalen geen evenem'
+            'enten organiseren.</p>'
             '<p>Auto&#x27;s, vrachtverkeer en het openbaar vervoer zullen het kruispunt twee '
             'maanden lang niet kunnen passeren, fietsers en voetgangers wel via een gemengde '
             'doorgang langs de werf. Lokaal verkeer kan de Noordersingel en Slachthuislaan in'
@@ -75,3 +103,13 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
             ' dat afgescheiden is van de rijweg door een groenstrook of vergroende parkeerstr'
             'ook. Ook de kruispunten worden veiliger gemaakt.</p>'
         )
+
+        self.assertEqual(item['ednote'], 'The story has 1 attachment(s)')
+
+        attachment_id = item['attachments'][0]['attachment']
+        data = get_resource_service('attachments').find_one(req=None, _id=attachment_id)
+        self.assertEqual(data["title"], "belga_remote_newsml_1_2.jpeg")
+        self.assertEqual(data["filename"], "belga_remote_newsml_1_2.jpeg")
+        self.assertEqual(data["description"], "belga remote attachment")
+        self.assertEqual(data["mimetype"], "image/jpeg")
+        self.assertEqual(data["length"], 4680)
