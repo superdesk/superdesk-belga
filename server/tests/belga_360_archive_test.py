@@ -64,8 +64,9 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         item = self.provider.format_list_item(get_belga360_item())
         guid = 'urn:belga.be:360archive:39670442'
         self.assertEqual(item['type'], 'text')
-        self.assertEqual(item['mimetype'], 'application/vnd.belga.360archive')
+        self.assertEqual(item['mimetype'], 'application/superdesk.vnd.belga.360archive')
         self.assertEqual(item['_id'], guid)
+        self.assertEqual(item['state'], 'published')
         self.assertEqual(item['guid'], guid)
         self.assertEqual(item['extra']['bcoverage'], guid)
         self.assertEqual(item['headline'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
