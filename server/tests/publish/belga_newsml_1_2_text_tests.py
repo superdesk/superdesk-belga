@@ -503,7 +503,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "_id": "urn:newsml:localhost:5000:2019-08-22T19:21:03.822095:354d20b8-1e3f-479a-ab80-eea6d72d5324",
                 "type": "audio"
             },
-            "belga-related-audio--2": {
+            "belga-related-video--1": {
                 "_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
                 "type": "video"
             },

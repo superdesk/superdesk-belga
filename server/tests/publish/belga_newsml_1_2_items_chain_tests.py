@@ -94,6 +94,131 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             "translations": [
                 "original-fr"
             ],
+            "associations": {
+                "editor_0": {
+                    "renditions": {
+                        "original": {
+                            "width": 5472,
+                            "height": 3648,
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                        },
+                        "thumbnail": {
+                            "href": "http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom"
+                        },
+                        "viewImage": {
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj"
+                        },
+                        "baseImage": {
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                        }
+                    },
+                    "type": "picture",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:image:154620545",
+                    "guid": "urn:belga.be:image:154620545",
+                    "headline": "20190827_zap_d99_014.jpg",
+                    "description_text": "August 27, 2019: Gaza, Palestine.",
+                    "versioncreated": "2019-08-28T09:22:17+0000",
+                    "firstcreated": "2019-08-28T09:22:17+0000",
+                    "byline": "NBWBNX",
+                    "creditline": "ZUMAPRESS",
+                    "source": "ZUMAPRESS",
+                },
+                "belga_related_images--0": {
+                    "renditions": {
+                        "original": {
+                            "width": 4288,
+                            "height": 3012,
+                            "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                        },
+                        "thumbnail": {
+                            "href": "http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh"
+                        },
+                        "viewImage": {
+                            "href": "https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc"
+                        },
+                        "baseImage": {
+                            "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                        }
+                    },
+                    "_links": {
+                        "self": {
+                            "title": "Search_providers_proxy",
+                            "href": "search_providers_proxy/urn:belga.be:image:154670415"
+                        }
+                    },
+                    "type": "picture",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:image:154670415",
+                    "guid": "urn:belga.be:image:154670415",
+                    "headline": "urn:newsml:dpa.com:20090101:190829-99-659387",
+                    "description_text": "29 August 2019, Hanover: Cycling: UCI Europaserie, Germany Tour.",
+                    "versioncreated": "2019-08-29T13:22:02+0000",
+                    "firstcreated": "2019-08-29T13:22:02+0000",
+                    "byline": "NBYXIU",
+                    "creditline": "DPA",
+                    "source": "DPA",
+                    "_type": "externalsource",
+                    "fetch_endpoint": "search_providers_proxy"
+                },
+                "belga-coverages--0": {
+                    "renditions": {
+                        "original": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "thumbnail": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "viewImage": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "baseImage": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        }
+                    },
+                    "extra": {
+                        "bcoverage": "urn:belga.be:coverage:6690595"
+                    },
+                    "type": "graphic",
+                    "mimetype": "application/vnd.belga.coverage",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:coverage:6690595",
+                    "guid": "urn:belga.be:coverage:6690595",
+                    "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
+                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                                        " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
+                    "versioncreated": "2019-08-29T15:46:39+0000",
+                    "firstcreated": "2019-08-29T15:46:39+0000",
+                    "byline": "",
+                    "creditline": "ITARTASS",
+                    "source": "ITARTASS",
+                    "_type": "externalsource",
+                },
+                "belga_related_articles--0": {
+                    "extra": {
+                        "bcoverage": "urn:belga.be:360archive:77777777"
+                    },
+                    "type": "text",
+                    "mimetype": "application/vnd.belga.360archive",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:360archive:77777777",
+                    "guid": "urn:belga.be:360archive:77777777",
+                    "headline": "Vasil Kiryienka (38) doet ondanks hartproblemen verder bij INEOS",
+                    "name": "",
+                    "description_text": "",
+                    "versioncreated": "2019-10-23T09:30:14+0000",
+                    "firstcreated": "2019-10-23T09:30:14+0000",
+                    "creditline": "BELGA",
+                    "source": "BELGA",
+                    "language": "nl",
+                    "abstract": "Vasil Kiryienka zal ook in 2020 deel uitmaken van het peloton.",
+                    "body_html": "Kiryienka werd dit jaar opgeschrikt door een hartprobleem.",
+                    "_type": "externalsource",
+                    "fetch_endpoint": "search_providers_proxy",
+                    "ingest_provider": "5da8572a9e7cb98d13ce1d7b",
+                    "selected": False
+                }
+            },
         },
         {
             '_id': 'original-fr',
@@ -120,6 +245,131 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'byline': 'BELGA',
             "translation_id": "original",
             "translated_from": "original",
+            "associations": {
+                "editor_0": {
+                    "renditions": {
+                        "original": {
+                            "width": 5472,
+                            "height": 3648,
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                        },
+                        "thumbnail": {
+                            "href": "http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom"
+                        },
+                        "viewImage": {
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj"
+                        },
+                        "baseImage": {
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                        }
+                    },
+                    "type": "picture",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:image:154620545",
+                    "guid": "urn:belga.be:image:154620545",
+                    "headline": "20190827_zap_d99_014.jpg",
+                    "description_text": "August 27, 2019: Gaza, Palestine.",
+                    "versioncreated": "2019-08-28T09:22:17+0000",
+                    "firstcreated": "2019-08-28T09:22:17+0000",
+                    "byline": "NBWBNX",
+                    "creditline": "ZUMAPRESS",
+                    "source": "ZUMAPRESS",
+                },
+                "belga_related_images--0": {
+                    "renditions": {
+                        "original": {
+                            "width": 4288,
+                            "height": 3012,
+                            "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                        },
+                        "thumbnail": {
+                            "href": "http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh"
+                        },
+                        "viewImage": {
+                            "href": "https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc"
+                        },
+                        "baseImage": {
+                            "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                        }
+                    },
+                    "_links": {
+                        "self": {
+                            "title": "Search_providers_proxy",
+                            "href": "search_providers_proxy/urn:belga.be:image:154670415"
+                        }
+                    },
+                    "type": "picture",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:image:154670415",
+                    "guid": "urn:belga.be:image:154670415",
+                    "headline": "urn:newsml:dpa.com:20090101:190829-99-659387",
+                    "description_text": "29 August 2019, Hanover: Cycling: UCI Europaserie, Germany Tour.",
+                    "versioncreated": "2019-08-29T13:22:02+0000",
+                    "firstcreated": "2019-08-29T13:22:02+0000",
+                    "byline": "NBYXIU",
+                    "creditline": "DPA",
+                    "source": "DPA",
+                    "_type": "externalsource",
+                    "fetch_endpoint": "search_providers_proxy"
+                },
+                "belga-coverages--0": {
+                    "renditions": {
+                        "original": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "thumbnail": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "viewImage": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "baseImage": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        }
+                    },
+                    "extra": {
+                        "bcoverage": "urn:belga.be:coverage:6690595"
+                    },
+                    "type": "graphic",
+                    "mimetype": "application/vnd.belga.coverage",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:coverage:6690595",
+                    "guid": "urn:belga.be:coverage:6690595",
+                    "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
+                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                                        " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
+                    "versioncreated": "2019-08-29T15:46:39+0000",
+                    "firstcreated": "2019-08-29T15:46:39+0000",
+                    "byline": "",
+                    "creditline": "ITARTASS",
+                    "source": "ITARTASS",
+                    "_type": "externalsource",
+                },
+                "belga_related_articles--0": {
+                    "extra": {
+                        "bcoverage": "urn:belga.be:360archive:77777777"
+                    },
+                    "type": "text",
+                    "mimetype": "application/vnd.belga.360archive",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:360archive:77777777",
+                    "guid": "urn:belga.be:360archive:77777777",
+                    "headline": "Vasil Kiryienka (38) doet ondanks hartproblemen verder bij INEOS",
+                    "name": "",
+                    "description_text": "",
+                    "versioncreated": "2019-10-23T09:30:14+0000",
+                    "firstcreated": "2019-10-23T09:30:14+0000",
+                    "creditline": "BELGA",
+                    "source": "BELGA",
+                    "language": "nl",
+                    "abstract": "Vasil Kiryienka zal ook in 2020 deel uitmaken van het peloton.",
+                    "body_html": "Kiryienka werd dit jaar opgeschrikt door een hartprobleem.",
+                    "_type": "externalsource",
+                    "fetch_endpoint": "search_providers_proxy",
+                    "ingest_provider": "5da8572a9e7cb98d13ce1d7b",
+                    "selected": False
+                }
+            },
         },
         {
             '_id': 'update-1',
@@ -176,6 +426,131 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'byline': 'BELGA',
             "translation_id": "update-1",
             "translated_from": "update-1",
+            "associations": {
+                "editor_0": {
+                    "renditions": {
+                        "original": {
+                            "width": 5472,
+                            "height": 3648,
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                        },
+                        "thumbnail": {
+                            "href": "http://p.cdn.belga.be/belgaimage:154620545:600x140?v=5d5aaa94&m=kmjjblom"
+                        },
+                        "viewImage": {
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:800x800:w?v=5d5aaa94&m=hdccpkpj"
+                        },
+                        "baseImage": {
+                            "href": "https://3.t.cdn.belga.be/belgaimage:154620545:1800x650:w?v=5d5aaa94&m=njopcomo"
+                        }
+                    },
+                    "type": "picture",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:image:154620545",
+                    "guid": "urn:belga.be:image:154620545",
+                    "headline": "20190827_zap_d99_014.jpg",
+                    "description_text": "August 27, 2019: Gaza, Palestine.",
+                    "versioncreated": "2019-08-28T09:22:17+0000",
+                    "firstcreated": "2019-08-28T09:22:17+0000",
+                    "byline": "NBWBNX",
+                    "creditline": "ZUMAPRESS",
+                    "source": "ZUMAPRESS",
+                },
+                "belga_related_images--0": {
+                    "renditions": {
+                        "original": {
+                            "width": 4288,
+                            "height": 3012,
+                            "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                        },
+                        "thumbnail": {
+                            "href": "http://p.cdn.belga.be/belgaimage:154670415:600x140?v=5d5aaa94&m=fcgloioh"
+                        },
+                        "viewImage": {
+                            "href": "https://2.t.cdn.belga.be/belgaimage:154670415:800x800:w?v=5d5aaa94&m=ebedljnc"
+                        },
+                        "baseImage": {
+                            "href": "https://0.t.cdn.belga.be/belgaimage:154670415:1800x650:w?v=5d5aaa94&m=ablplddf"
+                        }
+                    },
+                    "_links": {
+                        "self": {
+                            "title": "Search_providers_proxy",
+                            "href": "search_providers_proxy/urn:belga.be:image:154670415"
+                        }
+                    },
+                    "type": "picture",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:image:154670415",
+                    "guid": "urn:belga.be:image:154670415",
+                    "headline": "urn:newsml:dpa.com:20090101:190829-99-659387",
+                    "description_text": "29 August 2019, Hanover: Cycling: UCI Europaserie, Germany Tour.",
+                    "versioncreated": "2019-08-29T13:22:02+0000",
+                    "firstcreated": "2019-08-29T13:22:02+0000",
+                    "byline": "NBYXIU",
+                    "creditline": "DPA",
+                    "source": "DPA",
+                    "_type": "externalsource",
+                    "fetch_endpoint": "search_providers_proxy"
+                },
+                "belga-coverages--0": {
+                    "renditions": {
+                        "original": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "thumbnail": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "viewImage": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        },
+                        "baseImage": {
+                            "href": "https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil"
+                        }
+                    },
+                    "extra": {
+                        "bcoverage": "urn:belga.be:coverage:6690595"
+                    },
+                    "type": "graphic",
+                    "mimetype": "application/vnd.belga.coverage",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:coverage:6690595",
+                    "guid": "urn:belga.be:coverage:6690595",
+                    "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
+                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                                        " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
+                    "versioncreated": "2019-08-29T15:46:39+0000",
+                    "firstcreated": "2019-08-29T15:46:39+0000",
+                    "byline": "",
+                    "creditline": "ITARTASS",
+                    "source": "ITARTASS",
+                    "_type": "externalsource",
+                },
+                "belga_related_articles--0": {
+                    "extra": {
+                        "bcoverage": "urn:belga.be:360archive:77777777"
+                    },
+                    "type": "text",
+                    "mimetype": "application/vnd.belga.360archive",
+                    "pubstatus": "usable",
+                    "_id": "urn:belga.be:360archive:77777777",
+                    "guid": "urn:belga.be:360archive:77777777",
+                    "headline": "Vasil Kiryienka (38) doet ondanks hartproblemen verder bij INEOS",
+                    "name": "",
+                    "description_text": "",
+                    "versioncreated": "2019-10-23T09:30:14+0000",
+                    "firstcreated": "2019-10-23T09:30:14+0000",
+                    "creditline": "BELGA",
+                    "source": "BELGA",
+                    "language": "nl",
+                    "abstract": "Vasil Kiryienka zal ook in 2020 deel uitmaken van het peloton.",
+                    "body_html": "Kiryienka werd dit jaar opgeschrikt door een hartprobleem.",
+                    "_type": "externalsource",
+                    "fetch_endpoint": "search_providers_proxy",
+                    "ingest_provider": "5da8572a9e7cb98d13ce1d7b",
+                    "selected": False
+                }
+            },
         },
         {
             '_id': 'update-2',
@@ -288,7 +663,15 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         expected = (
             ('original', 'nl'),
+            ('urn:belga.be:image:154620545', 'nl'),
+            ('urn:belga.be:image:154670415', 'nl'),
+            ('urn:belga.be:coverage:6690595', 'nl'),
+            ('urn:belga.be:360archive:77777777', 'nl'),
             ('original-fr', 'fr'),
+            ('urn:belga.be:image:154620545', 'fr'),
+            ('urn:belga.be:image:154670415', 'fr'),
+            ('urn:belga.be:coverage:6690595', 'fr'),
+            ('urn:belga.be:360archive:77777777', 'nl'),
             ('update-1', 'nl'),
             ('update-2', 'nl')
         )

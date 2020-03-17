@@ -370,7 +370,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'http://localhost:5000/api/upload-raw/video_1.mp4'
+            'urn:www.belga.be:superdesk:tst:video_1'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/Format'
