@@ -416,9 +416,9 @@
     },
     {
         "_id": "countries",
-        "display_name": "Countries",
+        "display_name": "Country",
         "type": "manageable",
-        "selection_type": "multi selection",
+        "selection_type": "single selection",
         "unique_field": "qcode",
         "schema": {
             "name": {},
@@ -428,7 +428,7 @@
         "service": {
             "all": 1
         },
-        "init_version": 1,
+        "init_version": 2,
         "items": [
             {
                 "name": "Aruba",
