@@ -38,71 +38,19 @@ belga_apiget_response = {
 
 
 class BelgaNewsML12FormatterVideoTest(TestCase):
-    article = {
-        "_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
-        "media": "video_1",
-        "type": "video",
-        "pubstatus": "usable",
-        "format": "HTML",
-        "firstcreated": "2019-08-14T14:51:06+0000",
-        "versioncreated": "2019-08-14T14:51:06+0000",
-        "original_creator": "5d385f31fe985ec67a0ca583",
-        "guid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
-        "unique_id": 13,
-        "unique_name": "#13",
-        "family_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06."
-                     "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
-        "event_id": "tag:localhost:5000:2019:d8846c42-d18a-447d-96e2-c3173c3adfdd",
-        "state": "in_progress",
-        "source": "Superdesk",
-        "priority": 6,
-        "urgency": 3,
-        "genre": [
-            {
-                "qcode": "Article",
-                "name": "Article (news)"
-            }
-        ],
-        "place": [],
-        "sign_off": "ADM",
-        "language": "nl",
-        "operation": "update",
-        "version_creator": "5d385f31fe985ec67a0ca583",
-        "renditions": {
-            "original": {
-                "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
-                "media": "video_1",
-                "mimetype": "video/mp4"
-            }
-        },
-        "mimetype": "video/mp4",
-        "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                         "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                         "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                         "n\": \"Big endian\", \"length\": 1022462}",
-        "description_text": "water",
-        "expiry": "2046-12-29T14:51:06+0000",
-        "headline": "water",
-        "version": 2,
-        "_current_version": 2,
-    }
 
     archive = (
         {
-            "_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
-            "media": "video_1",
-            "type": "video",
+            "_id": "urn:newsml:localhost:5000:2019-08-15T13:04:19.702285:d201d16e-1011-4d4c-a262-fed9942a64db",
+            "media": "pic_1",
+            "type": "picture",
             "pubstatus": "usable",
             "format": "HTML",
+            "_current_version": 4,
             "firstcreated": "2019-08-14T14:51:06+0000",
             "versioncreated": "2019-08-14T14:51:06+0000",
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
-            "unique_id": 13,
-            "unique_name": "#13",
-            "family_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06."
-                         "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
-            "event_id": "tag:localhost:5000:2019:d8846c42-d18a-447d-96e2-c3173c3adfdd",
             "state": "in_progress",
             "source": "Superdesk",
             "priority": 6,
@@ -116,25 +64,70 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             "place": [],
             "sign_off": "ADM",
             "language": "nl",
-            "operation": "update",
             "version_creator": "5d385f31fe985ec67a0ca583",
             "renditions": {
                 "original": {
-                    "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
-                    "media": "video_1",
-                    "mimetype": "video/mp4"
+                    "href": "http://localhost:5000/api/upload-raw/5d553c333031e2855a2e5662.jpg",
+                    "media": "pic_1",
+                    "mimetype": "image/jpeg",
+                    "width": 1920,
+                    "height": 1280,
+                    "poi": {
+                        "x": 960,
+                        "y": 640
+                    }
+                },
+                "baseImage": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5664.jpg",
+                    "media": "pic_1",
+                    "mimetype": "image/jpeg",
+                    "width": 1400,
+                    "height": 933,
+                    "poi": {
+                        "x": 700,
+                        "y": 466
+                    }
+                },
+                "thumbnail": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5666.jpg",
+                    "media": "pic_1",
+                    "mimetype": "image/jpeg",
+                    "width": 180,
+                    "height": 120,
+                    "poi": {
+                        "x": 90,
+                        "y": 60
+                    }
+                },
+                "viewImage": {
+                    "href": "http://localhost:5000/api/upload-raw/5d553c343031e2855a2e5668.jpg",
+                    "media": "pic_1",
+                    "mimetype": "image/jpeg",
+                    "width": 640,
+                    "height": 426,
+                    "poi": {
+                        "x": 320,
+                        "y": 213
+                    }
                 }
             },
-            "mimetype": "video/mp4",
-            "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                             "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                             "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                             "n\": \"Big endian\", \"length\": 1022462}",
-            "description_text": "water",
-            "expiry": "2046-12-29T14:51:06+0000",
-            "headline": "water",
-            "version": 2,
-            "_current_version": 2,
+            "mimetype": "image/jpeg",
+            "filemeta_json": "{\"length\": 170263}",
+            "byline": "BIENVENIDO VELASCO",
+            "description_text": "History of Mazda",
+            "headline": "History",
+            "extra": {
+                "belga-keywords": "one, two, three",
+                "city": "Prague",
+                "country": "CZ"
+            },
+            "subject": [
+                {
+                    "name": "Belga",
+                    "qcode": "Belga",
+                    "scheme": "credit"
+                }
+            ]
         },
     )
 
@@ -202,11 +195,11 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         # insert pictures
         media_items = (
             {
-                '_id': 'video_1',
-                'content': BytesIO(b'czech rap xD'),
-                'content_type': 'video/mp4',
+                '_id': 'pic_1',
+                'content': BytesIO(b'pic_one_content'),
+                'content_type': 'image/jpeg',
                 'metadata': {
-                    'length': 12
+                    'length': 10
                 }
             },
         )
@@ -214,9 +207,10 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             # base rendition
             self.app.media.put(**media_item)
 
-        self.article['state'] = 'published'
+        article = self.archive[0]
+        article['state'] = 'published'
         self.formatter = BelgaNewsML12Formatter()
-        seq, doc = self.formatter.format(self.article, self.subscriber)[0]
+        seq, doc = self.formatter.format(article, self.subscriber)[0]
         self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
 
     def test_catalog(self):
@@ -256,11 +250,11 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             self.formatter._duid
         )
         revisionid = self.newsml.xpath('NewsItem/Identification/NewsIdentifier/RevisionId')[0]
-        self.assertEqual(revisionid.text, '2')
+        self.assertEqual(revisionid.text, '4')
         self.assertDictEqual(dict(revisionid.attrib), {'Update': 'N', 'PreviousRevision': '0'})
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/PublicIdentifier')[0].text,
-            'urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5:2N'
+            'urn:newsml:localhost:5000:2019-08-15T13:04:19.702285:d201d16e-1011-4d4c-a262-fed9942a64db:4N'
         )
 
     def test_newsmanagement(self):
@@ -299,7 +293,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsComponent/NewsLines/HeadLine')[0].text,
-            'water'
+            'History'
         )
         # NewsML -> NewsItem -> NewsComponent -> AdministrativeMetadata
         self.assertIsNone(
@@ -311,7 +305,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             {'FormalName': ''}
         )
 
-    def test_video(self):
+    def test_picture(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         newscomponent_2_level = self.newsml.xpath(
             'NewsItem/NewsComponent/NewsComponent'
@@ -319,7 +313,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertEqual(
-            newscomponent_2_level.xpath('Role[@FormalName="Video"]')[0].text,
+            newscomponent_2_level.xpath('Role[@FormalName="Picture"]')[0].text,
             None
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
@@ -330,7 +324,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
-            'water'
+            'History'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
@@ -338,7 +332,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             datacontent.text,
-            'water'
+            'History'
         )
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
@@ -346,43 +340,43 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )
         self.assertEqual(
             sizeinbytes[0].text,
-            '5'
+            '7'
         )
-        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Caption) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
         self.assertEqual(
             datacontent.text,
-            'water'
+            'History of Mazda'
         )
         sizeinbytes = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
             '/ContentItem/Characteristics/SizeInBytes'
         )[0]
         self.assertEqual(
             sizeinbytes.text,
-            '5'
+            '16'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         contentitem = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem'
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:tst:video_1'
+            'urn:www.belga.be:superdesk:tst:pic_1'
         )
         _format = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/Format'
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Mp4'
+            'Jpg'
         )
         mimetype = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/MimeType'
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/MimeType'
         )[0]
         self.assertEqual(
             mimetype.attrib['FormalName'],
-            'video/mp4'
+            'image/jpeg'
         )
