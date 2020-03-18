@@ -185,7 +185,7 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
                     "_id": "urn:belga.be:coverage:6690595",
                     "guid": "urn:belga.be:coverage:6690595",
                     "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
-                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019."
                                         " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
                     "versioncreated": "2019-08-29T15:46:39+0000",
                     "firstcreated": "2019-08-29T15:46:39+0000",
@@ -336,7 +336,7 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
                     "_id": "urn:belga.be:coverage:6690595",
                     "guid": "urn:belga.be:coverage:6690595",
                     "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
-                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019."
                                         " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
                     "versioncreated": "2019-08-29T15:46:39+0000",
                     "firstcreated": "2019-08-29T15:46:39+0000",
@@ -517,7 +517,7 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
                     "_id": "urn:belga.be:coverage:6690595",
                     "guid": "urn:belga.be:coverage:6690595",
                     "headline": "RUSSIAN PARAGLIDING CHAMPIONSHIP IN STAVROPOL TERRITORY",
-                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019: Contestants during the 2019 Russian"
+                    "description_text": "STAVROPOL TERRITORY, RUSSIA - AUGUST 28, 2019."
                                         " Paragliding Championship on Mount Yutsa. Anton Podgaiko/TASS 0",
                     "versioncreated": "2019-08-29T15:46:39+0000",
                     "firstcreated": "2019-08-29T15:46:39+0000",

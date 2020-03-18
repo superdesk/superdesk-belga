@@ -200,10 +200,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         identification = SubElement(newsitem, 'Identification')
         news_identifier = SubElement(identification, 'NewsIdentifier')
         SubElement(news_identifier, 'ProviderId').text = app.config['NEWSML_PROVIDER_ID']
-        SubElement(news_identifier, 'DateId').text = self._get_formatted_datetime(self._current_item.get('firstcreated'))
+        SubElement(news_identifier, 'DateId').text = self._get_formatted_datetime(
+            self._current_item.get('firstcreated')
+        )
         SubElement(news_identifier, 'NewsItemId').text = self._duid
         revision = self._process_revision(self._current_item)
-        SubElement(news_identifier, 'RevisionId', attrib=revision).text = str(self._current_item.get(config.VERSION, ''))
+        SubElement(news_identifier, 'RevisionId', attrib=revision).text = \
+            str(self._current_item.get(config.VERSION, ''))
         SubElement(news_identifier, 'PublicIdentifier').text = self._generate_public_identifier(
             self._current_item[config.ID_FIELD],
             self._current_item.get(config.VERSION, ''),
@@ -1109,17 +1112,17 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             media_items = [
                 sd_item_associations[i] for i in sd_item_associations
                 if sd_item_associations[i]
-                   and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
-                                                   CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
-                   and 'renditions' in sd_item_associations[i]
+                and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
+                                                           CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
+                and 'renditions' in sd_item_associations[i]
             ]
             # get all associated media items `_id`s where `renditions` are NOT IN the item
             media_items_ids = [
                 sd_item_associations[i]['_id'] for i in sd_item_associations
                 if sd_item_associations[i]
-                   and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
-                                                   CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
-                   and 'renditions' not in sd_item_associations[i]
+                and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
+                                                           CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
+                and 'renditions' not in sd_item_associations[i]
             ]
             # fetch associated docs by _id
             if media_items_ids:
