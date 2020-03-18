@@ -1047,7 +1047,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     def _get_newsml_items_chain(self, item):
         """
         Get the whole items chain in context of Belga NewsML.
-        Enties which are treated as a standalone items (NewsComponent 2nd level) in Belga NewsML:
+        Entities which are treated as a standalone items (NewsComponent 2nd level) in Belga NewsML:
         - sd item
         - every association of sd item:
             - related internal/external image
