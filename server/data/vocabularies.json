@@ -12189,5 +12189,33 @@
             "single": false
         },
         "unique_field": "qcode"
+    },
+    {
+        "_id": "categories",
+        "display_name": "Categories",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "name": "FIXME1",
+                "qcode": "f1",
+                "subject": "",
+                "translations": {
+                    "name": {
+                        "fr": "FIXME1-fr",
+                        "nl": "FIXME1-nl"
+                    }
+                }
+            }
+        ],
+        "schema": {
+            "name": {
+                "translate": true
+            },
+            "qcode": {},
+            "subject": {}
+        }
     }
 ]
