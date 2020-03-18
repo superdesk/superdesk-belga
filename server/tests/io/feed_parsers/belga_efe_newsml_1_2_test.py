@@ -11,12 +11,12 @@
 
 import os
 from lxml import etree
-from superdesk.tests import TestCase
+
 from belga.io.feed_parsers.belga_efe_newsml_1_2 import BelgaEFENewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaEFENewsMLOneTestCase(BelgaTestCase):
+class BelgaEFENewsMLOneTestCase(TestCase):
     filename = 'efe_belga.xml'
 
     def setUp(self):
@@ -39,7 +39,7 @@ class BelgaEFENewsMLOneTestCase(BelgaTestCase):
             {'name': 'NEWS/POLITICS', 'qcode': 'NEWS/POLITICS', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'qcode': '01026000', 'name': 'mass media', 'scheme': 'iptc_subject_codes'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
-            {'name': 'EFE', 'qcode': 'EFE', 'scheme': 'credits'},
+            {'name': 'EFE', 'qcode': 'EFE', 'scheme': 'sources'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'India', 'qcode': 'country_ind', 'scheme': 'country',
              'translations': {'name': {'fr': 'Inde', 'nl': 'India'}}},

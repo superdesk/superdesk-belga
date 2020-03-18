@@ -416,9 +416,9 @@
     },
     {
         "_id": "countries",
-        "display_name": "Countries",
+        "display_name": "Country",
         "type": "manageable",
-        "selection_type": "multi selection",
+        "selection_type": "single selection",
         "unique_field": "qcode",
         "schema": {
             "name": {},
@@ -428,7 +428,7 @@
         "service": {
             "all": 1
         },
-        "init_version": 1,
+        "init_version": 2,
         "items": [
             {
                 "name": "Aruba",
@@ -3352,8 +3352,8 @@
         ]
     },
     {
-        "_id": "credits",
-        "display_name": "Credits",
+        "_id": "sources",
+        "display_name": "Sources",
         "type": "manageable",
         "unique_field": "qcode",
         "service": {
@@ -11868,26 +11868,8 @@
         ]
     },
     {
-        "_id": "credit",
-        "display_name": "Credit",
-        "type": "manageable",
-        "selection_type": "single selection",
-        "items": [
-            {
-                "is_active": true,
-                "name": "Belga",
-                "qcode": "Belga"
-            },
-            {
-                "is_active": true,
-                "name": "Belga handout",
-                "qcode": "Belga_handout"
-            }
-        ]
-    },
-    {
-        "_id": "media-credit",
-        "display_name": "Credit",
+        "_id": "media-source",
+        "display_name": "Media source",
         "type": "manageable",
         "service": {"all": 1},
         "selection_type": "single selection",
@@ -12207,5 +12189,33 @@
             "single": false
         },
         "unique_field": "qcode"
+    },
+    {
+        "_id": "categories",
+        "display_name": "Categories",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "unique_field": "qcode",
+        "items": [
+            {
+                "is_active": true,
+                "name": "FIXME1",
+                "qcode": "f1",
+                "subject": "",
+                "translations": {
+                    "name": {
+                        "fr": "FIXME1-fr",
+                        "nl": "FIXME1-nl"
+                    }
+                }
+            }
+        ],
+        "schema": {
+            "name": {
+                "translate": true
+            },
+            "qcode": {},
+            "subject": {}
+        }
     }
 ]

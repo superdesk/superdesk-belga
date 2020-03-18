@@ -1,10 +1,11 @@
 import os
 from lxml import etree
-from . import BelgaTestCase
+
 from belga.io.feed_parsers.belga_kyodo_newsml_1_2 import BelgaKyodoNewsMLOneFeedParser
+from tests import TestCase
 
 
-class BelgaKyodoNewsMLTestCase(BelgaTestCase):
+class BelgaKyodoNewsMLTestCase(TestCase):
     filename = 'kyodo_newsml_1_2_belga.xml'
 
     def setUp(self):

@@ -1,8 +1,10 @@
 import os
+
 import settings
-from superdesk.tests import TestCase
 from superdesk import config
+
 from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
+from tests import TestCase
 
 
 class BaseBelgaANPAFeedParserTestCase(TestCase):
@@ -37,7 +39,7 @@ class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
         self.assertEqual(item["extra"], {"city": "SAITAMA"})
         self.assertListEqual(item["subject"], [
             {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
-            {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'credits'},
+            {'name': 'KYODO', 'qcode': 'KYODO', 'scheme': 'sources'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
         ])
         self.assertEqual(item["priority"], 2)

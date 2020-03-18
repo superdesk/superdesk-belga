@@ -1,11 +1,11 @@
 import {IExtension, IExtensionActivationResult, ISuperdesk, IArticle, ISubject} from 'superdesk-api';
 
-type Scheme = 'media-credit' | 'belga-keywords' | 'country' | 'services-products' | 'distribution';
+type Scheme = 'media-source' | 'belga-keywords' | 'country' | 'services-products' | 'distribution';
 
-const CVS: Array<Scheme> = ['media-credit', 'belga-keywords', 'country', 'services-products', 'distribution'];
+const CVS: Array<Scheme> = ['media-source', 'belga-keywords', 'country', 'services-products', 'distribution'];
 
 const DEFAULT_SUBJECT = {
-    'media-credit': ['BELGA_ON_THE_SPOT'],
+    'media-source': ['BELGA_ON_THE_SPOT'],
     'belga-keywords': ['RUSHES', 'BELGAILLUSTRATION', 'BELGAINTERVIEW', 'BELGAINSERT'],
     'country': ['COUNTRY_BEL'],
     'distribution': ['BILINGUAL'],

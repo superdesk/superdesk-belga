@@ -73,7 +73,7 @@
             "section": "header",
             "required": true
         },
-        "media-credit": {
+        "media-source": {
             "order": 10,
             "section": "header",
             "required": true

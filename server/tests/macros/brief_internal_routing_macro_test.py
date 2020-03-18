@@ -1,8 +1,8 @@
 
 import unittest
-import superdesk.tests as tests
+from datetime import timedelta
 
-from datetime import timedelta, datetime
+import superdesk.tests as tests
 from superdesk.utc import utcnow, utc_to_local, utc
 from superdesk.errors import StopDuplication
 from superdesk.metadata.item import CONTENT_STATE

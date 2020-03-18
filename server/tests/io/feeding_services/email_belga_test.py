@@ -14,9 +14,11 @@ import os
 import superdesk
 from superdesk import get_resource_service
 from superdesk.io.feed_parsers.rfc822 import EMailRFC822FeedParser
-from superdesk.tests import TestCase, setup
+from superdesk.tests import setup
 from superdesk.users.services import UsersService
+
 from belga.io.feeding_services.email_belga import EmailBelgaFeedingService
+from tests import TestCase
 
 
 class EmailBelgaIngestServiceTest(TestCase):
