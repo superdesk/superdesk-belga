@@ -11,11 +11,12 @@
 
 import os
 from lxml import etree
+
 from belga.io.feed_parsers.belga_anp_newsml_1_2 import BelgaANPNewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaANPNewsMLOneTestCase(BelgaTestCase):
+class BelgaANPNewsMLOneTestCase(TestCase):
     filename = 'anp_belga.xml'
 
     def setUp(self):
@@ -38,7 +39,7 @@ class BelgaANPNewsMLOneTestCase(BelgaTestCase):
         expected_subjects = [
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'credits'},
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},

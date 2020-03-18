@@ -88,8 +88,11 @@ TIMEZONE_CODE = {
     'wst': 'America/Indiana/Indianapolis'
 }
 
-#: Default value for Source to be set for manually created items
+# Default value for Source to be set for manually created items
 DEFAULT_SOURCE_VALUE_FOR_MANUAL_ARTICLES = "Belga"
+
+# Generating short GUID for items
+GENERATE_SHORT_GUID = True
 
 # This value gets injected into NewsML 1.2 and G2 output documents.
 NEWSML_PROVIDER_ID = 'belga.be'
@@ -167,3 +170,17 @@ SCHEMA['graphic'].update({
 
 VALIDATOR_MEDIA_METADATA = {}
 ALLOW_UPDATING_SCHEDULED_ITEMS = True
+
+GRAMMALECTE_CONFIG = {
+    # disable typographic apostrophes (SDBELGA-326)
+    "apos": False,
+    # disable typographic quotation marks (SDBELGA-326)
+    "ignore_rules": {
+        "typo_guillemets_typographiques_doubles_ouvrants",
+        "typo_guillemets_typographiques_doubles_fermants",
+    },
+}
+
+# Suffix used in belga URN schema generation for Belga NewsMl output
+# SDBELGA-355
+OUTPUT_BELGA_URN_SUFFIX = env('OUTPUT_BELGA_URN_SUFFIX', 'dev')

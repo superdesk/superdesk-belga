@@ -13,10 +13,10 @@ import os
 from lxml import etree
 
 from belga.io.feed_parsers.belga_tass_newsml_1_2 import BelgaTASSNewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaTASSNewsMLOneTestCase(BelgaTestCase):
+class BelgaTASSNewsMLOneTestCase(TestCase):
     filename = 'tass_belga.xml'
 
     def setUp(self):
@@ -39,7 +39,7 @@ class BelgaTASSNewsMLOneTestCase(BelgaTestCase):
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
-            {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'credits'},
+            {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'sources'},
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},

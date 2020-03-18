@@ -10,15 +10,15 @@ import datetimeFieldExtension from 'superdesk-core/scripts/extensions/datetimeFi
 import belgaCoverageExtension from '../extensions/belgaCoverage/dist/index';
 import updateArticleOnProfileChangeExtension from '../extensions/updateArticleOnProfileChange/dist/src/extension';
 import iptcExtension from '../extensions/iptc/dist/extension'
+import {AvatarContentText} from 'superdesk-ui-framework';
 
-class UserAvatar extends React.Component<{user: IUser}> {
+class UserAvatar extends React.PureComponent<{user: IUser}> {
     render() {
         return (
-            <div className="user-avatar" data-test-id="user-avatar">
-                <figure className="avatar avatar--no-margin initials">
-                    {this.props.user.sign_off}
-                </figure>
-            </div>
+            <AvatarContentText
+                text={this.props.user.sign_off}
+                tooltipText={this.props.user.display_name}
+            />
         );
     }
 }

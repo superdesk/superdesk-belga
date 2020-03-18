@@ -11,11 +11,12 @@
 import os
 import datetime
 from lxml import etree
+
 from belga.io.feed_parsers.belga_afp_newsml_1_2 import BelgaAFPNewsMLOneFeedParser
-from . import BelgaTestCase
+from tests import TestCase
 
 
-class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
+class BelgaAFPNewsMLOneTestCase(TestCase):
     filename = 'afp_belga.xml'
 
     def setUp(self):
@@ -41,7 +42,7 @@ class BelgaAFPNewsMLOneTestCase(BelgaTestCase):
             {'name': 'trials', 'qcode': '02008000', 'scheme': 'iptc_subject_codes'},
             {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW', 'scheme': 'of_interest_to'},
             {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
-            {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'credits'},
+            {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'sources'},
             {'name': 'crime, law and justice', 'qcode': '02000000', 'scheme': 'iptc_subject_codes'},
             {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU', 'scheme': 'of_interest_to'},

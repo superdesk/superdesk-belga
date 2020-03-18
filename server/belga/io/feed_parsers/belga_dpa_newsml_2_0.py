@@ -90,8 +90,8 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                             'scheme': 'services-products'
                         })
 
-                    # Credits is DPA
-                    credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "credits"}
+                    # Source is DPA
+                    credit = {"name": 'DPA', "qcode": 'DPA', "scheme": "sources"}
                     item.setdefault('subject', []).append(credit)
                     # Distribution is default
                     dist = {"name": 'default', "qcode": 'default', "scheme": "distribution"}

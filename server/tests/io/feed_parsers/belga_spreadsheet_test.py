@@ -9,8 +9,9 @@
 # at https://www.sourcefabric.org/superdesk/license
 from datetime import datetime, timezone
 
-from superdesk.tests import TestCase
 from belga.io.feed_parsers.belga_spreadsheet import BelgaSpreadsheetParser
+from tests import TestCase
+
 
 data = [
     ['Start date', 'Start time', 'End date', 'End time', 'All day', 'Timezone', 'Slugline', 'Event name',

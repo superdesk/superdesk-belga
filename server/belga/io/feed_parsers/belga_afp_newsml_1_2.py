@@ -55,8 +55,8 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     break
         # Label must be empty
         item['subject'] = [i for i in item['subject'] if i.get('scheme') != 'label']
-        # Credits is AFP
-        credit = {"name": 'AFP', "qcode": 'AFP', "scheme": "credits"}
+        # Source is AFP
+        credit = {"name": 'AFP', "qcode": 'AFP', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
 
         return item
