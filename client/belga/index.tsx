@@ -12,14 +12,18 @@ import updateArticleOnProfileChangeExtension from '../extensions/updateArticleOn
 import iptcExtension from '../extensions/iptc/dist/extension'
 import {AvatarContentText} from 'superdesk-ui-framework';
 
-class UserAvatar extends React.PureComponent<{user: IUser}> {
+class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
-        return (
-            <AvatarContentText
-                text={this.props.user.sign_off}
-                tooltipText={this.props.user.display_name}
-            />
-        );
+        if (this.props.user.sign_off == null) { // will be null when creating a new user
+            return null;
+        } else {
+            return (
+                <AvatarContentText
+                    text={this.props.user.sign_off}
+                    tooltipText={this.props.user.display_name}
+                />
+            );
+        }
     }
 }
 
