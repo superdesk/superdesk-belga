@@ -12217,5 +12217,55 @@
             "qcode": {},
             "subject": {}
         }
+    },
+    {
+        "_id": "type",
+        "display_name": "Article Type",
+        "type": "unmanageable",
+        "unique_field": "qcode",
+        "description": "Type of the item",
+        "init_version": 2,
+        "items": [
+            {
+                "is_active": true,
+                "name": "text",
+                "qcode": "text"
+            },
+            {
+                "is_active": true,
+                "qcode": "audio",
+                "name": "audio"
+            },
+            {
+                "is_active": true,
+                "name": "video",
+                "qcode": "video"
+            },
+            {
+                "is_active": true,
+                "name": "picture",
+                "qcode": "picture"
+            },
+            {
+                "is_active": true,
+                "name": "graphic",
+                "qcode": "graphic"
+            },
+            {
+                "is_active": true,
+                "name": "Planning item",
+                "qcode": "planning"
+            },
+            {
+                "is_active": true,
+                "name": "Event",
+                "qcode": "event"
+            },
+            {
+                "is_active": true,
+                "qcode": "planning_featured",
+                "name": "Featured Stories"
+            }
+        ]
     }
 ]
