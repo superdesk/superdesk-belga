@@ -726,8 +726,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     rendition['filename'] = '{}.jpeg'.format(belga_id)
             # rendition is from Belga coverage search provider
             elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
-                # ignore coverage for now
-                pass
+                belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
+                rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
             # the rest are internaly uploaded media: pictures, video and audio
             else:
                 rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(

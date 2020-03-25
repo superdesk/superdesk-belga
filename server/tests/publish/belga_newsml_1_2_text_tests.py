@@ -2024,7 +2024,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+            'urn:www.belga.be:belgagallery:6690595'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2089,7 +2089,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+            'urn:www.belga.be:belgagallery:6666666'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
