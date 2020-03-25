@@ -1132,7 +1132,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
+            {'FormalName': 'Priority', 'Value': '4'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
@@ -1319,7 +1319,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
@@ -1518,7 +1517,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         priority = newscomponent_2_level.xpath('AdministrativeMetadata/Property[@FormalName="Priority"]')[0]
         self.assertEqual(
             priority.attrib['Value'],
-            '6'
+            '3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[NewsObjectId]
         newsobjectid = newscomponent_2_level.xpath(

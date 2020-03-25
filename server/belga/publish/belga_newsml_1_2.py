@@ -883,10 +883,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'ForeignId', 'Value': item['administrative']['foreign_id']}
             )
-        if item.get('priority'):
+        if item.get('urgency'):
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'Priority', 'Value': str(item['priority'])}
+                {'FormalName': 'Priority', 'Value': str(item['urgency'])}
             )
         if item.get('slugline'):
             SubElement(
@@ -1078,7 +1078,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             'version_creator',
             'firstpublished',
             'firstcreated',
-            'priority',
             'slugline',
             'creditline',
             'extra',
