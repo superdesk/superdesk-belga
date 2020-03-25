@@ -898,6 +898,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
             )
+        if item.get('ednote'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'EditorialInfo', 'Value': item['ednote']}
+            )
 
         for subject in item.get('subject', []):
             if subject.get('scheme') == 'services-products':
