@@ -8,21 +8,22 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import html
 import logging
 from datetime import datetime
 from copy import deepcopy
 from urllib.parse import urljoin
 from collections import namedtuple
 
+from lxml import etree
+from lxml.etree import SubElement
+from lxml.html.clean import Cleaner
+from eve.utils import config
 from eve.utils import ParsedRequest
 from flask import current_app as app
 
 import superdesk
+from superdesk import text_utils
 from apps.archive.common import get_utc_schedule
-from eve.utils import config
-from lxml import etree
-from lxml.etree import SubElement
 from superdesk.errors import FormatterError
 from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
                                      ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
@@ -983,7 +984,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 # ContentItem
                 contentitem = SubElement(newscomponent_3_level, 'ContentItem')
                 SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-                text = html.escape(item.get(item_key))
+
+                # cut off all tags except paragraph and headings
+                cleaner = Cleaner(
+                    allow_tags=('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
+                    remove_unknown_tags=False
+                )
+                html_str = cleaner.clean_html(item.get(item_key))
+                text = text_utils.get_text(html_str, content='html', space_on_elements=True, space='   ')
+                text = text.strip()
+
                 SubElement(contentitem, 'DataContent').text = text
                 characteristics = SubElement(contentitem, 'Characteristics')
                 # string's length is used in original belga's newsml
@@ -1116,16 +1126,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             media_items = [
                 sd_item_associations[i] for i in sd_item_associations
                 if sd_item_associations[i]
-                and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
-                                                           CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
+                and sd_item_associations[i].get(ITEM_TYPE) in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
+                                                               CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
                 and 'renditions' in sd_item_associations[i]
             ]
             # get all associated media items `_id`s where `renditions` are NOT IN the item
             media_items_ids = [
                 sd_item_associations[i]['_id'] for i in sd_item_associations
                 if sd_item_associations[i]
-                and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
-                                                           CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
+                and sd_item_associations[i].get(ITEM_TYPE) in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
+                                                               CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
                 and 'renditions' not in sd_item_associations[i]
             ]
             # fetch associated docs by _id
@@ -1203,13 +1213,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # get all associated `text` items where `_type` is `externalsource`.
             rel_text_items = [
                 sd_item_associations[i] for i in sd_item_associations
-                if (sd_item_associations[i] and sd_item_associations[i]['type'] == 'text'
+                if (sd_item_associations[i] and sd_item_associations[i].get(ITEM_TYPE) == 'text'
                     and sd_item_associations[i].get('_type') == 'externalsource')
             ]
             # get all associated `text` items ids where `_type` is not `externalsource`.
             rel_text_items_ids = [
                 sd_item_associations[i]['_id'] for i in sd_item_associations
-                if (sd_item_associations[i] and sd_item_associations[i]['type'] == 'text'
+                if (sd_item_associations[i] and sd_item_associations[i].get(ITEM_TYPE) == 'text'
                     and sd_item_associations[i].get('_type') != 'externalsource')
             ]
             # fetch associated docs by _id
