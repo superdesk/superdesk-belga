@@ -726,8 +726,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     rendition['filename'] = '{}.jpeg'.format(belga_id)
             # rendition is from Belga coverage search provider
             elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
-                # ignore coverage for now
-                pass
+                belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
+                rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
             # the rest are internaly uploaded media: pictures, video and audio
             else:
                 rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(
@@ -883,10 +883,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'ForeignId', 'Value': item['administrative']['foreign_id']}
             )
-        if item.get('priority'):
+        if item.get('urgency'):
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'Priority', 'Value': str(item['priority'])}
+                {'FormalName': 'Priority', 'Value': str(item['urgency'])}
             )
         if item.get('slugline'):
             SubElement(
@@ -897,6 +897,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
+            )
+        if item.get('ednote'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'EditorialInfo', 'Value': item['ednote']}
             )
 
         for subject in item.get('subject', []):
@@ -1073,7 +1078,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             'version_creator',
             'firstpublished',
             'firstcreated',
-            'priority',
             'slugline',
             'creditline',
             'extra',

@@ -1132,10 +1132,12 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
+            {'FormalName': 'Priority', 'Value': '4'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
+            {'FormalName': 'EditorialInfo', 'Value': 'Vestibulum ac diam sit amet quam vehicula elementum '
+                                                     'sed sit amet dui.'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
@@ -1317,7 +1319,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
@@ -1516,7 +1517,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         priority = newscomponent_2_level.xpath('AdministrativeMetadata/Property[@FormalName="Priority"]')[0]
         self.assertEqual(
             priority.attrib['Value'],
-            '6'
+            '3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[NewsObjectId]
         newsobjectid = newscomponent_2_level.xpath(
@@ -2024,7 +2025,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+            'urn:www.belga.be:belgagallery:6690595'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2089,7 +2090,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+            'urn:www.belga.be:belgagallery:6666666'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
