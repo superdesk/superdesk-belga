@@ -550,21 +550,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 'name': 'OLEG',
             }
         ],
-        'body_html': '<p>hellow world</p>\n<!-- EMBED START Image {id: \"editor_0\"} -->\n<figure>\n <img src=\"http://'
-                     'localhost:5000/api/upload-raw/pic_1.jpg\" alt=\"\" />\n <figcaption>Mazda MX5 '
-                     'retro</figcaption>\n</figure>\n<!-- EMBED END Image {id: \"editor_0\"} -->\n<p><br></p>\n<!-- EMB'
-                     'ED START Image {id: \"editor_1\"} -->\n<figure>\n <img src=\"https://3.t.cdn.belga.be/belgaimage:'
-                     '154620545:1800x650:w?v=5d5aaa94&m=njopcomo\" alt=\"\" />\n <figcaption>August 27, 2019: Gaza, Pal'
-                     'estine. 27 August 2019.The Al-Azza team defeats the Qalat Al-Janoub team 3-0 in the opening match'
-                     ' of the amputees football league. The match has been organized by the Palestine Amputee Football '
-                     'Association under the auspices of the International Committee of the Red Cross (ICRC) and was hel'
-                     'd at the Palestine stadium in Gaza City. Although some of the players were either born disable or'
-                     ' lost their limbs in the three recent Israeli offensives on Gaza, many others have lost their lim'
-                     'bs in recent months after being shot by Israeli forces while taking part in the Great March of Re'
-                     'turn rallies along the Gaza-Israeli border. The ICRC in Gaza believes in the importance of suppor'
-                     'ting people with disabilities caused by military conflicts and in reintegrating them into society'
-                     ' through both psychological and physical rehabilitation.</figcaption>\n</figure>\n<!-- EMBED END '
-                     'Image {id: \"editor_1\"} -->\n<p>&nbsp;</p>',
+        'body_html': '<p>Curabitur non nulla sit amet nisl <b>tempus</b> convallis quis ac lectus. Donec sollicitudin <'
+                     'b>molestie</b> malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.</p>\n<p>Donec ru'
+                     'trum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta da'
+                     'pibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p>\n<h2>books</h2>'
+                     '\n<p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet qua'
+                     'm id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien '
+                     'massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus o'
+                     'rci luctus et ultrices posuere cubilia Curae.</p>',
         'ednote': 'Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.',
         'extra': {
             'belga-url': [
@@ -1132,10 +1125,12 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
+            {'FormalName': 'Priority', 'Value': '4'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
+            {'FormalName': 'EditorialInfo', 'Value': 'Vestibulum ac diam sit amet quam vehicula elementum '
+                                                     'sed sit amet dui.'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
@@ -1221,8 +1216,15 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             }
         )
         self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
+            """Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
+   Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+   books
+   Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
+        )
+        self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '1566'
+            '690'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
@@ -1317,7 +1319,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
@@ -1516,7 +1517,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         priority = newscomponent_2_level.xpath('AdministrativeMetadata/Property[@FormalName="Priority"]')[0]
         self.assertEqual(
             priority.attrib['Value'],
-            '6'
+            '3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[NewsObjectId]
         newsobjectid = newscomponent_2_level.xpath(
@@ -2024,7 +2025,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+            'urn:www.belga.be:belgagallery:6690595'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2089,7 +2090,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+            'urn:www.belga.be:belgagallery:6666666'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
