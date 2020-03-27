@@ -71,7 +71,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     Belga News ML 1.2 Formatter
     """
 
-    ENCODING = "ISO-8859-15"
+    ENCODING = "UTF-8"
     XML_ROOT = '<?xml version="1.0" encoding="{}"?>'.format(ENCODING)
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
@@ -141,7 +141,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._format_newsenvelope()
             self._format_newsitem()
 
-            xml_string = self.XML_ROOT + '\n' + etree.tostring(self._newsml, pretty_print=True).decode('utf-8')
+            xml_string = self.XML_ROOT + '\n' + etree.tostring(
+                self._newsml, pretty_print=True,
+                encoding=self.ENCODING
+            ).decode(self.ENCODING)
             pub_seq_num = generate_sequence_number(subscriber)
 
             return [(pub_seq_num, xml_string)]
