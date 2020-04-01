@@ -224,7 +224,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
 
         news_management = SubElement(newsitem, 'NewsManagement')
-        SubElement(news_management, 'NewsItemType', {'FormalName': 'News'})
+        SubElement(news_management, 'NewsItemType', {'FormalName': 'NEWS'})
         SubElement(
             news_management, 'FirstCreated'
         ).text = self._get_formatted_datetime(self._current_item.get('firstcreated'))

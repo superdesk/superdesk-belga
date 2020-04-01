@@ -1019,7 +1019,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         newsitemtype = self.newsml.xpath('NewsItem/NewsManagement/NewsItemType')[0]
         self.assertDictEqual(
             dict(newsitemtype.attrib),
-            {'FormalName': 'News'}
+            {'FormalName': 'NEWS'}
         )
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
