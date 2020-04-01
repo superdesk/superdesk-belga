@@ -54,10 +54,20 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.assertIsInstance(self.provider, superdesk.SearchProvider)
 
     def test_find_params(self):
+        params = {
+            'sources': 'belga',
+            'credits': 'afp',
+            'dates': {'start': '02/02/2020', 'end': '14/02/2020'},
+            'languages': 'en',
+            'types': 'Short',
+        }
         self.provider.session.get = MagicMock()
-        self.provider.find(self.query)
+        self.provider.find(self.query, params)
         url = self.provider.base_url + 'archivenewsobjects'
-        params = {'start': 50, 'pageSize': 50, 'searchText': 'test query'}
+        params = {
+            'start': 50, 'pageSize': 50, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
+            'sources': 'BELGA', 'fromDate': '20200202', 'toDate': '20200214', 'searchText': 'test query',
+        }
         self.provider.session.get.assert_called_with(url, params=params)
 
     def test_format_list_item(self):

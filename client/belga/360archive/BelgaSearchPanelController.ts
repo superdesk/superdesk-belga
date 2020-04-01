@@ -18,10 +18,10 @@ export default class BelgaSearchPanelController {
     ];
 
     this.types = [
-      { name: "alert", id: "alert" },
-      { name: "text", id: "text" },
-      { name: "brief", id: "brief" },
-      { name: "short", id: "short" }
+      { name: "Alert", id: "Alert" },
+      { name: "Text", id: "Text" },
+      { name: "Brief", id: "Brief" },
+      { name: "Short", id: "Short" }
     ];
 
     this.periods = [

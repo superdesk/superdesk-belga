@@ -3,7 +3,6 @@ import uuid
 import arrow
 import hashlib
 import requests
-import datetime
 import superdesk
 
 from urllib.parse import urljoin
@@ -239,6 +238,20 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'pageSize': query.get('size', 25),
         }
 
+        if params:
+            for api_param, param in {'language': 'languages', 'assetType': 'types'}.items():
+                if params.get(param):
+                    api_params[api_param] = params.get(param)
+            if params.get('credits'):
+                api_params['credits'] = params['credits'].strip().upper()
+            if params.get('sources'):
+                api_params['sources'] = params['sources'].strip().upper()
+            dates = params.get('dates', {})
+            if dates.get('start'):
+                api_params['fromDate'] = self._get_belga_date(dates['start'])
+            if dates.get('end'):
+                api_params['toDate'] = self._get_belga_date(dates['end'])
+
         try:
             api_params['searchText'] = query['query']['filtered']['query']['query_string']['query']
         except KeyError:
@@ -258,6 +271,12 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         resp = self.session.get(self.url(endpoint), params=params)
         resp.raise_for_status()
         return resp.json()
+
+    def _get_belga_date(self, date):
+        try:
+            return arrow.get(date, 'DD/MM/YYYY').format('YYYYMMDD')
+        except arrow.parser.ParserError:
+            return ''
 
     def _get_newscomponent(self, item, component):
         components = [i for i in item.get('newsComponents', []) if i.get('assetType', '').lower() == component.lower()]
