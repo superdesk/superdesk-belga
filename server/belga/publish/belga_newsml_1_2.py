@@ -642,6 +642,25 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
 
+        # video image thumbnail
+        for role, key in (('Image', 'viewImage'), ('Thumbnail', 'thumbnail')):
+            if key not in video['renditions']:
+                continue
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if video.get(GUID_FIELD):
+                newscomponent_3_level.attrib['Duid'] = video.get(GUID_FIELD)
+            if video.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = video.get('language')
+
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Image'}
+            )
+
+            self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions'][key])
+
     def _format_attachment(self, newscomponent_1_level, attachment):
         """
         Creates a `<NewsComponent>` of a 2nd level with file attached to the item.
