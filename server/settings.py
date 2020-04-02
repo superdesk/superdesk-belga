@@ -143,30 +143,29 @@ video_profile = copy.deepcopy(picture_profile)
 video_profile['schema']['headline']['required'] = True
 video_profile['editor']['headline']['required'] = True
 
-EDITOR = {
-    'picture': picture_profile['editor'],
-    'video': video_profile['editor'],
-    'graphic': picture_profile['editor'],
-}
-
-EDITOR['graphic'].update({
+graphic_profile = copy.deepcopy(picture_profile)
+graphic_profile['editor'].update({
     'bcoverage': {
         'order': 5,
         'section': 'content',
     },
 })
-
-SCHEMA = {
-    'picture': picture_profile['schema'],
-    'video': video_profile['schema'],
-    'graphic': picture_profile['schema'],
-}
-
-SCHEMA['graphic'].update({
+graphic_profile['schema'].update({
     'bcoverage': {
         'type': 'string',
     },
 })
+
+EDITOR = {
+    'picture': picture_profile['editor'],
+    'video': video_profile['editor'],
+    'graphic': graphic_profile['editor'],
+}
+SCHEMA = {
+    'picture': picture_profile['schema'],
+    'video': video_profile['schema'],
+    'graphic': graphic_profile['schema'],
+}
 
 VALIDATOR_MEDIA_METADATA = {}
 ALLOW_UPDATING_SCHEDULED_ITEMS = True

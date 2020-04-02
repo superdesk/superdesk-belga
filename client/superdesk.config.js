@@ -62,7 +62,9 @@ module.exports = function(grunt) {
         
         search_cvs: [
             {id: 'belga-keywords', name:'Belga keywords', field: 'subject', list: 'belga-keywords'},
-            {id: 'services-products', name:'Packages', field: 'subject', list: 'services-products'}
+            {id: 'services-products', name:'Packages', field: 'subject', list: 'services-products'},
+            {id: 'sources', name:'Sources', field: 'subject', list: 'sources'},
+            {id: 'languages', name:'Language', field: 'subject', list: 'languages'}
         ],
 
         search: {
