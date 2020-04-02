@@ -242,7 +242,7 @@ class BelgaRemoteNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             file_service = FileFeedingService()
             # move processed attachments to the same folder with XML
             file_dir = os.path.dirname(file_dir)
-            file_service.move_file(file_dir, '/attachments/' + filename, self.provider)
+            file_service.move_file(file_dir, 'attachments/' + filename, self.provider)
 
 
 register_feed_parser(BelgaRemoteNewsMLOneFeedParser.NAME, BelgaRemoteNewsMLOneFeedParser())
