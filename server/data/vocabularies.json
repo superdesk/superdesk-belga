@@ -7113,7 +7113,7 @@
     },
     {
         "_id": "belga-keywords",
-        "init_version": 2,
+        "init_version": 3,
         "display_name": "Belga Keywords",
         "type": "manageable",
         "selection_type": "multi selection",
@@ -7127,7 +7127,7 @@
             "all": 1
         },
         "items": [
-            {
+        	{
                 "name": "BRIEF",
                 "qcode": "BRIEF",
                 "is_active": true,
@@ -7144,8 +7144,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VOORBERICHT",
-                        "fr": "AVANT-PAPIER"
+                        "nl": "Voorbericht",
+                        "fr": "Avant-Papier"
                     }
                 }
             },
@@ -7155,8 +7155,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WEST-VLAANDEREN",
-                        "fr": "FLANDRE OCCIDENTALE"
+                        "nl": "West-Vlaanderen",
+                        "fr": "Flandre occidentale"
                     }
                 }
             },
@@ -7166,8 +7166,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "OOST-VLAANDEREN",
-                        "fr": "FLANDRE ORIENTALE"
+                        "nl": "Oost-Vlaanderen",
+                        "fr": "Flandre orientale"
                     }
                 }
             },
@@ -7177,8 +7177,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ANTWERPEN",
-                        "fr": "ANVERS"
+                        "nl": "Antwerpen",
+                        "fr": "Anvers"
                     }
                 }
             },
@@ -7188,8 +7188,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LIMBURG",
-                        "fr": "LIMBOURG"
+                        "nl": "Limburg",
+                        "fr": "Limbourg"
                     }
                 }
             },
@@ -7199,8 +7199,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VLAAMS-BRABANT",
-                        "fr": "BRABANT FLAMAND"
+                        "nl": "Vlaams-Brabant",
+                        "fr": "Brabant flamand"
                     }
                 }
             },
@@ -7211,7 +7211,62 @@
                 "translations": {
                     "name": {
                         "nl": "BHG",
-                        "fr": "REGION DE BRUXELLES-CAPITALE"
+                        "fr": "BXLCap"
+                    }
+                }
+            },
+            {
+                "name": "NAMUR",
+                "qcode": "NAMUR",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Namen",
+                        "fr": "Namur"
+                    }
+                }
+            },
+            {
+                "name": "HAINAUT",
+                "qcode": "HAINAUT",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Henegouwen",
+                        "fr": "Hainaut"
+                    }
+                }
+            },
+            {
+                "name": "LIEGE",
+                "qcode": "LIEGE",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Luik",
+                        "fr": "Liège"
+                    }
+                }
+            },
+            {
+                "name": "LUXEMBOURG",
+                "qcode": "LUXEMBOURG",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Luxemburg",
+                        "fr": "Luxembourg"
+                    }
+                }
+            },
+            {
+                "name": "WALLOON BRABANT",
+                "qcode": "WALLOON BRABANT",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Waals-Brabant",
+                        "fr": "Brabant wallon"
                     }
                 }
             },
@@ -7221,8 +7276,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BIOGRAFIE",
-                        "fr": "BIOGRAPHIE"
+                        "nl": "Biografie",
+                        "fr": "Biographie"
                     }
                 }
             },
@@ -7232,8 +7287,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WEER",
-                        "fr": "METEO"
+                        "nl": "Weer",
+                        "fr": "Météo"
                     }
                 }
             },
@@ -7243,8 +7298,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AANSLAG",
-                        "fr": "ATTENTAT"
+                        "nl": "Aanslagen",
+                        "fr": "Attentat"
                     }
                 }
             },
@@ -7254,8 +7309,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AARDBEVINGEN",
-                        "fr": "SEISMES"
+                        "nl": "Aardbevingen",
+                        "fr": "Séismes"
                     }
                 }
             },
@@ -7265,8 +7320,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AGENDA",
-                        "fr": "AGENDA"
+                        "nl": "Agenda",
+                        "fr": "Agenda"
                     }
                 }
             },
@@ -7276,8 +7331,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AMBTZAKEN",
-                        "fr": "FONCTION PUBLIQUE"
+                        "nl": "AmbtZaken",
+                        "fr": "Fonction publique"
                     }
                 }
             },
@@ -7287,8 +7342,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ASIEL ",
-                        "fr": "ASILE"
+                        "nl": "Asiel ",
+                        "fr": "Asile"
                     }
                 }
             },
@@ -7298,8 +7353,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ASTRONOMIE",
-                        "fr": "ASTRONOMIE"
+                        "nl": "Astronomie",
+                        "fr": "Astronomie"
                     }
                 }
             },
@@ -7320,8 +7375,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AUTO",
-                        "fr": "AUTOMOBILE"
+                        "nl": "Auto",
+                        "fr": "Automobile"
                     }
                 }
             },
@@ -7331,8 +7386,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BANKEN",
-                        "fr": "BANQUES"
+                        "nl": "Banken",
+                        "fr": "Banques"
                     }
                 }
             },
@@ -7342,8 +7397,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BEDRIJVEN",
-                        "fr": "ENTREPRISES"
+                        "nl": "Bedrijven",
+                        "fr": "Entreprises"
                     }
                 }
             },
@@ -7353,8 +7408,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BEGROTING",
-                        "fr": "BUDGET"
+                        "nl": "Begroting",
+                        "fr": "Budget"
                     }
                 }
             },
@@ -7364,8 +7419,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BEURS",
-                        "fr": "BOURSE"
+                        "nl": "Beurs",
+                        "fr": "Bourse"
                     }
                 }
             },
@@ -7375,8 +7430,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BINZAKEN",
-                        "fr": "AFFINTER"
+                        "nl": "BinZaken",
+                        "fr": "Affinter"
                     }
                 }
             },
@@ -7386,8 +7441,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BIOTECH",
-                        "fr": "BIOTECH"
+                        "nl": "Biotech",
+                        "fr": "Biotech"
                     }
                 }
             },
@@ -7397,8 +7452,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BOUW",
-                        "fr": "CONSTRUCTION"
+                        "nl": "Bouw",
+                        "fr": "Construction"
+                    }
+                }
+            },
+            {
+                "name": "FIRE",
+                "qcode": "FIRE",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Brand",
+                        "fr": "Incendie"
                     }
                 }
             },
@@ -7408,8 +7474,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BRUREG",
-                        "fr": "GVTBXL"
+                        "nl": "BruReg",
+                        "fr": "GvtBXL"
                     }
                 }
             },
@@ -7419,8 +7485,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BRUPARL",
-                        "fr": "PARLBXL"
+                        "nl": "BruParl",
+                        "fr": "ParlBXL"
                     }
                 }
             },
@@ -7430,8 +7496,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BUITZAKEN",
-                        "fr": "AFFETR"
+                        "nl": "BuitZaken",
+                        "fr": "AffÉtr"
                     }
                 }
             },
@@ -7441,8 +7507,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CHEMIE",
-                        "fr": "CHIMIE"
+                        "nl": "Chemie",
+                        "fr": "Chimie"
                     }
                 }
             },
@@ -7452,8 +7518,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CONCURRENTIE",
-                        "fr": "CONCURRENCE"
+                        "nl": "Concurrentie",
+                        "fr": "Concurrence"
                     }
                 }
             },
@@ -7463,8 +7529,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CONFLICTEN",
-                        "fr": "CONFLITS"
+                        "nl": "Conflicten",
+                        "fr": "Conflit"
                     }
                 }
             },
@@ -7474,8 +7540,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CONJUNCTUUR",
-                        "fr": "CONJONCTURE"
+                        "nl": "Conjunctuur",
+                        "fr": "Conjoncture"
                     }
                 }
             },
@@ -7485,8 +7551,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CONSUMENTEN",
-                        "fr": "CONSOMATION"
+                        "nl": "Consumenten",
+                        "fr": "Consommation"
                     }
                 }
             },
@@ -7496,19 +7562,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CULTUUR",
-                        "fr": "CULTURE"
-                    }
-                }
-            },
-            {
-                "name": "CYBER",
-                "qcode": "CYBER",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "CYBER",
-                        "fr": "CYBER"
+                        "nl": "Cultuur",
+                        "fr": "Culture"
                     }
                 }
             },
@@ -7518,8 +7573,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CYBERSECURITY",
-                        "fr": "CYBER SECURITY"
+                        "nl": "Cybersecurity",
+                        "fr": "Cybersécurité"
                     }
                 }
             },
@@ -7529,8 +7584,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DEFENSIE",
-                        "fr": "DEFENSE"
+                        "nl": "Defensie",
+                        "fr": "Défense"
                     }
                 }
             },
@@ -7540,8 +7595,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DEMOCRATIE",
-                        "fr": "DEMOCRATIE"
+                        "nl": "Democratie",
+                        "fr": "Démocratie"
                     }
                 }
             },
@@ -7551,8 +7606,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DEMOGRAFIE",
-                        "fr": "DEMOGRAPHIE"
+                        "nl": "Demografie",
+                        "fr": "Démographie"
                     }
                 }
             },
@@ -7562,8 +7617,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DIAMANT",
-                        "fr": "DIAMANT"
+                        "nl": "Diamant",
+                        "fr": "Diamant"
                     }
                 }
             },
@@ -7573,8 +7628,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DIEREN",
-                        "fr": "ANIMAUX"
+                        "nl": "Dieren",
+                        "fr": "Animaux"
                     }
                 }
             },
@@ -7584,8 +7639,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DIPLOMATIE",
-                        "fr": "DIPLOMATIE"
+                        "nl": "Diplomatie",
+                        "fr": "Diplomatie"
                     }
                 }
             },
@@ -7595,8 +7650,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DROOGTE",
-                        "fr": "SECHERESSE"
+                        "nl": "Droogte",
+                        "fr": "Sécheresse"
                     }
                 }
             },
@@ -7606,8 +7661,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DRUGS",
-                        "fr": "DROGUE"
+                        "nl": "Drugs",
+                        "fr": "Drogue"
                     }
                 }
             },
@@ -7617,8 +7672,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DUITSGEM",
-                        "fr": "COMGER"
+                        "nl": "DuitsGem",
+                        "fr": "Comger"
                     }
                 }
             },
@@ -7628,8 +7683,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DUITSPARL",
-                        "fr": "PARLGER"
+                        "nl": "DuitsParl",
+                        "fr": "Parlger"
                     }
                 }
             },
@@ -7639,8 +7694,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DUITSREG",
-                        "fr": "GVTGER"
+                        "nl": "DuitsReg",
+                        "fr": "Gvtger"
                     }
                 }
             },
@@ -7650,8 +7705,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ENERGIE",
-                        "fr": "ENERGIE"
+                        "nl": "Energie",
+                        "fr": "Énergie"
                     }
                 }
             },
@@ -7661,8 +7716,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "EURO",
-                        "fr": "EURO"
+                        "nl": "Euro",
+                        "fr": "Euro"
                     }
                 }
             },
@@ -7672,8 +7727,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "EUROCOM",
-                        "fr": "COMEURO"
+                        "nl": "EuroCom",
+                        "fr": "Comeuro"
                     }
                 }
             },
@@ -7683,8 +7738,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "EUROPA",
-                        "fr": "EUROPE"
+                        "nl": "Europa",
+                        "fr": "Europe"
                     }
                 }
             },
@@ -7694,8 +7749,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "EUROPARL",
-                        "fr": "PARLEURO"
+                        "nl": "EuroParl",
+                        "fr": "Parleuro"
                     }
                 }
             },
@@ -7705,8 +7760,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "EVENEMENTEN",
-                        "fr": "EVENEMENTS"
+                        "nl": "Evenementen",
+                        "fr": "Événements"
                     }
                 }
             },
@@ -7716,8 +7771,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FARMA",
-                        "fr": "PHARMA"
+                        "nl": "Farma",
+                        "fr": "Pharma"
                     }
                 }
             },
@@ -7727,8 +7782,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FEDREG",
-                        "fr": "GVTFED"
+                        "nl": "FedReg",
+                        "fr": "Gvtfed"
                     }
                 }
             },
@@ -7738,8 +7793,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FESTIVALS",
-                        "fr": "FESTIVALS"
+                        "nl": "Festivals",
+                        "fr": "Festivals"
                     }
                 }
             },
@@ -7749,8 +7804,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FILM",
-                        "fr": "CINEMA"
+                        "nl": "Film",
+                        "fr": "Cinéma"
                     }
                 }
             },
@@ -7760,8 +7815,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FINANCIEN",
-                        "fr": "FINANCES"
+                        "nl": "Financiën",
+                        "fr": "Finances"
                     }
                 }
             },
@@ -7771,8 +7826,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FRAREG",
-                        "fr": "GVTFRA"
+                        "nl": "FraReg",
+                        "fr": "Gvtfra"
                     }
                 }
             },
@@ -7782,8 +7837,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FRAPARL",
-                        "fr": "PARLFRA"
+                        "nl": "FraParl",
+                        "fr": "Parlfra"
                     }
                 }
             },
@@ -7793,8 +7848,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GASTRONOMIE",
-                        "fr": "GASTRONOMIE"
+                        "nl": "Gastronomie",
+                        "fr": "Gastronomie"
                     }
                 }
             },
@@ -7804,8 +7859,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GELD",
-                        "fr": "ARGENT"
+                        "nl": "Geld",
+                        "fr": "Argent"
                     }
                 }
             },
@@ -7815,8 +7870,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEMEENSCHAPPEN",
-                        "fr": "COMMUNAUTES"
+                        "nl": "Gemeenschappen",
+                        "fr": "Communautés"
                     }
                 }
             },
@@ -7826,8 +7881,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEMEENTEN",
-                        "fr": "COMMUNES"
+                        "nl": "Gemeenten",
+                        "fr": "Communes"
                     }
                 }
             },
@@ -7837,8 +7892,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GENDER",
-                        "fr": "GENRES"
+                        "nl": "Gender",
+                        "fr": "Genre"
                     }
                 }
             },
@@ -7848,8 +7903,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GERECHT",
-                        "fr": "JUSTICE"
+                        "nl": "Gerecht",
+                        "fr": "Justice"
                     }
                 }
             },
@@ -7859,8 +7914,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GESCHIEDENIS",
-                        "fr": "HISTOIRE"
+                        "nl": "Geschiedenis",
+                        "fr": "Histoire"
                     }
                 }
             },
@@ -7870,8 +7925,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEVANGENISSEN",
-                        "fr": "PRISONS"
+                        "nl": "Gevangenissen",
+                        "fr": "Prisons"
                     }
                 }
             },
@@ -7881,8 +7936,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEWELD",
-                        "fr": "VIOLENCES"
+                        "nl": "Geweld",
+                        "fr": "Violence"
                     }
                 }
             },
@@ -7892,8 +7947,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEWESTEN",
-                        "fr": "REGIONS"
+                        "nl": "Gewesten",
+                        "fr": "Régions"
                     }
                 }
             },
@@ -7903,8 +7958,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEZONDHEID",
-                        "fr": "SANTE"
+                        "nl": "Gezondheid",
+                        "fr": "Santé"
                     }
                 }
             },
@@ -7914,8 +7969,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GRONDWET",
-                        "fr": "CONSTITUTION"
+                        "nl": "Grondwet",
+                        "fr": "Constitution"
                     }
                 }
             },
@@ -7925,8 +7980,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HANDEL",
-                        "fr": "COMMERCE"
+                        "nl": "Handel",
+                        "fr": "Commerce"
                     }
                 }
             },
@@ -7936,8 +7991,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HAVEN",
-                        "fr": "PORTS"
+                        "nl": "Haven",
+                        "fr": "Ports"
                     }
                 }
             },
@@ -7947,8 +8002,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HORECA",
-                        "fr": "HORECA"
+                        "nl": "Horeca",
+                        "fr": "Horeca"
                     }
                 }
             },
@@ -7958,8 +8013,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "INFRASTRUCTUUR",
-                        "fr": "INFRASTRUCTURES"
+                        "nl": "Infrastructuur",
+                        "fr": "Infrastructure"
                     }
                 }
             },
@@ -7969,8 +8024,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "INSTELLINGEN",
-                        "fr": "INSTITUTIONS"
+                        "nl": "Instellingen",
+                        "fr": "Institutions"
                     }
                 }
             },
@@ -7980,8 +8035,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "INTERNET",
-                        "fr": "INTERNET"
+                        "nl": "Internet",
+                        "fr": "Internet"
                     }
                 }
             },
@@ -7991,8 +8046,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "INTORG",
-                        "fr": "ORGINT"
+                        "nl": "IntOrg",
+                        "fr": "Orgint"
                     }
                 }
             },
@@ -8002,8 +8057,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "JEUGD",
-                        "fr": "JEUNESSE"
+                        "nl": "Jeugd",
+                        "fr": "Jeunesse"
                     }
                 }
             },
@@ -8013,8 +8068,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "JUSTITIE",
-                        "fr": "JUDICIAIRE"
+                        "nl": "Justitie",
+                        "fr": "Judiciaire"
                     }
                 }
             },
@@ -8024,8 +8079,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KAMER",
-                        "fr": "CHAMBRE"
+                        "nl": "Kamer",
+                        "fr": "Chambre"
                     }
                 }
             },
@@ -8035,8 +8090,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KLIMAAT",
-                        "fr": "CLIMAT"
+                        "nl": "Klimaat",
+                        "fr": "Climat"
                     }
                 }
             },
@@ -8046,8 +8101,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KUNST",
-                        "fr": "ARTS"
+                        "nl": "Kunst",
+                        "fr": "Arts"
                     }
                 }
             },
@@ -8057,8 +8112,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LEGER",
-                        "fr": "ARMEE"
+                        "nl": "Leger",
+                        "fr": "Armée"
                     }
                 }
             },
@@ -8068,8 +8123,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LANDBOUW",
-                        "fr": "AGRICULTURE"
+                        "nl": "Landbouw",
+                        "fr": "Agriculture"
                     }
                 }
             },
@@ -8090,8 +8145,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LITERATUUR",
-                        "fr": "LITERATURE"
+                        "nl": "Literatuur",
+                        "fr": "Littérature"
                     }
                 }
             },
@@ -8101,8 +8156,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LUCHTVAART",
-                        "fr": "AERONAUTIQUE"
+                        "nl": "Luchtvaart",
+                        "fr": "Aéronautique"
                     }
                 }
             },
@@ -8112,8 +8167,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MEDIA ",
-                        "fr": "MEDIAS"
+                        "nl": "Media ",
+                        "fr": "Médias"
                     }
                 }
             },
@@ -8123,7 +8178,7 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MENSENRECHTEN",
+                        "nl": "Mensenrechten",
                         "fr": "DDH"
                     }
                 }
@@ -8134,8 +8189,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "METAAL",
-                        "fr": "METAL"
+                        "nl": "Metaal",
+                        "fr": "Métal"
                     }
                 }
             },
@@ -8145,8 +8200,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MIGRATIE ",
-                        "fr": "IMMIGRATION"
+                        "nl": "Migratie ",
+                        "fr": "Immigration"
                     }
                 }
             },
@@ -8156,8 +8211,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MILIEU",
-                        "fr": "ENVIRONNEMENT"
+                        "nl": "Milieu",
+                        "fr": "Environnement"
                     }
                 }
             },
@@ -8167,19 +8222,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MINDERHEDEN",
-                        "fr": "MINORITES"
-                    }
-                }
-            },
-            {
-                "name": "COUNCIL OF MINISTERS",
-                "qcode": "COUNCIL OF MINISTERS",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "MINISTERRAAD",
-                        "fr": "CONSEIL DES MINISTRES"
+                        "nl": "Minderheden",
+                        "fr": "Minorités"
                     }
                 }
             },
@@ -8189,8 +8233,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MOBILITEIT",
-                        "fr": "MOBILITE"
+                        "nl": "Mobiliteit",
+                        "fr": "Mobilité"
                     }
                 }
             },
@@ -8200,8 +8244,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MODE",
-                        "fr": "MODE"
+                        "nl": "Mode",
+                        "fr": "Mode"
                     }
                 }
             },
@@ -8211,8 +8255,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MUZIEK",
-                        "fr": "MUSIQUE"
+                        "nl": "Muziek",
+                        "fr": "Musique"
                     }
                 }
             },
@@ -8222,8 +8266,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "NATUUR",
-                        "fr": "NATURE"
+                        "nl": "Natuur",
+                        "fr": "Nature"
                     }
                 }
             },
@@ -8255,8 +8299,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "NOODWEER",
-                        "fr": "INTEMPERIES"
+                        "nl": "Noodweer",
+                        "fr": "Intempéries"
                     }
                 }
             },
@@ -8266,8 +8310,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "NUCLEAIR",
-                        "fr": "NUCLEAIRE"
+                        "nl": "Nucleair",
+                        "fr": "Nucléaire"
                     }
                 }
             },
@@ -8277,8 +8321,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ONDERWIJS",
-                        "fr": "ENSEIGNEMENT"
+                        "nl": "Onderwijs",
+                        "fr": "Enseignement"
                     }
                 }
             },
@@ -8288,8 +8332,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ONDERZOEK",
-                        "fr": "RECHERCHE"
+                        "nl": "Onderzoek",
+                        "fr": "Recherche"
                     }
                 }
             },
@@ -8299,8 +8343,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ONGEVALLEN",
-                        "fr": "ACCIDENTS"
+                        "nl": "Ongevallen",
+                        "fr": "Accidents"
                     }
                 }
             },
@@ -8310,8 +8354,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ONTWIKKELINGSHULP",
-                        "fr": "AIDE AU DEVELOPPEMENT"
+                        "nl": "Ontwikkelingshulp",
+                        "fr": "Coopération"
                     }
                 }
             },
@@ -8321,8 +8365,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "OORLOG",
-                        "fr": "GUERRE"
+                        "nl": "Oorlog",
+                        "fr": "Guerre"
                     }
                 }
             },
@@ -8332,8 +8376,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "OVERLIJDEN",
-                        "fr": "DECES"
+                        "nl": "Overlijden",
+                        "fr": "Décès"
                     }
                 }
             },
@@ -8343,8 +8387,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PALEIS",
-                        "fr": "PALAIS"
+                        "nl": "Paleis",
+                        "fr": "Palais"
                     }
                 }
             },
@@ -8354,8 +8398,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PARTIJEN",
-                        "fr": "PARTIS"
+                        "nl": "Partijen",
+                        "fr": "Partis"
                     }
                 }
             },
@@ -8365,8 +8409,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PEILING",
-                        "fr": "SONDAGE"
+                        "nl": "Peiling",
+                        "fr": "Sondage"
+                    }
+                }
+            },
+            {
+                "name": "PENSIONS",
+                "qcode": "PENSIONS",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Pensioenen",
+                        "fr": "Pensions"
                     }
                 }
             },
@@ -8376,8 +8431,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PEOPLE ",
-                        "fr": "PEOPLE"
+                        "nl": "People ",
+                        "fr": "People"
                     }
                 }
             },
@@ -8387,8 +8442,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "POLITIE",
-                        "fr": "POLICE"
+                        "nl": "Politie",
+                        "fr": "Police"
                     }
                 }
             },
@@ -8398,8 +8453,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "POST",
-                        "fr": "POSTE"
+                        "nl": "Post",
+                        "fr": "Poste"
                     }
                 }
             },
@@ -8410,7 +8465,18 @@
                 "translations": {
                     "name": {
                         "nl": "PRESS",
-                        "fr": "PRESS"
+                        "fr": "Press"
+                    }
+                }
+            },
+            {
+                "name": "PRIVACY",
+                "qcode": "PRIVACY",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Privacy",
+                        "fr": "Vie privée"
                     }
                 }
             },
@@ -8420,8 +8486,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PROVINCIES",
-                        "fr": "PROVINCES"
+                        "nl": "Provincies",
+                        "fr": "Provinces"
                     }
                 }
             },
@@ -8431,8 +8497,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RACISME",
-                        "fr": "RACISME"
+                        "nl": "Racisme",
+                        "fr": "Racisme"
                     }
                 }
             },
@@ -8442,8 +8508,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RADIO",
-                        "fr": "RADIO"
+                        "nl": "Radio",
+                        "fr": "Radio"
                     }
                 }
             },
@@ -8453,8 +8519,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RAMPEN",
-                        "fr": "CATASTROPHES"
+                        "nl": "Rampen",
+                        "fr": "Catastrophes"
                     }
                 }
             },
@@ -8464,8 +8530,41 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RELIGIE",
-                        "fr": "RELIGION"
+                        "nl": "Religie",
+                        "fr": "Religion"
+                    }
+                }
+            },
+            {
+                "name": "LAICITE",
+                "qcode": "LAICITE",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Laïciteit",
+                        "fr": "Laïcité"
+                    }
+                }
+            },
+            {
+                "name": "ETHICS",
+                "qcode": "ETHICS",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Ethiek",
+                        "fr": "Ethique"
+                    }
+                }
+            },
+            {
+                "name": "RETAIL",
+                "qcode": "RETAIL",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Retail",
+                        "fr": "Commerce de détail"
                     }
                 }
             },
@@ -8475,8 +8574,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ROYALS",
-                        "fr": "ROYAUTE"
+                        "nl": "Royals",
+                        "fr": "Royauté"
                     }
                 }
             },
@@ -8486,8 +8585,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RUIMTEVAART",
-                        "fr": "ESPACE"
+                        "nl": "Ruimtevaart",
+                        "fr": "Espace"
                     }
                 }
             },
@@ -8497,8 +8596,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SAMENLEVING",
-                        "fr": "SOCIETE"
+                        "nl": "Samenleving",
+                        "fr": "Société"
                     }
                 }
             },
@@ -8508,8 +8607,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHEEPVAART",
-                        "fr": "NAVIGATION"
+                        "nl": "Scheepvaart",
+                        "fr": "Navigation"
                     }
                 }
             },
@@ -8519,8 +8618,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SEKSUALITEIT",
-                        "fr": "SEXUALITE"
+                        "nl": "Seksualiteit",
+                        "fr": "Sexualité"
                     }
                 }
             },
@@ -8530,8 +8629,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SENAAT",
-                        "fr": "SENAT"
+                        "nl": "Senaat",
+                        "fr": "Sénat"
                     }
                 }
             },
@@ -8541,8 +8640,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SOCIAAL",
-                        "fr": "SOCIAL"
+                        "nl": "Sociaal",
+                        "fr": "Social"
                     }
                 }
             },
@@ -8552,8 +8651,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SOCMEDIA ",
-                        "fr": "RESOC"
+                        "nl": "Sociale Media ",
+                        "fr": "Réseaux sociaux"
                     }
                 }
             },
@@ -8563,8 +8662,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SOCZEKERHEID",
-                        "fr": "SECSOC"
+                        "nl": "SocZekerheid",
+                        "fr": "Secsoc"
                     }
                 }
             },
@@ -8574,8 +8673,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SPOOR",
-                        "fr": "FERROVIAIRE"
+                        "nl": "Spoor",
+                        "fr": "Ferroviaire"
                     }
                 }
             },
@@ -8585,8 +8684,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "STAATSHERVORMING",
-                        "fr": "REFORME DE L'ETAT"
+                        "nl": "Staatshervorming",
+                        "fr": "Réforme de l'État"
                     }
                 }
             },
@@ -8596,19 +8695,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "STAKING",
-                        "fr": "GREVE"
+                        "nl": "Staking",
+                        "fr": "Grève"
                     }
                 }
             },
             {
-                "name": "STARTUP",
-                "qcode": "STARTUP",
+                "name": "START-UP",
+                "qcode": "START-UP",
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "STARTUP",
-                        "fr": "STARTUP"
+                        "nl": "Start-up",
+                        "fr": "Start-up"
                     }
                 }
             },
@@ -8618,8 +8717,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "STEDEN",
-                        "fr": "VILLES"
+                        "nl": "Steden",
+                        "fr": "Villes"
                     }
                 }
             },
@@ -8629,8 +8728,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TALEN",
-                        "fr": "LANGUES"
+                        "nl": "Talen",
+                        "fr": "Langues"
                     }
                 }
             },
@@ -8640,8 +8739,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TECHNOLOGIE",
-                        "fr": "TECHNOLOGIES"
+                        "nl": "Technologie",
+                        "fr": "Technologies"
                     }
                 }
             },
@@ -8651,8 +8750,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TELECOM",
-                        "fr": "TELECOMS"
+                        "nl": "Telecom",
+                        "fr": "Télécoms"
                     }
                 }
             },
@@ -8662,8 +8761,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TENTOONSTELLINGEN",
-                        "fr": "EXPOSITIONS"
+                        "nl": "Tentoonstellingen",
+                        "fr": "Expositions"
                     }
                 }
             },
@@ -8673,8 +8772,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TERRORISME",
-                        "fr": "TERRORISME"
+                        "nl": "Terrorisme",
+                        "fr": "Terrorisme"
                     }
                 }
             },
@@ -8684,8 +8783,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "THEATER",
-                        "fr": "THEATRE"
+                        "nl": "Theater",
+                        "fr": "Théâtre"
                     }
                 }
             },
@@ -8695,8 +8794,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TOERISME",
-                        "fr": "TOURISME"
+                        "nl": "Toerisme",
+                        "fr": "Tourisme"
                     }
                 }
             },
@@ -8706,8 +8805,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TRANSPORT",
-                        "fr": "TRANSPORT"
+                        "nl": "Transport",
+                        "fr": "Transport"
                     }
                 }
             },
@@ -8728,8 +8827,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "URBANISME",
-                        "fr": "URBANISME"
+                        "nl": "Stedenbouw",
+                        "fr": "Urbanisme"
                     }
                 }
             },
@@ -8739,8 +8838,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VAKBONDEN",
-                        "fr": "SYNDICATS"
+                        "nl": "Vakbonden",
+                        "fr": "Syndicats"
                     }
                 }
             },
@@ -8750,8 +8849,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VARIA",
-                        "fr": "DIVERS"
+                        "nl": "Varia",
+                        "fr": "Divers"
                     }
                 }
             },
@@ -8761,8 +8860,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VASTGOED",
-                        "fr": "IMMOBILIER"
+                        "nl": "Vastgoed",
+                        "fr": "Immobilier"
                     }
                 }
             },
@@ -8772,8 +8871,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VEILIGHEID",
-                        "fr": "SECURITE"
+                        "nl": "Veiligheid",
+                        "fr": "Sécurité"
                     }
                 }
             },
@@ -8783,8 +8882,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VERGRIJZING",
-                        "fr": "SENIORS"
+                        "nl": "Vergrijzing",
+                        "fr": "Seniors"
                     }
                 }
             },
@@ -8794,8 +8893,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VERKEER",
-                        "fr": "CIRCULATION"
+                        "nl": "Verkeer",
+                        "fr": "Circulation"
                     }
                 }
             },
@@ -8805,8 +8904,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VERKIEZINGEN",
-                        "fr": "ELECTIONS"
+                        "nl": "Verkiezingen",
+                        "fr": "Élections"
                     }
                 }
             },
@@ -8816,8 +8915,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VERVUILING",
-                        "fr": "POLLUTION"
+                        "nl": "Vervuiling",
+                        "fr": "Pollution"
                     }
                 }
             },
@@ -8827,8 +8926,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VERZEKERINGEN",
-                        "fr": "ASSURANCES"
+                        "nl": "Verzekeringen",
+                        "fr": "Assurances"
                     }
                 }
             },
@@ -8844,13 +8943,35 @@
                 }
             },
             {
+                "name": "COCOF",
+                "qcode": "COCOF",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "COCOF",
+                        "fr": "Cocof"
+                    }
+                }
+            },
+            {
+                "name": "COCOM",
+                "qcode": "COCOM",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "COCOM",
+                        "fr": "Cocom"
+                    }
+                }
+            },
+            {
                 "name": "FISHERIES",
                 "qcode": "FISHERIES",
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VISSERIJ",
-                        "fr": "PECHE"
+                        "nl": "Visserij",
+                        "fr": "Pêche"
                     }
                 }
             },
@@ -8860,8 +8981,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VLAANDEREN",
-                        "fr": "FLANDRE"
+                        "nl": "Vlaanderen",
+                        "fr": "Flandre"
+                    }
+                }
+            },
+            {
+                "name": "WALLONIA",
+                "qcode": "WALLONIA",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Wallonië",
+                        "fr": "Wallonie"
                     }
                 }
             },
@@ -8871,8 +9003,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VLAREG ",
-                        "fr": "GVTFLA"
+                        "nl": "VlaReg ",
+                        "fr": "Gvtfla"
                     }
                 }
             },
@@ -8882,8 +9014,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VLAPARL",
-                        "fr": "PARLFLA"
+                        "nl": "VlaParl",
+                        "fr": "Parlfla"
                     }
                 }
             },
@@ -8894,7 +9026,7 @@
                 "translations": {
                     "name": {
                         "nl": "VN",
-                        "fr": "ONU"
+                        "fr": "Onu"
                     }
                 }
             },
@@ -8904,8 +9036,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VOEDING",
-                        "fr": "ALIMENTATION"
+                        "nl": "Voeding",
+                        "fr": "Alimentation"
                     }
                 }
             },
@@ -8915,8 +9047,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VOLKEN",
-                        "fr": "PEUPLES"
+                        "nl": "Volkeren",
+                        "fr": "Peuples"
                     }
                 }
             },
@@ -8926,8 +9058,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VRIJE TIJD",
-                        "fr": "LOISIRS"
+                        "nl": "Vrije Tijd",
+                        "fr": "Loisirs"
                     }
                 }
             },
@@ -8937,8 +9069,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WAAREG ",
-                        "fr": "GVTWAL"
+                        "nl": "WaaReg ",
+                        "fr": "Gvtwal"
                     }
                 }
             },
@@ -8948,8 +9080,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WAAPARL",
-                        "fr": "PARLWAL"
+                        "nl": "WaaParl",
+                        "fr": "Parlwal"
                     }
                 }
             },
@@ -8959,8 +9091,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WATER",
-                        "fr": "EAU"
+                        "nl": "Water",
+                        "fr": "Eau"
                     }
                 }
             },
@@ -8970,8 +9102,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WELZIJN",
-                        "fr": "BIEN-ETRE"
+                        "nl": "Welzijn",
+                        "fr": "Bien-être"
                     }
                 }
             },
@@ -8981,8 +9113,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WERK",
-                        "fr": "EMPLOI"
+                        "nl": "Werk",
+                        "fr": "Emploi"
                     }
                 }
             },
@@ -8992,8 +9124,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WERKGEVERS",
-                        "fr": "PATRONAT"
+                        "nl": "Werkgevers",
+                        "fr": "Patronat"
                     }
                 }
             },
@@ -9003,8 +9135,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WETENSCHAPPEN",
-                        "fr": "SCIENCES"
+                        "nl": "Wetenschappen",
+                        "fr": "Sciences"
                     }
                 }
             },
@@ -9014,8 +9146,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WONEN",
-                        "fr": "LOGEMENT"
+                        "nl": "Wonen",
+                        "fr": "Logement"
                     }
                 }
             },
@@ -9047,8 +9179,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VERENIGINGEN",
-                        "fr": "ASSOCIATIF"
+                        "nl": "Verenigingen",
+                        "fr": "Associatif"
                     }
                 }
             },
@@ -9058,8 +9190,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MIDDENKLASSE",
-                        "fr": "CLASSES MOYENNES"
+                        "nl": "Middenklasse",
+                        "fr": "Classes moyennes"
                     }
                 }
             },
@@ -9069,8 +9201,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DISTRIBUTIE",
-                        "fr": "DISTRIBUTION"
+                        "nl": "Distributie",
+                        "fr": "Distribution"
                     }
                 }
             },
@@ -9080,8 +9212,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FEESTEN",
-                        "fr": "FETES"
+                        "nl": "Feesten",
+                        "fr": "Fêtes"
                     }
                 }
             },
@@ -9091,8 +9223,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BIZAR",
-                        "fr": "INSOLITE"
+                        "nl": "Bizar",
+                        "fr": "Insolite"
                     }
                 }
             },
@@ -9102,8 +9234,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KIND",
-                        "fr": "ENFANCE"
+                        "nl": "Kinderen",
+                        "fr": "Enfance"
                     }
                 }
             },
@@ -9113,8 +9245,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PATRIMONIUM",
-                        "fr": "PATRIMOINE"
+                        "nl": "Patrimonium",
+                        "fr": "Patrimoine"
                     }
                 }
             },
@@ -9124,8 +9256,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHILDERKUNST",
-                        "fr": "PEINTURE"
+                        "nl": "Schilderkunst",
+                        "fr": "Peinture"
                     }
                 }
             },
@@ -9135,8 +9267,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PERSOONLIJKHEID",
-                        "fr": "PERSONNALITES"
+                        "nl": "Persoonlijkheden",
+                        "fr": "Personnalités"
                     }
                 }
             },
@@ -9146,8 +9278,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SPEKTAKELS",
-                        "fr": "SPECTACLES"
+                        "nl": "Spektakels",
+                        "fr": "Spectacles"
                     }
                 }
             },
@@ -9157,8 +9289,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AIKIDO",
-                        "fr": "AIKIDO"
+                        "nl": "Aikido",
+                        "fr": "Aikido"
                     }
                 }
             },
@@ -9168,8 +9300,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ATLETIEK",
-                        "fr": "ATHLETISME"
+                        "nl": "Atletiek",
+                        "fr": "Athlétisme"
                     }
                 }
             },
@@ -9179,8 +9311,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AUTOSPORT",
-                        "fr": "AUTOMOBILISME"
+                        "nl": "Autosport",
+                        "fr": "Automobilisme"
                     }
                 }
             },
@@ -9190,8 +9322,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ROEIEN",
-                        "fr": "AVIRON"
+                        "nl": "Roeien",
+                        "fr": "Aviron"
                     }
                 }
             },
@@ -9201,8 +9333,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BADMINTON",
-                        "fr": "BADMINTON"
+                        "nl": "Badminton",
+                        "fr": "Badminton"
                     }
                 }
             },
@@ -9212,8 +9344,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BASEBALL",
-                        "fr": "BASEBALL"
+                        "nl": "Baseball",
+                        "fr": "Baseball"
                     }
                 }
             },
@@ -9223,8 +9355,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BASKET",
-                        "fr": "BASKET"
+                        "nl": "Basket",
+                        "fr": "Basket"
                     }
                 }
             },
@@ -9234,8 +9366,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BIATLON",
-                        "fr": "BIATHLON"
+                        "nl": "Biatlon",
+                        "fr": "Biathlon"
                     }
                 }
             },
@@ -9245,8 +9377,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BILJARTEN",
-                        "fr": "BILLARD"
+                        "nl": "Biljarten",
+                        "fr": "Billard"
                     }
                 }
             },
@@ -9256,8 +9388,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BOBSLEE",
-                        "fr": "BOBSLEIGH"
+                        "nl": "Bobslee",
+                        "fr": "Bobsleigh"
                     }
                 }
             },
@@ -9267,8 +9399,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BOWLING",
-                        "fr": "BOWLING"
+                        "nl": "Bowling",
+                        "fr": "Bowling"
                     }
                 }
             },
@@ -9278,8 +9410,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BOKSEN",
-                        "fr": "BOXE"
+                        "nl": "Boksen",
+                        "fr": "Boxe"
                     }
                 }
             },
@@ -9289,8 +9421,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KANO",
-                        "fr": "CANOE  "
+                        "nl": "Kano",
+                        "fr": "Canoë"
                     }
                 }
             },
@@ -9300,8 +9432,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CRICKET",
-                        "fr": "CRICKET"
+                        "nl": "Cricket",
+                        "fr": "Cricket"
                     }
                 }
             },
@@ -9311,8 +9443,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CURLING",
-                        "fr": "CURLING"
+                        "nl": "Curling",
+                        "fr": "Curling"
                     }
                 }
             },
@@ -9322,8 +9454,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WIELRENNEN",
-                        "fr": "CYCLISME"
+                        "nl": "Wielrennen",
+                        "fr": "Cyclisme"
                     }
                 }
             },
@@ -9333,8 +9465,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VELDRIJDEN",
-                        "fr": "CYCLOCROSS"
+                        "nl": "Veldrijden",
+                        "fr": "Cyclocross"
+                    }
+                }
+            },
+            {
+                "name": "TRACK CYCLING",
+                "qcode": "TRACK CYCLING",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Baanwielrennen",
+                        "fr": "Cyclisme sur piste"
                     }
                 }
             },
@@ -9344,8 +9487,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DARTS",
-                        "fr": "DARTS"
+                        "nl": "Darts",
+                        "fr": "Darts"
                     }
                 }
             },
@@ -9355,8 +9498,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DUATLON",
-                        "fr": "DUATHLON"
+                        "nl": "Duatlon",
+                        "fr": "Duathlon"
                     }
                 }
             },
@@ -9366,8 +9509,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RUITERSPORT",
-                        "fr": "EQUITATION"
+                        "nl": "Ruitersport",
+                        "fr": "Équitation"
                     }
                 }
             },
@@ -9377,8 +9520,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MUURKLIMMEN",
-                        "fr": "ESCALADE"
+                        "nl": "Muurklimmen",
+                        "fr": "Escalade"
                     }
                 }
             },
@@ -9388,8 +9531,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHERMEN",
-                        "fr": "ESCRIME"
+                        "nl": "Schermen",
+                        "fr": "Escrime"
                     }
                 }
             },
@@ -9399,8 +9542,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHAKEN ",
-                        "fr": "ECHECS "
+                        "nl": "Schaken ",
+                        "fr": "Échecs"
                     }
                 }
             },
@@ -9410,8 +9553,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VOETBAL",
-                        "fr": "FOOTBALL"
+                        "nl": "Voetbal",
+                        "fr": "Football"
                     }
                 }
             },
@@ -9421,8 +9564,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AMERICAN FOOTBALL",
-                        "fr": "FOOTBALL AMERICAIN"
+                        "nl": "American Football",
+                        "fr": "Football américain"
                     }
                 }
             },
@@ -9432,8 +9575,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ZAALVOETBAL",
-                        "fr": "FOOTBALL EN SALLE "
+                        "nl": "Futsal",
+                        "fr": "Futsal"
                     }
                 }
             },
@@ -9443,8 +9586,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GOLF",
-                        "fr": "GOLF"
+                        "nl": "Golf",
+                        "fr": "Golf"
                     }
                 }
             },
@@ -9454,8 +9597,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TURNEN",
-                        "fr": "GYMNASTIQUE"
+                        "nl": "Turnen",
+                        "fr": "Gymnastique"
                     }
                 }
             },
@@ -9465,8 +9608,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "GEWICHTHEFFEN",
-                        "fr": "HALTEROPHILIE"
+                        "nl": "Gewichtheffen",
+                        "fr": "Haltérophilie"
                     }
                 }
             },
@@ -9476,8 +9619,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HANDBAL",
-                        "fr": "HANDBALL"
+                        "nl": "Handbal",
+                        "fr": "Handball"
                     }
                 }
             },
@@ -9487,8 +9630,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WEDRENNEN",
-                        "fr": "HIPPISME"
+                        "nl": "Wedrennen",
+                        "fr": "Hippisme"
                     }
                 }
             },
@@ -9498,8 +9641,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HOCKEY",
-                        "fr": "HOCKEY"
+                        "nl": "Hockey",
+                        "fr": "Hockey"
                     }
                 }
             },
@@ -9509,8 +9652,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "IJSHOCKEY",
-                        "fr": "HOCKEY SUR GLACE"
+                        "nl": "IJshockey",
+                        "fr": "Hockey Sur Glace"
                     }
                 }
             },
@@ -9520,8 +9663,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "JIU-JITSU",
-                        "fr": "JU-JITSU"
+                        "nl": "Jiu-Jitsu",
+                        "fr": "Ju-Jitsu"
                     }
                 }
             },
@@ -9531,8 +9674,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "JUDO",
-                        "fr": "JUDO"
+                        "nl": "Judo",
+                        "fr": "Judo"
                     }
                 }
             },
@@ -9542,19 +9685,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KARATE",
-                        "fr": "KARATE"
-                    }
-                }
-            },
-            {
-                "name": "KARTING",
-                "qcode": "KARTING",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "KARTING",
-                        "fr": "KARTING"
+                        "nl": "Karate",
+                        "fr": "Karate"
                     }
                 }
             },
@@ -9564,8 +9696,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KAJAK",
-                        "fr": "KAYAK"
+                        "nl": "Kajak",
+                        "fr": "Kayak"
                     }
                 }
             },
@@ -9575,8 +9707,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KORFBAL",
-                        "fr": "KORFBAL"
+                        "nl": "Korfbal",
+                        "fr": "Korfbal"
                     }
                 }
             },
@@ -9586,8 +9718,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RODELEN",
-                        "fr": "LUGE"
+                        "nl": "Rodelen",
+                        "fr": "Luge"
                     }
                 }
             },
@@ -9597,8 +9729,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WORSTELEN",
-                        "fr": "LUTTE"
+                        "nl": "Worstelen",
+                        "fr": "Lutte"
                     }
                 }
             },
@@ -9608,8 +9740,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MOTORCROSS",
-                        "fr": "MOTOCROSS"
+                        "nl": "Motorcross",
+                        "fr": "Motocross"
                     }
                 }
             },
@@ -9619,8 +9751,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MOTORSPORT",
-                        "fr": "MOTOCYCLISME"
+                        "nl": "Motorsport",
+                        "fr": "Motocyclisme"
                     }
                 }
             },
@@ -9630,8 +9762,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MOUNTAINBIKE",
-                        "fr": "MOUNTAINBIKE"
+                        "nl": "Mountainbike",
+                        "fr": "Mountainbike"
+                    }
+                }
+            },
+            {
+                "name": "NORDIC COMBINED",
+                "qcode": "NORDIC COMBINED",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Noordse Combinatie",
+                        "fr": "Combiné Nordique"
                     }
                 }
             },
@@ -9641,8 +9784,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ZWEMMEN",
-                        "fr": "NATATION"
+                        "nl": "Zwemmen",
+                        "fr": "Natation"
                     }
                 }
             },
@@ -9652,8 +9795,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SYNCHROONZWEMMEN",
-                        "fr": "NATATION SYNCHRONISEE "
+                        "nl": "Synchroonzwemmen",
+                        "fr": "Natation Synchronisee "
                     }
                 }
             },
@@ -9663,8 +9806,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHAATSEN",
-                        "fr": "PATINAGE"
+                        "nl": "Schaatsen",
+                        "fr": "Patinage"
                     }
                 }
             },
@@ -9674,8 +9817,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "KUNSTSCHAATSEN",
-                        "fr": "PATINAGE ARTISTIQUE"
+                        "nl": "Kunstschaatsen",
+                        "fr": "Patinage Artistique"
                     }
                 }
             },
@@ -9685,8 +9828,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VIJFKAMP",
-                        "fr": "PENTATHLON"
+                        "nl": "Vijfkamp",
+                        "fr": "Pentathlon"
                     }
                 }
             },
@@ -9696,8 +9839,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PETANQUE",
-                        "fr": "PETANQUE"
+                        "nl": "Petanque",
+                        "fr": "Petanque"
                     }
                 }
             },
@@ -9707,8 +9850,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DUIKEN",
-                        "fr": "PLONGEON"
+                        "nl": "Duiken",
+                        "fr": "Plongeon"
                     }
                 }
             },
@@ -9718,8 +9861,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "POWERLIFTEN",
-                        "fr": "POWERLIFTING"
+                        "nl": "Powerliften",
+                        "fr": "Powerlifting"
                     }
                 }
             },
@@ -9729,8 +9872,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SKEELEREN",
-                        "fr": "ROLLER "
+                        "nl": "Skeeleren",
+                        "fr": "Roller "
                     }
                 }
             },
@@ -9740,8 +9883,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RUGBY",
-                        "fr": "RUGBY"
+                        "nl": "Rugby",
+                        "fr": "Rugby"
                     }
                 }
             },
@@ -9751,8 +9894,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SKELETON",
-                        "fr": "SKELETON"
+                        "nl": "Skeleton",
+                        "fr": "Skeleton"
                     }
                 }
             },
@@ -9762,8 +9905,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ALPIJNSE SKI",
-                        "fr": "SKI ALPIN"
+                        "nl": "Alpijnse Ski",
+                        "fr": "Ski Alpin"
                     }
                 }
             },
@@ -9773,8 +9916,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WATERSKI",
-                        "fr": "SKI NAUTIQUE"
+                        "nl": "Waterski",
+                        "fr": "Ski Nautique"
+                    }
+                }
+            },
+            {
+                "name": "WATERPOLO",
+                "qcode": "WATERPOLO",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Waterpolo",
+                        "fr": "Waterpolo"
                     }
                 }
             },
@@ -9784,8 +9938,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHANSSPRINGEN",
-                        "fr": "SAUT A SKI"
+                        "nl": "Schansspringen",
+                        "fr": "Saut à ski"
                     }
                 }
             },
@@ -9795,8 +9949,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LANGLAUFEN",
-                        "fr": "LANGLAUFEN"
+                        "nl": "Langlaufen",
+                        "fr": "Ski de fond"
                     }
                 }
             },
@@ -9806,8 +9960,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SNOOKER",
-                        "fr": "SNOOKER"
+                        "nl": "Snooker",
+                        "fr": "Snooker"
                     }
                 }
             },
@@ -9817,8 +9971,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SNOWBOARD",
-                        "fr": "SNOWBOARD"
+                        "nl": "Snowboard",
+                        "fr": "Snowboard"
                     }
                 }
             },
@@ -9828,8 +9982,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SOFTBAL",
-                        "fr": "SOFTBALL"
+                        "nl": "Softbal",
+                        "fr": "Softball"
                     }
                 }
             },
@@ -9839,19 +9993,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SQUASH",
-                        "fr": "SQUASH"
-                    }
-                }
-            },
-            {
-                "name": "SUMO",
-                "qcode": "SUMO",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "SUMO ",
-                        "fr": "SUMO "
+                        "nl": "Squash",
+                        "fr": "Squash"
                     }
                 }
             },
@@ -9861,8 +10004,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TAEKWONDO",
-                        "fr": "TAEKWONDO"
+                        "nl": "Taekwondo",
+                        "fr": "Taekwondo"
                     }
                 }
             },
@@ -9872,8 +10015,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TENNIS",
-                        "fr": "TENNIS"
+                        "nl": "Tennis",
+                        "fr": "Tennis"
                     }
                 }
             },
@@ -9883,8 +10026,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TAFELTENNIS",
-                        "fr": "TENNIS DE TABLE"
+                        "nl": "Tafeltennis",
+                        "fr": "Tennis De Table"
                     }
                 }
             },
@@ -9894,8 +10037,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCHIETEN",
-                        "fr": "TIR"
+                        "nl": "Schieten",
+                        "fr": "Tir"
                     }
                 }
             },
@@ -9905,8 +10048,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BOOGSCHIETEN",
-                        "fr": "TIR A LARC"
+                        "nl": "Boogschieten",
+                        "fr": "Tir à l'arc"
                     }
                 }
             },
@@ -9916,8 +10059,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TRIAL",
-                        "fr": "TRIAL "
+                        "nl": "Trial",
+                        "fr": "Trial "
                     }
                 }
             },
@@ -9927,8 +10070,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "TRIATLON",
-                        "fr": "TRIATHLON"
+                        "nl": "Triatlon",
+                        "fr": "Triathlon"
                     }
                 }
             },
@@ -9938,8 +10081,19 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "VOLLEY",
-                        "fr": "VOLLEY"
+                        "nl": "Volley",
+                        "fr": "Volley"
+                    }
+                }
+            },
+            {
+                "name": "BEACHVOLLEY",
+                "qcode": "BEACHVOLLEY",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Beachvolley",
+                        "fr": "Beachvolley"
                     }
                 }
             },
@@ -9950,7 +10104,7 @@
                 "translations": {
                     "name": {
                         "nl": "OS",
-                        "fr": "OLYMPISME"
+                        "fr": "Olympisme"
                     }
                 }
             },
@@ -9960,8 +10114,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HANDISPORT",
-                        "fr": "HANDISPORT"
+                        "nl": "Handisport",
+                        "fr": "Handisport"
                     }
                 }
             },
@@ -9982,8 +10136,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "COMPETITIES",
-                        "fr": "COMPÉTITIONS"
+                        "nl": "Competities",
+                        "fr": "Compétitions"
                     }
                 }
             },
@@ -9993,8 +10147,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REDDEVILS",
-                        "fr": "REDDEVILS"
+                        "nl": "RedDevils",
+                        "fr": "RedDevils"
                     }
                 }
             },
@@ -10004,8 +10158,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REDFLAMES",
-                        "fr": "REDFLAMES"
+                        "nl": "RedFlames",
+                        "fr": "RedFlames"
                     }
                 }
             },
@@ -10015,8 +10169,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "JUPILERPROLEAGUE",
-                        "fr": "JUPILERPROLEAGUE"
+                        "nl": "JupilerProLeague",
+                        "fr": "JupilerProLeague"
                     }
                 }
             },
@@ -10026,8 +10180,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PROXIMUSLEAGUE",
-                        "fr": "PROXIMUSLEAGUE"
+                        "nl": "ProximusLeague",
+                        "fr": "ProximusLeague"
                     }
                 }
             },
@@ -10037,8 +10191,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BEKER",
-                        "fr": "COUPE"
+                        "nl": "Beker",
+                        "fr": "Coupe"
                     }
                 }
             },
@@ -10125,19 +10279,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DISCIPLINARY",
-                        "fr": "DISCIPLINARY"
-                    }
-                }
-            },
-            {
-                "name": "SPORT JUSTICE",
-                "qcode": "SPORT JUSTICE",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "SPORT JUSTICE",
-                        "fr": "SPORT JUSTICE"
+                        "nl": "Disciplinary",
+                        "fr": "Disciplinary"
                     }
                 }
             },
@@ -10147,8 +10290,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "UCIWT ",
-                        "fr": "UCIWT "
+                        "nl": "WorldTour",
+                        "fr": "WorldTour"
                     }
                 }
             },
@@ -10169,8 +10312,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FE ",
-                        "fr": "FE "
+                        "nl": "FE",
+                        "fr": "FE"
                     }
                 }
             },
@@ -10180,8 +10323,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "RALLY",
-                        "fr": "RALLY"
+                        "nl": "Rally",
+                        "fr": "Rally"
                     }
                 }
             },
@@ -10202,8 +10345,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MOTOGP",
-                        "fr": "MOTOGP"
+                        "nl": "MotoGP",
+                        "fr": "MotoGP"
                     }
                 }
             },
@@ -10285,13 +10428,79 @@
                 }
             },
             {
+                "name": "PARALYMPICS2020",
+                "qcode": "PARALYMPICS2020",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "PARALYMPICS2020",
+                        "fr": "PARALYMPICS2020"
+                    }
+                }
+            },
+            {
+                "name": "PARALYMPICS2022",
+                "qcode": "PARALYMPICS2022",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "PARALYMPICS2022",
+                        "fr": "PARALYMPICS2022"
+                    }
+                }
+            },
+            {
+                "name": "PARALYMPICS2024",
+                "qcode": "PARALYMPICS2024",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "PARALYMPICS2024",
+                        "fr": "PARALYMPICS2024"
+                    }
+                }
+            },
+            {
+                "name": "PARALYMPICS2026",
+                "qcode": "PARALYMPICS2026",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "PARALYMPICS2026",
+                        "fr": "PARALYMPICS2026"
+                    }
+                }
+            },
+            {
+                "name": "PARALYMPICS2028",
+                "qcode": "PARALYMPICS2028",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "PARALYMPICS2028",
+                        "fr": "PARALYMPICS2028"
+                    }
+                }
+            },
+            {
+                "name": "PARALYMPICS2030",
+                "qcode": "PARALYMPICS2030",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "PARALYMPICS2030",
+                        "fr": "PARALYMPICS2030"
+                    }
+                }
+            },
+            {
                 "name": "EC2020",
                 "qcode": "EC2020",
                 "is_active": true,
                 "translations": {
                     "name": {
                         "nl": "EK2020",
-                        "fr": "EURO2020"
+                        "fr": "Euro2020"
                     }
                 }
             },
@@ -10302,7 +10511,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2021",
-                        "fr": "EURO2021"
+                        "fr": "Euro2021"
                     }
                 }
             },
@@ -10313,7 +10522,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2022",
-                        "fr": "EURO2022"
+                        "fr": "Euro2022"
                     }
                 }
             },
@@ -10324,7 +10533,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2023",
-                        "fr": "EURO2023"
+                        "fr": "Euro2023"
                     }
                 }
             },
@@ -10335,7 +10544,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2024",
-                        "fr": "EURO2024"
+                        "fr": "Euro2024"
                     }
                 }
             },
@@ -10346,7 +10555,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2025",
-                        "fr": "EURO2025"
+                        "fr": "Euro2025"
                     }
                 }
             },
@@ -10357,7 +10566,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2026",
-                        "fr": "EURO2026"
+                        "fr": "Euro2026"
                     }
                 }
             },
@@ -10368,7 +10577,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2027",
-                        "fr": "EURO2027"
+                        "fr": "Euro2027"
                     }
                 }
             },
@@ -10379,7 +10588,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2028",
-                        "fr": "EURO2028"
+                        "fr": "Euro2028"
                     }
                 }
             },
@@ -10390,7 +10599,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2029",
-                        "fr": "EURO2029"
+                        "fr": "Euro2029"
                     }
                 }
             },
@@ -10401,7 +10610,7 @@
                 "translations": {
                     "name": {
                         "nl": "EK2030",
-                        "fr": "EURO2030"
+                        "fr": "Euro2030"
                     }
                 }
             },
@@ -10412,7 +10621,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2020",
-                        "fr": "MONDIAL2020"
+                        "fr": "Mondial2020"
                     }
                 }
             },
@@ -10423,7 +10632,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2021",
-                        "fr": "MONDIAL2021"
+                        "fr": "Mondial2021"
                     }
                 }
             },
@@ -10434,7 +10643,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2022",
-                        "fr": "MONDIAL2022"
+                        "fr": "Mondial2022"
                     }
                 }
             },
@@ -10445,7 +10654,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2023",
-                        "fr": "MONDIAL2023"
+                        "fr": "Mondial2023"
                     }
                 }
             },
@@ -10456,7 +10665,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2024",
-                        "fr": "MONDIAL2024"
+                        "fr": "Mondial2024"
                     }
                 }
             },
@@ -10467,7 +10676,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2025",
-                        "fr": "MONDIAL2025"
+                        "fr": "Mondial2025"
                     }
                 }
             },
@@ -10478,7 +10687,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2026",
-                        "fr": "MONDIAL2026"
+                        "fr": "Mondial2026"
                     }
                 }
             },
@@ -10489,7 +10698,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2027",
-                        "fr": "MONDIAL2027"
+                        "fr": "Mondial2027"
                     }
                 }
             },
@@ -10500,7 +10709,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2028",
-                        "fr": "MONDIAL2028"
+                        "fr": "Mondial2028"
                     }
                 }
             },
@@ -10511,7 +10720,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2029",
-                        "fr": "MONDIAL2029"
+                        "fr": "Mondial2029"
                     }
                 }
             },
@@ -10522,7 +10731,7 @@
                 "translations": {
                     "name": {
                         "nl": "WK2030",
-                        "fr": "MONDIAL2030"
+                        "fr": "Mondial2030"
                     }
                 }
             },
@@ -10532,8 +10741,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REDLIONS",
-                        "fr": "REDLIONS"
+                        "nl": "RedLions",
+                        "fr": "RedLions"
                     }
                 }
             },
@@ -10543,8 +10752,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REDPANTHERS",
-                        "fr": "REDPANTHERS"
+                        "nl": "RedPanthers",
+                        "fr": "RedPanthers"
                     }
                 }
             },
@@ -10554,8 +10763,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REDDRAGONS",
-                        "fr": "REDDRAGONS"
+                        "nl": "RedDragons",
+                        "fr": "RedDragons"
                     }
                 }
             },
@@ -10565,8 +10774,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "YELLOWTIGERS",
-                        "fr": "YELLOWTIGERS"
+                        "nl": "YellowTigers",
+                        "fr": "YellowTigers"
                     }
                 }
             },
@@ -10576,8 +10785,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGIANLIONS",
-                        "fr": "BELGIANLIONS"
+                        "nl": "BelgianLions",
+                        "fr": "BelgianLions"
                     }
                 }
             },
@@ -10587,8 +10796,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGIANCATS",
-                        "fr": "BELGIANCATS"
+                        "nl": "BelgianCats",
+                        "fr": "BelgianCats"
                     }
                 }
             },
@@ -10598,8 +10807,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REDWOLVES",
-                        "fr": "REDWOLVES"
+                        "nl": "RedWolves",
+                        "fr": "RedWolves"
                     }
                 }
             },
@@ -10609,8 +10818,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BLACKARROWS",
-                        "fr": "BLACKARROWS"
+                        "nl": "BlackArrows",
+                        "fr": "BlackArrows"
                     }
                 }
             },
@@ -10620,8 +10829,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SPORTS",
-                        "fr": "SPORTS"
+                        "nl": "Sports",
+                        "fr": "Sports"
                     }
                 }
             },
@@ -10631,8 +10840,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MUSIC",
-                        "fr": "MUSIC"
+                        "nl": "Music",
+                        "fr": "Music"
                     }
                 }
             },
@@ -10642,8 +10851,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MUSIC FESTIVALS",
-                        "fr": "MUSIC FESTIVALS"
+                        "nl": "Music Festivals",
+                        "fr": "Music Festivals"
                     }
                 }
             },
@@ -10653,8 +10862,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FILM FESTIVALS",
-                        "fr": "FILM FESTIVALS"
+                        "nl": "Film Festivals",
+                        "fr": "Film Festivals"
                     }
                 }
             },
@@ -10664,8 +10873,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ACTION",
-                        "fr": "ACTION"
+                        "nl": "Action",
+                        "fr": "Action"
                     }
                 }
             },
@@ -10675,8 +10884,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ANIMATION",
-                        "fr": "ANIMATION"
+                        "nl": "Animation",
+                        "fr": "Animation"
                     }
                 }
             },
@@ -10686,8 +10895,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ADVENTURE",
-                        "fr": "ADVENTURE"
+                        "nl": "Adventure",
+                        "fr": "Adventure"
                     }
                 }
             },
@@ -10697,8 +10906,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "COMEDY",
-                        "fr": "COMEDY"
+                        "nl": "Comedy",
+                        "fr": "Comedy"
                     }
                 }
             },
@@ -10708,8 +10917,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DOCUMENTARY",
-                        "fr": "DOCUMENTARY"
+                        "nl": "Documentary",
+                        "fr": "Documentary"
                     }
                 }
             },
@@ -10719,8 +10928,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DRAMA",
-                        "fr": "DRAME"
+                        "nl": "Drama",
+                        "fr": "Drame"
                     }
                 }
             },
@@ -10730,8 +10939,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FAMILY",
-                        "fr": "FAMILY"
+                        "nl": "Family",
+                        "fr": "Family"
                     }
                 }
             },
@@ -10741,8 +10950,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HORROR",
-                        "fr": "HORROR"
+                        "nl": "Horror",
+                        "fr": "Horror"
                     }
                 }
             },
@@ -10752,8 +10961,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MUSIC",
-                        "fr": "MUSIC"
+                        "nl": "Music",
+                        "fr": "Music"
                     }
                 }
             },
@@ -10763,8 +10972,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LOVE",
-                        "fr": "LOVE"
+                        "nl": "Love",
+                        "fr": "Love"
                     }
                 }
             },
@@ -10774,8 +10983,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SCI-FI",
-                        "fr": "SCI-FI"
+                        "nl": "Sci-Fi",
+                        "fr": "Sci-Fi"
                     }
                 }
             },
@@ -10785,8 +10994,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "THRILLER",
-                        "fr": "THRILLER"
+                        "nl": "Thriller",
+                        "fr": "Thriller"
                     }
                 }
             },
@@ -10796,8 +11005,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ALTERNATIVE & INDIE",
-                        "fr": "ALTERNATIVE & INDIE"
+                        "nl": "Alternative & Indie",
+                        "fr": "Alternative & Indie"
                     }
                 }
             },
@@ -10807,8 +11016,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BLUES",
-                        "fr": "BLUES"
+                        "nl": "Blues",
+                        "fr": "Blues"
                     }
                 }
             },
@@ -10818,8 +11027,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "CLASSICAL",
-                        "fr": "CLASSICAL"
+                        "nl": "Classical",
+                        "fr": "Classical"
                     }
                 }
             },
@@ -10829,8 +11038,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "DANCE & DISCO",
-                        "fr": "DANCE & DISCO"
+                        "nl": "Dance & Disco",
+                        "fr": "Dance & Disco"
                     }
                 }
             },
@@ -10851,8 +11060,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ELECTRONICA",
-                        "fr": "ELECTRONICA"
+                        "nl": "Electronica",
+                        "fr": "Electronica"
                     }
                 }
             },
@@ -10862,8 +11071,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "FRANS",
-                        "fr": "FRANÇAIS"
+                        "nl": "Frans",
+                        "fr": "Français"
                     }
                 }
             },
@@ -10873,8 +11082,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HIP HOP & RAP",
-                        "fr": "HIP HOP & RAP"
+                        "nl": "Hip Hop & Rap",
+                        "fr": "Hip Hop & Rap"
                     }
                 }
             },
@@ -10884,8 +11093,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "JAZZ",
-                        "fr": "JAZZ"
+                        "nl": "Jazz",
+                        "fr": "Jazz"
                     }
                 }
             },
@@ -10895,8 +11104,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "METAL & HARD ROCK",
-                        "fr": "METAL & HARD ROCK"
+                        "nl": "Metal & Hard Rock",
+                        "fr": "Metal & Hard Rock"
                     }
                 }
             },
@@ -10906,8 +11115,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "MUSICAL",
-                        "fr": "MUSICAL"
+                        "nl": "Musical",
+                        "fr": "Musical"
                     }
                 }
             },
@@ -10917,8 +11126,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "NEDERLANDS",
-                        "fr": "NEERLANDAIS"
+                        "nl": "Nederlands",
+                        "fr": "Néerlandais"
                     }
                 }
             },
@@ -10928,8 +11137,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "OPERA",
-                        "fr": "OPERA"
+                        "nl": "Opera",
+                        "fr": "Opera"
                     }
                 }
             },
@@ -10939,8 +11148,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "POP",
-                        "fr": "POP"
+                        "nl": "Pop",
+                        "fr": "Pop"
                     }
                 }
             },
@@ -10950,8 +11159,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "PUNK & NEW WAVE",
-                        "fr": "PUNK & NEW WAVE"
+                        "nl": "Punk & New Wave",
+                        "fr": "Punk & New Wave"
                     }
                 }
             },
@@ -10961,8 +11170,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "REGGAE",
-                        "fr": "REGGAE"
+                        "nl": "Reggae",
+                        "fr": "Reggae"
                     }
                 }
             },
@@ -10972,8 +11181,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ROCK",
-                        "fr": "ROCK"
+                        "nl": "Rock",
+                        "fr": "Rock"
                     }
                 }
             },
@@ -10983,8 +11192,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SINGER-SONGWRITER & FOLK",
-                        "fr": "SINGER-SONGWRITER & FOLK"
+                        "nl": "Singer-Songwriter & Folk",
+                        "fr": "Singer-Songwriter & Folk"
                     }
                 }
             },
@@ -10994,8 +11203,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "SOUL",
-                        "fr": "SOUL"
+                        "nl": "Soul",
+                        "fr": "Soul"
                     }
                 }
             },
@@ -11005,8 +11214,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "URBAN",
-                        "fr": "URBAN"
+                        "nl": "Urban",
+                        "fr": "Urban"
                     }
                 }
             },
@@ -11016,8 +11225,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "WORLD MUSIC",
-                        "fr": "WORLD MUSIC"
+                        "nl": "World Music",
+                        "fr": "World Music"
                     }
                 }
             },
@@ -11027,8 +11236,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LIFESTYLE",
-                        "fr": "LIFESTYLE"
+                        "nl": "Lifestyle",
+                        "fr": "Lifestyle"
                     }
                 }
             },
@@ -11038,8 +11247,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ECONOMIE",
-                        "fr": "ECONOMIE"
+                        "nl": "Economie",
+                        "fr": "Economie"
                     }
                 }
             },
@@ -11049,8 +11258,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AUTOBEDRIJVEN",
-                        "fr": "ENTREPRISE AUTOMOBILE"
+                        "nl": "Autobedrijven",
+                        "fr": "Entreprise Automobile"
                     }
                 }
             },
@@ -11071,8 +11280,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAINSERT",
-                        "fr": "BELGAINSERT"
+                        "nl": "BelgaInsert",
+                        "fr": "BelgaInsert"
                     }
                 }
             },
@@ -11082,8 +11291,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAILLUSTRATION",
-                        "fr": "BELGAILLUSTRATION"
+                        "nl": "BelgaIllustration",
+                        "fr": "BelgaIllustration"
                     }
                 }
             },
@@ -11093,8 +11302,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "HEADSHOT ONE PERSON",
-                        "fr": "HEADSHOT ONE PERSON"
+                        "nl": "Headshot One Person",
+                        "fr": "Headshot One Person"
                     }
                 }
             },
@@ -11104,8 +11313,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAPORTRAIT",
-                        "fr": "BELGAPORTRAIT"
+                        "nl": "BelgaPortrait",
+                        "fr": "BelgaPortrait"
                     }
                 }
             },
@@ -11115,8 +11324,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGABIZAR",
-                        "fr": "BELGABIZAR"
+                        "nl": "BelgaBizar",
+                        "fr": "BelgaBizar"
                     }
                 }
             },
@@ -11126,8 +11335,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAACTION",
-                        "fr": "BELGAACTION"
+                        "nl": "BelgaAction",
+                        "fr": "BelgaAction"
                     }
                 }
             },
@@ -11137,8 +11346,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAINTERVIEW",
-                        "fr": "BELGAINTERVIEW"
+                        "nl": "BelgaInterview",
+                        "fr": "BelgaInterview"
                     }
                 }
             },
@@ -11148,8 +11357,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "ENGELS",
-                        "fr": "ANGLAIS"
+                        "nl": "Engels",
+                        "fr": "Anglais"
                     }
                 }
             },
@@ -11159,8 +11368,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAMETEO",
-                        "fr": "BELGAMETEO"
+                        "nl": "BelgaMeteo",
+                        "fr": "BelgaMeteo"
                     }
                 }
             },
@@ -11170,8 +11379,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGADRONE",
-                        "fr": "BELGADRONE"
+                        "nl": "BelgaDrone",
+                        "fr": "BelgaDrone"
                     }
                 }
             },
@@ -11181,8 +11390,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "AERIAL VIEW",
-                        "fr": "AERIAL VIEW"
+                        "nl": "Aerial View",
+                        "fr": "Aerial View"
                     }
                 }
             },
@@ -11192,8 +11401,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BUILDING",
-                        "fr": "BUILDING"
+                        "nl": "Building",
+                        "fr": "Building"
                     }
                 }
             },
@@ -11203,8 +11412,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BEST QUALITY AVAILABLE",
-                        "fr": "BEST QUALITY AVAILABLE"
+                        "nl": "Best Quality Available",
+                        "fr": "Best Quality Available"
                     }
                 }
             },
@@ -11214,8 +11423,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "LOGO",
-                        "fr": "LOGO"
+                        "nl": "Logo",
+                        "fr": "Logo"
                     }
                 }
             },
@@ -11225,8 +11434,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGADRAWING",
-                        "fr": "BELGADRAWING"
+                        "nl": "BelgaDrawing",
+                        "fr": "BelgaDrawing"
                     }
                 }
             },
@@ -11236,41 +11445,8 @@
                 "is_active": true,
                 "translations": {
                     "name": {
-                        "nl": "BELGAMOMENT",
-                        "fr": "BELGAMOMENT"
-                    }
-                }
-            },
-            {
-                "name": "BELGASILENTVIDEO2017",
-                "qcode": "BELGASILENTVIDEO2017",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "BELGASILENTVIDEO2017",
-                        "fr": "BELGASILENTVIDEO2017"
-                    }
-                }
-            },
-            {
-                "name": "BELGASILENTVIDEO2018",
-                "qcode": "BELGASILENTVIDEO2018",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "BELGASILENTVIDEO2018",
-                        "fr": "BELGASILENTVIDEO2018"
-                    }
-                }
-            },
-            {
-                "name": "RUSHES",
-                "qcode": "RUSHES",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "RUSHES",
-                        "fr": "RUSHES"
+                        "nl": "BelgaMoment",
+                        "fr": "BelgaMoment"        
                     }
                 }
             }
