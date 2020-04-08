@@ -4,7 +4,7 @@
         "display_name": "Packages",
         "type": "manageable",
         "selection_type": "multi selection",
-        "init_version": 2,
+        "init_version": 3,
         "unique_field": "qcode",
         "service": {
             "all": 1
@@ -35,18 +35,6 @@
                 "parent": null
             },
             {
-                "name": "NEWS",
-                "qcode": "NEWS",
-                "is_active": true,
-                "parent": null
-            },
-            {
-                "name": "SPECIAL",
-                "qcode": "SPECIAL",
-                "is_active": true,
-                "parent": null
-            },
-            {
                 "name": "SPF",
                 "qcode": "SPF",
                 "is_active": true,
@@ -55,6 +43,18 @@
             {
                 "name": "SPN",
                 "qcode": "SPN",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "NEWS",
+                "qcode": "NEWS",
+                "is_active": true,
+                "parent": null
+            },
+            {
+                "name": "SPECIAL",
+                "qcode": "SPECIAL",
                 "is_active": true,
                 "parent": null
             },
@@ -83,20 +83,8 @@
                 "parent": "BIN"
             },
             {
-                "name": "BIN/POD",
-                "qcode": "BIN/POD",
-                "is_active": true,
-                "parent": "BIN"
-            },
-            {
                 "name": "BIN/PRV",
                 "qcode": "BIN/PRV",
-                "is_active": true,
-                "parent": "BIN"
-            },
-            {
-                "name": "BIN/SPORTS",
-                "qcode": "BIN/SPORTS",
                 "is_active": true,
                 "parent": "BIN"
             },
@@ -125,50 +113,8 @@
                 "parent": "BTL"
             },
             {
-                "name": "EXT/GENERAL",
-                "qcode": "EXT/GENERAL",
-                "is_active": true,
-                "parent": "EXT"
-            },
-            {
-                "name": "EXT/EUR",
-                "qcode": "EXT/EUR",
-                "is_active": true,
-                "parent": "EXT"
-            },
-            {
-                "name": "EXT/ECO",
-                "qcode": "EXT/ECO",
-                "is_active": true,
-                "parent": "EXT"
-            },
-            {
-                "name": "EXT/GEN",
-                "qcode": "EXT/GEN",
-                "is_active": true,
-                "parent": "EXT"
-            },
-            {
-                "name": "EXT/POL",
-                "qcode": "EXT/POL",
-                "is_active": true,
-                "parent": "EXT"
-            },
-            {
-                "name": "INT/POL",
-                "qcode": "INT/POL",
-                "is_active": true,
-                "parent": "INT"
-            },
-            {
-                "name": "INT/ALG",
-                "qcode": "INT/ALG",
-                "is_active": true,
-                "parent": "INT"
-            },
-            {
-                "name": "INT/GENERAL",
-                "qcode": "INT/GENERAL",
+                "name": "INT/GEN",
+                "qcode": "INT/GEN",
                 "is_active": true,
                 "parent": "INT"
             },
@@ -179,52 +125,40 @@
                 "parent": "INT"
             },
             {
+                "name": "INT/POL",
+                "qcode": "INT/POL",
+                "is_active": true,
+                "parent": "INT"
+            },
+            {
                 "name": "INT/PRV",
                 "qcode": "INT/PRV",
                 "is_active": true,
                 "parent": "INT"
             },
             {
-                "name": "INT/GEN",
-                "qcode": "INT/GEN",
+                "name": "EXT/GEN",
+                "qcode": "EXT/GEN",
                 "is_active": true,
-                "parent": "INT"
+                "parent": "EXT"
             },
             {
-                "name": "NEWS/CULTURE_LIFESTYLE",
-                "qcode": "NEWS/CULTURE_LIFESTYLE",
+                "name": "EXT/ECO",
+                "qcode": "EXT/ECO",
                 "is_active": true,
-                "parent": "NEWS"
+                "parent": "EXT"
             },
             {
-                "name": "NEWS/POLITICS",
-                "qcode": "NEWS/POLITICS",
+                "name": "EXT/POL",
+                "qcode": "EXT/POL",
                 "is_active": true,
-                "parent": "NEWS"
+                "parent": "EXT"
             },
             {
-                "name": "NEWS/AUDIO_SPEECH",
-                "qcode": "NEWS/AUDIO_SPEECH",
+                "name": "EXT/EUR",
+                "qcode": "EXT/EUR",
                 "is_active": true,
-                "parent": "NEWS"
-            },
-            {
-                "name": "NEWS/SPORTS",
-                "qcode": "NEWS/SPORTS",
-                "is_active": true,
-                "parent": "NEWS"
-            },
-            {
-                "name": "NEWS/ENTERTAINMENT",
-                "qcode": "NEWS/ENTERTAINMENT",
-                "is_active": true,
-                "parent": "NEWS"
-            },
-            {
-                "name": "NEWS/CULTURE",
-                "qcode": "NEWS/CULTURE",
-                "is_active": true,
-                "parent": "NEWS"
+                "parent": "EXT"
             },
             {
                 "name": "NEWS/GENERAL",
@@ -235,6 +169,36 @@
             {
                 "name": "NEWS/ECONOMY",
                 "qcode": "NEWS/ECONOMY",
+                "is_active": true,
+                "parent": "NEWS"
+            },
+            {
+                "name": "NEWS/POLITICS",
+                "qcode": "NEWS/POLITICS",
+                "is_active": true,
+                "parent": "NEWS"
+            },
+            {
+                "name": "NEWS/SPORTS",
+                "qcode": "NEWS/SPORTS",
+                "is_active": true,
+                "parent": "NEWS"
+            },
+            {
+                "name": "NEWS/CULTURE_LIFESTYLE",
+                "qcode": "NEWS/CULTURE_LIFESTYLE",
+                "is_active": true,
+                "parent": "NEWS"
+            },
+            {
+                "name": "NEWS/ENTERTAINMENT",
+                "qcode": "NEWS/ENTERTAINMENT",
+                "is_active": true,
+                "parent": "NEWS"
+            },
+            {
+                "name": "NEWS/AUDIO_SPEECH",
+                "qcode": "NEWS/AUDIO_SPEECH",
                 "is_active": true,
                 "parent": "NEWS"
             },
@@ -259,12 +223,6 @@
             {
                 "name": "SPECIAL/CROSS",
                 "qcode": "SPECIAL/CROSS",
-                "is_active": true,
-                "parent": "SPECIAL"
-            },
-            {
-                "name": "SPECIAL/ALG",
-                "qcode": "SPECIAL/ALG",
                 "is_active": true,
                 "parent": "SPECIAL"
             },
@@ -299,14 +257,14 @@
                 "parent": "SPECIAL"
             },
             {
-                "name": "SPF/HIP",
-                "qcode": "SPF/HIP",
+                "name": "SPF/GEN",
+                "qcode": "SPF/GEN",
                 "is_active": true,
                 "parent": "SPF"
             },
             {
-                "name": "SPF/RES",
-                "qcode": "SPF/RES",
+                "name": "SPF/ECO",
+                "qcode": "SPF/ECO",
                 "is_active": true,
                 "parent": "SPF"
             },
@@ -317,14 +275,8 @@
                 "parent": "SPF"
             },
             {
-                "name": "SPF/REB",
-                "qcode": "SPF/REB",
-                "is_active": true,
-                "parent": "SPF"
-            },
-            {
-                "name": "SPF/SPORTS",
-                "qcode": "SPF/SPORTS",
+                "name": "SPF/HIP",
+                "qcode": "SPF/HIP",
                 "is_active": true,
                 "parent": "SPF"
             },
@@ -335,22 +287,10 @@
                 "parent": "SPF"
             },
             {
-                "name": "SPF/GEN",
-                "qcode": "SPF/GEN",
+                "name": "SPF/RES",
+                "qcode": "SPF/RES",
                 "is_active": true,
                 "parent": "SPF"
-            },
-            {
-                "name": "SPN/RAN",
-                "qcode": "SPN/RAN",
-                "is_active": true,
-                "parent": "SPN"
-            },
-            {
-                "name": "SPN/HFR",
-                "qcode": "SPN/HFR",
-                "is_active": true,
-                "parent": "SPN"
             },
             {
                 "name": "SPN/ALG",
@@ -359,8 +299,14 @@
                 "parent": "SPN"
             },
             {
-                "name": "SPN/REB",
-                "qcode": "SPN/REB",
+                "name": "SPN/ECO",
+                "qcode": "SPN/ECO",
+                "is_active": true,
+                "parent": "SPN"
+            },
+            {
+                "name": "SPN/POL",
+                "qcode": "SPN/POL",
                 "is_active": true,
                 "parent": "SPN"
             },
@@ -377,14 +323,26 @@
                 "parent": "SPN"
             },
             {
-                "name": "SPN/SPORTS",
-                "qcode": "SPN/SPORTS",
+                "name": "SPN/OLY",
+                "qcode": "SPN/OLY",
                 "is_active": true,
                 "parent": "SPN"
             },
             {
-                "name": "SPN/OLY",
-                "qcode": "SPN/OLY",
+                "name": "SPN/RAN",
+                "qcode": "SPN/RAN",
+                "is_active": true,
+                "parent": "SPN"
+            },
+            {
+                "name": "SPN/HFR",
+                "qcode": "SPN/HFR",
+                "is_active": true,
+                "parent": "SPN"
+            },
+            {
+                "name": "SPN/REB",
+                "qcode": "SPN/REB",
                 "is_active": true,
                 "parent": "SPN"
             },
@@ -404,7 +362,7 @@
                 "name": "THEMA/BIZAR",
                 "qcode": "THEMA/BIZAR",
                 "is_active": true,
-                "parent": "THEMA"
+                "parent": "THEMA"  
             },
             {
                 "name": "THEMA/CULTURE_LIFESTYLE",
