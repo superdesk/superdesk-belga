@@ -2,6 +2,7 @@ import os
 import unittest
 import superdesk
 
+import arrow
 from flask import json
 from httmock import all_requests, HTTMock
 from unittest.mock import MagicMock
@@ -55,7 +56,6 @@ class Belga360ArchiveTestCase(unittest.TestCase):
 
     def test_find_params(self):
         params = {
-            'sources': 'belga',
             'credits': 'afp',
             'dates': {'start': '02/02/2020', 'end': '14/02/2020'},
             'languages': 'en',
@@ -66,7 +66,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         url = self.provider.base_url + 'archivenewsobjects'
         params = {
             'start': 50, 'pageSize': 50, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
-            'sources': 'BELGA', 'fromDate': '20200202', 'toDate': '20200214', 'searchText': 'test query',
+            'fromDate': '20200202', 'toDate': '20200214', 'searchText': 'test query',
         }
         self.provider.session.get.assert_called_with(url, params=params)
 
@@ -117,3 +117,16 @@ class Belga360ArchiveTestCase(unittest.TestCase):
         self.provider.session.get.assert_called_with(url, params={})
 
         self.assertEqual('urn:belga.be:360archive:39670442', item['guid'])
+
+    def test_get_periods(self):
+        arrow.now = MagicMock(return_value=arrow.get('2020-02-14'))
+        day_period = self.provider._get_period('day')
+        self.assertEqual(day_period['fromDate'], '20200213')
+        self.assertEqual(day_period['toDate'], '20200214')
+
+        def get_period(period):
+            return self.provider._get_period(period)['fromDate']
+
+        self.assertEqual(get_period('week'), '20200207')
+        self.assertEqual(get_period('month'), '20200114')
+        self.assertEqual(get_period('year'), '20190214')

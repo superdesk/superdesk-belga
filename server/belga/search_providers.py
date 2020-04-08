@@ -224,6 +224,12 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
     TYPE_SUPPORT = ('TEXT', 'BRIEF', 'ALERT', 'SHORT')
+    PERIODS = {
+        'day': {'days': -1},
+        'week': {'weeks': -1},
+        'month': {'months': -1},
+        'year': {'years': -1},
+    }
 
     def __init__(self, provider):
         super().__init__(provider)
@@ -244,13 +250,17 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
                     api_params[api_param] = params.get(param)
             if params.get('credits'):
                 api_params['credits'] = params['credits'].strip().upper()
-            if params.get('sources'):
-                api_params['sources'] = params['sources'].strip().upper()
+
             dates = params.get('dates', {})
             if dates.get('start'):
                 api_params['fromDate'] = self._get_belga_date(dates['start'])
             if dates.get('end'):
                 api_params['toDate'] = self._get_belga_date(dates['end'])
+
+            period = params.get('period')
+            if period and self.PERIODS.get(period):
+                # override value of search by date
+                api_params.update(self._get_period(period))
 
         try:
             api_params['searchText'] = query['query']['filtered']['query']['query_string']['query']
@@ -277,6 +287,13 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             return arrow.get(date, 'DD/MM/YYYY').format('YYYYMMDD')
         except arrow.parser.ParserError:
             return ''
+
+    def _get_period(self, period):
+        today = arrow.now(BELGA_TZ)
+        return {
+            'fromDate': today.shift(**self.PERIODS.get(period)).format('YYYYMMDD'),
+            'toDate': today.format('YYYYMMDD'),
+        }
 
     def _get_newscomponent(self, item, component):
         components = [i for i in item.get('newsComponents', []) if i.get('assetType', '').lower() == component.lower()]

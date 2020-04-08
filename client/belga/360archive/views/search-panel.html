@@ -21,13 +21,6 @@
     </div>
 
     <div class="field">
-        <label for="search-headline">{{:: 'Sources' | translate}}</label>
-        <div class="control">
-            <input type="text" id="search-sources" ng-model="params.sources" tabindex="1">
-        </div>
-    </div>
-
-    <div class="field">
         <label class="search-label" translate>Period</label>
         <select ng-model="params.period">
             <option ng-repeat="period in searchPanel.periods" value="{{ period.id }}">{{ period.name }}</option>
