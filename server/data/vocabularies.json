@@ -4076,7 +4076,7 @@
         "display_name": "Urgency",
         "type": "manageable",
         "unique_field": "qcode",
-        "init_version": 1,
+        "init_version": 2,
         "items": [
             {
                 "is_active": true,
