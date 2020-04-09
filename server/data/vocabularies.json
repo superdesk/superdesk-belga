@@ -4034,7 +4034,7 @@
         "display_name": "Urgency",
         "type": "manageable",
         "unique_field": "qcode",
-        "init_version": 1,
+        "init_version": 2,
         "items": [
             {
                 "is_active": true,
@@ -4064,7 +4064,7 @@
                 "is_active": true,
                 "name": "5",
                 "qcode": 5,
-                "color" : "#808080"
+                "color" : "#ffff00"
             }
         ],
         "schema": {
