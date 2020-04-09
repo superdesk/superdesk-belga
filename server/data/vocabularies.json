@@ -3284,881 +3284,6 @@
         ]
     },
     {
-        "_id": "author_roles",
-        "display_name": "author roles",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "AUTHOR",
-                "qcode": "AUTHOR",
-                "is_active": true
-            },
-            {
-                "name": "EDITOR",
-                "qcode": "EDITOR",
-                "is_active": true
-            },
-            {
-                "name": "CORRESPONDENT",
-                "qcode": "CORRESPONDENT",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "sources",
-        "display_name": "Sources",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "BELGA",
-                "qcode": "BELGA",
-                "is_active": true
-            },
-            {
-                "name": "AFP",
-                "qcode": "AFP",
-                "is_active": true
-            },
-            {
-                "name": "DPA",
-                "qcode": "DPA",
-                "is_active": true
-            },
-            {
-                "name": "ANP",
-                "qcode": "ANP",
-                "is_active": true
-            },
-            {
-                "name": "TASS",
-                "qcode": "TASS",
-                "is_active": true
-            },
-            {
-                "name": "RPT",
-                "qcode": "RPT",
-                "is_active": true
-            },
-            {
-                "name": "ATS",
-                "qcode": "ATS",
-                "is_active": true
-            },
-            {
-                "name": "BDIRECT",
-                "qcode": "BDIRECT",
-                "is_active": true
-            },
-            {
-                "name": "COM",
-                "qcode": "COM",
-                "is_active": true
-            },
-            {
-                "name": "EFE",
-                "qcode": "EFE",
-                "is_active": true
-            },
-            {
-                "name": "KYODO",
-                "qcode": "KYODO",
-                "is_active": true
-            },
-            {
-                "name": "RFAX",
-                "qcode": "RFAX",
-                "is_active": true
-            },
-            {
-                "name": "TNL",
-                "qcode": "TNL",
-                "is_active": true
-            },
-            {
-                "name": "FPOL",
-                "qcode": "FPOL",
-                "is_active": true
-            },
-            {
-                "name": "AFPN",
-                "qcode": "AFPN",
-                "is_active": true
-            },
-            {
-                "name": "AFPH",
-                "qcode": "AFPH",
-                "is_active": true
-            },
-            {
-                "name": "BLOOMBERG",
-                "qcode": "BLOOMBERG",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "languages",
-        "display_name": "Languages",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "nl",
-                "qcode": "nl",
-                "is_active": true
-            },
-            {
-                "name": "fr",
-                "qcode": "fr",
-                "is_active": true
-            },
-            {
-                "name": "en",
-                "qcode": "en",
-                "is_active": true
-            },
-            {
-                "name": "de",
-                "qcode": "de",
-                "is_active": true
-            },
-            {
-                "name": "es",
-                "qcode": "es",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "keywords",
-        "init_version": 1,
-        "display_name": "Storytags",
-        "type": "manageable",
-        "selection_type": "multi selection",
-        "unique_field": "qcode",
-        "schema": {
-            "name": {},
-            "qcode": {}
-        },
-        "items": [
-            {
-                "name": "#",
-                "qcode": "#",
-                "is_active": true
-            },
-            {
-                "name": "#containerparkbullies",
-                "qcode": "#containerparkbullies",
-                "is_active": true
-            },
-            {
-                "name": "#zwartepiet",
-                "qcode": "#zwartepiet",
-                "is_active": true
-            },
-            {
-                "name": "#blackfriday",
-                "qcode": "#blackfriday",
-                "is_active": true
-            },
-            {
-                "name": "#julianassange",
-                "qcode": "#julianassange",
-                "is_active": true
-            },
-            {
-                "name": "#phd",
-                "qcode": "#phd",
-                "is_active": true
-            },
-            {
-                "name": "#bocoolsaet",
-                "qcode": "#bocoolsaet",
-                "is_active": true
-            },
-            {
-                "name": "#tulancesquelquechosecommetuveux",
-                "qcode": "#tulancesquelquechosecommetuveux",
-                "is_active": true
-            },
-            {
-                "name": "#Remcoco",
-                "qcode": "#Remcoco",
-                "is_active": true
-            },
-            {
-                "name": "#herstructureringProximus",
-                "qcode": "#herstructureringProximus",
-                "is_active": true
-            },
-            {
-                "name": "proc\u00e8s",
-                "qcode": "proc\u00e8s",
-                "is_active": true
-            },
-            {
-                "name": "agression",
-                "qcode": "agression",
-                "is_active": true
-            },
-            {
-                "name": "politique",
-                "qcode": "politique",
-                "is_active": true
-            },
-            {
-                "name": "ultradroite",
-                "qcode": "ultradroite",
-                "is_active": true
-            },
-            {
-                "name": "ultragauche",
-                "qcode": "ultragauche",
-                "is_active": true
-            },
-            {
-                "name": "assises91",
-                "qcode": "assises91",
-                "is_active": true
-            },
-            {
-                "name": "Cl\u00e9ment M\u00e9ric",
-                "qcode": "Cl\u00e9ment M\u00e9ric",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "genre",
-        "display_name": "Genre",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "ANALYSIS",
-                "qcode": "ANALYSIS",
-                "is_active": true
-            },
-            {
-                "name": "ARCHIVE",
-                "qcode": "ARCHIVE",
-                "is_active": true
-            },
-            {
-                "name": "BACKGROUND",
-                "qcode": "BACKGROUND",
-                "is_active": true
-            },
-            {
-                "name": "CURRENT",
-                "qcode": "CURRENT",
-                "is_active": true
-            },
-            {
-                "name": "FORECAST",
-                "qcode": "FORECAST",
-                "is_active": true
-            },
-            {
-                "name": "HISTORY",
-                "qcode": "HISTORY",
-                "is_active": true
-            }
-        ],
-        "selection_type": "multi selection"
-    },
-    {
-        "_id": "news_item_types",
-        "display_name": "News item types",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "ADVISORY",
-                "qcode": "ADVISORY",
-                "is_active": true
-            },
-            {
-                "name": "ALERT",
-                "qcode": "ALERT",
-                "is_active": true
-            },
-            {
-                "name": "DATA",
-                "qcode": "DATA",
-                "is_active": true
-            },
-            {
-                "name": "MAINTENANCE",
-                "qcode": "MAINTENANCE",
-                "is_active": true
-            },
-            {
-                "name": "NEWS",
-                "qcode": "NEWS",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "news_products",
-        "display_name": "News products",
-        "type": "manageable",
-        "selection_type": "multi selection",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "ALG",
-                "qcode": "ALG",
-                "is_active": true
-            },
-            {
-                "name": "AUDIO_SPEECH",
-                "qcode": "AUDIO_SPEECH",
-                "is_active": true
-            },
-            {
-                "name": "BIZAR",
-                "qcode": "BIZAR",
-                "is_active": true
-            },
-            {
-                "name": "BV",
-                "qcode": "BV",
-                "is_active": true
-            },
-            {
-                "name": "CARS",
-                "qcode": "CARS",
-                "is_active": true
-            },
-            {
-                "name": "CLT",
-                "qcode": "CLT",
-                "is_active": true
-            },
-            {
-                "name": "CROSS",
-                "qcode": "CROSS",
-                "is_active": true
-            },
-            {
-                "name": "CULTURE",
-                "qcode": "CULTURE",
-                "is_active": true
-            },
-            {
-                "name": "CULTURE_LIFESTYLE",
-                "qcode": "CULTURE_LIFESTYLE",
-                "is_active": true
-            },
-            {
-                "name": "ECO",
-                "qcode": "ECO",
-                "is_active": true
-            },
-            {
-                "name": "ECONOMY",
-                "qcode": "ECONOMY",
-                "is_active": true
-            },
-            {
-                "name": "EDUCATION",
-                "qcode": "EDUCATION",
-                "is_active": true
-            },
-            {
-                "name": "EMC",
-                "qcode": "EMC",
-                "is_active": true
-            },
-            {
-                "name": "ENTERTAINMENT",
-                "qcode": "ENTERTAINMENT",
-                "is_active": true
-            },
-            {
-                "name": "ENTERTAINMENT_PLUS",
-                "qcode": "ENTERTAINMENT_PLUS",
-                "is_active": true
-            },
-            {
-                "name": "EUR",
-                "qcode": "EUR",
-                "is_active": true
-            },
-            {
-                "name": "FIN",
-                "qcode": "FIN",
-                "is_active": true
-            },
-            {
-                "name": "FINANCE",
-                "qcode": "FINANCE",
-                "is_active": true
-            },
-            {
-                "name": "FLASH",
-                "qcode": "FLASH",
-                "is_active": true
-            },
-            {
-                "name": "GEN",
-                "qcode": "GEN",
-                "is_active": true
-            },
-            {
-                "name": "GENERAL",
-                "qcode": "GENERAL",
-                "is_active": true
-            },
-            {
-                "name": "HFR",
-                "qcode": "HFR",
-                "is_active": true
-            },
-            {
-                "name": "HIP",
-                "qcode": "HIP",
-                "is_active": true
-            },
-            {
-                "name": "INFO",
-                "qcode": "INFO",
-                "is_active": true
-            },
-            {
-                "name": "MCUBE_PEOPLE",
-                "qcode": "MCUBE_PEOPLE",
-                "is_active": true
-            },
-            {
-                "name": "METEO",
-                "qcode": "METEO",
-                "is_active": true
-            },
-            {
-                "name": "NEWSPOOL",
-                "qcode": "NEWSPOOL",
-                "is_active": true
-            },
-            {
-                "name": "OLY",
-                "qcode": "OLY",
-                "is_active": true
-            },
-            {
-                "name": "PHARMA",
-                "qcode": "PHARMA",
-                "is_active": true
-            },
-            {
-                "name": "POD",
-                "qcode": "POD",
-                "is_active": true
-            },
-            {
-                "name": "POL",
-                "qcode": "POL",
-                "is_active": true
-            },
-            {
-                "name": "POLITICS",
-                "qcode": "POLITICS",
-                "is_active": true
-            },
-            {
-                "name": "PRV",
-                "qcode": "PRV",
-                "is_active": true
-            },
-            {
-                "name": "RAN",
-                "qcode": "RAN",
-                "is_active": true
-            },
-            {
-                "name": "REB",
-                "qcode": "REB",
-                "is_active": true
-            },
-            {
-                "name": "RED_FLAMES",
-                "qcode": "RED_FLAMES",
-                "is_active": true
-            },
-            {
-                "name": "RES",
-                "qcode": "RES",
-                "is_active": true
-            },
-            {
-                "name": "SALON",
-                "qcode": "SALON",
-                "is_active": true
-            },
-            {
-                "name": "SPORTLINE",
-                "qcode": "SPORTLINE",
-                "is_active": true
-            },
-            {
-                "name": "SPORTS",
-                "qcode": "SPORTS",
-                "is_active": true
-            },
-            {
-                "name": "TECHNOLOGY",
-                "qcode": "TECHNOLOGY",
-                "is_active": true
-            },
-            {
-                "name": "TEST",
-                "qcode": "TEST",
-                "is_active": true
-            },
-            {
-                "name": "IT",
-                "qcode": "IT",
-                "is_active": true
-            },
-            {
-                "name": "UNKNOWN",
-                "qcode": "UNKNOWN",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "news_services",
-        "display_name": "News services",
-        "type": "manageable",
-        "selection_type": "multi selection",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "BIN",
-                "qcode": "BIN",
-                "is_active": true
-            },
-            {
-                "name": "BRF",
-                "qcode": "BRF",
-                "is_active": true
-            },
-            {
-                "name": "BRN",
-                "qcode": "BRN",
-                "is_active": true
-            },
-            {
-                "name": "BTL",
-                "qcode": "BTL",
-                "is_active": true
-            },
-            {
-                "name": "CALLCENTER",
-                "qcode": "CALLCENTER",
-                "is_active": true
-            },
-            {
-                "name": "EXT",
-                "qcode": "EXT",
-                "is_active": true
-            },
-            {
-                "name": "FOCUS",
-                "qcode": "FOCUS",
-                "is_active": true
-            },
-            {
-                "name": "HERMES",
-                "qcode": "HERMES",
-                "is_active": true
-            },
-            {
-                "name": "ICT",
-                "qcode": "ICT",
-                "is_active": true
-            },
-            {
-                "name": "INT",
-                "qcode": "INT",
-                "is_active": true
-            },
-            {
-                "name": "NEWS",
-                "qcode": "NEWS",
-                "is_active": true
-            },
-            {
-                "name": "PR",
-                "qcode": "PR",
-                "is_active": true
-            },
-            {
-                "name": "RESULTS",
-                "qcode": "RESULTS",
-                "is_active": true
-            },
-            {
-                "name": "SPECIAL",
-                "qcode": "SPECIAL",
-                "is_active": true
-            },
-            {
-                "name": "SPF",
-                "qcode": "SPF",
-                "is_active": true
-            },
-            {
-                "name": "SPN",
-                "qcode": "SPN",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "label",
-        "display_name": "Label",
-        "type": "manageable",
-        "selection_type": "single selection",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "A1",
-                "qcode": "A1",
-                "is_active": true
-            },
-            {
-                "name": "A2",
-                "qcode": "A2",
-                "is_active": true
-            },
-            {
-                "name": "F1",
-                "qcode": "F1",
-                "is_active": true
-            },
-            {
-                "name": "F2",
-                "qcode": "F2",
-                "is_active": true
-            },
-            {
-                "name": "R1",
-                "qcode": "R1",
-                "is_active": true
-            },
-            {
-                "name": "R2",
-                "qcode": "R2",
-                "is_active": true
-            },
-            {
-                "name": "R3",
-                "qcode": "R3",
-                "is_active": true
-            },
-            {
-                "name": "S1",
-                "qcode": "S1",
-                "is_active": true
-            },
-            {
-                "name": "S2",
-                "qcode": "S2",
-                "is_active": true
-            },
-            {
-                "name": "S3",
-                "qcode": "S3",
-                "is_active": true
-            }
-        ]
-    },
-    {
-        "_id": "distribution",
-        "display_name": "Distribution",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [
-            {
-                "name": "default",
-                "qcode": "default",
-                "is_active": true
-            },
-            {
-                "name": "bilingual",
-                "qcode": "bilingual",
-                "is_active": true
-            }
-        ],
-        "selection_type": "single selection",
-        "field_options": {
-            "single": true
-        }
-    },
-    {
-        "_id": "urgency",
-        "display_name": "Urgency",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "init_version": 2,
-        "items": [
-            {
-                "is_active": true,
-                "name": "1",
-                "qcode": 1,
-                "color" : "#ff0000"
-            },
-            {
-                "is_active": true,
-                "name": "2",
-                "qcode": 2,
-                "color" : "#ff0000"
-            },
-            {
-                "is_active": true,
-                "name": "3",
-                "qcode": 3,
-                "color" : "#808080"
-            },
-            {
-                "is_active": true,
-                "name": "4",
-                "qcode": 4,
-                "color" : "#808080"
-            },
-            {
-                "is_active": true,
-                "name": "5",
-                "qcode": 5,
-                "color" : "#ffff00"
-            }
-        ],
-        "schema": {
-            "name": {},
-            "qcode": {},
-            "color": {
-                "type": "color",
-                "label": "Сolour"
-            },
-            "short": {
-                "type": "short",
-                "label": "List Name",
-                "maxlength": 2
-            }
-        }
-    },
-    {
-        "_id": "belga_related_articles",
-        "display_name": "Belga related articles",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [],
-        "field_type": "related_content",
-        "schema": {
-            "name": {},
-            "qcode": {},
-            "parent": {}
-        },
-        "description": "Belga related items",
-        "field_options": {
-            "allowed_types": {
-                "video": true,
-                "audio": true,
-                "text": true
-            },
-            "multiple_items": {
-                "enabled": true,
-                "max_items": 99
-            }
-        },
-        "helper_text": "Text, Video, Audio"
-    },
-    {
-        "_id": "belga_related_images",
-        "display_name": "Belga related images",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "service": {
-            "all": 1
-        },
-        "items": [],
-        "field_type": "related_content",
-        "schema": {
-            "name": {},
-            "qcode": {},
-            "parent": {}
-        },
-        "description": "Belga related images",
-        "field_options": {
-            "allowed_types": {
-                "picture": true
-            },
-            "multiple_items": {
-                "enabled": true,
-                "max_items": 99
-            }
-        },
-        "helper_text": "Image"
-    },
-    {
-        "_id": "city",
-        "field_type": "text",
-        "items": [],
-        "type": "manageable",
-        "schema": {
-            "name": {},
-            "qcode": {},
-            "parent": {}
-        },
-        "service": {
-            "all": 1
-        },
-        "display_name": "City",
-        "description": "",
-        "helper_text": "",
-        "field_options": {
-            "single": true
-        },
-        "unique_field": "qcode"
-    },
-    {
         "_id": "country",
         "display_name": "Countries keywords",
         "type": "manageable",
@@ -7068,6 +6193,465 @@
                 }
             }
         ]
+    },
+    {
+        "_id": "author_roles",
+        "display_name": "author roles",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [
+            {
+                "name": "AUTHOR",
+                "qcode": "AUTHOR",
+                "is_active": true
+            },
+            {
+                "name": "EDITOR",
+                "qcode": "EDITOR",
+                "is_active": true
+            },
+            {
+                "name": "CORRESPONDENT",
+                "qcode": "CORRESPONDENT",
+                "is_active": true
+            }
+        ]
+    },
+    {
+        "_id": "sources",
+        "display_name": "Sources",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [
+            {
+                "name": "BELGA",
+                "qcode": "BELGA",
+                "is_active": true
+            },
+            {
+                "name": "AFP",
+                "qcode": "AFP",
+                "is_active": true
+            },
+            {
+                "name": "DPA",
+                "qcode": "DPA",
+                "is_active": true
+            },
+            {
+                "name": "ANP",
+                "qcode": "ANP",
+                "is_active": true
+            },
+            {
+                "name": "TASS",
+                "qcode": "TASS",
+                "is_active": true
+            },
+            {
+                "name": "RPT",
+                "qcode": "RPT",
+                "is_active": true
+            },
+            {
+                "name": "ATS",
+                "qcode": "ATS",
+                "is_active": true
+            },
+            {
+                "name": "BDIRECT",
+                "qcode": "BDIRECT",
+                "is_active": true
+            },
+            {
+                "name": "COM",
+                "qcode": "COM",
+                "is_active": true
+            },
+            {
+                "name": "EFE",
+                "qcode": "EFE",
+                "is_active": true
+            },
+            {
+                "name": "KYODO",
+                "qcode": "KYODO",
+                "is_active": true
+            },
+            {
+                "name": "RFAX",
+                "qcode": "RFAX",
+                "is_active": true
+            },
+            {
+                "name": "TNL",
+                "qcode": "TNL",
+                "is_active": true
+            },
+            {
+                "name": "FPOL",
+                "qcode": "FPOL",
+                "is_active": true
+            },
+            {
+                "name": "AFPN",
+                "qcode": "AFPN",
+                "is_active": true
+            },
+            {
+                "name": "AFPH",
+                "qcode": "AFPH",
+                "is_active": true
+            },
+            {
+                "name": "BLOOMBERG",
+                "qcode": "BLOOMBERG",
+                "is_active": true
+            }
+        ]
+    },
+    {
+        "_id": "languages",
+        "display_name": "Languages",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [
+            {
+                "name": "nl",
+                "qcode": "nl",
+                "is_active": true
+            },
+            {
+                "name": "fr",
+                "qcode": "fr",
+                "is_active": true
+            },
+            {
+                "name": "en",
+                "qcode": "en",
+                "is_active": true
+            },
+            {
+                "name": "de",
+                "qcode": "de",
+                "is_active": true
+            },
+            {
+                "name": "es",
+                "qcode": "es",
+                "is_active": true
+            }
+        ]
+    },
+    {
+        "_id": "keywords",
+        "init_version": 1,
+        "display_name": "Storytags",
+        "type": "manageable",
+        "selection_type": "multi selection",
+        "unique_field": "qcode",
+        "schema": {
+            "name": {},
+            "qcode": {}
+        },
+        "items": [
+            {
+                "name": "#",
+                "qcode": "#",
+                "is_active": true
+            },
+            {
+                "name": "#containerparkbullies",
+                "qcode": "#containerparkbullies",
+                "is_active": true
+            },
+            {
+                "name": "#zwartepiet",
+                "qcode": "#zwartepiet",
+                "is_active": true
+            },
+            {
+                "name": "#blackfriday",
+                "qcode": "#blackfriday",
+                "is_active": true
+            },
+            {
+                "name": "#julianassange",
+                "qcode": "#julianassange",
+                "is_active": true
+            },
+            {
+                "name": "#phd",
+                "qcode": "#phd",
+                "is_active": true
+            },
+            {
+                "name": "#bocoolsaet",
+                "qcode": "#bocoolsaet",
+                "is_active": true
+            },
+            {
+                "name": "#tulancesquelquechosecommetuveux",
+                "qcode": "#tulancesquelquechosecommetuveux",
+                "is_active": true
+            },
+            {
+                "name": "#Remcoco",
+                "qcode": "#Remcoco",
+                "is_active": true
+            },
+            {
+                "name": "#herstructureringProximus",
+                "qcode": "#herstructureringProximus",
+                "is_active": true
+            },
+            {
+                "name": "proc\u00e8s",
+                "qcode": "proc\u00e8s",
+                "is_active": true
+            },
+            {
+                "name": "agression",
+                "qcode": "agression",
+                "is_active": true
+            },
+            {
+                "name": "politique",
+                "qcode": "politique",
+                "is_active": true
+            },
+            {
+                "name": "ultradroite",
+                "qcode": "ultradroite",
+                "is_active": true
+            },
+            {
+                "name": "ultragauche",
+                "qcode": "ultragauche",
+                "is_active": true
+            },
+            {
+                "name": "assises91",
+                "qcode": "assises91",
+                "is_active": true
+            },
+            {
+                "name": "Cl\u00e9ment M\u00e9ric",
+                "qcode": "Cl\u00e9ment M\u00e9ric",
+                "is_active": true
+            }
+        ]
+    },
+    {
+        "_id": "genre",
+        "display_name": "Genre",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [
+            {
+                "name": "ANALYSIS",
+                "qcode": "ANALYSIS",
+                "is_active": true
+            },
+            {
+                "name": "ARCHIVE",
+                "qcode": "ARCHIVE",
+                "is_active": true
+            },
+            {
+                "name": "BACKGROUND",
+                "qcode": "BACKGROUND",
+                "is_active": true
+            },
+            {
+                "name": "CURRENT",
+                "qcode": "CURRENT",
+                "is_active": true
+            },
+            {
+                "name": "FORECAST",
+                "qcode": "FORECAST",
+                "is_active": true
+            },
+            {
+                "name": "HISTORY",
+                "qcode": "HISTORY",
+                "is_active": true
+            }
+        ],
+        "selection_type": "multi selection"
+    },
+    {
+        "_id": "label",
+        "display_name": "Label",
+        "type": "manageable",
+        "selection_type": "single selection",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [
+            {
+                "name": "A1",
+                "qcode": "A1",
+                "is_active": true
+            },
+            {
+                "name": "A2",
+                "qcode": "A2",
+                "is_active": true
+            },
+            {
+                "name": "F1",
+                "qcode": "F1",
+                "is_active": true
+            },
+            {
+                "name": "F2",
+                "qcode": "F2",
+                "is_active": true
+            },
+            {
+                "name": "R1",
+                "qcode": "R1",
+                "is_active": true
+            },
+            {
+                "name": "R2",
+                "qcode": "R2",
+                "is_active": true
+            },
+            {
+                "name": "R3",
+                "qcode": "R3",
+                "is_active": true
+            },
+            {
+                "name": "S1",
+                "qcode": "S1",
+                "is_active": true
+            },
+            {
+                "name": "S2",
+                "qcode": "S2",
+                "is_active": true
+            },
+            {
+                "name": "S3",
+                "qcode": "S3",
+                "is_active": true
+            }
+        ]
+    },
+    {
+        "_id": "distribution",
+        "display_name": "Distribution",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "service": {
+            "all": 1
+        },
+        "items": [
+            {
+                "name": "default",
+                "qcode": "default",
+                "is_active": true
+            },
+            {
+                "name": "bilingual",
+                "qcode": "bilingual",
+                "is_active": true
+            }
+        ],
+        "selection_type": "single selection",
+        "field_options": {
+            "single": true
+        }
+    },
+    {
+        "_id": "urgency",
+        "display_name": "Urgency",
+        "type": "manageable",
+        "unique_field": "qcode",
+        "init_version": 2,
+        "items": [
+            {
+                "is_active": true,
+                "name": "1",
+                "qcode": 1,
+                "color" : "#ff0000"
+            },
+            {
+                "is_active": true,
+                "name": "2",
+                "qcode": 2,
+                "color" : "#ff0000"
+            },
+            {
+                "is_active": true,
+                "name": "3",
+                "qcode": 3,
+                "color" : "#808080"
+            },
+            {
+                "is_active": true,
+                "name": "4",
+                "qcode": 4,
+                "color" : "#808080"
+            },
+            {
+                "is_active": true,
+                "name": "5",
+                "qcode": 5,
+                "color" : "#ffff00"
+            }
+        ],
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "color": {
+                "type": "color",
+                "label": "Сolour"
+            },
+            "short": {
+                "type": "short",
+                "label": "List Name",
+                "maxlength": 2
+            }
+        }
+    },
+    {
+        "_id": "city",
+        "field_type": "text",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "City",
+        "description": "",
+        "helper_text": "",
+        "field_options": {
+            "single": true
+        },
+        "unique_field": "qcode"
     },
     {
         "_id": "belga-keywords",
@@ -11452,48 +11036,6 @@
         ]
     },
     {
-        "_id": "contact_mobile_usage",
-        "display_name": "Contact mobile usage",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "items": [
-            {
-                "is_active": true,
-                "qcode": "Confidential",
-                "name": "Confidential number",
-                "public": false
-            },
-            {
-                "is_active": true,
-                "qcode": "Business",
-                "name": "Business number",
-                "public": true
-            }
-        ],
-        "helper_text": "Indicates if the contact mobile number is to be made public outside the system"
-    },
-    {
-        "_id": "contact_phone_usage",
-        "display_name": "Contact phone usage",
-        "type": "manageable",
-        "unique_field": "qcode",
-        "items": [
-            {
-                "is_active": true,
-                "qcode": "Confidential",
-                "name": "Confidential number",
-                "public": false
-            },
-            {
-                "is_active": true,
-                "qcode": "Business",
-                "name": "Business number",
-                "public": true
-            }
-        ],
-        "helper_text": "Indicates if the contact phone number is to be made public outside the system"
-    },
-    {
         "_id": "g2_content_type",
         "display_name": "Coverage content types",
         "type": "manageable",
@@ -11972,34 +11514,6 @@
         },
         "_deleted": false,
         "unique_field": "qcode"
-    },
-    {
-        "_id": "media_type",
-        "display_name": "Type",
-        "type": "manageable",
-        "selection_type": "single selection",
-        "items": [
-            {
-                "is_active": true,
-                "name": "interview dutch",
-                "qcode": "interview dutch"
-            },
-            {
-                "is_active": true,
-                "name": "interview french",
-                "qcode": "interview french"
-            },
-            {
-                "is_active": true,
-                "name": "illustration",
-                "qcode": "illustration"
-            },
-            {
-                "is_active": true,
-                "name": "insert",
-                "qcode": "insert"
-            }
-        ]
     },
     {
         "_id": "media-source",
