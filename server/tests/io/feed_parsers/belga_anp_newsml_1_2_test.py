@@ -37,7 +37,6 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
         item["subject"].sort(key=lambda i: i['scheme'])
         expected_subjects = [
-            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},

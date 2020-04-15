@@ -7,7 +7,6 @@
             "required": true
         },
         "priority": null,
-        "news_item_types": null,
         "headline": {
             "order": 5,
             "formatOptions": [],

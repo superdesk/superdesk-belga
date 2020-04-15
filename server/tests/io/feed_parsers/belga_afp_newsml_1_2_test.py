@@ -44,7 +44,6 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
             {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
             {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'sources'},
             {'name': 'crime, law and justice', 'qcode': '02000000', 'scheme': 'iptc_subject_codes'},
-            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU', 'scheme': 'of_interest_to'},
             {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
             {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
