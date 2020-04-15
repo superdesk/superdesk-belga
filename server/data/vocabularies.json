@@ -11970,5 +11970,54 @@
             ]
         },
         "unique_field": "qcode"
+    },
+    {
+        "_id": "bcoverage",
+        "field_type": "custom",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Coverage",
+        "custom_field_type": "belga.coverage",
+        "unique_field": "qcode"
+    },
+    {
+        "_id": "belga_related_video",
+        "field_type": "media",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "field_options": {
+            "allowed_workflows": {
+                "in_progress": true,
+                "published": true,
+                "ingested": false
+            },
+            "allowed_types": {
+                "video": true,
+                "audio": true
+            },
+            "multiple_items": {
+                "enabled": true,
+                "max_items": 5
+            }
+        },
+        "display_name": "Video & Audio",
+        "_deleted": false,
+        "unique_field": "qcode"
     }
 ]
