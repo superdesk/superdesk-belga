@@ -11915,5 +11915,37 @@
                 "name": "Featured Stories"
             }
         ]
+    },
+    {
+        "_id": "belga_related_images",
+        "field_type": "media",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "field_options": {
+            "allowed_workflows": {
+                "in_progress": false,
+                "published": true,
+                "ingested": false
+            },
+            "allowed_types": {
+                "picture": true
+            },
+            "multiple_items": {
+                "enabled": true,
+                "max_items": 99
+            }
+        },
+        "display_name": "Images",
+        "description": "Belga related images",
+        "helper_text": "Image",
+        "unique_field": "qcode"
     }
 ]
