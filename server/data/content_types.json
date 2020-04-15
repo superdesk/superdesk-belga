@@ -2,7 +2,7 @@
     {
         "_id": "alert",
         "label": "ALERT",
-        "description": "ALERT",
+        "description": "Alert",
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -268,7 +268,7 @@
     {
         "_id": "brief",
         "label": "BRIEF",
-        "description": "BRIEF",
+        "description": "Brief",
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -587,7 +587,7 @@
     {
         "_id": "tip",
         "label": "TIP",
-        "description": "TIP",
+        "description": "Tip",
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -840,6 +840,370 @@
             "event_description": null,
             "transcription": null,
             "belga-url": null
+        }
+    },
+    {
+        "_id": "text",
+        "label": "TEXT",
+        "description": "Text",
+        "enabled": true,
+        "priority": 0,
+        "editor": {
+            "keywords": {
+                "order": 13,
+                "sdWidth": "full",
+                "section": "header",
+                "required": false
+            },
+            "language": {
+                "order": 5,
+                "sdWidth": "half",
+                "section": "header",
+                "required": true
+            },
+            "genre": {
+                "order": 6,
+                "sdWidth": "half",
+                "required": false,
+                "section": "header"
+            },
+            "urgency": {
+                "order": 4,
+                "sdWidth": "half",
+                "required": false,
+                "section": "header"
+            },
+            "ednote": {
+                "order": 24,
+                "sdWidth": "full",
+                "required": false,
+                "section": "header"
+            },
+            "authors": {
+                "order": 7,
+                "sdWidth": "half",
+                "required": true,
+                "section": "header"
+            },
+            "services-products": {
+                "order": 1,
+                "section": "header",
+                "required": true,
+                "sdWidth": "half"
+            },
+            "countries": {
+                "order": 9,
+                "section": "header",
+                "required": false,
+                "sdWidth": "half"
+            },
+            "country": {
+                "order": 12,
+                "section": "header",
+                "required": false,
+                "sdWidth": "half"
+            },
+            "sources": {
+                "order": 3,
+                "section": "header",
+                "required": false,
+                "sdWidth": "quarter"
+            },
+            "label": {
+                "order": 8,
+                "section": "header",
+                "required": false,
+                "sdWidth": "half"
+            },
+            "distribution": {
+                "order": 2,
+                "section": "header",
+                "required": false,
+                "sdWidth": "quarter"
+            },
+            "belga-keywords": {
+                "order": 11,
+                "section": "header",
+                "required": false,
+                "sdWidth": "half"
+            },
+            "city": {
+                "order": 10,
+                "section": "header",
+                "required": false,
+                "sdWidth": "half"
+            },
+            "slugline": {
+                "order": 14,
+                "sdWidth": "full",
+                "section": "content",
+                "required": false
+            },
+            "headline": {
+                "order": 15,
+                "formatOptions": [],
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "body_html": {
+                "order": 17,
+                "formatOptions": [
+                    "bold"
+                ],
+                "cleanPastedHTML": true,
+                "editor3": true,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "DueBy": {
+                "order": 16,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "belga_related_images": {
+                "order": 18,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "bcoverage": {
+                "order": 19,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "attachments": {
+                "order": 22,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "belga_related_video": {
+                "order": 20,
+                "section": "content",
+                "required": false,
+                "showCrops": true,
+                "imageTitle": true,
+                "sdWidth": "full"
+            },
+            "belga_related_articles": {
+                "order": 21,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "belga-url": {
+                "order": 23,
+                "section": "content",
+                "required": false,
+                "sdWidth": "full"
+            },
+            "usageterms": null,
+            "anpa_take_key": null,
+            "place": null,
+            "priority": null,
+            "anpa_category": null,
+            "company_codes": null,
+            "sms": null,
+            "abstract": null,
+            "byline": null,
+            "dateline": null,
+            "footer": null,
+            "body_footer": null,
+            "sign_off": null,
+            "feature_media": null,
+            "media_description": null,
+            "author_roles": null,
+            "languages": null,
+            "media-source": null,
+            "iptc_subject_codes": null,
+            "people": null,
+            "event_description": null,
+            "transcription": null
+        },
+        "schema": {
+            "authors": {
+                "schema": {
+                    "schema": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "parent": {
+                            "type": "string"
+                        },
+                        "role": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "dict"
+                },
+                "type": "list",
+                "required": true,
+                "enabled": true,
+                "nullable": false
+            },
+            "ednote": {
+                "type": "string",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "keywords": {
+                "type": "list",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "language": {
+                "type": "string",
+                "required": true,
+                "enabled": true,
+                "nullable": false
+            },
+            "urgency": {
+                "type": "integer",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "city": {
+                "type": "text",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "subject": {
+                "mandatory_in_list": {
+                    "scheme": {
+                        "services-products": "services-products",
+                        "countries": null,
+                        "country": null,
+                        "author_roles": null,
+                        "sources": null,
+                        "languages": null,
+                        "genre": null,
+                        "label": null,
+                        "distribution": null,
+                        "belga-keywords": null,
+                        "media-source": null,
+                        "subject": null
+                    }
+                },
+                "schema": {
+                    "schema": {
+                        "name": {},
+                        "qcode": {},
+                        "scheme": {
+                            "type": "string",
+                            "required": true,
+                            "nullable": true,
+                            "allowed": [
+                                "services-products",
+                                "countries",
+                                "country",
+                                "sources",
+                                "genre",
+                                "label",
+                                "distribution",
+                                "belga-keywords"
+                            ]
+                        },
+                        "service": {
+                            "nullable": true
+                        },
+                        "parent": {
+                            "nullable": true
+                        }
+                    },
+                    "type": "dict"
+                },
+                "type": "list",
+                "required": false,
+                "default": []
+            },
+            "slugline": {
+                "type": "string",
+                "required": false,
+                "maxlength": 51,
+                "enabled": true,
+                "nullable": true
+            },
+            "headline": {
+                "type": "string",
+                "required": false,
+                "maxlength": 90,
+                "enabled": true,
+                "nullable": true
+            },
+            "body_html": {
+                "type": "string",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "DueBy": {
+                "type": "custom",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "belga_related_images": {
+                "type": "media",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "bcoverage": {
+                "type": "custom",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "attachments": {
+                "type": "list",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "belga_related_video": {
+                "type": "media",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "belga_related_articles": {
+                "type": "related_content",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "belga-url": {
+                "type": "urls",
+                "required": false,
+                "enabled": true,
+                "nullable": true
+            },
+            "usageterms": null,
+            "anpa_take_key": null,
+            "place": null,
+            "priority": null,
+            "anpa_category": null,
+            "company_codes": null,
+            "sms": null,
+            "abstract": null,
+            "byline": null,
+            "dateline": null,
+            "footer": null,
+            "body_footer": null,
+            "sign_off": null,
+            "feature_media": null,
+            "media_description": null,
+            "people": null,
+            "event_description": null,
+            "transcription": null
         }
     }
 ]
