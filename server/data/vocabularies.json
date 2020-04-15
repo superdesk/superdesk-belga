@@ -11947,5 +11947,28 @@
         "description": "Belga related images",
         "helper_text": "Image",
         "unique_field": "qcode"
+    },
+    {
+        "_id": "DueBy",
+        "field_type": "custom",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "display_name": "Coming up",
+        "custom_field_type": "datetime",
+        "custom_field_config": {
+            "initial_offset_minutes": 45,
+            "increment_steps": [
+                30
+            ]
+        },
+        "unique_field": "qcode"
     }
 ]
