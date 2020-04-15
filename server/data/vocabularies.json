@@ -12017,7 +12017,37 @@
             }
         },
         "display_name": "Video & Audio",
-        "_deleted": false,
+        "unique_field": "qcode"
+    },
+    {
+        "_id": "belga_related_articles",
+        "field_type": "related_content",
+        "items": [],
+        "type": "manageable",
+        "schema": {
+            "name": {},
+            "qcode": {},
+            "parent": {}
+        },
+        "service": {
+            "all": 1
+        },
+        "field_options": {
+            "allowed_workflows": {
+                "in_progress": false,
+                "published": true,
+                "ingested": false
+            },
+            "allowed_types": {
+                "text": true
+            },
+            "multiple_items": {
+                "enabled": true,
+                "max_items": 99
+            }
+        },
+        "display_name": "Related articles",
+        "description": "Belga related items",
         "unique_field": "qcode"
     }
 ]
