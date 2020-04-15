@@ -16,11 +16,28 @@
         },
         "template_type": "create"
     },
-      {
+    {
         "template_name": "brief",
         "is_public": true,
         "data": {
             "profile": "brief",
+            "type": "text",
+            "pubstatus": "usable",
+            "flags": {
+                "marked_for_not_publication": false,
+                "marked_for_legal": false,
+                "marked_archived_only": false,
+                "marked_for_sms": false
+            },
+            "format": "HTML"
+        },
+        "template_type": "create"
+    },
+    {
+        "template_name": "tip",
+        "is_public": true,
+        "data": {
+            "profile": "tip",
             "type": "text",
             "pubstatus": "usable",
             "flags": {
