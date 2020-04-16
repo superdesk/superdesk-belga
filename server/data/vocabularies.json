@@ -6222,6 +6222,7 @@
     },
     {
         "_id": "sources",
+        "init_version": 2,
         "display_name": "Sources",
         "type": "manageable",
         "unique_field": "qcode",
@@ -6314,7 +6315,8 @@
                 "qcode": "BLOOMBERG",
                 "is_active": true
             }
-        ]
+        ],
+        "selection_type" : "multi selection"
     },
     {
         "_id": "languages",
