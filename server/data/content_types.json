@@ -3,6 +3,7 @@
         "_id": "alert",
         "label": "ALERT",
         "description": "Alert",
+        "init_version": 2,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -269,6 +270,7 @@
         "_id": "brief",
         "label": "BRIEF",
         "description": "Brief",
+        "init_version": 2,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -588,6 +590,7 @@
         "_id": "tip",
         "label": "TIP",
         "description": "Tip",
+        "init_version": 2,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -846,6 +849,7 @@
         "_id": "text",
         "label": "TEXT",
         "description": "Text",
+        "init_version": 2,
         "enabled": true,
         "priority": 0,
         "editor": {
