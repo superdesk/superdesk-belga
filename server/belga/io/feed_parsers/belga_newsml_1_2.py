@@ -258,15 +258,6 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if manage_el is None:
             return newsmanagement
 
-        element = manage_el.find('NewsItemType')
-        if element is not None and element.get('FormalName'):
-            # news_item_types CV
-            newsmanagement.setdefault('subject', []).append({
-                "name": element.get('FormalName'),
-                "qcode": element.get('FormalName'),
-                "scheme": "news_item_types"
-            })
-
         element = manage_el.find('FirstCreated')
         if element is not None:
             # firstcreated

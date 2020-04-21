@@ -12,7 +12,7 @@ from superdesk import get_resource_service
 
 
 logger = logging.getLogger(__name__)
-SUBJECT_SCHEMES = ('services-products', 'news_services', 'news_products', 'distribution')
+SUBJECT_SCHEMES = ('services-products', 'distribution')
 
 
 def get_default_content_template(item, **kwargs):
