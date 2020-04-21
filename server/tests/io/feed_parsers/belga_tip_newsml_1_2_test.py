@@ -40,7 +40,6 @@ class BelgaTipNewsMLOneTestCase(TestCase):
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
         self.assertEqual(
             item["subject"], [
-                {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_item_types'},
                 {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products', 'parent': 'BIN'}
             ]
         )

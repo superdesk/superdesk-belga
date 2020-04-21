@@ -7,7 +7,6 @@
             "required": true
         },
         "priority": null,
-        "news_item_types": null,
         "headline": {
             "order": 5,
             "formatOptions": [],
@@ -16,7 +15,6 @@
         "usageterms": null,
         "anpa_take_key": null,
         "iptc_subject_codes": null,
-        "news_products": null,
         "services-products": {
             "order": 1,
             "section": "header",
@@ -33,7 +31,6 @@
         "dateline": null,
         "body_footer": null,
         "languages": null,
-        "belga_related_articles": null,
         "distribution": {
             "order": 2,
             "section": "header",
@@ -44,8 +41,6 @@
         "place": null,
         "attachments": null,
         "author_roles": null,
-        "belga_related_images": null,
-        "news_services": null,
         "slugline": {
             "sdWidth": "full",
             "order": 4,
@@ -162,9 +157,7 @@
             },
             "required": false
         },
-        "belga_related_articles": null,
         "body_footer": null,
-        "belga_related_images": null,
         "place": null,
         "sms": null,
         "attachments": null,
