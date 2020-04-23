@@ -9,6 +9,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 from io import BytesIO
+import pytz
 import datetime
 from lxml import etree
 from unittest import mock
@@ -60,11 +61,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'stage': ObjectId('5c94ed09fe985e1b69d7cb62'),
             'user': ObjectId('5d385f31fe985ec67a0ca583')
         },
-        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         '_current_version': 2,
-        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         'original_creator': '5d385f31fe985ec67a0ca583',
         'unique_id': 43,
         'unique_name': '#43',
@@ -83,7 +84,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         '_etag': '61c350853dc1513064f9e566f6d3c161cd387a0f',
         'lock_action': 'edit',
         'lock_session': ObjectId('5ca1cb4afe985e54931ee112'),
-        'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         'lock_user': ObjectId('5d385f31fe985ec67a0ca583'),
         'annotations': [],
         "associations": {
@@ -663,8 +664,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "pubstatus": "usable",
             "format": "HTML",
             "_current_version": 4,
-            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
-            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "tag:localhost:5000:2019:bb1f22ac-d33a-4b31-8ed6-2c7889373c78",
             "state": "in_progress",
@@ -836,8 +837,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "type": "text",
             "pubstatus": "usable",
             "format": "HTML",
-            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
-            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413",
             "unique_id": 71,
@@ -1000,7 +1001,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190403T124153'
+            '20190403T144153'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
@@ -1024,11 +1025,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190403T124153'
+            '20190403T144153'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190403T124514'
+            '20190403T144514'
         )
         status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
         self.assertDictEqual(
@@ -1171,7 +1172,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
             dict(descriptivemetadata.attrib),
-            {'DateAndTime': '20190403T124153'}
+            {'DateAndTime': '20190403T144153'}
         )
         self.assertIsNone(
             descriptivemetadata.xpath('SubjectCode')[0].text
@@ -1354,7 +1355,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
             dict(descriptivemetadata.attrib),
-            {'DateAndTime': '20190403T124153'}
+            {'DateAndTime': '20190403T144153'}
         )
         self.assertIsNone(
             descriptivemetadata.xpath('SubjectCode')[0].text
@@ -1537,7 +1538,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertEqual(
             descriptivemetadata.attrib['DateAndTime'],
-            '20190819T131501'
+            '20190819T151501'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata -> Location
         property = newscomponent_2_level.xpath('DescriptiveMetadata/Location/Property[@FormalName="City"]')[0]
@@ -1690,7 +1691,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertEqual(
             descriptivemetadata.attrib['DateAndTime'],
-            '20190828T092217'
+            '20190828T112217'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
