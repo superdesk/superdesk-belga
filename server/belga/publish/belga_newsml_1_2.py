@@ -8,11 +8,12 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+import pytz
 import logging
-from datetime import datetime
 from copy import deepcopy
 from urllib.parse import urljoin
 from collections import namedtuple
+from dateutil import parser as dateutil_parser
 
 from lxml import etree
 from lxml.etree import SubElement
@@ -128,7 +129,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # SDBELGA-348
             self._duid = self._original_item[GUID_FIELD]
 
-            self._now = utcnow()
+            self._tz = pytz.timezone(superdesk.app.config['DEFAULT_TIMEZONE'])
+            self._now = utcnow().astimezone(self._tz)
             # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
             # Theoretically it may happen
             if self._current_item.get('firstpublished'):
@@ -671,7 +673,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment['_id'] = str(attachment['_id'])
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
-        attachment['description_text'] = attachment.pop('description')
+        attachment['description_text'] = attachment.pop('description', '')
         attachment['firstcreated'] = attachment['_created']
 
         newscomponent_2_level = SubElement(
@@ -1064,9 +1066,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _get_formatted_datetime(self, _datetime):
         if type(_datetime) is str:
-            return datetime.strptime(_datetime, '%Y-%m-%dT%H:%M:%S+0000').strftime(self.DATETIME_FORMAT)
-        else:
-            return _datetime.strftime(self.DATETIME_FORMAT)
+            _datetime = dateutil_parser.parse(_datetime)
+
+        return _datetime.astimezone(self._tz).strftime(self.DATETIME_FORMAT)
 
     def _get_content_profile_name(self, item):
         if item.get('profile') in self.SD_CP_NAME_ROLE_MAP:
