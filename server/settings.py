@@ -31,6 +31,7 @@ INSTALLED_APPS.extend([
     'belga.macros',
     'belga.update',
     'belga.unmark_user_when_moved_to_incoming_stage',
+    'belga.generate_id_for_url',
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
