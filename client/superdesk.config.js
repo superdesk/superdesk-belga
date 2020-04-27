@@ -65,6 +65,7 @@ module.exports = function(grunt) {
             'en': {
                 'slugline': 'topic',
                 'keywords': 'storytags'
+                }
             },        
             
         search_cvs: [
