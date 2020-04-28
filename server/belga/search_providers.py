@@ -277,7 +277,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         created = get_datetime(datetime.datetime.now())
         return {
             'type': 'text',
-            'mimetype': 'application/superdesk.vnd.belga.360archive',
+            'mimetype': 'application/superdesk.item.text',
             'pubstatus': 'usable',
             '_id': guid,
             'state': 'published',
