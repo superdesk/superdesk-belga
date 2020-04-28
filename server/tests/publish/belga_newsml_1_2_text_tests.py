@@ -562,8 +562,16 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'ednote': 'Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.',
         'extra': {
             'belga-url': [
-                {'url': 'http://example.com/', 'description': 'Example com'},
-                {'url': 'https://github.com/superdesk', 'description': 'Superdesk'}
+                {
+                    'url': 'http://example.com/',
+                    'description': 'Example com',
+                    'guid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'
+                },
+                {
+                    'url': 'https://github.com/superdesk',
+                    'description': 'Superdesk',
+                    'guid': '262f0e63-b4d9-4269-8a45-8938b0c9e556'
+                }
             ],
             "city": "Prague",
             "country": "CZ",
@@ -1275,7 +1283,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
+                'Duid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
@@ -1321,8 +1329,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
-            {'FormalName': 'NewsObjectId', 'Value':
-                'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
+            {'FormalName': 'NewsObjectId', 'Value': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
