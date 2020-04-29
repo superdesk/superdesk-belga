@@ -121,10 +121,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # the actual item which was selected for publishing in the UI
             self._current_item = article
-            # items chain in context of Belga NewsML
-            self._newsml_items_chain = self._get_newsml_items_chain(self._current_item)
             # original/initial item
-            self._original_item = self._newsml_items_chain[0]
+            items_chain = self.arhive_service.get_items_chain(self._current_item)
+            self._original_item = items_chain[0]
+            # items chain in context of Belga NewsML
+            self._newsml_items_chain = self._get_newsml_items_chain(items_chain)
             # `NewsItemId` and `Duid` must always use guid of original item
             # SDBELGA-348
             self._duid = self._original_item[GUID_FIELD]
@@ -1083,7 +1084,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         return content_type['label'].capitalize()
 
-    def _get_newsml_items_chain(self, item):
+    def _get_newsml_items_chain(self, items_chain):
         """
         Get the whole items chain in context of Belga NewsML.
         Entities which are treated as a standalone items (NewsComponent 2nd level) in Belga NewsML:
@@ -1097,8 +1098,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         - every item.extra.belga-url
         - every attachment
 
-        :param item: sd item
-        :type items: dict
+        :param items_chain: chain of items
+        :type items_chain: list
         :return: tuple where every item represents a 2nd level NewsComponent in Belga NewsML
         :rtype: tuple
         """
@@ -1120,7 +1121,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         # sd items chain including updates and translations
         sd_items_chain = deepcopy(tuple(
-            i for i in self.arhive_service.get_items_chain(item)
+            i for i in items_chain
             if i.get(ITEM_STATE) in (CONTENT_STATE.PUBLISHED, CONTENT_STATE.CORRECTED)
         ))
 
