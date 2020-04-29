@@ -289,7 +289,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             return ''
 
     def _get_period(self, period):
-        today = arrow.now(BELGA_TZ)
+        today = arrow.now(superdesk.app.config['DEFAULT_TIMEZONE'])
         return {
             'fromDate': today.shift(**self.PERIODS.get(period)).format('YYYYMMDD'),
             'toDate': today.format('YYYYMMDD'),
