@@ -9,6 +9,8 @@
             "headLine": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             "language": "fr",
             "source": "BELGA",
+            "createDate": 1581646440000,
+            "validateDate": 1581654480000,
             "newsComponents": [
                 {
                     "newsComponentId": 0,
