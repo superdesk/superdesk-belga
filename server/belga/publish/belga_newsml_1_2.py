@@ -8,21 +8,23 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
-import html
+import pytz
 import logging
-from datetime import datetime
 from copy import deepcopy
 from urllib.parse import urljoin
 from collections import namedtuple
+from dateutil import parser as dateutil_parser
 
+from lxml import etree
+from lxml.etree import SubElement
+from lxml.html.clean import Cleaner
+from eve.utils import config
 from eve.utils import ParsedRequest
 from flask import current_app as app
 
 import superdesk
+from superdesk import text_utils
 from apps.archive.common import get_utc_schedule
-from eve.utils import config
-from lxml import etree
-from lxml.etree import SubElement
 from superdesk.errors import FormatterError
 from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
                                      ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
@@ -70,7 +72,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     Belga News ML 1.2 Formatter
     """
 
-    ENCODING = "ISO-8859-15"
+    ENCODING = "UTF-8"
     XML_ROOT = '<?xml version="1.0" encoding="{}"?>'.format(ENCODING)
     DATETIME_FORMAT = '%Y%m%dT%H%M%S'
     BELGA_TEXT_PROFILE = 'belga_text'
@@ -127,7 +129,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # SDBELGA-348
             self._duid = self._original_item[GUID_FIELD]
 
-            self._now = utcnow()
+            self._tz = pytz.timezone(superdesk.app.config['DEFAULT_TIMEZONE'])
+            self._now = utcnow().astimezone(self._tz)
             # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
             # Theoretically it may happen
             if self._current_item.get('firstpublished'):
@@ -140,7 +143,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._format_newsenvelope()
             self._format_newsitem()
 
-            xml_string = self.XML_ROOT + '\n' + etree.tostring(self._newsml, pretty_print=True).decode('utf-8')
+            xml_string = self.XML_ROOT + '\n' + etree.tostring(
+                self._newsml, pretty_print=True,
+                encoding=self.ENCODING
+            ).decode(self.ENCODING)
             pub_seq_num = generate_sequence_number(subscriber)
 
             return [(pub_seq_num, xml_string)]
@@ -220,7 +226,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         """
 
         news_management = SubElement(newsitem, 'NewsManagement')
-        SubElement(news_management, 'NewsItemType', {'FormalName': 'News'})
+        SubElement(news_management, 'NewsItemType', {'FormalName': 'NEWS'})
         SubElement(
             news_management, 'FirstCreated'
         ).text = self._get_formatted_datetime(self._current_item.get('firstcreated'))
@@ -638,6 +644,25 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions']['original'])
 
+        # video image thumbnail
+        for role, key in (('Image', 'viewImage'), ('Thumbnail', 'thumbnail')):
+            if key not in video['renditions']:
+                continue
+            newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+            if video.get(GUID_FIELD):
+                newscomponent_3_level.attrib['Duid'] = video.get(GUID_FIELD)
+            if video.get('language'):
+                newscomponent_3_level.attrib[XML_LANG] = video.get('language')
+
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            SubElement(
+                SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                'Property',
+                {'FormalName': 'ComponentClass', 'Value': 'Image'}
+            )
+
+            self._format_media_contentitem(newscomponent_3_level, rendition=video['renditions'][key])
+
     def _format_attachment(self, newscomponent_1_level, attachment):
         """
         Creates a `<NewsComponent>` of a 2nd level with file attached to the item.
@@ -648,7 +673,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment['_id'] = str(attachment['_id'])
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
-        attachment['description_text'] = attachment.pop('description')
+        attachment['description_text'] = attachment.pop('description', '')
         attachment['firstcreated'] = attachment['_created']
 
         newscomponent_2_level = SubElement(
@@ -726,8 +751,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     rendition['filename'] = '{}.jpeg'.format(belga_id)
             # rendition is from Belga coverage search provider
             elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
-                # ignore coverage for now
-                pass
+                belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
+                rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
             # the rest are internaly uploaded media: pictures, video and audio
             else:
                 rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(
@@ -883,10 +908,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'ForeignId', 'Value': item['administrative']['foreign_id']}
             )
-        if item.get('priority'):
+        if item.get('urgency'):
             SubElement(
                 administrative_metadata, 'Property',
-                {'FormalName': 'Priority', 'Value': str(item['priority'])}
+                {'FormalName': 'Priority', 'Value': str(item['urgency'])}
             )
         if item.get('slugline'):
             SubElement(
@@ -897,6 +922,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(
                 administrative_metadata, 'Property',
                 {'FormalName': 'NewsObjectId', 'Value': item[GUID_FIELD]}
+            )
+        if item.get('ednote'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'EditorialInfo', 'Value': item['ednote']}
             )
 
         for subject in item.get('subject', []):
@@ -978,7 +1008,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 # ContentItem
                 contentitem = SubElement(newscomponent_3_level, 'ContentItem')
                 SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-                text = html.escape(item.get(item_key))
+
+                # cut off all tags except paragraph and headings
+                cleaner = Cleaner(
+                    allow_tags=('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
+                    remove_unknown_tags=False
+                )
+                html_str = cleaner.clean_html(item.get(item_key))
+                text = text_utils.get_text(html_str, content='html', space_on_elements=True, space='   ')
+                text = text.strip()
+
                 SubElement(contentitem, 'DataContent').text = text
                 characteristics = SubElement(contentitem, 'Characteristics')
                 # string's length is used in original belga's newsml
@@ -1027,9 +1066,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _get_formatted_datetime(self, _datetime):
         if type(_datetime) is str:
-            return datetime.strptime(_datetime, '%Y-%m-%dT%H:%M:%S+0000').strftime(self.DATETIME_FORMAT)
-        else:
-            return _datetime.strftime(self.DATETIME_FORMAT)
+            _datetime = dateutil_parser.parse(_datetime)
+
+        return _datetime.astimezone(self._tz).strftime(self.DATETIME_FORMAT)
 
     def _get_content_profile_name(self, item):
         if item.get('profile') in self.SD_CP_NAME_ROLE_MAP:
@@ -1073,7 +1112,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             'version_creator',
             'firstpublished',
             'firstcreated',
-            'priority',
             'slugline',
             'creditline',
             'extra',
@@ -1112,16 +1150,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             media_items = [
                 sd_item_associations[i] for i in sd_item_associations
                 if sd_item_associations[i]
-                and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
-                                                           CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
+                and sd_item_associations[i].get(ITEM_TYPE) in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
+                                                               CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
                 and 'renditions' in sd_item_associations[i]
             ]
             # get all associated media items `_id`s where `renditions` are NOT IN the item
             media_items_ids = [
                 sd_item_associations[i]['_id'] for i in sd_item_associations
                 if sd_item_associations[i]
-                and sd_item_associations[i][ITEM_TYPE] in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
-                                                           CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
+                and sd_item_associations[i].get(ITEM_TYPE) in (CONTENT_TYPE.PICTURE, CONTENT_TYPE.GRAPHIC,
+                                                               CONTENT_TYPE.AUDIO, CONTENT_TYPE.VIDEO)
                 and 'renditions' not in sd_item_associations[i]
             ]
             # fetch associated docs by _id
@@ -1199,13 +1237,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # get all associated `text` items where `_type` is `externalsource`.
             rel_text_items = [
                 sd_item_associations[i] for i in sd_item_associations
-                if (sd_item_associations[i] and sd_item_associations[i]['type'] == 'text'
+                if (sd_item_associations[i] and sd_item_associations[i].get(ITEM_TYPE) == 'text'
                     and sd_item_associations[i].get('_type') == 'externalsource')
             ]
             # get all associated `text` items ids where `_type` is not `externalsource`.
             rel_text_items_ids = [
                 sd_item_associations[i]['_id'] for i in sd_item_associations
-                if (sd_item_associations[i] and sd_item_associations[i]['type'] == 'text'
+                if (sd_item_associations[i] and sd_item_associations[i].get(ITEM_TYPE) == 'text'
                     and sd_item_associations[i].get('_type') != 'externalsource')
             ]
             # fetch associated docs by _id

@@ -73,6 +73,20 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
                 "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                 "media": "video_1",
                 "mimetype": "video/mp4"
+            },
+            "viewImage": {
+                "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
+                "media": "pic_1",
+                "mimetype": "image/jpeg",
+                "width": 200,
+                "height": 133
+            },
+            "thumbnail": {
+                "href": "http://localhost:5000/api/upload-raw/pic_2.jpg",
+                "media": "pic_2",
+                "mimetype": "image/jpeg",
+                "width": 1920,
+                "height": 1280
             }
         },
         "mimetype": "video/mp4",
@@ -209,6 +223,22 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
                     'length': 12
                 }
             },
+            {
+                '_id': 'pic_1',
+                'content': BytesIO(b'pic_one_content'),
+                'content_type': 'image/jpeg',
+                'metadata': {
+                    'length': 10
+                }
+            },
+            {
+                '_id': 'pic_2',
+                'content': BytesIO(b'pic_two_content'),
+                'content_type': 'image/jpeg',
+                'metadata': {
+                    'length': 10
+                }
+            },
         )
         for media_item in media_items:
             # base rendition
@@ -249,7 +279,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
@@ -268,16 +298,16 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         newsitemtype = self.newsml.xpath('NewsItem/NewsManagement/NewsItemType')[0]
         self.assertDictEqual(
             dict(newsitemtype.attrib),
-            {'FormalName': 'News'}
+            {'FormalName': 'NEWS'}
         )
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
         self.assertDictEqual(
@@ -364,7 +394,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             sizeinbytes.text,
             '5'
         )
-        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Clip)
         contentitem = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem'
         )[0]
@@ -385,4 +415,48 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         self.assertEqual(
             mimetype.attrib['FormalName'],
             'video/mp4'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image)
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'urn:www.belga.be:superdesk:tst:pic_1'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Jpg'
+        )
+        mimetype = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/MimeType'
+        )[0]
+        self.assertEqual(
+            mimetype.attrib['FormalName'],
+            'image/jpeg'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail)
+        contentitem = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
+        )[0]
+        self.assertEqual(
+            contentitem.attrib['Href'],
+            'urn:www.belga.be:superdesk:tst:pic_2'
+        )
+        _format = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem/Format'
+        )[0]
+        self.assertEqual(
+            _format.attrib['FormalName'],
+            'Jpg'
+        )
+        mimetype = newscomponent_2_level.xpath(
+            'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem/MimeType'
+        )[0]
+        self.assertEqual(
+            mimetype.attrib['FormalName'],
+            'image/jpeg'
         )

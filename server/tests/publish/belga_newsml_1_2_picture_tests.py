@@ -243,7 +243,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
@@ -262,16 +262,16 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         newsitemtype = self.newsml.xpath('NewsItem/NewsManagement/NewsItemType')[0]
         self.assertDictEqual(
             dict(newsitemtype.attrib),
-            {'FormalName': 'News'}
+            {'FormalName': 'NEWS'}
         )
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
         self.assertDictEqual(

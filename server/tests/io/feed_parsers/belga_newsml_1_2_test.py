@@ -74,7 +74,6 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['slugline'], 'BelgaService')
         self.assertEqual(item['source'], 'BELGA')
         self.assertEqual(item['subject'], [
-            {'name': 'NEWS', 'qcode': 'NEWS', 'scheme': 'news_item_types'},
             {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
             {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products', 'parent': 'BIN'},
             {'name': 'BIN/ECO', 'qcode': 'BIN/ECO', 'scheme': 'services-products', 'parent': 'BIN'},

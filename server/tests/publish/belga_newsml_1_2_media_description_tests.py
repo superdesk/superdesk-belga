@@ -9,6 +9,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 from io import BytesIO
+import pytz
 import datetime
 from lxml import etree
 from unittest import mock
@@ -30,11 +31,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'profile': 'belga_text',
         'pubstatus': 'usable',
         'format': 'HTML',
-        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         '_current_version': 2,
-        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         'original_creator': '5d385f31fe985ec67a0ca583',
         'state': 'in_progress',
         'source': 'Belga',

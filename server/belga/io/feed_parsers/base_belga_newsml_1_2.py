@@ -287,14 +287,6 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if manage_el is None:
             return
 
-        for element in manage_el.findall('NewsItemType'):
-            if element is not None and element.get('FormalName'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "news_item_types"
-                })
-
         element = manage_el.find('FirstCreated')
         if element is not None:
             item['firstcreated'] = self.datetime(element.text)

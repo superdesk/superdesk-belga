@@ -42,7 +42,6 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
             {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'sources'},
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'News', 'qcode': 'News', 'scheme': 'news_item_types'},
             {'name': 'Russian Federation', 'qcode': 'country_rus', 'scheme': 'country',
              'translations': {'name': {'nl': 'Rusland', 'fr': 'Russie'}}},
         ]

@@ -9,6 +9,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 from io import BytesIO
+import pytz
 import datetime
 from lxml import etree
 from unittest import mock
@@ -60,11 +61,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'stage': ObjectId('5c94ed09fe985e1b69d7cb62'),
             'user': ObjectId('5d385f31fe985ec67a0ca583')
         },
-        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         '_current_version': 2,
-        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         'original_creator': '5d385f31fe985ec67a0ca583',
         'unique_id': 43,
         'unique_name': '#43',
@@ -83,7 +84,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         '_etag': '61c350853dc1513064f9e566f6d3c161cd387a0f',
         'lock_action': 'edit',
         'lock_session': ObjectId('5ca1cb4afe985e54931ee112'),
-        'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         'lock_user': ObjectId('5d385f31fe985ec67a0ca583'),
         'annotations': [],
         "associations": {
@@ -550,26 +551,27 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 'name': 'OLEG',
             }
         ],
-        'body_html': '<p>hellow world</p>\n<!-- EMBED START Image {id: \"editor_0\"} -->\n<figure>\n <img src=\"http://'
-                     'localhost:5000/api/upload-raw/pic_1.jpg\" alt=\"\" />\n <figcaption>Mazda MX5 '
-                     'retro</figcaption>\n</figure>\n<!-- EMBED END Image {id: \"editor_0\"} -->\n<p><br></p>\n<!-- EMB'
-                     'ED START Image {id: \"editor_1\"} -->\n<figure>\n <img src=\"https://3.t.cdn.belga.be/belgaimage:'
-                     '154620545:1800x650:w?v=5d5aaa94&m=njopcomo\" alt=\"\" />\n <figcaption>August 27, 2019: Gaza, Pal'
-                     'estine. 27 August 2019.The Al-Azza team defeats the Qalat Al-Janoub team 3-0 in the opening match'
-                     ' of the amputees football league. The match has been organized by the Palestine Amputee Football '
-                     'Association under the auspices of the International Committee of the Red Cross (ICRC) and was hel'
-                     'd at the Palestine stadium in Gaza City. Although some of the players were either born disable or'
-                     ' lost their limbs in the three recent Israeli offensives on Gaza, many others have lost their lim'
-                     'bs in recent months after being shot by Israeli forces while taking part in the Great March of Re'
-                     'turn rallies along the Gaza-Israeli border. The ICRC in Gaza believes in the importance of suppor'
-                     'ting people with disabilities caused by military conflicts and in reintegrating them into society'
-                     ' through both psychological and physical rehabilitation.</figcaption>\n</figure>\n<!-- EMBED END '
-                     'Image {id: \"editor_1\"} -->\n<p>&nbsp;</p>',
+        'body_html': '<p>Curabitur non nulla sit amet nisl <b>tempus</b> convallis quis ac lectus. Donec sollicitudin <'
+                     'b>molestie</b> malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.</p>\n<p>Donec ru'
+                     'trum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta da'
+                     'pibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.</p>\n<h2>books</h2>'
+                     '\n<p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet qua'
+                     'm id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien '
+                     'massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus o'
+                     'rci luctus et ultrices posuere cubilia Curae.</p>',
         'ednote': 'Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.',
         'extra': {
             'belga-url': [
-                {'url': 'http://example.com/', 'description': 'Example com'},
-                {'url': 'https://github.com/superdesk', 'description': 'Superdesk'}
+                {
+                    'url': 'http://example.com/',
+                    'description': 'Example com',
+                    'guid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'
+                },
+                {
+                    'url': 'https://github.com/superdesk',
+                    'description': 'Superdesk',
+                    'guid': '262f0e63-b4d9-4269-8a45-8938b0c9e556'
+                }
             ],
             "city": "Prague",
             "country": "CZ",
@@ -670,8 +672,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "pubstatus": "usable",
             "format": "HTML",
             "_current_version": 4,
-            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
-            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "tag:localhost:5000:2019:bb1f22ac-d33a-4b31-8ed6-2c7889373c78",
             "state": "in_progress",
@@ -843,8 +845,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "type": "text",
             "pubstatus": "usable",
             "format": "HTML",
-            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
-            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413",
             "unique_id": 71,
@@ -1007,7 +1009,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190403T124153'
+            '20190403T144153'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
@@ -1026,16 +1028,16 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         newsitemtype = self.newsml.xpath('NewsItem/NewsManagement/NewsItemType')[0]
         self.assertDictEqual(
             dict(newsitemtype.attrib),
-            {'FormalName': 'News'}
+            {'FormalName': 'NEWS'}
         )
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190403T124153'
+            '20190403T144153'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190403T124514'
+            '20190403T144514'
         )
         status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
         self.assertDictEqual(
@@ -1132,10 +1134,12 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
+            {'FormalName': 'Priority', 'Value': '4'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value':
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
+            {'FormalName': 'EditorialInfo', 'Value': 'Vestibulum ac diam sit amet quam vehicula elementum '
+                                                     'sed sit amet dui.'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
@@ -1176,7 +1180,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
             dict(descriptivemetadata.attrib),
-            {'DateAndTime': '20190403T124153'}
+            {'DateAndTime': '20190403T144153'}
         )
         self.assertIsNone(
             descriptivemetadata.xpath('SubjectCode')[0].text
@@ -1221,8 +1225,15 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             }
         )
         self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
+            """Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
+   Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+   books
+   Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
+        )
+        self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '1566'
+            '690'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
@@ -1272,7 +1283,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
+                'Duid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e',
                 '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
             }
         )
@@ -1317,10 +1328,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'FormalName': 'Validator', 'Value': 'adm'},
             {'FormalName': 'ValidationDate', 'Value': '123123'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
-            {'FormalName': 'Priority', 'Value': '6'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
-            {'FormalName': 'NewsObjectId', 'Value':
-                'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
+            {'FormalName': 'NewsObjectId', 'Value': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
@@ -1353,7 +1362,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
             dict(descriptivemetadata.attrib),
-            {'DateAndTime': '20190403T124153'}
+            {'DateAndTime': '20190403T144153'}
         )
         self.assertIsNone(
             descriptivemetadata.xpath('SubjectCode')[0].text
@@ -1516,7 +1525,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         priority = newscomponent_2_level.xpath('AdministrativeMetadata/Property[@FormalName="Priority"]')[0]
         self.assertEqual(
             priority.attrib['Value'],
-            '6'
+            '3'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> AdministrativeMetadata -> Property[NewsObjectId]
         newsobjectid = newscomponent_2_level.xpath(
@@ -1536,7 +1545,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertEqual(
             descriptivemetadata.attrib['DateAndTime'],
-            '20190819T131501'
+            '20190819T151501'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata -> Location
         property = newscomponent_2_level.xpath('DescriptiveMetadata/Location/Property[@FormalName="City"]')[0]
@@ -1689,7 +1698,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertEqual(
             descriptivemetadata.attrib['DateAndTime'],
-            '20190828T092217'
+            '20190828T112217'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
@@ -2024,7 +2033,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://1.t.cdn.belga.be/belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+            'urn:www.belga.be:belgagallery:6690595'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
@@ -2089,7 +2098,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             contentitem.attrib['Href'],
-            'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+            'urn:www.belga.be:belgagallery:6666666'
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Component"]/ancestor::NewsComponent/ContentItem/Format'
