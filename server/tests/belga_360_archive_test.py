@@ -1,14 +1,12 @@
 import os
-import unittest
 import superdesk
 
 import arrow
 from flask import json
 from httmock import all_requests, HTTMock
 from unittest.mock import MagicMock
-from superdesk.factory import get_app as get_sd_app
-
 from belga.search_providers import Belga360ArchiveSearchProvider, get_datetime
+from superdesk.tests import TestCase
 
 
 def fixture(filename):
@@ -34,7 +32,7 @@ def get_belga360_item():
         return items['newsObjects'][0]
 
 
-class Belga360ArchiveTestCase(unittest.TestCase):
+class Belga360ArchiveTestCase(TestCase):
     def setUp(self):
         self.provider = Belga360ArchiveSearchProvider(dict())
         self.query = {
@@ -121,8 +119,7 @@ class Belga360ArchiveTestCase(unittest.TestCase):
 
     def test_get_periods(self):
         arrow.now = MagicMock(return_value=arrow.get('2020-02-14'))
-        with get_sd_app().app_context():
-            day_period = self.provider._get_period('day')
+        day_period = self.provider._get_period('day')
         self.assertEqual(day_period['fromDate'], '20200213')
         self.assertEqual(day_period['toDate'], '20200214')
 
