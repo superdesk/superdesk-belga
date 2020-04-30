@@ -1226,14 +1226,13 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
-            """Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
-   Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
-   books
-   Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
+            """Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+     books
+     Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '690'
+            '530'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
@@ -1269,6 +1268,41 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
             '15'
+        )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[2]
+        self.assertDictEqual(
+            dict(newscomponent_3_level.attrib),
+            {
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('Role')[0].attrib),
+            {
+                'FormalName': 'Lead',
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('DescriptiveMetadata/Property')[0].attrib),
+            {
+                'FormalName': 'ComponentClass',
+                'Value': 'Text'
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('ContentItem/Format')[0].attrib),
+            {
+                'FormalName': 'Text'
+            }
+        )
+        self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
+            'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.'# noqa
+        )
+        self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
+            '160'
         )
 
     def test_url_newscomponent(self):

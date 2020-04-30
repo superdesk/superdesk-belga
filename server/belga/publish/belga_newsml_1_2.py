@@ -23,6 +23,7 @@ from eve.utils import ParsedRequest
 from flask import current_app as app
 
 import superdesk
+from superdesk.etree import parse_html, to_string
 from superdesk import text_utils
 from apps.archive.common import get_utc_schedule
 from superdesk.errors import FormatterError
@@ -992,8 +993,19 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_2_level: NewsComponent of 2nd level
         """
 
+        # output first paragraph of the body as a lead
+        item['lead'] = ''
+        if item.get('body_html'):
+            tree = parse_html(item['body_html'])
+            for el in tree:
+                if el.tag == 'p':
+                    item['lead'] = to_string(el)
+                    tree.remove(el)
+                    item['body_html'] = to_string(tree, pretty_print=True)
+                break
+
         # Title, Lead, Body
-        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'abstract')):
+        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'lead')):
             if item.get(item_key):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
