@@ -76,7 +76,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'genre': [{'qcode': 'Article', 'name': 'Article (news)'}],
         'place': [],
         'sign_off': 'ADM',
-        'language': 'nl',
+        'language': 'fr',
         'operation': 'update',
         'version_creator': '5d385f31fe985ec67a0ca583',
         'expiry': None,
@@ -1053,7 +1053,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             dict(newscomponent_1_level.attrib),
             {
                 'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsLines -> HeadLine
@@ -1078,7 +1078,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             dict(newscomponent_2_level.attrib),
             {
                 'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
@@ -1202,7 +1202,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1239,7 +1239,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1274,7 +1274,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1318,7 +1318,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             dict(newscomponent_2_level.attrib),
             {
                 'Duid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
@@ -1418,7 +1418,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1453,7 +1453,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
