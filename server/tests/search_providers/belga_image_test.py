@@ -13,7 +13,7 @@ from belga.search_providers import BelgaImageSearchProvider
 
 
 def fixture(filename):
-    return os.path.join(os.path.dirname(__file__), 'fixtures', filename)
+    return os.path.join(os.path.dirname(__file__), '..', 'fixtures', filename)
 
 
 @all_requests
