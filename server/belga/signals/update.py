@@ -1,6 +1,5 @@
-
 from superdesk import get_resource_service
-from superdesk.signals import item_rewrite
+
 
 TEXT = 'TEXT'
 ALERT = 'ALERT'
@@ -24,7 +23,3 @@ def handle_update(sender, item, original, **kwargs):
                 'scheme': DISTRIBUTION_ID,
             })
             item['subject'] = subject
-
-
-def init_app(app_):
-    item_rewrite.connect(handle_update)
