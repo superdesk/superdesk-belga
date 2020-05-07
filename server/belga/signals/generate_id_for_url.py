@@ -1,10 +1,6 @@
-import logging
 from uuid import uuid4
 
 from superdesk.metadata.item import GUID_FIELD
-
-
-logger = logging.getLogger(__name__)
 
 
 def set_belga_url_ids(item):

@@ -1,10 +1,6 @@
-import logging
 from copy import deepcopy
 
 from superdesk.metadata.item import CONTENT_TYPE
-
-
-logger = logging.getLogger(__name__)
 
 
 def handle_duplicate(sender, item, original, operation):
