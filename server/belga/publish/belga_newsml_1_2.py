@@ -1188,6 +1188,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(picture['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(picture)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.PICTURE
                 newsml_items_chain.append(newsml_item)
             # graphics
@@ -1198,6 +1199,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(graphic['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(graphic)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
                 newsml_items_chain.append(newsml_item)
             # audios
@@ -1208,9 +1210,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(audio['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(audio)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.AUDIO
                 newsml_items_chain.append(newsml_item)
-
             # videos
             used_ids = []
             for video in [i for i in media_items if i[ITEM_TYPE] == CONTENT_TYPE.VIDEO]:
@@ -1219,6 +1221,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(video['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(video)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.VIDEO
                 newsml_items_chain.append(newsml_item)
             # belga.coverage custom fields

@@ -1,8 +1,7 @@
-
 import logging
 
 from superdesk import get_resource_service
-from superdesk.signals import item_move
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,3 @@ def unmark_user(sender, item, original):
     except KeyError as err:
         logger.error('key error %s', err)
         return
-
-
-def init_app(_app):
-    item_move.connect(unmark_user)

@@ -1,6 +1,6 @@
 
 from superdesk.tests import TestCase
-from belga.update import handle_update, ALERT, TEXT
+from belga.signals.update import handle_update, ALERT, TEXT
 
 
 class UpdateAlertTestCase(TestCase):
