@@ -66,6 +66,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         '_current_version': 2,
         'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         'original_creator': '5d385f31fe985ec67a0ca583',
         'unique_id': 43,
         'unique_name': '#43',
@@ -1132,7 +1133,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         expected_attribs = (
             {'FormalName': 'Validator', 'Value': 'adm'},
-            {'FormalName': 'ValidationDate', 'Value': '123123'},
+            {'FormalName': 'ValidationDate', 'Value': '20190403T144514'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '4'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
@@ -1360,7 +1361,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         expected_attribs = (
             {'FormalName': 'Validator', 'Value': 'adm'},
-            {'FormalName': 'ValidationDate', 'Value': '123123'},
+            {'FormalName': 'ValidationDate', 'Value': '20190403T144514'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
             {'FormalName': 'NewsObjectId', 'Value': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'},
