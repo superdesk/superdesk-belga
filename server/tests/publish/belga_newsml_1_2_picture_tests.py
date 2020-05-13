@@ -49,6 +49,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             "_current_version": 4,
             "firstcreated": "2019-08-14T14:51:06+0000",
             "versioncreated": "2019-08-14T14:51:06+0000",
+            "firstpublished": "2019-08-14T14:51:06+0000",
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
             "state": "in_progress",
