@@ -64,6 +64,10 @@ module.exports = function(grunt) {
         langOverride: {
             'en': {
                 'slugline': 'topic',
+                'Slugline': 'Topic',
+                'SLUGLINE': 'TOPIC',
+                'Keywords': 'Storytags',
+                'KEYWORDS': 'STORYTAGS',
                 'keywords': 'storytags'
                 }
             },
