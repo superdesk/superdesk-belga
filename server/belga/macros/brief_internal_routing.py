@@ -1,14 +1,13 @@
-
 import logging
 import superdesk
 
-from flask import current_app as app
 from datetime import timedelta
 from superdesk.metadata.item import CONTENT_STATE, PUBLISH_SCHEDULE, SCHEDULE_SETTINGS
 from superdesk.macros.internal_destination_auto_publish import internal_destination_auto_publish
 from superdesk.editor_utils import replace_text, filter_blocks
 from apps.archive.common import update_schedule_settings
-from superdesk.errors import StopDuplication, ValidationError
+from superdesk.errors import StopDuplication
+from superdesk.validation import ValidationError
 from superdesk.text_utils import get_word_count
 from superdesk.utc import utcnow, utc_to_local
 
