@@ -54,13 +54,13 @@ module.exports = function(grunt) {
                 closeAndContinue: true,
             },
         },
-        
+
         workspace: {
             analytics: true,
             planning: true,
             assignments: true
         },
-        
+
         langOverride: {
             'en': {
                 'slugline': 'topic',
@@ -70,8 +70,8 @@ module.exports = function(grunt) {
                 'KEYWORDS': 'STORYTAGS',
                 'keywords': 'storytags'
                 }
-            },        
-            
+            },
+
         search_cvs: [
             {id: 'belga-keywords', name:'Belga keywords', field: 'subject', list: 'belga-keywords'},
             {id: 'services-products', name:'Packages', field: 'subject', list: 'services-products'},
@@ -94,13 +94,13 @@ module.exports = function(grunt) {
             'marked_desks': 1,
             'scheduled': 1
         },
-        
+
         list: {
             priority: [
                 'urgency'
             ],
             firstLine: [
-                'slugline',                
+                'slugline',
                 'highlights',
                 'markedDesks',
                 'headline',
@@ -134,6 +134,19 @@ module.exports = function(grunt) {
                     allowed_fields_to_sort: [ 'publish_schedule' ]
                 }
             },
+        },
+        assignmentsList: {
+            firstLine: ['slugline', 'name'],
+            secondLine: [
+                'priority',
+                'state',
+                'accepted',
+                'content',
+                'internal',
+                'due_date',
+                'desk',
+                'genre',
+            ],
         }
     };
 };
