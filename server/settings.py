@@ -166,6 +166,20 @@ SCHEMA = {
     'graphic': graphic_profile['schema'],
 }
 
+SCHEMA_UPDATE = {
+    'archive': {
+        'extra': {
+            'type': 'dict',
+            'schema': {},
+            'mapping': {
+                'type': 'object',
+                'enabled': True
+            },
+            'allow_unknown': True,
+        }
+    }
+}
+
 VALIDATOR_MEDIA_METADATA = {}
 ALLOW_UPDATING_SCHEDULED_ITEMS = True
 
