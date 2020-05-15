@@ -173,7 +173,31 @@ SCHEMA_UPDATE = {
             'schema': {},
             'mapping': {
                 'type': 'object',
-                'enabled': True
+                'properties': {
+                    'DueBy': {
+                        'type': 'date',
+                        'format': 'strict_date_optional_time'
+                    },
+                    'belga-url': {
+                        'properties': {
+                            'description': {
+                                'type': 'string'
+                            },
+                            'guid': {
+                                'type': 'string'
+                            },
+                            'id': {
+                                'type': 'string'
+                            },
+                            'url': {
+                                'type': 'string'
+                            }
+                        }
+                    },
+                    'city': {
+                        'type': 'string'
+                    }
+                }
             },
             'allow_unknown': True,
         }
