@@ -166,6 +166,44 @@ SCHEMA = {
     'graphic': graphic_profile['schema'],
 }
 
+SCHEMA_UPDATE = {
+    'archive': {
+        'extra': {
+            'type': 'dict',
+            'schema': {},
+            'mapping': {
+                'type': 'object',
+                'properties': {
+                    'DueBy': {
+                        'type': 'date',
+                        'format': 'strict_date_optional_time'
+                    },
+                    'belga-url': {
+                        'properties': {
+                            'description': {
+                                'type': 'string'
+                            },
+                            'guid': {
+                                'type': 'string'
+                            },
+                            'id': {
+                                'type': 'string'
+                            },
+                            'url': {
+                                'type': 'string'
+                            }
+                        }
+                    },
+                    'city': {
+                        'type': 'string'
+                    }
+                }
+            },
+            'allow_unknown': True,
+        }
+    }
+}
+
 VALIDATOR_MEDIA_METADATA = {}
 ALLOW_UPDATING_SCHEDULED_ITEMS = True
 
