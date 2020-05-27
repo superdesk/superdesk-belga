@@ -8,6 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+import pytz
 import datetime
 from lxml import etree
 from unittest import mock
@@ -37,7 +38,7 @@ belga_apiget_response = {
 }
 
 
-class BelgaNewsML12FormatterItemsChainTest(TestCase):
+class BelgaNewsML12Formatter_ItemsChainTest(TestCase):
     article = {
         '_id': 'update-2',
         'guid': 'update-2',
@@ -47,10 +48,11 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
         'pubstatus': 'usable',
         'format': 'HTML',
         'template': ObjectId('5c94ead2fe985e1c5776ddca'),
-        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         'original_creator': '5d385f31fe985ec67a0ca583',
         'state': 'corrected',
         'source': 'Belga',
@@ -75,10 +77,11 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'pubstatus': 'usable',
             'format': 'HTML',
             'template': ObjectId('5c94ead2fe985e1c5776ddca'),
-            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
             'original_creator': '5d385f31fe985ec67a0ca583',
             'state': 'corrected',
             'source': 'Belga',
@@ -229,10 +232,11 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'pubstatus': 'usable',
             'format': 'HTML',
             'template': ObjectId('5c94ead2fe985e1c5776ddca'),
-            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
             'original_creator': '5d385f31fe985ec67a0ca583',
             'state': 'published',
             'source': 'Belga',
@@ -380,10 +384,11 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'pubstatus': 'usable',
             'format': 'HTML',
             'template': ObjectId('5c94ead2fe985e1c5776ddca'),
-            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
             'original_creator': '5d385f31fe985ec67a0ca583',
             'state': 'published',
             'source': 'Belga',
@@ -410,10 +415,11 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'pubstatus': 'usable',
             'format': 'HTML',
             'template': ObjectId('5c94ead2fe985e1c5776ddca'),
-            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
             'original_creator': '5d385f31fe985ec67a0ca583',
             'state': 'in_progress',
             'source': 'Belga',
@@ -561,10 +567,11 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             'pubstatus': 'usable',
             'format': 'HTML',
             'template': ObjectId('5c94ead2fe985e1c5776ddca'),
-            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
             'original_creator': '5d385f31fe985ec67a0ca583',
             'state': 'published',
             'source': 'Belga',
@@ -672,6 +679,203 @@ class BelgaNewsML12FormatterItemsChainTest(TestCase):
             ('urn:belga.be:image:154670415', 'fr'),
             ('urn:belga.be:coverage:6690595', 'fr'),
             ('urn:belga.be:360archive:77777777', 'nl'),
+            ('update-1', 'nl'),
+            ('update-2', 'nl')
+        )
+        for i, newscomponent_2_level in enumerate(self.newsml.xpath('NewsItem/NewsComponent/NewsComponent')):
+            self.assertDictEqual(
+                dict(newscomponent_2_level.attrib),
+                {
+                    'Duid': expected[i][0],
+                    '{http://www.w3.org/XML/1998/namespace}lang': expected[i][1]
+                }
+            )
+
+
+class BelgaNewsML12Formatter_NotPublishedItemsChainTest(BelgaNewsML12Formatter_ItemsChainTest):
+    archive = (
+        {
+            '_id': 'original',
+            'guid': 'original',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'in_progress',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'nl',
+            'headline': 'New Skoda Scala',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            'rewritten_by': 'update-1',
+            "translation_id": "original",
+            "translations": [
+                "original-fr"
+            ],
+            "associations": {},
+        },
+        {
+            '_id': 'original-fr',
+            'guid': 'original-fr',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'published',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'fr',
+            'headline': 'Old my beer',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            "translation_id": "original",
+            "translated_from": "original",
+            "associations": {},
+        },
+        {
+            '_id': 'update-1',
+            'guid': 'update-1',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'published',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'nl',
+            'headline': 'New Skoda Scala 1',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            'rewritten_by': 'update-2',
+            "rewrite_of": "original",
+            "rewrite_sequence": 1,
+            "translations": [
+                "update-1-fr"
+            ],
+        },
+        {
+            '_id': 'update-1-fr',
+            'guid': 'update-1-fr',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'in_progress',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'fr',
+            'headline': 'Old my beer',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            "translation_id": "update-1",
+            "translated_from": "update-1",
+            "associations": {},
+        },
+        {
+            '_id': 'update-2',
+            'guid': 'update-2',
+            'type': 'text',
+            'version': 1,
+            'profile': 'belga_text',
+            'pubstatus': 'usable',
+            'format': 'HTML',
+            'template': ObjectId('5c94ead2fe985e1c5776ddca'),
+            '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+            'original_creator': '5d385f31fe985ec67a0ca583',
+            'state': 'published',
+            'source': 'Belga',
+            'priority': 6,
+            'urgency': 4,
+            'language': 'nl',
+            'headline': 'New Skoda Scala 2',
+            'keywords': ['europe', 'Prague', 'CZ', 'Skoda'],
+            'slugline': 'skoda scala',
+            'byline': 'BELGA',
+            "rewrite_of": "update-1",
+            "rewrite_sequence": 2,
+        }
+    )
+
+    @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
+    def setUp(self):
+        init_app(self.app)
+        self.app.data.insert('users', self.users)
+        self.app.data.insert('archive', self.archive)
+        self.app.data.insert('roles', self.roles)
+        self.app.data.insert('vocabularies', self.vocabularies)
+
+        self.article['state'] = 'published'
+        self.formatter = BelgaNewsML12Formatter()
+        seq, doc = self.formatter.format(self.article, self.subscriber)[0]
+        self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
+
+    def test_newsitemid(self):
+        # NewsML -> NewsItem -> Identification
+        self.assertEqual(
+            self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
+            'original'
+        )
+
+    def test_1_level_newscomponent(self):
+        # NewsML -> NewsItem -> NewsComponent
+        newscomponent_1_level = self.newsml.xpath('NewsItem/NewsComponent')[0]
+        self.assertDictEqual(
+            dict(newscomponent_1_level.attrib),
+            {
+                'Duid': 'original',
+                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+            }
+        )
+
+    def test_belga_text_newscomponent(self):
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent
+        expected = (
+            ('original-fr', 'fr'),
             ('update-1', 'nl'),
             ('update-2', 'nl')
         )

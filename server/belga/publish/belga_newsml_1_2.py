@@ -8,11 +8,12 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+import pytz
 import logging
-from datetime import datetime
 from copy import deepcopy
 from urllib.parse import urljoin
 from collections import namedtuple
+from dateutil import parser as dateutil_parser
 
 from lxml import etree
 from lxml.etree import SubElement
@@ -22,6 +23,7 @@ from eve.utils import ParsedRequest
 from flask import current_app as app
 
 import superdesk
+from superdesk.etree import parse_html, to_string
 from superdesk import text_utils
 from apps.archive.common import get_utc_schedule
 from superdesk.errors import FormatterError
@@ -29,7 +31,6 @@ from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
                                      ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
-from superdesk.utc import utcnow
 from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider
 
 logger = logging.getLogger(__name__)
@@ -118,23 +119,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._belga_coverage_field_ids = [
                 i['_id'] for i in self.vocabularies_service.find({'custom_field_type': 'belga.coverage'})
             ]
-            # the actual item which was selected for publishing in the UI
-            self._current_item = article
-            # items chain in context of Belga NewsML
-            self._newsml_items_chain = self._get_newsml_items_chain(self._current_item)
+
             # original/initial item
-            self._original_item = self._newsml_items_chain[0]
+            items_chain = self.arhive_service.get_items_chain(article)
+            self._original_item = items_chain[0]
+            # the actual item which was selected for publishing in the UI.
+            # just fetched doc from the db (the one in `items_chain`) is used instead of `article` to avoid
+            # a possible difference in `versioncreated` datetime
+            for item in items_chain:
+                if item['guid'] == article['guid']:
+                    self._current_item = item
+                    break
+            else:
+                # in theory, it'll never happen
+                logger.warning('Published item was not found in the items chain')
+                self._current_item = article
+
+            # items chain in context of Belga NewsML
+            self._newsml_items_chain = self._get_newsml_items_chain(items_chain)
             # `NewsItemId` and `Duid` must always use guid of original item
             # SDBELGA-348
             self._duid = self._original_item[GUID_FIELD]
 
-            self._now = utcnow()
-            # it's done to avoid difference between latest item's `ValidationDate` and `DateAndTime` in `NewsEnvelope`.
-            # Theoretically it may happen
-            if self._current_item.get('firstpublished'):
-                self._string_now = self._get_formatted_datetime(self._current_item['firstpublished'])
-            else:
-                self._string_now = self._now.strftime(self.DATETIME_FORMAT)
+            self._tz = pytz.timezone(superdesk.app.config['DEFAULT_TIMEZONE'])
+            self._string_now = self._get_formatted_datetime(self._current_item['firstpublished'])
 
             self._newsml = etree.Element('NewsML')
             self._format_catalog()
@@ -230,7 +238,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         ).text = self._get_formatted_datetime(self._current_item.get('firstcreated'))
         SubElement(
             news_management, 'ThisRevisionCreated'
-        ).text = self._get_formatted_datetime(self._current_item['versioncreated'])
+        ).text = self._string_now
 
         if self._current_item.get(EMBARGO):
             SubElement(news_management, 'Status', {'FormalName': 'Embargoed'})
@@ -326,12 +334,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param dict picture: picture item
         :param dict item: item
         """
-
-        # SDBELGA-322
-        # this is a case when _item is an external belga 360 archive.
-        # parent's firstpublished is used in this case
-        if not item.get('firstpublished'):
-            item['firstpublished'] = self._now
 
         # NewsComponent
         newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
@@ -671,7 +673,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         attachment['_id'] = str(attachment['_id'])
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
-        attachment['description_text'] = attachment.pop('description')
+        attachment['description_text'] = attachment.pop('description', '')
         attachment['firstcreated'] = attachment['_created']
 
         newscomponent_2_level = SubElement(
@@ -891,15 +893,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Validator', 'Value': item['administrative']['validator']}
             )
-        # SDBELGA-322
-        validation_date = self._string_now
-        if item.get('firstpublished'):
-            validation_date = self._get_formatted_datetime(item['firstpublished'])
-        elif item.get('administrative', {}).get('validation_date'):
-            validation_date = item['administrative']['validation_date']
         SubElement(
             administrative_metadata, 'Property',
-            {'FormalName': 'ValidationDate', 'Value': validation_date}
+            {'FormalName': 'ValidationDate', 'Value': self._get_formatted_datetime(item['firstpublished'])}
         )
         if item.get('administrative', {}).get('foreign_id'):
             SubElement(
@@ -989,8 +985,19 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_2_level: NewsComponent of 2nd level
         """
 
+        # output first paragraph of the body as a lead
+        item['lead'] = ''
+        if item.get('body_html'):
+            tree = parse_html(item['body_html'])
+            for el in tree:
+                if el.tag == 'p':
+                    item['lead'] = to_string(el)
+                    tree.remove(el)
+                    item['body_html'] = to_string(tree, pretty_print=True)
+                break
+
         # Title, Lead, Body
-        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'abstract')):
+        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'lead')):
             if item.get(item_key):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
@@ -1064,9 +1071,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _get_formatted_datetime(self, _datetime):
         if type(_datetime) is str:
-            return datetime.strptime(_datetime, '%Y-%m-%dT%H:%M:%S+0000').strftime(self.DATETIME_FORMAT)
-        else:
-            return _datetime.strftime(self.DATETIME_FORMAT)
+            _datetime = dateutil_parser.parse(_datetime)
+
+        return _datetime.astimezone(self._tz).strftime(self.DATETIME_FORMAT)
 
     def _get_content_profile_name(self, item):
         if item.get('profile') in self.SD_CP_NAME_ROLE_MAP:
@@ -1081,7 +1088,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         return content_type['label'].capitalize()
 
-    def _get_newsml_items_chain(self, item):
+    def _get_newsml_items_chain(self, items_chain):
         """
         Get the whole items chain in context of Belga NewsML.
         Entities which are treated as a standalone items (NewsComponent 2nd level) in Belga NewsML:
@@ -1095,8 +1102,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         - every item.extra.belga-url
         - every attachment
 
-        :param item: sd item
-        :type items: dict
+        :param items_chain: chain of items
+        :type items_chain: list
         :return: tuple where every item represents a 2nd level NewsComponent in Belga NewsML
         :rtype: tuple
         """
@@ -1110,6 +1117,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             'version_creator',
             'firstpublished',
             'firstcreated',
+            'versioncreated',
             'slugline',
             'creditline',
             'extra',
@@ -1118,7 +1126,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
         # sd items chain including updates and translations
         sd_items_chain = deepcopy(tuple(
-            i for i in self.arhive_service.get_items_chain(item)
+            i for i in items_chain
             if i.get(ITEM_STATE) in (CONTENT_STATE.PUBLISHED, CONTENT_STATE.CORRECTED)
         ))
 
@@ -1173,6 +1181,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(picture['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(picture)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.PICTURE
                 newsml_items_chain.append(newsml_item)
             # graphics
@@ -1183,6 +1192,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(graphic['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(graphic)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
                 newsml_items_chain.append(newsml_item)
             # audios
@@ -1193,9 +1203,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(audio['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(audio)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.AUDIO
                 newsml_items_chain.append(newsml_item)
-
             # videos
             used_ids = []
             for video in [i for i in media_items if i[ITEM_TYPE] == CONTENT_TYPE.VIDEO]:
@@ -1204,6 +1214,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 used_ids.append(video['_id'])
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(video)
+                newsml_item['language'] = sd_item.get('language', newsml_item.get('language'))
                 newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.VIDEO
                 newsml_items_chain.append(newsml_item)
             # belga.coverage custom fields

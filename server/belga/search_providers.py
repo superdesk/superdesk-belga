@@ -3,7 +3,6 @@ import uuid
 import arrow
 import hashlib
 import requests
-import datetime
 import superdesk
 
 from urllib.parse import urljoin
@@ -225,6 +224,12 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
     TYPE_SUPPORT = ('TEXT', 'BRIEF', 'ALERT', 'SHORT')
+    PERIODS = {
+        'day': {'days': -1},
+        'week': {'weeks': -1},
+        'month': {'months': -1},
+        'year': {'years': -1},
+    }
 
     def __init__(self, provider):
         super().__init__(provider)
@@ -238,6 +243,24 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'start': query.get('from', 0),
             'pageSize': query.get('size', 25),
         }
+
+        if params:
+            for api_param, param in {'language': 'languages', 'assetType': 'types'}.items():
+                if params.get(param):
+                    api_params[api_param] = params.get(param)
+            if params.get('credits'):
+                api_params['credits'] = params['credits'].strip().upper()
+
+            dates = params.get('dates', {})
+            if dates.get('start'):
+                api_params['fromDate'] = self._get_belga_date(dates['start'])
+            if dates.get('end'):
+                api_params['toDate'] = self._get_belga_date(dates['end'])
+
+            period = params.get('period')
+            if period and self.PERIODS.get(period):
+                # override value of search by date
+                api_params.update(self._get_period(period))
 
         try:
             api_params['searchText'] = query['query']['filtered']['query']['query_string']['query']
@@ -259,6 +282,19 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         resp.raise_for_status()
         return resp.json()
 
+    def _get_belga_date(self, date):
+        try:
+            return arrow.get(date, 'DD/MM/YYYY').format('YYYYMMDD')
+        except arrow.parser.ParserError:
+            return ''
+
+    def _get_period(self, period):
+        today = arrow.now(superdesk.app.config['DEFAULT_TIMEZONE'])
+        return {
+            'fromDate': today.shift(**self.PERIODS.get(period)).format('YYYYMMDD'),
+            'toDate': today.format('YYYYMMDD'),
+        }
+
     def _get_newscomponent(self, item, component):
         components = [i for i in item.get('newsComponents', []) if i.get('assetType', '').lower() == component.lower()]
         try:
@@ -267,17 +303,23 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             return ''
 
     def _get_body_html(self, item):
-        return self._get_newscomponent(item, 'body')
+        # SDBELGA-393
+        body = '&nbsp;&nbsp;&nbsp;&nbsp;' + get_text(self._get_newscomponent(item, 'body'))
+        return body.replace('\n', '<br/>&nbsp;&nbsp;&nbsp;&nbsp;')
 
     def _get_abstract(self, item):
         return self._get_newscomponent(item, 'lead')
 
+    def _get_datetime(self, date=None):
+        if not date:
+            return get_datetime(date)
+        return get_datetime(date / 1000)
+
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
-        created = get_datetime(datetime.datetime.now())
         return {
             'type': 'text',
-            'mimetype': 'application/superdesk.vnd.belga.360archive',
+            'mimetype': 'application/superdesk.item.text',
             'pubstatus': 'usable',
             '_id': guid,
             'state': 'published',
@@ -286,13 +328,13 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'slugline': get_text(data['topic']),
             'name': get_text(data['name']),
             'description_text': get_text(data.get('description')),
-            'versioncreated': created,
-            'firstcreated': created,
+            'versioncreated': self._get_datetime(data.get('validateDate')),
+            'firstcreated': self._get_datetime(data.get('createDate')),
             'creditline': get_text(data['credit']),
             'source': get_text(data['source']),
             'language': get_text(data['language']),
             'abstract': get_text(self._get_abstract(data)),
-            'body_html': get_text(self._get_body_html(data)),
+            'body_html': self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
             },

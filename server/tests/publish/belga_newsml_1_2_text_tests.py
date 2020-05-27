@@ -9,6 +9,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 from io import BytesIO
+import pytz
 import datetime
 from lxml import etree
 from unittest import mock
@@ -60,11 +61,12 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'stage': ObjectId('5c94ed09fe985e1b69d7cb62'),
             'user': ObjectId('5d385f31fe985ec67a0ca583')
         },
-        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14),
-        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         '_current_version': 2,
-        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53),
-        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14),
+        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         'original_creator': '5d385f31fe985ec67a0ca583',
         'unique_id': 43,
         'unique_name': '#43',
@@ -75,7 +77,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'genre': [{'qcode': 'Article', 'name': 'Article (news)'}],
         'place': [],
         'sign_off': 'ADM',
-        'language': 'nl',
+        'language': 'fr',
         'operation': 'update',
         'version_creator': '5d385f31fe985ec67a0ca583',
         'expiry': None,
@@ -83,7 +85,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         '_etag': '61c350853dc1513064f9e566f6d3c161cd387a0f',
         'lock_action': 'edit',
         'lock_session': ObjectId('5ca1cb4afe985e54931ee112'),
-        'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53),
+        'lock_time': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         'lock_user': ObjectId('5d385f31fe985ec67a0ca583'),
         'annotations': [],
         "associations": {
@@ -561,8 +563,16 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'ednote': 'Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.',
         'extra': {
             'belga-url': [
-                {'url': 'http://example.com/', 'description': 'Example com'},
-                {'url': 'https://github.com/superdesk', 'description': 'Superdesk'}
+                {
+                    'url': 'http://example.com/',
+                    'description': 'Example com',
+                    'guid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'
+                },
+                {
+                    'url': 'https://github.com/superdesk',
+                    'description': 'Superdesk',
+                    'guid': '262f0e63-b4d9-4269-8a45-8938b0c9e556'
+                }
             ],
             "city": "Prague",
             "country": "CZ",
@@ -663,8 +673,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "pubstatus": "usable",
             "format": "HTML",
             "_current_version": 4,
-            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
-            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "tag:localhost:5000:2019:bb1f22ac-d33a-4b31-8ed6-2c7889373c78",
             "state": "in_progress",
@@ -836,8 +846,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "type": "text",
             "pubstatus": "usable",
             "format": "HTML",
-            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
-            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53),
+            "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+            "versioncreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "urn:newsml:localhost:5000:2019-09-16T16:15:29.975832:2cbd7b49-9d7b-48c5-b1a0-fc802f3f4413",
             "unique_id": 71,
@@ -1000,7 +1010,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190403T124153'
+            '20190403T144153'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
@@ -1024,11 +1034,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190403T124153'
+            '20190403T144153'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190403T124514'
+            '20190403T144514'
         )
         status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
         self.assertDictEqual(
@@ -1044,7 +1054,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             dict(newscomponent_1_level.attrib),
             {
                 'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsLines -> HeadLine
@@ -1069,7 +1079,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             dict(newscomponent_2_level.attrib),
             {
                 'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
@@ -1123,7 +1133,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         expected_attribs = (
             {'FormalName': 'Validator', 'Value': 'adm'},
-            {'FormalName': 'ValidationDate', 'Value': '123123'},
+            {'FormalName': 'ValidationDate', 'Value': '20190403T144514'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Priority', 'Value': '4'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
@@ -1171,7 +1181,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
             dict(descriptivemetadata.attrib),
-            {'DateAndTime': '20190403T124153'}
+            {'DateAndTime': '20190403T144153'}
         )
         self.assertIsNone(
             descriptivemetadata.xpath('SubjectCode')[0].text
@@ -1193,7 +1203,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1217,21 +1227,20 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
-            """Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.
-   Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
-   books
-   Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
+            """Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+     books
+     Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '690'
+            '530'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
         newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1261,6 +1270,41 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
             '15'
         )
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[2]
+        self.assertDictEqual(
+            dict(newscomponent_3_level.attrib),
+            {
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('Role')[0].attrib),
+            {
+                'FormalName': 'Lead',
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('DescriptiveMetadata/Property')[0].attrib),
+            {
+                'FormalName': 'ComponentClass',
+                'Value': 'Text'
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('ContentItem/Format')[0].attrib),
+            {
+                'FormalName': 'Text'
+            }
+        )
+        self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
+            'Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.'# noqa
+        )
+        self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
+            '160'
+        )
 
     def test_url_newscomponent(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
@@ -1274,8 +1318,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_2_level.attrib),
             {
-                'Duid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                'Duid': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e',
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
@@ -1317,11 +1361,10 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         expected_attribs = (
             {'FormalName': 'Validator', 'Value': 'adm'},
-            {'FormalName': 'ValidationDate', 'Value': '123123'},
+            {'FormalName': 'ValidationDate', 'Value': '20190403T144514'},
             {'FormalName': 'ForeignId', 'Value': '4444444'},
             {'FormalName': 'Topic', 'Value': 'skoda scala'},
-            {'FormalName': 'NewsObjectId', 'Value':
-                'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
+            {'FormalName': 'NewsObjectId', 'Value': 'bf744ced-ecca-4a2f-bf6d-bdd52092e31e'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
@@ -1354,7 +1397,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertDictEqual(
             dict(descriptivemetadata.attrib),
-            {'DateAndTime': '20190403T124153'}
+            {'DateAndTime': '20190403T144153'}
         )
         self.assertIsNone(
             descriptivemetadata.xpath('SubjectCode')[0].text
@@ -1376,7 +1419,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1411,7 +1454,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
             }
         )
         self.assertDictEqual(
@@ -1537,7 +1580,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertEqual(
             descriptivemetadata.attrib['DateAndTime'],
-            '20190819T131501'
+            '20190819T151501'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata -> Location
         property = newscomponent_2_level.xpath('DescriptiveMetadata/Location/Property[@FormalName="City"]')[0]
@@ -1690,7 +1733,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]
         self.assertEqual(
             descriptivemetadata.attrib['DateAndTime'],
-            '20190828T092217'
+            '20190828T112217'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
         datacontent = newscomponent_2_level.xpath(

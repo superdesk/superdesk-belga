@@ -46,6 +46,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         "format": "HTML",
         "firstcreated": "2019-08-14T14:51:06+0000",
         "versioncreated": "2019-08-14T14:51:06+0000",
+        "firstpublished": "2019-08-14T14:51:06+0000",
         "original_creator": "5d385f31fe985ec67a0ca583",
         "guid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
         "unique_id": 13,
@@ -110,6 +111,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             "format": "HTML",
             "firstcreated": "2019-08-14T14:51:06+0000",
             "versioncreated": "2019-08-14T14:51:06+0000",
+            "firstpublished": "2019-08-14T14:51:06+0000",
             "original_creator": "5d385f31fe985ec67a0ca583",
             "guid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
             "unique_id": 13,
@@ -279,7 +281,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
@@ -303,11 +305,11 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         self.assertEqual(
             self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190814T145106'
+            '20190814T165106'
         )
         status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
         self.assertDictEqual(

@@ -1,12 +1,5 @@
 <fieldset ng-controller="BelgaSearchPanelController as searchPanel">
     <div class="field">
-        <label for="search-headline">{{:: 'Headline' | translate}}</label>
-        <div class="control">
-            <input type="text" id="search-headline" ng-model="params.headline" tabindex="1">
-        </div>
-    </div>
-
-    <div class="field">
         <label class="search-label">Language</label>
         <select ng-model="params.languages">
             <option ng-repeat="language in searchPanel.languages" value="{{ language.id }}">{{ language.name }}</option>
