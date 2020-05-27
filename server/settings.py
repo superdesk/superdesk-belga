@@ -29,9 +29,7 @@ INSTALLED_APPS.extend([
     'belga.command',
     'belga.publish',
     'belga.macros',
-    'belga.update',
-    'belga.unmark_user_when_moved_to_incoming_stage',
-    'belga.generate_id_for_url',
+    'belga.signals'
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -130,7 +128,6 @@ PLANNING_EXPORT_BODY_TEMPLATE = '''
 PLANNING_EVENT_TEMPLATES_ENABLED = True
 
 KEYWORDS_ADD_MISSING_ON_PUBLISH = True
-MACROS_MODULE = env('MACROS_MODULE', 'belga.macros')
 
 WORKFLOW_ALLOW_MULTIPLE_UPDATES = True
 
@@ -166,6 +163,44 @@ SCHEMA = {
     'picture': picture_profile['schema'],
     'video': video_profile['schema'],
     'graphic': graphic_profile['schema'],
+}
+
+SCHEMA_UPDATE = {
+    'archive': {
+        'extra': {
+            'type': 'dict',
+            'schema': {},
+            'mapping': {
+                'type': 'object',
+                'properties': {
+                    'DueBy': {
+                        'type': 'date',
+                        'format': 'strict_date_optional_time'
+                    },
+                    'belga-url': {
+                        'properties': {
+                            'description': {
+                                'type': 'string'
+                            },
+                            'guid': {
+                                'type': 'string'
+                            },
+                            'id': {
+                                'type': 'string'
+                            },
+                            'url': {
+                                'type': 'string'
+                            }
+                        }
+                    },
+                    'city': {
+                        'type': 'string'
+                    }
+                }
+            },
+            'allow_unknown': True,
+        }
+    }
 }
 
 VALIDATOR_MEDIA_METADATA = {}

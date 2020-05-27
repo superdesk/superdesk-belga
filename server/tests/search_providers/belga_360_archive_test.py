@@ -10,7 +10,7 @@ from superdesk.tests import TestCase
 
 
 def fixture(filename):
-    return os.path.join(os.path.dirname(__file__), 'fixtures', filename)
+    return os.path.join(os.path.dirname(__file__), '..', 'fixtures', filename)
 
 
 class DetailResponse():
@@ -92,10 +92,13 @@ class Belga360ArchiveTestCase(TestCase):
             ' finibus diam in urna vehicula accumsan'
         ))
         self.assertEqual(item['body_html'], (
-            'Morbi lacus ex, molestie id ullamcorper quis, scelerisque quis lectus.\n'
-            ' Phasellus laoreet turpis nunc, vitae porttitor sapien ultricies non.\n'
-            ' Nullam fringilla justo vitae ex commodo vulputate.\n In bibendum diam vitae condimentum scelerisque.\n'
-            ' Integer dapibus turpis augue, a varius diam ornare in.\n Donec aliquam cursus posuere.'
+            '&nbsp;&nbsp;&nbsp;&nbsp;'
+            'Morbi lacus ex, molestie id ullamcorper quis, scelerisque quis lectus.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
+            ' Phasellus laoreet turpis nunc, vitae porttitor sapien ultricies non.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
+            ' Nullam fringilla justo vitae ex commodo vulputate.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
+            ' In bibendum diam vitae condimentum scelerisque.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
+            ' Integer dapibus turpis augue, a varius diam ornare in.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
+            ' Donec aliquam cursus posuere.'
         ))
         self.assertFalse(item['_fetchable'])
 
