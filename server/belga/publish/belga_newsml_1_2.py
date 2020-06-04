@@ -754,7 +754,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
                 rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
             # the rest are internaly uploaded media: pictures, video and audio
-            else:
+            elif 'media' in rendition:
                 rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(
                     app.config['OUTPUT_BELGA_URN_SUFFIX'],
                     rendition['media']
