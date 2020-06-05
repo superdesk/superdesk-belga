@@ -58,6 +58,11 @@ def set_default_metadata_with_translate(item, **kwargs):
     # and now we apply the update
     new_item = archive_service.find_one(req=None, _id=new_id)
     set_default_metadata(new_item, **kwargs)
+
+    # untoggle coming up
+    if new_item.get('extra', {}).get('DueBy'):
+        del new_item['extra']['DueBy']
+
     archive_service.put(new_id, new_item)
 
     # no need for further treatment, we stop here internal_destinations workflow
