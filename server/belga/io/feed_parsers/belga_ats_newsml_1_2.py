@@ -35,15 +35,15 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
         return xml.tag == 'NewsML'
 
-    def parser_newsmanagement(self, item, manage_el):
-        super().parser_newsmanagement(item, manage_el)
+    def parse_newsmanagement(self, item, manage_el):
+        super().parse_newsmanagement(item, manage_el)
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
         item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
         # Source is ATS
         credit = {"name": 'ATS', "qcode": 'ATS', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
 
-    def parser_newscomponent(self, item, newscomponent_el):
+    def parse_newscomponent(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
 
@@ -77,12 +77,12 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param component_el:
         :return:
         """
-        super().parser_newscomponent(item, newscomponent_el)
+        super().parse_newscomponent(item, newscomponent_el)
         second_newscomponent_el = newscomponent_el.find('NewsComponent')
         if second_newscomponent_el is not None:
             content_el = second_newscomponent_el.find('ContentItem')
             if content_el is not None:
-                self.parser_contentitem(item, content_el)
+                self.parse_contentitem(item, content_el)
         return item
 
 

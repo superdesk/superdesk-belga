@@ -102,19 +102,19 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             self._item_seed = {}
             # parser the NewsEnvelope element
             self._item_seed.update(
-                self.parser_newsenvelop(xml.find('NewsEnvelope'))
+                self.parse_newsenvelop(xml.find('NewsEnvelope'))
             )
             # parser the NewsItem element
             for newsitem_el in xml.findall('NewsItem'):
                 try:
-                    self.parser_newsitem(newsitem_el)
+                    self.parse_newsitem(newsitem_el)
                 except SkipItemException:
                     continue
             return self._items
         except Exception as ex:
             raise ParserError.newsmlOneParserError(ex, self._provider)
 
-    def parser_newsenvelop(self, envelop_el):
+    def parse_newsenvelop(self, envelop_el):
         """
         Parser Identification element.
 
@@ -132,7 +132,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # not that much we can get here
         return {}
 
-    def parser_newsitem(self, newsitem_el):
+    def parse_newsitem(self, newsitem_el):
         """
         Parse Newsitem element.
 
@@ -156,12 +156,12 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
         # Identification
         self._item_seed.update(
-            self.parser_identification(newsitem_el.find('Identification'))
+            self.parse_identification(newsitem_el.find('Identification'))
         )
 
         # NewsManagement
         self._item_seed.update(
-            self.parser_newsmanagement(newsitem_el.find('NewsManagement'))
+            self.parse_newsmanagement(newsitem_el.find('NewsManagement'))
         )
 
         # NewsComponent
@@ -197,7 +197,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
                 # NewsComponent
                 try:
-                    self.parser_newscomponent(item, news_component_2)
+                    self.parse_newscomponent(item, news_component_2)
                     # SDBELGA-328
                     if item.get('abstract'):
                         abstract = '<p>' + item['abstract'] + '</p>'
@@ -210,7 +210,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
                 self._items.append(item)
 
-    def parser_identification(self, indent_el):
+    def parse_identification(self, indent_el):
         """
         Parse Identification in NewsItem element.
 
@@ -268,7 +268,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return identification
 
-    def parser_newsmanagement(self, manage_el):
+    def parse_newsmanagement(self, manage_el):
         """
         Parse NewsManagement in NewsItem element.
 
@@ -308,7 +308,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return newsmanagement
 
-    def parser_newscomponent(self, item, newscomponent_el):
+    def parse_newscomponent(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
 
@@ -359,15 +359,15 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         # NewsLines
         newslines_el = newscomponent_el.find('NewsLines')
-        self.parser_newslines(item, newslines_el)
+        self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
         admin_el = newscomponent_el.find('AdministrativeMetadata')
-        self.parser_administrativemetadata(item, admin_el)
+        self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
         descript_el = newscomponent_el.find('DescriptiveMetadata')
-        self.parser_descriptivemetadata(item, descript_el)
+        self.parse_descriptivemetadata(item, descript_el)
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
@@ -399,7 +399,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return item
 
-    def parser_newslines(self, item, newslines_el):
+    def parse_newslines(self, item, newslines_el):
         """Parse NewsLines in 2nd level NewsComponent element."""
         if newslines_el is None:
             return
@@ -439,7 +439,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             if element is not None and element.text:
                 item.setdefault('keywords', []).append(element.text)
 
-    def parser_administrativemetadata(self, item, admin_el):
+    def parse_administrativemetadata(self, item, admin_el):
         """Parse AdministrativeMetadata in 2nd level NewsComponent element."""
         if admin_el is None:
             return
@@ -515,7 +515,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get('Value'):
             item['slugline'] = element.get('Value')
 
-    def parser_descriptivemetadata(self, item, descript_el):
+    def parse_descriptivemetadata(self, item, descript_el):
         """
         Parse DescriptiveMetadata in NewsComponent element.
 

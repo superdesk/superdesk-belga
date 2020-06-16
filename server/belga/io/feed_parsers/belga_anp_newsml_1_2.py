@@ -27,13 +27,13 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     }
 
     # anp related logic goes here
-    def parser_newsmanagement(self, item, manage_el):
-        super().parser_newsmanagement(item, manage_el)
+    def parse_newsmanagement(self, item, manage_el):
+        super().parse_newsmanagement(item, manage_el)
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
         item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
 
-    def parser_newsitem(self, item, newsitem_el):
-        super().parser_newsitem(item, newsitem_el)
+    def parse_newsitem(self, item, newsitem_el):
+        super().parse_newsitem(item, newsitem_el)
         for subject in item.get('subject', []):
             if subject.get('scheme', '') == 'genre':
                 qcode = self.MAPPING_PRODUCTS.get(subject.get('name'), 'NEWS/GENERAL')
