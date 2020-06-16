@@ -43,8 +43,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     label = 'Belga News ML 1.2 Parser'
 
-    SUPPORTED_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
-    ASSET_TYPES_WITH_ATTACHMENTS = ('IMAGE', 'SOUND', 'CLIP', 'COMPONENT')
+    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
+    SUPPORTED_MEDIA_ASSET_TYPES = ('VIDEO',)
+    SUPPORTED_BINARY_ASSET_SUBTYPES = ('IMAGE', 'SOUND', 'CLIP', 'COMPONENT')
 
     def __init__(self):
         super().__init__()
@@ -343,7 +344,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         role = newscomponent_el.find('Role')
         if role is not None:
             role_name = role.attrib.get('FormalName')
-            if not (role_name and role_name.upper() in self.SUPPORTED_ASSET_TYPES):
+            if not (role_name and role_name.upper() in self.SUPPORTED_TEXT_ASSET_TYPES):
                 logger.warning('NewsComponent/Role/FormalName is not supported: "{}". '
                                'Skiping an "{}" item.'.format(role_name, item['guid']))
                 raise SkipItemException
@@ -555,10 +556,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         attachments = []
         for news_component_2 in news_component_1.findall('NewsComponent'):
             role_name = self._get_role(news_component_2)
-            if role_name and role_name.upper() not in self.SUPPORTED_ASSET_TYPES:
+            if role_name and role_name.upper() not in self.SUPPORTED_TEXT_ASSET_TYPES:
                 for newscomponent in news_component_2.findall('NewsComponent'):
                     component_role = self._get_role(newscomponent)
-                    if component_role and component_role.upper() in self.ASSET_TYPES_WITH_ATTACHMENTS:
+                    if component_role and component_role.upper() in self.SUPPORTED_BINARY_ASSET_SUBTYPES:
                         attachment = self.parse_attachment(newscomponent)
                         if attachment:
                             attachments.append(attachment)
