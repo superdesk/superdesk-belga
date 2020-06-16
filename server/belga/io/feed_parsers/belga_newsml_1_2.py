@@ -562,8 +562,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         attachment = self.parse_attachment(newscomponent)
                         if attachment:
                             attachments.append(attachment)
-                            # remove element to avoid parsing it as news item
-                            news_component_1.remove(news_component_2)
+                # remove element to avoid parsing it as news item
+                news_component_1.remove(news_component_2)
         if attachments:
             return {
                 'attachments': attachments,
