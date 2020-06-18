@@ -191,9 +191,14 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             el.get('FormalName').upper() in self.SUPPORTED_MEDIA_ASSET_TYPES.keys()
             for el in news_component_1.findall('NewsComponent/Role')
         ]
+        # check if all roles are in `SUPPORTED_TEXT_ASSET_TYPES`
+        is_text_roles = [
+            el.get('FormalName').upper() in self.SUPPORTED_TEXT_ASSET_TYPES
+            for el in news_component_1.findall('NewsComponent/Role')
+        ]
         # not all 2nd level NewsComponents are media items,
         # save media items as attachments for text items
-        if any(is_media_roles) and not all(is_media_roles):
+        if not all(is_text_roles) and not all(is_media_roles):
             # parse attachment
             self._item_seed.update(self.parse_attachments(news_component_1))
 
