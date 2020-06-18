@@ -49,6 +49,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         'VIDEO': {
             'CLIP': 'original',
             'IMAGE': 'thumbnail',
+        },
+        'AUDIO': {
+            'SOUND': 'original',
         }
     }
     SUPPORTED_BINARY_ASSET_SUBTYPES = ('SOUND', 'CLIP', 'COMPONENT', 'IMAGE')
@@ -226,12 +229,6 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             except SkipItemException:
                 continue
 
-            # from pprint import pprint
-            # print('AFTER\n\n')
-            # pprint(item)
-            #
-            # exit()
-
             self._items.append(item)
 
     def parse_identification(self, indent_el):
@@ -280,7 +277,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             element = newsident_el.find('RevisionId')
             if element is not None and element.text:
                 # version
-                version = int(element.text)
+                try:
+                    version = int(element.text)
+                except ValueError:
+                    version = 1
                 if version == 0:
                     version = 1
                 identification['version'] = version
@@ -491,7 +491,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
                 if datacontent is not None and format is not None:
                     formalname = format.attrib.get('FormalName')
-                    if not formalname or formalname != 'Text':
+                    if not formalname or formalname not in ('Text', 'ascii'):
                         logger.warning(
                             'ContentItem/FormalName was not found or not supported: "{}". '
                             'Skiping an "{}" item.'.format(formalname, item['guid'])
