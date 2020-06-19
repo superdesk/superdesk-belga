@@ -29,6 +29,7 @@ from superdesk.io.feeding_services import FileFeedingService, FTPFeedingService
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from superdesk.media.media_operations import process_file_from_stream
 from superdesk.utc import local_to_utc
+from superdesk.metadata.item import ITEM_TYPE, CONTENT_TYPE
 
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser, SkipItemException
 
@@ -43,8 +44,17 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     label = 'Belga News ML 1.2 Parser'
 
-    SUPPORTED_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
-    ASSET_TYPES_WITH_ATTACHMENTS = ('IMAGE', 'SOUND', 'CLIP', 'COMPONENT')
+    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
+    SUPPORTED_MEDIA_ASSET_TYPES = {
+        'VIDEO': {
+            'CLIP': 'original',
+            'IMAGE': 'thumbnail',
+        },
+        'AUDIO': {
+            'SOUND': 'original',
+        }
+    }
+    SUPPORTED_BINARY_ASSET_SUBTYPES = ('SOUND', 'CLIP', 'COMPONENT', 'IMAGE')
 
     def __init__(self):
         super().__init__()
@@ -101,19 +111,20 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             self._item_seed = {}
             # parser the NewsEnvelope element
             self._item_seed.update(
-                self.parser_newsenvelop(xml.find('NewsEnvelope'))
+                self.parse_newsenvelop(xml.find('NewsEnvelope'))
             )
             # parser the NewsItem element
             for newsitem_el in xml.findall('NewsItem'):
                 try:
-                    self.parser_newsitem(newsitem_el)
+                    self.parse_newsitem(newsitem_el)
                 except SkipItemException:
                     continue
+
             return self._items
         except Exception as ex:
             raise ParserError.newsmlOneParserError(ex, self._provider)
 
-    def parser_newsenvelop(self, envelop_el):
+    def parse_newsenvelop(self, envelop_el):
         """
         Parser Identification element.
 
@@ -131,7 +142,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # not that much we can get here
         return {}
 
-    def parser_newsitem(self, newsitem_el):
+    def parse_newsitem(self, newsitem_el):
         """
         Parse Newsitem element.
 
@@ -155,61 +166,72 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
         # Identification
         self._item_seed.update(
-            self.parser_identification(newsitem_el.find('Identification'))
+            self.parse_identification(newsitem_el.find('Identification'))
         )
 
         # NewsManagement
         self._item_seed.update(
-            self.parser_newsmanagement(newsitem_el.find('NewsManagement'))
+            self.parse_newsmanagement(newsitem_el.find('NewsManagement'))
         )
 
         # NewsComponent
         news_component_1 = newsitem_el.find('NewsComponent')
-        if news_component_1 is not None:
-            # Genre from NewsComponent 1st level
-            for element in news_component_1.findall('DescriptiveMetadata/Genre'):
-                if element.get('FormalName'):
-                    # genre CV
-                    self._item_seed.setdefault('subject', []).append({
-                        "name": element.get('FormalName'),
-                        "qcode": element.get('FormalName'),
-                        "scheme": "genre"
-                    })
+        if news_component_1 is None:
+            return
 
+        # Genre from NewsComponent 1st level
+        for element in news_component_1.findall('DescriptiveMetadata/Genre'):
+            if element.get('FormalName'):
+                # genre CV
+                self._item_seed.setdefault('subject', []).append({
+                    "name": element.get('FormalName'),
+                    "qcode": element.get('FormalName'),
+                    "scheme": "genre"
+                })
+
+        # check if all roles are in `SUPPORTED_MEDIA_ASSET_TYPES`
+        is_media_roles = [
+            el.get('FormalName').upper() in self.SUPPORTED_MEDIA_ASSET_TYPES.keys()
+            for el in news_component_1.findall('NewsComponent/Role')
+        ]
+        # check if all roles are in `SUPPORTED_TEXT_ASSET_TYPES`
+        is_text_roles = [
+            el.get('FormalName').upper() in self.SUPPORTED_TEXT_ASSET_TYPES
+            for el in news_component_1.findall('NewsComponent/Role')
+        ]
+        # not all 2nd level NewsComponents are media items,
+        # save media items as attachments for text items
+        if not all(is_text_roles) and not all(is_media_roles):
             # parse attachment
-            self._item_seed.update(
-                self.parse_attachments(news_component_1)
-            )
+            self._item_seed.update(self.parse_attachments(news_component_1))
 
-            # NewsComponent 2nd level
-            # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
-            for news_component_2 in news_component_1.findall('NewsComponent'):
-                # guid
-                guid = news_component_2.attrib.get('Duid')
-                # most probably it's belga remote
-                if guid is None or guid == '0':
-                    guid = str(uuid4())
+        # NewsComponent 2nd level
+        # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
+        for news_component_2 in news_component_1.findall('NewsComponent'):
+            # guid
+            guid = news_component_2.attrib.get('Duid')
+            # most probably it's belga remote
+            if guid is None or guid == '0':
+                guid = str(uuid4())
 
-                # create an item
-                # deepcopy to avoid having a pointer to `subject`
-                item = deepcopy({**self._item_seed, 'guid': guid})
+            # deepcopy to avoid having a pointer to `subject`
+            item = deepcopy({**self._item_seed, 'guid': guid})
 
-                # NewsComponent
-                try:
-                    self.parser_newscomponent(item, news_component_2)
-                    # SDBELGA-328
-                    if item.get('abstract'):
-                        abstract = '<p>' + item['abstract'] + '</p>'
-                        item['body_html'] = abstract + item['body_html']
-                except SkipItemException:
-                    continue
+            try:
+                # all 2nd level NewsComponents are media items,
+                # ingest them as a standalone media items (not attachments)
+                if all(is_media_roles):
+                    self.parse_newscomponent_media(item, news_component_2)
+                # all 2nd level NewsComponents are text items,
+                # ingest them as a text items
+                else:
+                    self.parse_newscomponent_text(item, news_component_2)
+            except SkipItemException:
+                continue
 
-                # type
-                self.populate_fields(item)
+            self._items.append(item)
 
-                self._items.append(item)
-
-    def parser_identification(self, indent_el):
+    def parse_identification(self, indent_el):
         """
         Parse Identification in NewsItem element.
 
@@ -255,7 +277,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             element = newsident_el.find('RevisionId')
             if element is not None and element.text:
                 # version
-                version = int(element.text)
+                try:
+                    version = int(element.text)
+                except ValueError:
+                    version = 1
                 if version == 0:
                     version = 1
                 identification['version'] = version
@@ -267,7 +292,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return identification
 
-    def parser_newsmanagement(self, manage_el):
+    def parse_newsmanagement(self, manage_el):
         """
         Parse NewsManagement in NewsItem element.
 
@@ -307,9 +332,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return newsmanagement
 
-    def parser_newscomponent(self, item, newscomponent_el):
+    def parse_newscomponent_text(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
+        Supports only text items which roles are in `SUPPORTED_TEXT_ASSET_TYPES`
 
         Example:
 
@@ -343,7 +369,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         role = newscomponent_el.find('Role')
         if role is not None:
             role_name = role.attrib.get('FormalName')
-            if not (role_name and role_name.upper() in self.SUPPORTED_ASSET_TYPES):
+            if not (role_name and role_name.upper() in self.SUPPORTED_TEXT_ASSET_TYPES):
                 logger.warning('NewsComponent/Role/FormalName is not supported: "{}". '
                                'Skiping an "{}" item.'.format(role_name, item['guid']))
                 raise SkipItemException
@@ -358,15 +384,15 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         # NewsLines
         newslines_el = newscomponent_el.find('NewsLines')
-        self.parser_newslines(item, newslines_el)
+        self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
         admin_el = newscomponent_el.find('AdministrativeMetadata')
-        self.parser_administrativemetadata(item, admin_el)
+        self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
         descript_el = newscomponent_el.find('DescriptiveMetadata')
-        self.parser_descriptivemetadata(item, descript_el)
+        self.parse_descriptivemetadata(item, descript_el)
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
@@ -396,9 +422,154 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     ))
                     raise SkipItemException
 
+        # SDBELGA-328
+        if item.get('abstract'):
+            abstract = '<p>' + item['abstract'] + '</p>'
+            item['body_html'] = abstract + item['body_html']
+
+        # type
+        item[ITEM_TYPE] = CONTENT_TYPE.TEXT
+
         return item
 
-    def parser_newslines(self, item, newslines_el):
+    def parse_newscomponent_media(self, item, newscomponent_el):
+        """
+        Parse NewsComponent in NewsItem element.
+        Supports only text items which roles are in `SUPPORTED_MEDIA_ASSET_TYPES`
+
+        Example:
+
+        <NewsComponent>
+          <NewsLines>
+              <DateLine xml:lang="fr">Paris, 9 déc 2018 (AFP) -</DateLine>
+            <HeadLine xml:lang="fr">Un an après, les fans de Johnny lui rendent hommage à Paris</HeadLine>
+            <NewsLine>
+              <NewsLineType FormalName="ProductLine"/>
+              <NewsLineText xml:lang="fr">(Photo+Live Video+Video)</NewsLineText>
+            </NewsLine>
+          </NewsLines>
+          <AdministrativeMetadata>
+            <Provider>
+              <Party FormalName="AFP"/>
+            </Provider>
+          </AdministrativeMetadata>
+          <DescriptiveMetadata>
+            ....
+          </DescriptiveMetadata>
+          <ContentItem>
+            ....
+          </ContentItem>
+        </NewsComponent>
+
+        :param item:
+        :param component_el:
+        :return:
+        """
+
+        # language
+        item['language'] = newscomponent_el.attrib.get(XML_LANG)
+
+        # NewsLines
+        newslines_el = newscomponent_el.find('NewsLines')
+        self.parse_newslines(item, newslines_el)
+
+        # AdministrativeMetadata
+        admin_el = newscomponent_el.find('AdministrativeMetadata')
+        self.parse_administrativemetadata(item, admin_el)
+
+        # DescriptiveMetadata
+        descript_el = newscomponent_el.find('DescriptiveMetadata')
+        self.parse_descriptivemetadata(item, descript_el)
+
+        # description_text, headline
+        for formalname, item_key in (('Body', 'description_text'), ('Title', 'headline')):
+            role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format(formalname))
+            if role is not None:
+                newscomponent = role.getparent()
+                datacontent = newscomponent.find('ContentItem/DataContent')
+                format = newscomponent.find('ContentItem/Format')
+
+                if datacontent is not None and format is not None:
+                    formalname = format.attrib.get('FormalName')
+                    if not formalname or formalname not in ('Text', 'ascii'):
+                        logger.warning(
+                            'ContentItem/FormalName was not found or not supported: "{}". '
+                            'Skiping an "{}" item.'.format(formalname, item['guid'])
+                        )
+                        raise SkipItemException
+                    if datacontent.text:
+                        item[item_key] = datacontent.text.strip()
+
+                        if item_key == 'description_text':
+                            item[item_key] = self._plain_to_html(item[item_key])
+                else:
+                    logger.warning('Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
+                        item['guid']
+                    ))
+                    raise SkipItemException
+
+        # type
+        role = newscomponent_el.find('Role')
+        if role is not None:
+            role_name = role.attrib.get('FormalName')
+            if not role_name:
+                logger.warning('NewsComponent/Role was not found. Skiping an "{}" item.'.format(
+                    item['guid']
+                ))
+                raise SkipItemException
+            role_name = role_name.upper()
+            item[ITEM_TYPE] = getattr(CONTENT_TYPE, role_name)
+
+        # read files and save them into the storage
+        for newscomponent in newscomponent_el.findall('NewsComponent'):
+            component_role = self._get_role(newscomponent)
+            if component_role and component_role.upper() in self.SUPPORTED_MEDIA_ASSET_TYPES[role_name].keys():
+                content_item = newscomponent.find('ContentItem')
+                if content_item is None:
+                    continue
+
+                filename = content_item.attrib.get('Href')
+                if filename is None:
+                    continue
+
+                format_name = ''
+                format_el = content_item.find('Format')
+                if format_el is not None:
+                    format_name = format_el.attrib.get('FormalName')
+
+                content = self._get_file(filename)
+                if not content:
+                    continue
+
+                _, content_type, metadata = process_file_from_stream(content, 'application/' + format_name)
+                content.seek(0)
+                media_id = app.media.put(
+                    content,
+                    filename=filename,
+                    content_type=content_type,
+                    metadata=metadata
+                )
+
+                rendition_key = self.SUPPORTED_MEDIA_ASSET_TYPES[role_name][component_role.upper()]
+                item.setdefault('renditions', {})[rendition_key] = {
+                    'media': media_id,
+                    'mimetype': content_type,
+                    'href': app.media.url_for_media(media_id, content_type),
+                }
+
+        # this attibutes are redundand for media item
+        attrs_to_be_removed = ('date_id', 'item_id', 'provider_id', 'public_identifier')
+        for attr in attrs_to_be_removed:
+            if attr in item:
+                del item[attr]
+
+        # clean subject
+        subject_to_be_removed = (
+            'genre',
+        )
+        item['subject'] = [i for i in item.get('subject', []) if i['scheme'] not in subject_to_be_removed]
+
+    def parse_newslines(self, item, newslines_el):
         """Parse NewsLines in 2nd level NewsComponent element."""
         if newslines_el is None:
             return
@@ -438,7 +609,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             if element is not None and element.text:
                 item.setdefault('keywords', []).append(element.text)
 
-    def parser_administrativemetadata(self, item, admin_el):
+    def parse_administrativemetadata(self, item, admin_el):
         """Parse AdministrativeMetadata in 2nd level NewsComponent element."""
         if admin_el is None:
             return
@@ -514,7 +685,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get('Value'):
             item['slugline'] = element.get('Value')
 
-    def parser_descriptivemetadata(self, item, descript_el):
+    def parse_descriptivemetadata(self, item, descript_el):
         """
         Parse DescriptiveMetadata in NewsComponent element.
 
@@ -555,10 +726,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         attachments = []
         for news_component_2 in news_component_1.findall('NewsComponent'):
             role_name = self._get_role(news_component_2)
-            if role_name and role_name.upper() not in self.SUPPORTED_ASSET_TYPES:
+            if role_name and role_name.upper() not in self.SUPPORTED_TEXT_ASSET_TYPES:
                 for newscomponent in news_component_2.findall('NewsComponent'):
                     component_role = self._get_role(newscomponent)
-                    if component_role and component_role.upper() in self.ASSET_TYPES_WITH_ATTACHMENTS:
+                    if component_role and component_role.upper() in self.SUPPORTED_BINARY_ASSET_SUBTYPES:
                         attachment = self.parse_attachment(newscomponent)
                         if attachment:
                             attachments.append(attachment)

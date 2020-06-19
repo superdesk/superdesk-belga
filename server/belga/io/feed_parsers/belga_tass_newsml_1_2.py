@@ -28,14 +28,14 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # TODO clarify version
         return xml.tag == 'NewsML' and xml.get('Version', '1.2') == '1.2'
 
-    def parser_newsmanagement(self, item, manage_el):
-        super().parser_newsmanagement(item, manage_el)
+    def parse_newsmanagement(self, item, manage_el):
+        super().parse_newsmanagement(item, manage_el)
         tz = 'Europe/Moscow'
         item['firstcreated'] = local_to_utc(tz, item['firstcreated'])
         item['versioncreated'] = local_to_utc(tz, item['firstcreated'])
 
-    def parser_newsitem(self, item, newsitem_el):
-        super().parser_newsitem(item, newsitem_el)
+    def parse_newsitem(self, item, newsitem_el):
+        super().parse_newsitem(item, newsitem_el)
         # mapping news services-products from keywords
         if item.get('keywords'):
             for keyword in item['keywords']:
@@ -59,7 +59,7 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         credit = {"name": 'TASS', "qcode": 'TASS', "scheme": "sources"}
         item['subject'].append(credit)
 
-    def parser_newscomponent(self, item, newscomponent_el):
+    def parse_newscomponent(self, item, newscomponent_el):
         """
         Example:
         <NewsComponent Duid="03AE4325838900396A95" Essential="no" EquivalentsList="no">
@@ -74,7 +74,7 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param newscomponent_el:
         :return:
         """
-        super().parser_newscomponent(item, newscomponent_el.find('NewsComponent/NewsComponent'))
+        super().parse_newscomponent(item, newscomponent_el.find('NewsComponent/NewsComponent'))
         if newscomponent_el.attrib.get('Duid') is not None:
             item['guid'] = newscomponent_el.attrib.get('Duid', '')
         # Essential is CV
