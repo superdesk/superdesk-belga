@@ -766,13 +766,23 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_3_level: NewsComponent of 3st level
         :param dict rendition: rendition info
         """
+
+        FORMAT_MAP = {
+            'Mp4': 'Mpeg4',
+            'Jpg': 'Jpeg',
+        }
+
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
             {'Href': r'{}'.format(rendition.get('belga-urn', rendition['href']))}
         )
 
         filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
-        SubElement(contentitem, 'Format', {'FormalName': filename.rsplit('.', 1)[-1].capitalize()})
+
+        format_name = filename.rsplit('.', 1)[-1].capitalize()
+        format_name = FORMAT_MAP.get(format_name, format_name)
+
+        SubElement(contentitem, 'Format', {'FormalName': format_name})
         if rendition.get('mimetype'):
             SubElement(contentitem, 'MimeType', {'FormalName': rendition['mimetype']})
         characteristics = SubElement(contentitem, 'Characteristics')
