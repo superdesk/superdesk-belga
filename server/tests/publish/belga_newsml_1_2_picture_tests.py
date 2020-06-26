@@ -372,7 +372,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Jpg'
+            'Jpeg'
         )
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/MimeType'
