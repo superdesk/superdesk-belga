@@ -26,8 +26,8 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     }
 
     # efe related logic goes here
-    def parser_contentitem(self, item, content_el):
-        super().parser_contentitem(item, content_el)
+    def parse_contentitem(self, item, content_el):
+        super().parse_contentitem(item, content_el)
         categoria = content_el.find('DataContent/nitf/head/meta[@name="categoria"]')
         if categoria is not None:
             content = categoria.attrib.get('content')

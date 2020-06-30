@@ -28,8 +28,8 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         'ECO': 'NEWS/ECONOMY'
     }
 
-    def parser_newsitem(self, item, newsitem_el):
-        super().parser_newsitem(item, newsitem_el)
+    def parse_newsitem(self, item, newsitem_el):
+        super().parse_newsitem(item, newsitem_el)
         # mapping services-products from category, and have only one product
         for category in item.get('anpa_category', []):
             qcode = self.MAPPING_CATEGORY.get(category.get('qcode'), 'NEWS/GENERAL')

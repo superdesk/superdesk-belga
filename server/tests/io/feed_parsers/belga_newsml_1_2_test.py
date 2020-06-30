@@ -181,3 +181,113 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(data["description"], "belga remote attachment")
         self.assertEqual(data["mimetype"], "image/jpeg")
         self.assertEqual(data["length"], 4680)
+
+
+class BelgaNewsMLOneVideoIngestTestCase(TestCase):
+    filename = 'belga_newsml_1_2_video.xml'
+
+    def setUp(self):
+        dirname = os.path.dirname(os.path.realpath(__file__))
+        fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
+        provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
+        parser = BelgaNewsMLOneFeedParser()
+
+        def get_file_side_effect(value):
+            media_path = os.path.normpath(os.path.join(dirname, '../fixtures', value))
+            with open(media_path, 'rb') as f:
+                return BytesIO(f.read())
+
+        parser._get_file = MagicMock(side_effect=get_file_side_effect)
+
+        with open(fixture, 'rb') as f:
+            self.xml_root = etree.parse(f).getroot()
+            self.item = parser.parse(self.xml_root, provider)
+
+    def test_video_ingest(self):
+        item = self.item[0]
+
+        self.assertEqual(
+            item['administrative'],
+            {
+                'foreign_id': 'INT126',
+                'validation_date': '20200609T152302',
+                'validator': 'mwe'
+            }
+        )
+        self.assertEqual(
+            item['authors'],
+            [{'name': 'MWE', 'role': 'AUTHOR'}]
+        )
+        self.assertEqual(item['pubstatus'], 'usable')
+        self.assertEqual(item['language'], 'fr')
+        self.assertEqual(item['byline'], 'BELGA')
+        self.assertEqual(item['copyrightholder'], 'Belga')
+        self.assertEqual(item['version'], 12)
+        self.assertEqual(
+            item['description_text'],
+            '<p>TRADE UNIONS FGTB ABVV CHAIRMAN DEBATE</p><p> '
+            '00:00:00:00 - 00:00:32:04 ABVV/FGTB socialist union '
+            'general secretary Miranda Ulens talks in French during a '
+            'press conference after a meeting of the top of the '
+            'FGTB-ABVV socialist trade union, regarding the fate of '
+            'their chairman Vertenueil, Tuesday 09 June 2020 at the '
+            'headquarters in Brussels. Yesterday the party members '
+            'voted no confidence in Vertenueil, after he had a '
+            'meeting with president of MR liberals Bouchez. BELGA '
+            'VIDEO MAARTEN WEYNANTS.</p>'
+        )
+        self.assertEqual(
+            item['extra'],
+            {'city': 'BRUXELLES', 'country': 'Belgique'}
+        )
+        self.assertEqual(
+            item['headline'],
+            '"Nous avons la confiance de l\'ensemble des centrales et '
+            'régionales" (Miranda Ulens)'
+        )
+        self.assertEqual(item['line_type'], '1')
+        self.assertEqual(item['priority'], 3)
+        self.assertEqual(item['type'], 'video')
+        self.assertEqual(item['urgency'], 3)
+        self.assertEqual(item['type'], 'video')
+        self.assertEqual(
+            item['subject'],
+            [{'name': 'INT/ECO',
+              'parent': 'INT',
+              'qcode': 'INT/ECO',
+              'scheme': 'services-products'}]
+        )
+        self.assertIn('href', item['renditions']['original'])
+        self.assertIn('media', item['renditions']['original'])
+        self.assertEqual(item['renditions']['original']['mimetype'], 'video/mp4')
+        self.assertIn('href', item['renditions']['thumbnail'])
+        self.assertIn('media', item['renditions']['thumbnail'])
+        self.assertEqual(item['renditions']['thumbnail']['mimetype'], 'image/jpeg')
+
+
+class BelgaNewsMLOneAudioIngestTestCase(TestCase):
+    filename = 'belga_newsml_1_2_audio.xml'
+
+    def setUp(self):
+        dirname = os.path.dirname(os.path.realpath(__file__))
+        fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
+        provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
+        parser = BelgaNewsMLOneFeedParser()
+
+        def get_file_side_effect(value):
+            media_path = os.path.normpath(os.path.join(dirname, '../fixtures', value))
+            with open(media_path, 'rb') as f:
+                return BytesIO(f.read())
+
+        parser._get_file = MagicMock(side_effect=get_file_side_effect)
+
+        with open(fixture, 'rb') as f:
+            self.xml_root = etree.parse(f).getroot()
+            self.item = parser.parse(self.xml_root, provider)
+
+    def test_audio_ingest(self):
+        item = self.item[0]
+
+        self.assertIn('href', item['renditions']['original'])
+        self.assertIn('media', item['renditions']['original'])
+        self.assertEqual(item['renditions']['original']['mimetype'], 'audio/mpeg')
