@@ -133,8 +133,14 @@
             "type": "list",
             "mandatory_in_list": {
                 "scheme": {
-                    "distribution": "distribution",
-                    "services-products": "services-products"
+                    "distribution": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "services-products": {
+                        "type": "string",
+                        "required": true
+                    }
                 }
             },
             "schema": {
