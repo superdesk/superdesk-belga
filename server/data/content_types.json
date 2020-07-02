@@ -3,7 +3,7 @@
         "_id": "alert",
         "label": "ALERT",
         "description": "Alert",
-        "init_version": 2,
+        "init_version": 3,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -133,18 +133,54 @@
             "subject": {
                 "mandatory_in_list": {
                     "scheme": {
-                        "services-products": "services-products",
-                        "countries": null,
-                        "country": null,
-                        "author_roles": null,
-                        "sources": null,
-                        "languages": null,
-                        "genre": null,
-                        "label": null,
-                        "distribution": null,
-                        "belga-keywords": null,
-                        "media-source": null,
-                        "subject": null
+                        "services-products": {
+                            "required": true,
+                            "readonly": false
+                        },
+                        "countries": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "country": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "author_roles": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "sources": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "languages": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "genre": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "label": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "distribution": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "belga-keywords": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "media-source": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "subject": {
+                            "required": false,
+                            "readonly": false
+                        }
                     }
                 },
                 "schema": {
@@ -270,7 +306,7 @@
         "_id": "brief",
         "label": "BRIEF",
         "description": "Brief",
-        "init_version": 2,
+        "init_version": 3,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -492,18 +528,54 @@
             "subject": {
                 "mandatory_in_list": {
                     "scheme": {
-                        "services-products": null,
-                        "countries": null,
-                        "country": null,
-                        "author_roles": null,
-                        "sources": null,
-                        "languages": null,
-                        "genre": null,
-                        "label": null,
-                        "distribution": null,
-                        "belga-keywords": null,
-                        "media-source": null,
-                        "subject": null
+                        "services-products": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "countries": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "country": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "author_roles": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "sources": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "languages": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "genre": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "label": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "distribution": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "belga-keywords": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "media-source": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "subject": {
+                            "required": false,
+                            "readonly": false
+                        }
                     }
                 },
                 "schema": {
@@ -590,7 +662,7 @@
         "_id": "tip",
         "label": "TIP",
         "description": "Tip",
-        "init_version": 2,
+        "init_version": 3,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -767,18 +839,54 @@
             "subject": {
                 "mandatory_in_list": {
                     "scheme": {
-                        "services-products": null,
-                        "countries": null,
-                        "country": null,
-                        "author_roles": null,
-                        "sources": null,
-                        "languages": null,
-                        "genre": null,
-                        "label": null,
-                        "distribution": null,
-                        "belga-keywords": null,
-                        "media-source": null,
-                        "subject": null
+                        "services-products": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "countries": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "country": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "author_roles": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "sources": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "languages": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "genre": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "label": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "distribution": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "belga-keywords": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "media-source": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "subject": {
+                            "required": false,
+                            "readonly": false
+                        }
                     }
                 },
                 "schema": {
@@ -849,7 +957,7 @@
         "_id": "text",
         "label": "TEXT",
         "description": "Text",
-        "init_version": 2,
+        "init_version": 3,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -1082,18 +1190,54 @@
             "subject": {
                 "mandatory_in_list": {
                     "scheme": {
-                        "services-products": "services-products",
-                        "countries": null,
-                        "country": null,
-                        "author_roles": null,
-                        "sources": null,
-                        "languages": null,
-                        "genre": null,
-                        "label": null,
-                        "distribution": null,
-                        "belga-keywords": null,
-                        "media-source": null,
-                        "subject": null
+                        "services-products": {
+                            "required": true,
+                            "readonly": false
+                        },
+                        "countries": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "country": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "author_roles": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "sources": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "languages": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "genre": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "label": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "distribution": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "belga-keywords": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "media-source": {
+                            "required": false,
+                            "readonly": false
+                        },
+                        "subject": {
+                            "required": false,
+                            "readonly": false
+                        }
                     }
                 },
                 "schema": {
