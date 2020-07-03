@@ -1,6 +1,7 @@
 import hmac
 import uuid
 import arrow
+import json
 import hashlib
 import requests
 import superdesk
@@ -234,6 +235,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     def __init__(self, provider):
         super().__init__(provider)
         self.session = requests.Session()
+        with open('data/content_types.json') as f:
+            self.content_types = {c['label'].lower(): c['_id'] for c in json.load(f)}
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip('/'))
@@ -315,6 +318,12 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             return get_datetime(date)
         return get_datetime(date / 1000)
 
+    def _get_profile(self, profile):
+        label = profile.lower()
+        if label == 'short':
+            return self.content_types.get('text')
+        return self.content_types.get(label)
+
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
         return {
@@ -324,6 +333,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             '_id': guid,
             'state': 'published',
             'guid': guid,
+            'profile': self._get_profile(data.get('assetType', '')),
             'headline': get_text(data['headLine']),
             'slugline': get_text(data['topic']),
             'name': get_text(data['name']),

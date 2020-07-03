@@ -76,6 +76,7 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['mimetype'], 'application/superdesk.item.text')
         self.assertEqual(item['_id'], guid)
         self.assertEqual(item['state'], 'published')
+        self.assertEqual(item['profile'], 'text')
         self.assertEqual(item['guid'], guid)
         self.assertEqual(item['extra']['bcoverage'], guid)
         self.assertEqual(item['headline'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
