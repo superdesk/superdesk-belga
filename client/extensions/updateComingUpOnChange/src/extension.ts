@@ -3,30 +3,23 @@ import {
     IExtension,
     IExtensionActivationResult,
     IArticle,
-} from "superdesk-api";
+} from 'superdesk-api';
 
 const extension: IExtension = {
-    id: "updateComingUpOnChange",
+    id: 'updateComingUpOnChange',
     activate: (superdesk: ISuperdesk) => {
         const result: IExtensionActivationResult = {
             contributions: {
                 authoring: {
                     onUpdate: (current: IArticle, next: IArticle) => {
                         if (
-                            next.extra?.DueBy === null ||
+                            // Only trigger save on toggle
+                            (current.extra?.DueBy === null || next.extra?.DueBy === null) &&
                             current.extra?.DueBy !== next.extra?.DueBy
                         ) {
-                            return superdesk.dataApi
-                                .patch("archive", current, { ...current, extra: next.extra })
-                                .then((response) => {
-                                    return Promise.resolve({
-                                        ...next,
-                                        _etag: response._etag,
-                                    });
-                                });
-                        } else {
-                            return Promise.resolve(next);
+                            superdesk.ui.article.save();
                         }
+                        return Promise.resolve(next);
                     },
                 },
             },
