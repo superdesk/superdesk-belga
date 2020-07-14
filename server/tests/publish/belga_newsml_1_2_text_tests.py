@@ -1121,7 +1121,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'adm', 'Topic': 'AUTHOR'}
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),
@@ -1349,7 +1349,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[0].attrib),
-            {'FormalName': 'adm', 'Topic': 'AUTHOR'}
+            {'FormalName': 'John Smith', 'Topic': 'AUTHOR'}
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Creator/Party')[1].attrib),

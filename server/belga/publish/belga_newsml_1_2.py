@@ -1040,42 +1040,32 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
     def _get_author_info(self, author):
-        author_info = {
-            'initials': '',
-            'role': ''
-        }
+        author_info = {'initials': '', 'role': ''}
 
-        # get author_id
-        if type(author) is str:
+        if type(author) is dict:
+            author_info['initials'] = author.get(
+                'sub_label',
+                # most probably that author info was ingested
+                author.get('name', author.get('uri', ''))
+            )
+            author_info['role'] = author.get('role', '')
+        # in case of version_creator
+        elif type(author) is str:
             author_id = author
-        else:
+            # retrieve sd author info by id
             try:
-                author_id = author['_id'][0]
-            except (KeyError, IndexError):
-                author_id = None
-
-        # most probably that author info was ingested
-        if not author_id:
-            author_info = {
-                'initials': author.get('name', author.get('uri', '')),
-                'role': author.get('role', ''),
-            }
-            return author_info
-
-        # retrieve sd author info by id
-        try:
-            user = next(self.users_service.find({'_id': author_id}))
-        except StopIteration:
-            logger.warning("unknown user: {user_id}".format(user_id=author_id))
-        else:
-            if user.get('role'):
-                try:
-                    role = next(self.roles_service.find({'_id': user['role']}))
-                except StopIteration:
-                    logger.warning("unknown role: {role_id}".format(role_id=user['role']))
-                else:
-                    author_info['role'] = role.get('author_role', '')
-            author_info['initials'] = user.get('username')
+                user = next(self.users_service.find({'_id': author_id}))
+            except StopIteration:
+                logger.warning("unknown user: {user_id}".format(user_id=author_id))
+            else:
+                if user.get('role'):
+                    try:
+                        role = next(self.roles_service.find({'_id': user['role']}))
+                    except StopIteration:
+                        logger.warning("unknown role: {role_id}".format(role_id=user['role']))
+                    else:
+                        author_info['role'] = role.get('author_role', '')
+                author_info['initials'] = user.get('username')
 
         return author_info
 
