@@ -11,7 +11,7 @@ const extension: IExtension = {
         const result: IExtensionActivationResult = {
             contributions: {
                 authoring: {
-                    onUpdate: (current: IArticle, next: IArticle) => {
+                    onUpdateBefore: (current: IArticle, next: IArticle) => {
                         return Promise.all([
                             superdesk.entities.contentProfile.get(current.profile),
                             superdesk.entities.contentProfile.get(next.profile),
