@@ -70,6 +70,12 @@ class Belga360ArchiveTestCase(TestCase):
         self.provider.session.get.assert_called_with(url, params=params)
 
     def test_format_list_item(self):
+        self.app.data.insert(
+            'content_types',
+            [{'_id': 'text', 'label': 'text'}]
+        )
+        # reload content profiles
+        self.provider = Belga360ArchiveSearchProvider(dict())
         item = self.provider.format_list_item(get_belga360_item())
         guid = 'urn:belga.be:360archive:39670442'
         self.assertEqual(item['type'], 'text')

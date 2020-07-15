@@ -235,8 +235,10 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     def __init__(self, provider):
         super().__init__(provider)
         self.session = requests.Session()
-        with open('data/content_types.json') as f:
-            self.content_types = {c['label'].lower(): c['_id'] for c in json.load(f)}
+        self.content_types = {
+            c['label'].lower(): c['_id']
+            for c in superdesk.get_resource_service('content_types').find({})
+        }
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip('/'))
