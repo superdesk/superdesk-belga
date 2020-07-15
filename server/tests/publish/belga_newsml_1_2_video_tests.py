@@ -409,7 +409,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Mp4'
+            'Mpeg4'
         )
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/MimeType'
@@ -431,7 +431,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Jpg'
+            'Jpeg'
         )
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/MimeType'
@@ -453,7 +453,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Jpg'
+            'Jpeg'
         )
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem/MimeType'

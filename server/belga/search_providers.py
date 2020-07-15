@@ -303,7 +303,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             return ''
 
     def _get_body_html(self, item):
-        return self._get_newscomponent(item, 'body')
+        # SDBELGA-393
+        body = '&nbsp;&nbsp;&nbsp;&nbsp;' + get_text(self._get_newscomponent(item, 'body'))
+        return body.replace('\n', '<br/>&nbsp;&nbsp;&nbsp;&nbsp;')
 
     def _get_abstract(self, item):
         return self._get_newscomponent(item, 'lead')
@@ -332,7 +334,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'source': get_text(data['source']),
             'language': get_text(data['language']),
             'abstract': get_text(self._get_abstract(data)),
-            'body_html': get_text(self._get_body_html(data)),
+            'body_html': self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
             },

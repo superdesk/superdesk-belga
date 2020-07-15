@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<NewsML>
+    <Catalog Href="http://www.belga.be/dtd/BelgaCatalog.xml"/>
+    <NewsEnvelope>
+        <DateAndTime>20200609T152302</DateAndTime>
+        <NewsService FormalName=""/>
+        <NewsProduct FormalName=""/>
+    </NewsEnvelope>
+    <NewsItem>
+        <Identification>
+            <NewsIdentifier>
+                <ProviderId>belga.be</ProviderId>
+                <DateId>20200609T152312</DateId>
+                <NewsItemId>107255546</NewsItemId>
+                <RevisionId PreviousRevision="0" Update="N">12</RevisionId>
+                <PublicIdentifier>urn:newsml:www.belga.be</PublicIdentifier>
+            </NewsIdentifier>
+        </Identification>
+        <NewsManagement>
+            <NewsItemType FormalName="NEWS"/>
+            <FirstCreated>20200609T120204</FirstCreated>
+            <ThisRevisionCreated>20200609T152312</ThisRevisionCreated>
+            <Status FormalName="USABLE"/>
+        </NewsManagement>
+        <NewsComponent Duid="107255546" xml:lang="fr">
+            <NewsLines>
+                <HeadLine>Le bureau fédéral de la FGTB acte l'éviction du président Robert Vertenueil</HeadLine>
+            </NewsLines>
+            <AdministrativeMetadata/>
+            <DescriptiveMetadata>
+                <Genre FormalName="CURRENT"/>
+            </DescriptiveMetadata>
+            <NewsComponent Duid="107260386" xml:lang="fr">
+                <Role FormalName="Video"/>
+                <NewsLines>
+                    <DateLine/>
+                    <CreditLine>BELGA</CreditLine>
+                    <HeadLine>"Nous avons la confiance de l'ensemble des centrales et régionales" (Miranda Ulens)</HeadLine>
+                    <CopyrightLine>Belga</CopyrightLine>
+                    <NewsLine>
+                        <NewsLineType FormalName="1"/>
+                        <NewsLineText/>
+                    </NewsLine>
+                    <KeywordLine>SYNDICATS</KeywordLine>
+                    <KeywordLine>BELGAINSERT</KeywordLine>
+                    <KeywordLine>RUSHES</KeywordLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName=""/>
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="MWE" Topic="AUTHOR"/>
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA"/>
+                    </Source>
+                    <Contributor>
+                        <Party FormalName=""/>
+                    </Contributor>
+                    <Property FormalName="Validator" Value="mwe"/>
+                    <Property FormalName="ValidationDate" Value="20200609T152302"/>
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="INT"/>
+                        <Property FormalName="NewsProduct" Value="ECO"/>
+                    </Property>
+                    <Property FormalName="NewsObjectId" Value="107260386"/>
+                    <Property FormalName="ForeignId" Value="INT126"/>
+                    <Property FormalName="Priority" Value="3"/>
+                </AdministrativeMetadata>
+                <DescriptiveMetadata DateAndTime="20200609T152049">
+                    <SubjectCode/>
+                    <Location>
+                        <Property FormalName="City" Value="BRUXELLES"/>
+                        <Property FormalName="Country" Value="Belgique"/>
+                        <Property FormalName="CountryArea"/>
+                        <Property FormalName="SubLocation"/>
+                        <Property FormalName="WorldRegion"/>
+                    </Location>
+                </DescriptiveMetadata>
+                <NewsComponent Duid="107260387" xml:lang="fr">
+                    <Role FormalName="Title"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>83</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>"Nous avons la confiance de l'ensemble des centrales et régionales" (Miranda Ulens)</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="107260388" xml:lang="fr">
+                    <Role FormalName="Body"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text"/>
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text"/>
+                        <Characteristics>
+                            <SizeInBytes>489</SizeInBytes>
+                            <Property FormalName="maxCharCount" Value="0"/>
+                        </Characteristics>
+                        <DataContent>TRADE UNIONS FGTB ABVV CHAIRMAN DEBATE
+                            00:00:00:00 - 00:00:32:04 ABVV/FGTB socialist union general secretary Miranda Ulens talks in French during a press conference after a meeting of the top of the FGTB-ABVV socialist trade union, regarding the fate of their chairman Vertenueil, Tuesday 09 June 2020 at the headquarters in Brussels. Yesterday the party members voted no confidence in Vertenueil, after he had a meeting with president of MR liberals Bouchez. BELGA VIDEO MAARTEN WEYNANTS.
+                        </DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="107260389" xml:lang="fr">
+                    <Role FormalName="Clip"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Video"/>
+                    </DescriptiveMetadata>
+                    <ContentItem Href="dog.mp4">
+                        <Format FormalName="Mpeg4"/>
+                        <Characteristics>
+                            <SizeInBytes>42012947</SizeInBytes>
+                            <Property FormalName="Duration" Value="0"/>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="107260390" xml:lang="fr">
+                    <Role FormalName="Image"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Image"/>
+                    </DescriptiveMetadata>
+                    <ContentItem Href="belga_remote_newsml_1_2.jpeg">
+                        <Format FormalName="Jpeg"/>
+                        <Characteristics>
+                            <SizeInBytes>1198143</SizeInBytes>
+                            <Property FormalName="Width" Value="1920"/>
+                            <Property FormalName="Height" Value="1080"/>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="107260397" Euid="107260390" xml:lang="fr">
+                    <Role FormalName="Thumbnail"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Image"/>
+                    </DescriptiveMetadata>
+                    <ContentItem Href="pxy_107260397_106710353.jpeg">
+                        <Format FormalName="Jpeg"/>
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                            <Property FormalName="Width" Value="128"/>
+                            <Property FormalName="Height" Value="72"/>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="107260396" Euid="107260390" xml:lang="fr">
+                    <Role FormalName="Preview"/>
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Image"/>
+                    </DescriptiveMetadata>
+                    <ContentItem Href="pxy_107260396_106710352.jpeg">
+                        <Format FormalName="Jpeg"/>
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                            <Property FormalName="Width" Value="512"/>
+                            <Property FormalName="Height" Value="288"/>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+        </NewsComponent>
+    </NewsItem>
+</NewsML>

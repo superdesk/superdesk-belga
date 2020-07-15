@@ -754,7 +754,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
                 rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
             # the rest are internaly uploaded media: pictures, video and audio
-            else:
+            elif 'media' in rendition:
                 rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(
                     app.config['OUTPUT_BELGA_URN_SUFFIX'],
                     rendition['media']
@@ -766,13 +766,23 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_3_level: NewsComponent of 3st level
         :param dict rendition: rendition info
         """
+
+        FORMAT_MAP = {
+            'Mp4': 'Mpeg4',
+            'Jpg': 'Jpeg',
+        }
+
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
             {'Href': r'{}'.format(rendition.get('belga-urn', rendition['href']))}
         )
 
         filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
-        SubElement(contentitem, 'Format', {'FormalName': filename.rsplit('.', 1)[-1].capitalize()})
+
+        format_name = filename.rsplit('.', 1)[-1].capitalize()
+        format_name = FORMAT_MAP.get(format_name, format_name)
+
+        SubElement(contentitem, 'Format', {'FormalName': format_name})
         if rendition.get('mimetype'):
             SubElement(contentitem, 'MimeType', {'FormalName': rendition['mimetype']})
         characteristics = SubElement(contentitem, 'Characteristics')

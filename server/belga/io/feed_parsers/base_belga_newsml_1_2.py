@@ -65,14 +65,14 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             self.root = xml
 
             # parser the NewsEnvelope element
-            item_envelop = self.parser_newsenvelop(xml.find('NewsEnvelope'))
+            item_envelop = self.parse_newsenvelop(xml.find('NewsEnvelope'))
 
             # parser the NewsItem element
             l_newsitem_el = xml.findall('NewsItem')
             for newsitem_el in l_newsitem_el:
                 try:
                     item = item_envelop.copy()
-                    self.parser_newsitem(item, newsitem_el)
+                    self.parse_newsitem(item, newsitem_el)
                     # add product is NEWS/GENERAL, if product is empty
                     if not [it for it in item.get('subject', []) if it.get('scheme') == 'services-products']:
                         item.setdefault('subject', []).append({
@@ -101,7 +101,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         except Exception as ex:
             raise ParserError.newsmlOneParserError(ex, provider)
 
-    def parser_newsenvelop(self, envelop_el):
+    def parse_newsenvelop(self, envelop_el):
         """
         Function parser Identification element.
 
@@ -150,7 +150,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
         return item
 
-    def parser_newsitem(self, item, newsitem_el):
+    def parse_newsitem(self, item, newsitem_el):
         """
         Function parser Newsitem element.
 
@@ -193,17 +193,17 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 item['comment']['name'] = element.get('FormalName', '')
 
         # Parser Identification element
-        self.parser_identification(item, newsitem_el.find('Identification'))
+        self.parse_identification(item, newsitem_el.find('Identification'))
 
         # Parser NewsManagement element
-        self.parser_newsmanagement(item, newsitem_el.find('NewsManagement'))
+        self.parse_newsmanagement(item, newsitem_el.find('NewsManagement'))
 
         # Parser NewsComponent element
         component_parent = newsitem_el.find('NewsComponent')
         if component_parent is not None:
-            self.parser_newscomponent(item, component_parent)
+            self.parse_newscomponent(item, component_parent)
 
-    def parser_identification(self, item, indent_el):
+    def parse_identification(self, item, indent_el):
         """
         Function parse Identification in NewsItem element.
 
@@ -262,7 +262,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if element is not None:
             item['date_label'] = element.text
 
-    def parser_newsmanagement(self, item, manage_el):
+    def parse_newsmanagement(self, item, manage_el):
         """
         Function parser NewsManagement in NewsItem element.
 
@@ -319,7 +319,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     else:
                         item['associated_with']['type'] = [data]
 
-    def parser_newscomponent(self, item, component_el):
+    def parse_newscomponent(self, item, component_el):
         """
             Function parser NewsComponent in NewsItem element.
 
@@ -449,12 +449,12 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
         # parser DescriptiveMetadata element
         if component_el.find('DescriptiveMetadata') is not None:
-            self.parser_descriptivemetadata(item, component_el.find('DescriptiveMetadata'))
+            self.parse_descriptivemetadata(item, component_el.find('DescriptiveMetadata'))
         else:
-            self.parser_descriptivemetadata(item, component_el.find('DescriptiveMetada'))
+            self.parse_descriptivemetadata(item, component_el.find('DescriptiveMetada'))
 
         # parser ContentItem element
-        self.parser_contentitem(item, component_el.find('ContentItem'))
+        self.parse_contentitem(item, component_el.find('ContentItem'))
 
         # parser item_keywords element
         keywords = component_el.find('item_keywords')
@@ -466,7 +466,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 for element in [e for e in elements if e.text]:
                     item['keywords'].append(element.text)
 
-    def parser_descriptivemetadata(self, item, descript_el):
+    def parse_descriptivemetadata(self, item, descript_el):
         """
         Function parser DescriptiveMetadata in NewsComponent element.
 
@@ -587,7 +587,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 else:
                     item['keywords'] = [data]
 
-    def parser_contentitem(self, item, content_el):
+    def parse_contentitem(self, item, content_el):
         """
         Function parser DescriptiveMetadata in NewsComponent element.
 

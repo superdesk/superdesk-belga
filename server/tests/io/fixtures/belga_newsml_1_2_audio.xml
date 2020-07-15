@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- DOCTYPE NewsML SYSTEM "http://www.belga.be/NewsML/NewsML.1_2.dtd" -->
+<NewsML>
+    <NewsEnvelope>
+        <DateAndTime>20200616T144936</DateAndTime>
+        <NewsService FormalName="AUN"/>
+    </NewsEnvelope>
+    <NewsItem>
+        <Identification>
+            <NewsIdentifier>
+                <ProviderId>Belga Exporter</ProviderId>
+                <DateId>20200616</DateId>
+                <NewsItemId>DS02297434</NewsItemId>
+                <RevisionId PreviousRevision="0" Update="N">DS02299380</RevisionId>
+                <PublicIdentifier>urn:newsml:Belga Exporter:20200616:DS02297434:DS02299380</PublicIdentifier>
+            </NewsIdentifier>
+            <DateLabel>1500</DateLabel>
+        </Identification>
+        <NewsManagement>
+            <NewsItemType FormalName="AUDIO_BULLETIN"/>
+            <FirstCreated>20200616T144936</FirstCreated>
+            <ThisRevisionCreated>20200616T144936</ThisRevisionCreated>
+            <Status FormalName="OPEN"/>
+            <Urgency FormalName="DEFAULT"/>
+            <Property FormalName="Service" Value="NEWS"/>
+            <Property FormalName="BroadcastChannel" Value="groet_belga"/>
+            <Property FormalName="SoftwareVersion" Value="DAME SERVER 1.2.002-Belga 04-07-2006 14:35 Multithreaded"/>
+            <Property FormalName="PublishServer" Value=""/>
+        </NewsManagement>
+        <NewsComponent>
+            <DescriptiveMetadata>
+                <OfInterestTo FormalName="belgagroet_mp3_export"/>
+            </DescriptiveMetadata>
+            <NewsComponent xml:lang="nl" Duid="DS02578121">
+                <Role FormalName="Audio"/>
+                <AdministrativeMetadata>
+                    <Property FormalName="Credit" Value="BELGA"/>
+                    <Provider>
+                        <Party FormalName="BELGA"/>
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="BELGA"/>
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA"/>
+                    </Source>
+                </AdministrativeMetadata>
+                <RightsMetadata>
+                    <UsageRights/>
+                </RightsMetadata>
+                <DescriptiveMetadata>
+                    <Property FormalName="Keyword" Value="BASIC"/>
+                </DescriptiveMetadata>
+                <NewsLines>
+                    <DateLine>20200616</DateLine>
+                    <Headline xml:lang="nl">Nieuws 15u00</Headline>
+                </NewsLines>
+                <NewsComponent xml:lang="nl" Duid="DS07438396">
+                    <Role FormalName="Title"/>
+                    <ContentItem>
+                        <MediaType FormalName="text"/>
+                        <Format FormalName="ascii"/>
+                        <DataContent>Nieuws 15u00</DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent xml:lang="nl" Duid="DS07438397">
+                    <Role FormalName="Body"/>
+                    <ContentItem>
+                        <MediaType FormalName="text"/>
+                        <Format FormalName="ascii"/>
+                        <DataContent>
+
+                            ***
+
+
+                            ***
+
+                            NewsComponentRef
+
+                            NewsComponentRef
+
+                            De nieuwe federale regering moet bestaan uit de 3 klassieke families. Dus socialisten, liberalen en christen-democraten. Dat zeggen de socialistische partijvoorzitter, na hun gespreksronde. Zo&apos;n tripartite haalt geen meerderheid in het parlement. Toch is het nu de beste optie, zegt sp.a-voorzitter Conner Rousseau:
+
+                            De Franstalige christen-democraten van cdH zien zo&apos;n tripartite wel zitten. Groen is er niet bij, maar blijft constructief, zeggen ze.
+                            ***
+
+                            NewsComponentRef
+
+                            NewsComponentRef
+
+                            Het is geen toeval dat het gerecht nu een foto van bijna 40 jaar oud verspreid in het onderzoek naar de Bende van Nijvel. Dat zegt collega/journalist Faroek &#214;zg&#252;nes. De tijd dringt:
+
+                            Op de foto is een man te zien in camouflagekledij, die poseert met een semi-automatisch wapen.
+                            ***
+
+                            NewsComponentRef
+
+                            In de zaak van de ontvoering van een jongen van 13 in Limburg is de aanhouding van 3 verdachten verlengd. Het gaat om de zus en schoonbroer van de vermoedelijke spilfiguur. En een oud-Syri&#235;strijder uit Antwerpen. Er zitten nu 10 mensen in de cel voor de gijzeling.
+                            ***
+
+                            NewsComponentRef
+
+                            Geleidelijk meer wolken en kans op buien bij 23 graden. Morgen wisselvallig en na de middag kans op buien bij 22 graden.
+                        </DataContent>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent xml:lang="nl" Duid="DS07438398">
+                    <Role FormalName="Sound"/>
+                    <ContentItem Href="sample.mp3">
+                        <MediaType FormalName="audio"/>
+                        <Format FormalName="mp3"/>
+                        <Characteristics>
+                            <SizeInBytes>3708133</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+        </NewsComponent>
+    </NewsItem>
+</NewsML>

@@ -17,7 +17,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
     SUPPORTED_ASSET_TYPES = ('TIP',)
 
-    def parser_newsitem(self, newsitem_el):
+    def parse_newsitem(self, newsitem_el):
         """
         Parse Newsitem element.
 
@@ -40,12 +40,12 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
         """
         # Identification
         self._item_seed.update(
-            self.parser_identification(newsitem_el.find('Identification'))
+            self.parse_identification(newsitem_el.find('Identification'))
         )
 
         # NewsManagement
         self._item_seed.update(
-            self.parser_newsmanagement(newsitem_el.find('NewsManagement'))
+            self.parse_newsmanagement(newsitem_el.find('NewsManagement'))
         )
 
         # NewsComponent
@@ -70,7 +70,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
                 # NewsComponent
                 try:
-                    self.parser_newscomponent(item, news_component_2)
+                    self.parse_newscomponent(item, news_component_2)
                 except SkipItemException:
                     continue
 
@@ -79,7 +79,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
                 self._items.append(item)
 
-    def parser_newscomponent(self, item, newscomponent_el):
+    def parse_newscomponent(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
 
@@ -130,15 +130,15 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
         # NewsLines
         newslines_el = newscomponent_el.find('NewsLines')
-        self.parser_newslines(item, newslines_el)
+        self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
         admin_el = newscomponent_el.find('AdministrativeMetadata')
-        self.parser_administrativemetadata(item, admin_el)
+        self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
         descript_el = newscomponent_el.find('DescriptiveMetadata')
-        self.parser_descriptivemetadata(item, descript_el)
+        self.parse_descriptivemetadata(item, descript_el)
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
