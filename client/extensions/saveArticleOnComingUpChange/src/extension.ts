@@ -11,7 +11,7 @@ const extension: IExtension = {
         const result: IExtensionActivationResult = {
             contributions: {
                 authoring: {
-                    onUpdate: (current: IArticle, next: IArticle) => {
+                    onUpdateAfter: (current: IArticle, next: IArticle) => {
                         if (
                             // Only trigger save on toggle
                             (current.extra?.DueBy == null || next.extra?.DueBy == null) &&
