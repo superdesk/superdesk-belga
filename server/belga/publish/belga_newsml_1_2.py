@@ -1041,18 +1041,24 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
     def _get_author_info(self, author):
         author_info = {'initials': '', 'role': ''}
+        author_type = type(author)
 
-        if type(author) is dict:
-            author_info['initials'] = author.get(
-                'sub_label',
-                # most probably that author info was ingested
-                author.get('name', author.get('uri', ''))
-            )
+        # most probably that author info was ingested
+        if author_type is dict and '_id' not in author:
+            author_info['initials'] = author.get('name', author.get('uri', ''))
             author_info['role'] = author.get('role', '')
+        # manually added author
+        elif author_type is dict:
+            author_info['role'] = author['_id'][1]
+            try:
+                user = next(self.users_service.find({'_id': author['_id'][0]}))
+            except StopIteration:
+                logger.warning("unknown user: {user_id}".format(user_id=author['_id'][0]))
+            else:
+                author_info['initials'] = user.get('username')
         # in case of version_creator
-        elif type(author) is str:
+        elif author_type is str:
             author_id = author
-            # retrieve sd author info by id
             try:
                 user = next(self.users_service.find({'_id': author_id}))
             except StopIteration:
@@ -1066,6 +1072,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     else:
                         author_info['role'] = role.get('author_role', '')
                 author_info['initials'] = user.get('username')
+        else:
+            logger.warning("Unsupported author format: {author}".format(author=author))
 
         return author_info
 
