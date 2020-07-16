@@ -11,7 +11,7 @@ const extension: IExtension = {
         const result: IExtensionActivationResult = {
             contributions: {
                 authoring: {
-                    onUpdate: (current: IArticle, next: IArticle) => {
+                    onUpdateBefore: (current: IArticle, next: IArticle) => {
                         if (current.profile == null || next.profile == null) {
                             return Promise.resolve(next);
                         }
