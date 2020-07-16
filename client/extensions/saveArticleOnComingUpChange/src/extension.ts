@@ -19,7 +19,6 @@ const extension: IExtension = {
                         ) {
                             superdesk.ui.article.save();
                         }
-                        return Promise.resolve(next);
                     },
                 },
             },
