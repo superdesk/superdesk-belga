@@ -1,7 +1,6 @@
 import hmac
 import uuid
 import arrow
-import json
 import hashlib
 import requests
 import superdesk
