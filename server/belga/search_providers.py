@@ -235,7 +235,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         super().__init__(provider)
         self.session = requests.Session()
         self.content_types = {
-            c['label'].lower(): c['_id']
+            c['_id']: c['_id']
             for c in superdesk.get_resource_service('content_types').find({})
         }
 
