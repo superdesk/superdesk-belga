@@ -235,8 +235,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         super().__init__(provider)
         self.session = requests.Session()
         self.content_types = {
-            c['_id']: c['_id']
-            for c in superdesk.get_resource_service('content_types').find({})
+            c['_id'] for c in superdesk.get_resource_service('content_types').find({})
         }
 
     def url(self, resource):
@@ -322,8 +321,10 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     def _get_profile(self, profile):
         label = profile.lower()
         if label == 'short':
-            return self.content_types.get('text')
-        return self.content_types.get(label)
+            label = 'text'
+        if label not in self.content_types:
+            return
+        return label
 
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
