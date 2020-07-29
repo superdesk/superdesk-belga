@@ -1040,42 +1040,40 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
     def _get_author_info(self, author):
-        author_info = {
-            'initials': '',
-            'role': ''
-        }
-
-        # get author_id
-        if type(author) is str:
-            author_id = author
-        else:
-            try:
-                author_id = author['_id'][0]
-            except (KeyError, IndexError):
-                author_id = None
+        author_info = {'initials': '', 'role': ''}
+        author_type = type(author)
 
         # most probably that author info was ingested
-        if not author_id:
-            author_info = {
-                'initials': author.get('name', author.get('uri', '')),
-                'role': author.get('role', ''),
-            }
-            return author_info
-
-        # retrieve sd author info by id
-        try:
-            user = next(self.users_service.find({'_id': author_id}))
-        except StopIteration:
-            logger.warning("unknown user: {user_id}".format(user_id=author_id))
+        if author_type is dict and '_id' not in author:
+            author_info['initials'] = author.get('name', author.get('uri', ''))
+            author_info['role'] = author.get('role', '')
+        # manually added author
+        elif author_type is dict:
+            author_info['role'] = author['_id'][1]
+            try:
+                user = next(self.users_service.find({'_id': author['_id'][0]}))
+            except StopIteration:
+                logger.warning("unknown user: {user_id}".format(user_id=author['_id'][0]))
+            else:
+                author_info['initials'] = user.get('username')
+        # in case of version_creator
+        elif author_type is str:
+            author_id = author
+            try:
+                user = next(self.users_service.find({'_id': author_id}))
+            except StopIteration:
+                logger.warning("unknown user: {user_id}".format(user_id=author_id))
+            else:
+                if user.get('role'):
+                    try:
+                        role = next(self.roles_service.find({'_id': user['role']}))
+                    except StopIteration:
+                        logger.warning("unknown role: {role_id}".format(role_id=user['role']))
+                    else:
+                        author_info['role'] = role.get('author_role', '')
+                author_info['initials'] = user.get('username')
         else:
-            if user.get('role'):
-                try:
-                    role = next(self.roles_service.find({'_id': user['role']}))
-                except StopIteration:
-                    logger.warning("unknown role: {role_id}".format(role_id=user['role']))
-                else:
-                    author_info['role'] = role.get('author_role', '')
-            author_info['initials'] = user.get('username')
+            logger.warning("Unsupported author format: {author}".format(author=author))
 
         return author_info
 

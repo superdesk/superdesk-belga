@@ -38,6 +38,7 @@ include/
 .idea/
 .vagrant/
 /client/.tern-project
+/client/package-lock.json
 /server/.project
 /server/.pydevproject
 /server/.settings/org.eclipse.core.resources.prefs

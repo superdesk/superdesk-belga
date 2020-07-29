@@ -234,6 +234,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     def __init__(self, provider):
         super().__init__(provider)
         self.session = requests.Session()
+        self.content_types = {
+            c['_id'] for c in superdesk.get_resource_service('content_types').find({})
+        }
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip('/'))
@@ -315,6 +318,14 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             return get_datetime(date)
         return get_datetime(date / 1000)
 
+    def _get_profile(self, profile):
+        label = profile.lower()
+        if label == 'short':
+            label = 'text'
+        if label not in self.content_types:
+            return
+        return label
+
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
         return {
@@ -324,6 +335,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             '_id': guid,
             'state': 'published',
             'guid': guid,
+            'profile': self._get_profile(data.get('assetType', '')),
             'headline': get_text(data['headLine']),
             'slugline': get_text(data['topic']),
             'name': get_text(data['name']),
