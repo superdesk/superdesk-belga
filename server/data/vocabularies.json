@@ -6323,32 +6323,33 @@
         "display_name": "Languages",
         "type": "manageable",
         "unique_field": "qcode",
+        "init_version": 2,
         "service": {
             "all": 1
         },
         "items": [
             {
-                "name": "nl",
+                "name": "Nederlands",
                 "qcode": "nl",
                 "is_active": true
             },
             {
-                "name": "fr",
+                "name": "Français",
                 "qcode": "fr",
                 "is_active": true
             },
             {
-                "name": "en",
+                "name": "English",
                 "qcode": "en",
                 "is_active": true
             },
             {
-                "name": "de",
+                "name": "Deutsch",
                 "qcode": "de",
                 "is_active": true
             },
             {
-                "name": "es",
+                "name": "Español",
                 "qcode": "es",
                 "is_active": true
             }
