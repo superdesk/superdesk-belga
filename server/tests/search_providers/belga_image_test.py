@@ -104,6 +104,7 @@ class BelgaImageTestCase(unittest.TestCase):
                 'finance': False,
             },
             'period': 'today',
+            'dates': {'start': '01/09/2020', 'end': '10/09/2020'},
         }
 
         provider = BelgaImageSearchProvider(dict())
@@ -116,6 +117,8 @@ class BelgaImageTestCase(unittest.TestCase):
             'l': 20,
             'c': 'ansa,belga',
             'h': 'news,sports',
+            'f': 1598918400000,
+            'e': 1599696000000,
             'p': 'TODAY',
             't': 'test AND query',
         }).prepare().url
