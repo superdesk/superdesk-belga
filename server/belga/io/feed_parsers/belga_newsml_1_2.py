@@ -55,6 +55,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         }
     }
     SUPPORTED_BINARY_ASSET_SUBTYPES = ('SOUND', 'CLIP', 'COMPONENT', 'IMAGE')
+    MOVE_FILE = False
 
     def __init__(self):
         super().__init__()
@@ -818,7 +819,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 file_path = self._download_file(filename, file_path, config)
             with open(file_path, 'rb') as f:
                 content = f.read()
-                self._move_file(file_dir, filename, config)
+                if self.MOVE_FILE:
+                    self._move_file(file_dir, filename, config)
                 return BytesIO(content)
         except (FileNotFoundError, error_perm) as e:
             logger.warning('File %s not found', file_path)
