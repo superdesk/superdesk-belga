@@ -8,15 +8,32 @@ services:
 cache:
     - pip
     - npm
+    - yarn
 
 before_install:
-    - docker-compose -f .travis-docker-compose.yml up -d
+    - |
+      if [ "$SKIP_SERVER_INSTALL" != "true" ]; then
+        docker-compose -f .travis-docker-compose.yml up -d
+      fi
 
 install:
-    - cd server && pip install -r dev-requirements.txt && cd ..
-    - cd client && npm install && cd ..
+    - |
+      if [ "$SKIP_SERVER_REQUIREMENTS_INSTALL" != "true" ]; then
+        cd server && pip install -r dev-requirements.txt && cd ..
+      fi
+    - |
+      if [ "$SKIP_CLIENT_REQUIREMENTS_INSTALL" != "true" ]; then
+        cd client && npm install && cd ..
+      fi
 
-script:
-    - cd server && flake8 && nosetests && cd ..
-    - cd client && node --max_old_space_size=4098 ./node_modules/.bin/grunt build && cd ..
-    - cd server && python manage.py users:create -u test -p test -e test@localhost --admin && cd ..
+jobs:
+    include:
+        - script: cd server && flake8
+          name: "flake8"
+          env: SKIP_SERVER_INSTALL=true SKIP_CLIENT_REQUIREMENTS_INSTALL=true
+        - script: cd server && nosetests
+          name: "nosetests"
+          env: SKIP_CLIENT_REQUIREMENTS_INSTALL=true
+        - script: cd client && node --max_old_space_size=4098 ./node_modules/.bin/grunt build
+          name: "node build"
+          env: SKIP_SERVER_INSTALL=true SKIP_SERVER_REQUIREMENTS_INSTALL=true
