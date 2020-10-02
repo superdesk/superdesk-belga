@@ -1,6 +1,7 @@
 
 import logging
 import superdesk
+from typing import List, Dict
 
 from flask import current_app as app
 from datetime import timedelta
@@ -38,11 +39,11 @@ def _get_profile_id(label):
     return None
 
 
-def _find_subj(subject: list, scheme: str):
+def _find_subj(subject: List, scheme: str):
     return next((subj for subj in subject if subj.get('scheme') == scheme), None)
 
 
-def _get_brief_subject(subject: list):
+def _get_brief_subject(subject: List) -> List:
     if not subject:
         subject = []
     credit = _find_subj(subject, CREDITS)
@@ -57,7 +58,7 @@ def _get_brief_subject(subject: list):
     return subject
 
 
-def _get_product_subject(subject: list):
+def _get_product_subject(subject: List) -> List:
     if not subject:
         subject = []
     product = _find_subj(subject, PRODUCTS)
@@ -115,7 +116,7 @@ def brief_internal_routing(item: dict, **kwargs):
     item.setdefault('subject', [])
     item['urgency'] = 2
     item['profile'] = _get_profile_id(BRIEF_PROFILE)
-    item['subject'] = _get_product_subject(_get_brief_subject(item.get('subject')))
+    item['subject'] = _get_product_subject(_get_brief_subject(item.get('subject', [])))
     item['status'] = CONTENT_STATE.SCHEDULED
     item['operation'] = 'publish'
 
