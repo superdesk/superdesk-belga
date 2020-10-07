@@ -71,11 +71,11 @@ def set_default_metadata(item, **kwargs):
 
     # we first remove conflicting metadata, if any
     to_delete = []
-    for item in subject:
-        if item.get('scheme') in SUBJECT_SCHEMES:
-            to_delete.append(item)
-    for item in to_delete:
-        subject.remove(item)
+    for s in subject:
+        if s.get('scheme') in SUBJECT_SCHEMES:
+            to_delete.append(s)
+    for s in to_delete:
+        subject.remove(s)
 
     # and now we add the new one
     subject.extend([i for i in data.get('subject', []) if i.get('scheme') in SUBJECT_SCHEMES])
