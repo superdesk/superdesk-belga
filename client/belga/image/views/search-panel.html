@@ -23,4 +23,21 @@
             <option ng-repeat="period in searchPanel.periods" value="{{ period.id }}">{{ period.name }}</option>
         </select>
     </div>
+
+    <div class="form__row form__row--flex form__row--small-padding">
+        <div class="form__row-item">
+            <label class="form-label" translate>From</label>
+            <div sd-datepicker
+                ng-model="params.dates.start"
+                data-on-change="onDatesChange()"
+            ></div>
+        </div>
+        <div class="form__row-item">
+            <label class="form-label" translate>To</label>
+            <div sd-datepicker
+                ng-model="params.dates.end"
+                data-on-change="onDatesChange()"
+            ></div>
+        </div>
+    </div>
 </fieldset>

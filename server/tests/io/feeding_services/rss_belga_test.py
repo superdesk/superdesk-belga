@@ -21,9 +21,9 @@ dataset = {
     'id': 'http://nofollow.anp.nl/portal/news/item/belga-eco/ANPX270119007',
     'guidislink': False,
     'published': '2019-01-27T07:15:14+01:00',
-    'published_parsed': time.struct_time([2019, 1, 27, 6, 15, 14, 6, 27, 0]),
+    'published_parsed': time.struct_time((2019, 1, 27, 6, 15, 14, 6, 27, 0)),
     'updated': '2019-01-27T07:15:16+01:00',
-    'updated_parsed': time.struct_time([2019, 1, 27, 6, 15, 16, 6, 27, 0]),
+    'updated_parsed': time.struct_time((2019, 1, 27, 6, 15, 16, 6, 27, 0)),
     'tags': [{
         'term': 'ECO',
         'scheme': None,
