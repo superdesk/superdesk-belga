@@ -11,6 +11,7 @@
 import pytz
 import logging
 from copy import deepcopy
+from typing import NamedTuple
 from urllib.parse import urljoin
 from collections import namedtuple
 from dateutil import parser as dateutil_parser
@@ -67,6 +68,16 @@ def generate_sequence_number(subscriber):
     return superdesk.get_resource_service('subscribers').generate_sequence_number(subscriber)
 
 
+class NewsComponent2Roles(NamedTuple):
+    URL: str
+    PICTURE: str
+    GALLERY: str
+    AUDIO: str
+    VIDEO: str
+    RELATED_DOCUMENT: str
+    RELATED_ARTICLE: str
+
+
 class BelgaNewsML12Formatter(NewsML12Formatter):
     """
     Belga News ML 1.2 Formatter
@@ -86,10 +97,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     SD_CP_NAME_ROLE_MAP = {
         'belga_text': 'Belga text'
     }
-    NEWSCOMPONENT2_ROLES = namedtuple(
-        'NEWSCOMPONENT2_ROLES',
-        ('URL', 'PICTURE', 'GALLERY', 'AUDIO', 'VIDEO', 'RELATED_DOCUMENT', 'RELATED_ARTICLE')
-    )('URL', 'Picture', 'Gallery', 'Audio', 'Video', 'RelatedDocument', 'RelatedArticle')
+    NEWSCOMPONENT2_ROLES: NewsComponent2Roles = NewsComponent2Roles('URL', 'Picture', 'Gallery', 'Audio',
+                                                                    'Video', 'RelatedDocument', 'RelatedArticle')
     SD_MEDIA_TYPE_ROLE_MAP = {
         CONTENT_TYPE.PICTURE: NEWSCOMPONENT2_ROLES.PICTURE,
         CONTENT_TYPE.GRAPHIC: NEWSCOMPONENT2_ROLES.GALLERY,

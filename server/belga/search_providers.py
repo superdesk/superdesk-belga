@@ -104,6 +104,13 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
                 items = [key for key, val in params.get(param, {}).items() if val]
                 if items:
                     api_params[api_param] = ','.join(sorted(items))  # avoid random sort breaking test
+
+            dates = params.get('dates', {})
+            if dates.get('start'):
+                api_params['f'] = arrow.get(dates['start'], 'DD/MM/YYYY').timestamp * 1000
+            if dates.get('end'):
+                api_params['e'] = arrow.get(dates['end'], 'DD/MM/YYYY').timestamp * 1000
+
             if params.get('period'):
                 api_params['p'] = params['period'].upper()
 
