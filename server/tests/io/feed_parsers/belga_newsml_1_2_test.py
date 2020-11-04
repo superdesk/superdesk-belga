@@ -25,6 +25,7 @@ class BelgaNewsMLOneTestCase(TestCase):
     filename = 'belga_newsml_1_2.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
@@ -62,7 +63,6 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['copyrightholder'], 'Belga')
         self.assertEqual(item['date_id'], '20190129T133400')
         self.assertEqual(item['extra']['city'], 'BRUSSEL')
-        self.assertEqual(item['extra']['country'], 'België')
         self.assertEqual(item['firstcreated'], datetime.datetime(2019, 1, 29, 11, 45, 50, tzinfo=pytz.utc))
         self.assertEqual(item["guid"], "98055801")
         self.assertEqual(item["headline"], "Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur")
@@ -82,7 +82,9 @@ class BelgaNewsMLOneTestCase(TestCase):
             {'name': 'BIN/ECO', 'qcode': 'BIN/ECO', 'scheme': 'services-products', 'parent': 'BIN'},
             {'name': 'NEWS/CULTURE_LIFESTYLE', 'qcode': 'NEWS/CULTURE_LIFESTYLE', 'scheme': 'services-products',
              'parent': 'NEWS'},
-
+            {'name': 'Belgium', 'qcode': 'bel',
+             'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+             'scheme': 'countries'}
         ])
         self.assertEqual(item['type'], 'text')
         self.assertEqual(item['version'], 4)
@@ -94,6 +96,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
     media_file = 'belga_remote_newsml_1_2.jpeg'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         media_fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.media_file))
@@ -132,7 +135,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["source"], "BELGA")
-        self.assertEqual(item["extra"], {'city': 'ANTWERPEN', 'country': 'BELGIUM'})
+        self.assertEqual(item["extra"], {'city': 'ANTWERPEN'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(
             item['abstract'],
@@ -187,6 +190,7 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
     filename = 'belga_newsml_1_2_video.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
@@ -238,7 +242,7 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
         )
         self.assertEqual(
             item['extra'],
-            {'city': 'BRUXELLES', 'country': 'Belgique'}
+            {'city': 'BRUXELLES'}
         )
         self.assertEqual(
             item['headline'],
@@ -255,7 +259,11 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
             [{'name': 'INT/ECO',
               'parent': 'INT',
               'qcode': 'INT/ECO',
-              'scheme': 'services-products'}]
+              'scheme': 'services-products'},
+             {'name': 'Belgium', 'qcode': 'bel',
+              'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+              'scheme': 'countries'}
+             ]
         )
         self.assertIn('href', item['renditions']['original'])
         self.assertIn('media', item['renditions']['original'])
@@ -269,6 +277,7 @@ class BelgaNewsMLOneAudioIngestTestCase(TestCase):
     filename = 'belga_newsml_1_2_audio.xml'
 
     def setUp(self):
+        super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
