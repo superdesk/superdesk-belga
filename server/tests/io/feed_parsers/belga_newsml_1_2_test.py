@@ -75,6 +75,7 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['public_identifier'], 'urn:newsml:www.belga.be')
         self.assertEqual(item['pubstatus'], 'usable')
         self.assertEqual(item['slugline'], 'BelgaService')
+        self.assertEqual(item['ednote'], "Qu'y a-t-il écrit ici?")
         self.assertEqual(item['source'], 'BELGA')
         self.assertEqual(item['subject'], [
             {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},

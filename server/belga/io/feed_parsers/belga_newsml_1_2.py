@@ -686,6 +686,11 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get('Value'):
             item['slugline'] = element.get('Value')
 
+        # editorial note
+        element = admin_el.find('Property[@FormalName="EditorialInfo"]')
+        if element is not None and element.get('Value'):
+            item['ednote'] = element.get('Value')
+
     def parse_descriptivemetadata(self, item, descript_el):
         """
         Parse DescriptiveMetadata in NewsComponent element.
