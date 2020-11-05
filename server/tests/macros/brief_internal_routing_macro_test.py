@@ -103,10 +103,6 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         self.assertGreaterEqual(self.now + timedelta(minutes=31), schedule)
         self.assertLessEqual(self.now + timedelta(minutes=29), schedule)
         self.assertEqual('Europe/Brussels', published[SCHEDULE_SETTINGS]['time_zone'])
-
-        print('expect', utc_to_local('Europe/Brussels', self.now + timedelta(minutes=30)).replace(tzinfo=utc))
-        print('real', published['publish_schedule'])
-
         self.assertEqual(
             utc_to_local('Europe/Brussels', self.now + timedelta(minutes=30)).replace(tzinfo=utc),
             published['publish_schedule'])
