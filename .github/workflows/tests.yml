@@ -75,8 +75,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm
             ${{ runner.os }}-
-      
-      - run: npm install --no-audit
 
       - name: npm ci
         run: npm ci
