@@ -1,4 +1,5 @@
 import hmac
+from typing import Any, Dict, Optional
 import uuid
 import arrow
 import hashlib
@@ -361,7 +362,132 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         }
 
 
+class BelgaPressSearchProvider(superdesk.SearchProvider):
+
+    GUID_PREFIX = 'urn:belga.be:belgapress:'
+
+    label = 'Belga Press'
+    base_url = 'https://bp-api.ssl.belga.be/belgapress/api'
+    search_endpoint = 'newsobjects'
+    items_field = 'data'
+    openid_provider_url = 'https://sso.ssl.belga.be/auth/realms/belga/protocol/openid-connect/token'
+    PERIODS = {
+        'day': {'days': 0},
+        'yesterday': {'days': -1},
+        'this-week': {'weekday': 0, 'days': -7},
+        'week': {'weeks': -1},
+        'month': {'months': -1},
+        'year': {'years': -1},
+    }
+
+    def __init__(self, provider: Dict[str, Dict], **kwargs):
+        super().__init__(provider, **kwargs)
+        self.session = requests.Session()
+        self._access_token = None
+        config = provider.get('config', {})
+        if config.get('username') and config.get('password'):
+            self.auth()
+
+    def auth(self):
+        resp = self.session.post(f'{self.openid_provider_url}?scope=openid%20profile', data={
+            'client_id': self.provider.get('config', {}).get('username'),
+            'client_secret': self.provider.get('config', {}).get('password'),
+            'grant_type': 'client_credentials'
+        })
+        resp.raise_for_status()
+        if resp.status_code == 200 and resp.content:
+            data = resp.json()
+            self._access_token = data.get('access_token')
+
+    def find(self, query: Dict[str, Any], params: Optional[Dict] = None):
+        api_params = {
+            'offset': query.get('from', 0),
+            'count': query.get('size', 25),
+        }
+
+        if params:
+            for api_param, param in {'mediumtypegroup': 'types', 'language': 'languages'}.items():
+                if params.get(param):
+                    api_params[api_param] = params.get(param)
+
+            dates = params.get('dates', {})
+            if dates.get('start'):
+                api_params['start'] = arrow.get(dates['start'], 'DD/MM/YYYY').format('YYYY-MM-DD')
+            if dates.get('end'):
+                api_params['end'] = arrow.get(dates['end'], 'DD/MM/YYYY').format('YYYY-MM-DD')
+
+            period = params.get('period')
+            if period and self.PERIODS.get(period):
+                # override value of search by date
+                api_params.update(self._get_period(period))
+
+        api_params['order'] = '-PUBLISHDATE'
+        # Only check if current sorting is ascending or descending because Belga Press API order parameter
+        # is not compatiable with Superdesk sorting criteria
+        sort = next(iter(query.get('sort', [{}])[0].values()))
+        if sort == 'asc':
+            api_params['order'] = 'PUBLISHDATE'
+
+        try:
+            api_params['searchtext'] = query['query']['filtered']['query']['query_string']['query']
+        except KeyError:
+            pass
+
+        data = self.api_get(self.search_endpoint, api_params)
+        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        return BelgaListCursor(docs, data.get('_meta', {}).get('total', len(docs)))
+
+    def api_get(self, endpoint: str, params: Dict) -> Dict:
+        resp = self.session.get(f'{self.base_url}/{endpoint}', headers={
+            'Authorization': f'Bearer {self._access_token}',
+            'X-Belga-Context': 'API'
+        }, params=params)
+        resp.raise_for_status()
+        return resp.json()
+
+    def fetch(self, guid: str):
+        _id = guid.replace(self.GUID_PREFIX, '')
+        data = self.api_get(f'newsobject/{_id}', {})
+        return self.format_list_item(data)
+
+    def _get_period(self, period: str) -> Dict[str, str]:
+        today = arrow.now(BELGA_TZ)
+        shift = self.PERIODS.get(period, {})
+        if period == 'this-week' and today.weekday() == 0:
+            # Don't shift backward 7 days if today is monday, because weekday shift will return today
+            # instead of monday of next week
+            shift.pop('days')
+        return {
+            'start': today.shift(**shift).format('YYYY-MM-DD'),
+            'end': today.format('YYYY-MM-DD'),
+        }
+
+    def format_list_item(self, data: Dict[str, Any]) -> Dict:
+        guid = f"{self.GUID_PREFIX}{data['uuid']}"
+        return {
+            'type': 'text',
+            'mimetype': 'application/superdesk.item.text',
+            'pubstatus': 'usable',
+            '_id': guid,
+            'state': 'published',
+            'guid': guid,
+            'headline': get_text(data['title']),
+            'abstract': get_text(data['lead']),
+            'body_html': get_text(data['body']),
+            'versioncreated': data.get('publishDate'),
+            'firstcreated': data.get('publishDate'),  # createDate always is null
+            'source': get_text(data['source']),
+            'language': get_text(data['language']),
+            'word_count': data['wordCount'],
+            'extra': {
+                'bpress': data['uuid'],
+            },
+            '_fetchable': False,
+        }
+
+
 def init_app(app):
     superdesk.register_search_provider('belga_image', provider_class=BelgaImageSearchProvider)
     superdesk.register_search_provider('belga_coverage', provider_class=BelgaCoverageSearchProvider)
     superdesk.register_search_provider('belga_360archive', provider_class=Belga360ArchiveSearchProvider)
+    superdesk.register_search_provider('belga_press', provider_class=BelgaPressSearchProvider)
