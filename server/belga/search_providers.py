@@ -410,16 +410,20 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
                 if params.get(param):
                     api_params[api_param] = params.get(param)
 
-            dates = params.get('dates', {})
-            if dates.get('start'):
-                api_params['start'] = arrow.get(dates['start'], 'DD/MM/YYYY').format('YYYY-MM-DD')
-            if dates.get('end'):
-                api_params['end'] = arrow.get(dates['end'], 'DD/MM/YYYY').format('YYYY-MM-DD')
-
             period = params.get('period')
             if period and self.PERIODS.get(period):
-                # override value of search by date
                 api_params.update(self._get_period(period))
+
+            date = params.get('dates', {})
+            if date.get('start'):
+                start_date = arrow.get(date['start'], 'DD/MM/YYYY')
+                api_start_date = api_params.get('start')
+                # if period is set, only override start param when date start is greater than period start date
+                if not api_start_date or (api_start_date and start_date > arrow.get(api_start_date)):
+                    api_params['start'] = start_date.format('YYYY-MM-DD')
+
+            if date.get('end'):
+                api_params['end'] = arrow.get(date['end'], 'DD/MM/YYYY').format('YYYY-MM-DD')
 
         api_params['order'] = '-PUBLISHDATE'
         # Only check if current sorting is ascending or descending because Belga Press API order parameter

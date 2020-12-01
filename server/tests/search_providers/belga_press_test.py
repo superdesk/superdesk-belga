@@ -69,16 +69,22 @@ class BelgaPressTestCase(TestCase):
             'offset': 50, 'count': 25, 'mediumtypegroup': 'ONLINE', 'language': 'EN',
             'start': '2020-11-25', 'end': '2020-11-26', 'order': 'PUBLISHDATE', 'searchtext': 'test query',
         }
-        self.provider.session.get.assert_called_with(
-            url, headers={'Authorization': 'Bearer abc', 'X-Belga-Context': 'API'}, params=api_params)
+        headers = {'Authorization': 'Bearer abc', 'X-Belga-Context': 'API'}
+        self.provider.session.get.assert_called_with(url, headers=headers, params=api_params)
+        # Test combine period and date
+        arrow.now = MagicMock(return_value=arrow.get('2020-11-26'))
+        params = {
+            'dates': {'start': '26/10/2020', 'end': '25/11/2020'},
+            'period': 'year'
+        }
+
+        self.provider.find(self.query, params)
+        self.provider.session.get.assert_called_with(url, headers=headers, params={
+            'offset': 50, 'count': 25, 'start': '2020-10-26', 'end': '2020-11-25',
+            'order': 'PUBLISHDATE', 'searchtext': 'test query',
+        })
 
     def test_format_list_item(self):
-        self.app.data.insert(
-            'content_types',
-            [{'_id': 'text', 'label': 'text'}]
-        )
-        # reload content profiles
-        self.provider = BelgaPressSearchProvider(dict())
         item = self.provider.format_list_item(get_item())
         guid = 'urn:belga.be:belgapress:4fe4c785-b4d4-43f9-b6e1-c28bbc53363c'
         self.assertEqual(item['type'], 'text')
