@@ -11,6 +11,7 @@ export default class BelgaSearchPanelController {
 
   $onInit() {
       this.languages = [
+          {name: '', id: ''},
           {name: 'DE', id: 'DE'},
           {name: 'EN', id: 'EN'},
           {name: 'ES', id: 'ES'},
@@ -19,7 +20,6 @@ export default class BelgaSearchPanelController {
           {name: 'NO', id: 'NO'},
           {name: 'IT', id: 'IT'},
           {name: 'PT', id: 'PT'},
-
       ];
 
       this.country = [
@@ -31,6 +31,7 @@ export default class BelgaSearchPanelController {
       ];
 
       this.types = [
+          {name: '', id: ''},
           {name: 'PRINT', id: 'PRINT'},
           {name: 'ONLINE', id: 'ONLINE'},
           {name: 'SOCIAL', id: 'SOCIAL'},
