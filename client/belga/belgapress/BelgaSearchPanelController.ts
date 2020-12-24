@@ -23,7 +23,7 @@ export default class BelgaSearchPanelController {
       ];
 
       this.country = [
-          {name: 'International', id: ''},
+          {name: '', id: ''},
           {name: 'Belgium', id: 'belgium'},
           {name: 'France', id: 'france'},
           {name: 'Netherlands', id: 'netherlands'},
@@ -41,7 +41,7 @@ export default class BelgaSearchPanelController {
       ];
 
       this.periods = [
-          {name: 'Whenever', id: ''},
+          {name: '', id: ''},
           {name: 'Today', id: 'day'},
           {name: 'Yesterday', id: 'yesterday'},
           {name: 'This week', id: 'this-week'},
