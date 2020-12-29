@@ -1,9 +1,8 @@
 
 import logging
 import superdesk
-from typing import List, Dict
+from typing import List
 
-from flask import current_app as app
 from datetime import timedelta
 from superdesk.metadata.item import CONTENT_STATE, PUBLISH_SCHEDULE, SCHEDULE_SETTINGS
 from superdesk.macros.internal_destination_auto_publish import internal_destination_auto_publish
@@ -27,7 +26,7 @@ PRODUCT_MAPPING = {
 }
 
 TEXT_PROFILE = 'TEXT'
-BRIEF_PROFILE = 'Brief'
+BRIEF_PROFILE = 'BRIEF'
 
 logger = logging.getLogger(__name__)
 
