@@ -165,6 +165,17 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                         "name": "Belga On The Spot",
                         "qcode": "Belga_on_the_spot",
                         "scheme": "media-source"
+                    },
+                    {
+                        "name": "Czechia",
+                        "qcode": "cze",
+                        "translations": {
+                            "name": {
+                                "nl": "Tsjechië",
+                                "fr": "Tchéquie"
+                            }
+                        },
+                        "scheme": "countries"
                     }
                 ]
             },
@@ -252,8 +263,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "expiry": "2047-01-06T17:21:04+0000",
                 "extra": {
                     "belga-keywords": "audio, music",
-                    "city": "Pragua",
-                    "country": "CZ"
+                    "city": "Pragua"
                 },
                 "headline": "audio head",
             },
@@ -575,7 +585,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 }
             ],
             "city": "Prague",
-            "country": "CZ",
             "belga-coverage-new": "urn:belga.be:coverage:6666666"
         },
         'fields_meta': {
@@ -633,7 +642,18 @@ class BelgaNewsML12FormatterTextTest(TestCase):
              'scheme': 'services-products'},
             {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'sources'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'}
+            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
+            {
+                "name": "Belgium",
+                "qcode": "bel",
+                "translations": {
+                    "name": {
+                        "nl": "België",
+                        "fr": "Belgique"
+                    }
+                },
+                "scheme": "countries"
+            }
         ],
         'word_count': 28,
         'byline': 'BELGA',
@@ -744,14 +764,24 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "headline": "History",
             "extra": {
                 "belga-keywords": "one, two, three",
-                "city": "Prague",
-                "country": "CZ"
+                "city": "Prague"
             },
             "subject": [
                 {
                     "name": "Belga",
                     "qcode": "Belga",
                     "scheme": "credit"
+                },
+                {
+                    "name": "Belgium",
+                    "qcode": "bel",
+                    "translations": {
+                        "name": {
+                            "nl": "België",
+                            "fr": "Belgique"
+                        }
+                    },
+                    "scheme": "countries"
                 }
             ]
         },
@@ -799,8 +829,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "expiry": "2047-01-06T17:21:04+0000",
             "extra": {
                 "belga-keywords": "audio, music",
-                "city": "Pragua",
-                "country": "CZ"
+                "city": "Pragua"
             },
             "headline": "audio head",
         },
@@ -809,9 +838,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "family_id": "urn:newsml:localhost:5000:2019-09-10T16:16:39.458119:923d24ac-7075-413b-a164-701a4e9b2e06",
             "event_id": "tag:localhost:5000:2019:2bd05833-e4d7-482f-bf78-5afde4b980c5",
             "language": "nl",
-            "extra": {
-                "country": "nn"
-            },
             "source": "Belga",
             "authors": [
                 {
@@ -1188,7 +1214,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         expected_attribs = (
             {'FormalName': 'City', 'Value': 'Prague'},
-            {'FormalName': 'Country', 'Value': 'CZ'},
+            {'FormalName': 'Country', 'Value': 'Belgique'},
             {'FormalName': 'CountryArea'},
             {'FormalName': 'WorldRegion'}
         )
@@ -1404,7 +1430,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         expected_attribs = (
             {'FormalName': 'City', 'Value': 'Prague'},
-            {'FormalName': 'Country', 'Value': 'CZ'},
             {'FormalName': 'CountryArea'},
             {'FormalName': 'WorldRegion'}
         )
@@ -1591,7 +1616,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         property = newscomponent_2_level.xpath('DescriptiveMetadata/Location/Property[@FormalName="Country"]')[0]
         self.assertEqual(
             property.attrib['Value'],
-            'Japan'
+            'Tchéquie' # language is inherited from parent item
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
         datacontent = newscomponent_2_level.xpath(

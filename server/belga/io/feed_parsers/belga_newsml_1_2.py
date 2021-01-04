@@ -686,6 +686,11 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get('Value'):
             item['slugline'] = element.get('Value')
 
+        # editorial note
+        element = admin_el.find('Property[@FormalName="EditorialInfo"]')
+        if element is not None and element.get('Value'):
+            item['ednote'] = element.get('Value')
+
     def parse_descriptivemetadata(self, item, descript_el):
         """
         Parse DescriptiveMetadata in NewsComponent element.
@@ -718,7 +723,36 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             for element in elements:
                 # country
                 if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
-                    item.setdefault('extra', {})['country'] = element.attrib.get('Value')
+                    country_name_regex = {
+                        '$regex': r'^{}$'.format(element.attrib.get('Value')),
+                        # case-insensitive
+                        '$options': 'i'
+                    }
+                    scheme = 'countries'
+                    country = get_resource_service('vocabularies').get_from_mongo(
+                        req=None,
+                        lookup={
+                            '_id': 'countries',
+                            'items.translations.name.{}'.format(item['language']): country_name_regex
+                        },
+                        projection={
+                            'items': {
+                                '$elemMatch': {
+                                    'translations.name.{}'.format(item['language']): country_name_regex
+                                }
+                            }
+                        }
+                    )
+                    try:
+                        country = country.next()
+                        item.setdefault('subject', []).append({
+                            'name': country['items'][0]['name'],
+                            'qcode': country['items'][0]['qcode'],
+                            'translations': country['items'][0]['translations'],
+                            'scheme': scheme
+                        })
+                    except (StopIteration, KeyError, IndexError) as e:
+                        logger.error(e)
                 # city
                 if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):
                     item.setdefault('extra', {})['city'] = element.attrib.get('Value')
