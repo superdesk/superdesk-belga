@@ -6658,7 +6658,7 @@
     },
     {
         "_id": "belga-keywords",
-        "init_version": 3,
+        "init_version": 4,
         "display_name": "Belga Keywords",
         "type": "manageable",
         "selection_type": "multi selection",
