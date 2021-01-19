@@ -7102,6 +7102,17 @@
                 }
             },
             {
+                "name": "CORRUPTION",
+                "qcode": "CORRUPTION",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Corruption",
+                        "fr": "Corruptie"
+                    }
+                }
+            },
+            {
                 "name": "CULTURE",
                 "qcode": "CULTURE",
                 "is_active": true,
@@ -7186,6 +7197,17 @@
                     "name": {
                         "nl": "Diplomatie",
                         "fr": "Diplomatie"
+                    }
+                }
+            },
+            {
+                "name": "DOPING",
+                "qcode": "DOPING",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Doping",
+                        "fr": "Dopage"
                     }
                 }
             },
