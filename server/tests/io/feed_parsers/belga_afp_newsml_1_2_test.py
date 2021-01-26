@@ -63,7 +63,7 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:42:33+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:42:34+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["urgency"], "4")
+        self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["associated_with"], {'item': None, 'type': ['Sketch', 'Photo', 'Video']})
         self.assertEqual(item["dateline"], {'text': 'Paris, 21 jan 2019 (AFP) -',
                                             'date': datetime.datetime(2019, 1, 21, 10, 42, 33,

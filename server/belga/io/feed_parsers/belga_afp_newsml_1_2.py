@@ -48,7 +48,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 'scheme': 'services-products'
             })
         # add content for headline when it is empty
-        if item.get('urgency') in ('1', '2') and not item.get('headline'):
+        if item.get('urgency') in (1, 2) and not item.get('headline'):
             for line in get_text(item.get('body_html', ''), lf_on_block=True).split('\n'):
                 if line.strip():
                     item['headline'] = 'URGENT: ' + line.strip()
@@ -58,6 +58,9 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # Source is AFP
         credit = {"name": 'AFP', "qcode": 'AFP', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
+
+        if item.get('urgency') == 4:
+            item['urgency'] = 3
 
         return item
 

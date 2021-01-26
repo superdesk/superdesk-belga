@@ -303,7 +303,8 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if element is not None:
             item['urgency'] = element.get('FormalName', '')
             if item['urgency'] == '':
-                item['urgency'] = int(element.text)
+                item['urgency'] = element.text
+            item['urgency'] = int(item['urgency'])
 
         # parser AssociatedWith element
         elements = manage_el.findall('AssociatedWith')

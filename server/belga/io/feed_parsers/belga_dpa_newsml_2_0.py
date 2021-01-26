@@ -69,6 +69,9 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
                     item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
 
+                    if item['urgency'] == 4:
+                        item['urgency'] = 3
+
                     # mapping services-products
                     for cat in item.get('anpa_category', []):
                         qcode = self.MAPPING_CATEGORY.get(

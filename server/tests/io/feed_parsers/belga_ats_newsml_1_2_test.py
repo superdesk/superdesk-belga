@@ -58,7 +58,7 @@ class BelgaATSNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-06-03 15:47:29+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 15:47:29+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["urgency"], "4")
+        self.assertEqual(item["urgency"], 4)
         self.assertEqual(item["dateline"], {'text': 'Landquart GR'})
         self.assertEqual(item["headline"], "Un taureau entre dans un magasin à Landquart (GR)")
         self.assertEqual(item["line_type"], "CatchWord")
