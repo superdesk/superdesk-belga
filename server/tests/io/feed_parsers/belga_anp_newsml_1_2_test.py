@@ -57,7 +57,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2018-12-10 08:35:49+00:00")
         self.assertEqual(str(item["versioncreated"]), "2018-12-10 11:37:31+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["urgency"], "3")
+        self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["dateline"], {})
         self.assertEqual(item["headline"], "FNV staat alleen met acties bij PostNL (2)")
         self.assertEqual(item["sub_head_line"], None)
