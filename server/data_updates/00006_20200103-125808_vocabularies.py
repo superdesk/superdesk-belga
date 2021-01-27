@@ -7,10 +7,10 @@
 # Author  : olegpshenichniy
 # Creation: 2020-01-03 12:58
 
-from superdesk.commands.data_updates import DataUpdate
+from superdesk.commands.data_updates import BaseDataUpdate
 
 
-class DataUpdate(DataUpdate):
+class DataUpdate(BaseDataUpdate):
 
     resource = 'vocabularies'
 
