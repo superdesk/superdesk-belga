@@ -19,9 +19,9 @@ const extension: IExtension = {
                             superdesk.entities.contentProfile.get(current.profile),
                             superdesk.entities.contentProfile.get(next.profile),
                         ]).then((res) => {
-                            const [currentProfile, nextProfile] = res;
+                            const nextProfile = res[1];
 
-                            if (currentProfile.label === 'ALERT' && nextProfile.label !== 'ALERT') {
+                            if (nextProfile.label !== 'ALERT') {
                                 return Promise.resolve({
                                     ...next,
                                     urgency: 3,
@@ -33,7 +33,7 @@ const extension: IExtension = {
                                             scheme: 'distribution'
                                         }),
                                 });
-                            } else if (currentProfile.label !== 'ALERT' && nextProfile.label === 'ALERT') {
+                            } else if (nextProfile.label === 'ALERT') {
                                 return Promise.resolve({
                                     ...next,
                                     urgency: 1,
