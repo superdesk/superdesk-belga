@@ -444,7 +444,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             for element in elements:
                 if element.get('FormalName', '') == 'author':
                     item.setdefault('authors', []).append({
-                        'name': element.get('Value').replace(' ', ''),
+                        'name': element.get('Value', '').replace(' ', ''),
                         'role': element.get('FormalName', '')
                     })
 
