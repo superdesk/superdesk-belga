@@ -132,7 +132,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["line_type"], "1")
         self.assertEqual(item["keywords"], ['BELGIUM', 'MOBILITEIT', 'VERKEER', 'INFRASTRUCTUUR', 'STEDEN', 'BRIEF'])
         self.assertEqual(item["administrative"], {'foreign_id': '0'})
-        self.assertEqual(item["authors"], [{'name': 'COR 360', 'role': 'CORRESPONDENT'}])
+        self.assertEqual(item["authors"], [{'name': 'COR360', 'role': 'CORRESPONDENT'}])
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["source"], "BELGA")

@@ -623,10 +623,20 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
-                item.setdefault('authors', []).append({
-                    'name': element.get('FormalName'),
+                author = {
+                    'name': element.get('FormalName', '').replace(' ', ''),
                     'role': element.get('Topic', '')
-                })
+                }
+                # try to find an author in DB
+                user = get_resource_service('users').find_one(req=None, username=author['name'])
+                if user:
+                    author['_id'] = [
+                        str(user['_id']),
+                        author['role']
+                    ]
+                    author['sub_label'] = user.get('display_name', author['name'])
+                    author['parent'] = str(user['_id'])
+                item.setdefault('authors', []).append(author)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
