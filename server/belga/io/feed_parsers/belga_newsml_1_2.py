@@ -605,10 +605,36 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.text:
             item['line_text'] = element.text
 
-        # keywords
+        # belga-keywords
         for element in newslines_el.findall('KeywordLine'):
             if element is not None and element.text:
-                item.setdefault('keywords', []).append(element.text)
+                scheme = 'belga-keywords'
+                belga_keyword_name_regex = {
+                    '$regex': r'^{}$'.format(element.text.strip()),
+                    # case-insensitive
+                    '$options': 'i'
+                }
+                cursor = get_resource_service('vocabularies').get_from_mongo(
+                    req=None,
+                    lookup={'_id': scheme},
+                    projection={
+                        'items': {
+                            '$elemMatch': {
+                                'translations.name.{}'.format(item['language']): belga_keyword_name_regex
+                            }
+                        }
+                    }
+                )
+                try:
+                    belga_keyword = cursor.next()
+                    item.setdefault('subject', []).append({
+                        'name': belga_keyword['items'][0]['name'],
+                        'qcode': belga_keyword['items'][0]['qcode'],
+                        'translations': belga_keyword['items'][0]['translations'],
+                        'scheme': scheme
+                    })
+                except (StopIteration, KeyError, IndexError) as e:
+                    logger.error(e)
 
     def parse_administrativemetadata(self, item, admin_el):
         """Parse AdministrativeMetadata in 2nd level NewsComponent element."""
