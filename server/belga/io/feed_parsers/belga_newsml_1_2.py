@@ -624,7 +624,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
                 item.setdefault('authors', []).append({
-                    'name': element.get('FormalName'),
+                    'name': element.get('FormalName').replace(' ', ''),
                     'role': element.get('Topic', '')
                 })
 
