@@ -608,32 +608,15 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # belga-keywords
         for element in newslines_el.findall('KeywordLine'):
             if element is not None and element.text:
-                scheme = 'belga-keywords'
-                belga_keyword_name_regex = {
-                    '$regex': r'^{}$'.format(element.text.strip()),
-                    # case-insensitive
-                    '$options': 'i'
-                }
-                cursor = get_resource_service('vocabularies').get_from_mongo(
-                    req=None,
-                    lookup={'_id': scheme},
-                    projection={
-                        'items': {
-                            '$elemMatch': {
-                                'translations.name.{}'.format(item['language']): belga_keyword_name_regex
-                            }
-                        }
-                    }
+                belga_keywords = get_resource_service("vocabularies").get_items(
+                    _id='belga-keywords',
+                    name=element.text.strip(),
+                    lang=item['language'],
                 )
+
                 try:
-                    belga_keyword = cursor.next()
-                    item.setdefault('subject', []).append({
-                        'name': belga_keyword['items'][0]['name'],
-                        'qcode': belga_keyword['items'][0]['qcode'],
-                        'translations': belga_keyword['items'][0]['translations'],
-                        'scheme': scheme
-                    })
-                except (StopIteration, KeyError, IndexError) as e:
+                    item.setdefault('subject', []).append(belga_keywords[0])
+                except (StopIteration, IndexError) as e:
                     logger.error(e)
 
     def parse_administrativemetadata(self, item, admin_el):
@@ -759,35 +742,14 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             for element in elements:
                 # country
                 if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
-                    country_name_regex = {
-                        '$regex': r'^{}$'.format(element.attrib.get('Value')),
-                        # case-insensitive
-                        '$options': 'i'
-                    }
-                    scheme = 'countries'
-                    country = get_resource_service('vocabularies').get_from_mongo(
-                        req=None,
-                        lookup={
-                            '_id': 'countries',
-                            'items.translations.name.{}'.format(item['language']): country_name_regex
-                        },
-                        projection={
-                            'items': {
-                                '$elemMatch': {
-                                    'translations.name.{}'.format(item['language']): country_name_regex
-                                }
-                            }
-                        }
+                    countries = get_resource_service('vocabularies').get_items(
+                        _id='countries',
+                        name=element.attrib.get('Value'),
+                        lang=item['language']
                     )
                     try:
-                        country = country.next()
-                        item.setdefault('subject', []).append({
-                            'name': country['items'][0]['name'],
-                            'qcode': country['items'][0]['qcode'],
-                            'translations': country['items'][0]['translations'],
-                            'scheme': scheme
-                        })
-                    except (StopIteration, KeyError, IndexError) as e:
+                        item.setdefault('subject', []).append(countries[0])
+                    except (StopIteration, IndexError) as e:
                         logger.error(e)
                 # city
                 if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):
