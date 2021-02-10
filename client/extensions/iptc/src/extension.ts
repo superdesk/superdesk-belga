@@ -18,7 +18,6 @@ const COPY_FROM_PARENT_SCHEMAS = [
 ];
 
 const extension: IExtension = {
-    id: 'iptc',
     activate: (superdesk: ISuperdesk) => {
         const result: IExtensionActivationResult = {
             contributions: {

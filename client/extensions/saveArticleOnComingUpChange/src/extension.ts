@@ -6,7 +6,6 @@ import {
 } from 'superdesk-api';
 
 const extension: IExtension = {
-    id: 'saveArticleOnComingUpChange',
     activate: (superdesk: ISuperdesk) => {
         const result: IExtensionActivationResult = {
             contributions: {
