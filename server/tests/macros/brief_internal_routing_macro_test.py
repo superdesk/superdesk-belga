@@ -59,7 +59,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
 
     def setUp(self):
         self.profiles = self.app.data.insert('content_types', [
-            {'label': 'Brief'},
+            {'label': 'BRIEF'},
             {'label': 'TEXT'},
         ])
         self.now = utcnow()

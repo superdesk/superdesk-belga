@@ -991,9 +991,17 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if item.get('extra', {}).get('city'):
             city_property.set('Value', item['extra']['city'])
 
-        country_property = SubElement(location, 'Property', {'FormalName': 'Country'})
-        if item.get('extra', {}).get('country'):
-            country_property.set('Value', item['extra']['country'])
+        countries = [subj for subj in item.get('subject', []) if subj['scheme'] == 'countries']
+        for country in countries:
+            country_property = SubElement(location, 'Property', {'FormalName': 'Country'})
+            try:
+                country_property.set('Value', country['translations']['name'][item.get('language')])
+            except KeyError:
+                logger.warning(
+                    'There is no "{}" translation for countries cv. Country: {}'.format(item.get('language'), country)
+                )
+            # for now we output only one country
+            break
 
         SubElement(location, 'Property', {'FormalName': 'CountryArea'})
         SubElement(location, 'Property', {'FormalName': 'WorldRegion'})

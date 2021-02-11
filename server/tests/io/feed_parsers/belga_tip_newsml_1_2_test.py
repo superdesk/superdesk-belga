@@ -58,5 +58,4 @@ class BelgaTipNewsMLOneTestCase(TestCase):
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["source"], "BELGA")
-        self.assertEqual(item["extra"], {'country': 'BELGIUM'})
         self.assertEqual(item["type"], "text")

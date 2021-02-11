@@ -60,7 +60,7 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
                 '\ndpa tt xx n1\n'
             )
         self.assertEqual(item["ednote"], expected_ednote)
-        self.assertEqual(item["urgency"], 4)
+        self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["headline"], "Mehr als 200 Migranten in der Ägäis aufgegriffen")
         self.assertEqual(item["slugline"], None)
         self.assertEqual(item["keywords"], [])

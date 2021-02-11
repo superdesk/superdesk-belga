@@ -1,0 +1,38 @@
+<fieldset ng-controller="BelgaSearchPanelController as searchPanel">
+    <div class="field">
+        <label class="search-label">Language</label>
+        <select ng-model="params.languages">
+            <option ng-repeat="language in searchPanel.languages" value="{{ language.id }}">{{ language.name }}</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label class="search-label">Content type</label>
+        <select ng-model="params.types">
+            <option ng-repeat="type in searchPanel.types" value="{{ type.id }}">{{ type.name }}</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label class="search-label" translate>Period</label>
+        <select ng-model="params.period">
+            <option ng-repeat="period in searchPanel.periods" value="{{ period.id }}">{{ period.name }}</option>
+        </select>
+    </div>
+    <div class="form__row form__row--flex form__row--small-padding">
+        <div class="form__row-item">
+            <label class="form-label" translate>From</label>
+            <div sd-datepicker
+                ng-model="params.dates.start"
+                data-on-change="onDatesChange()"
+            ></div>
+        </div>
+        <div class="form__row-item">
+            <label class="form-label" translate>To</label>
+            <div sd-datepicker
+                ng-model="params.dates.end"
+                data-on-change="onDatesChange()"
+            ></div>
+        </div>
+    </div>
+</fieldset>
