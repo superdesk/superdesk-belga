@@ -141,6 +141,8 @@ video_profile = copy.deepcopy(picture_profile)
 video_profile['schema']['headline']['required'] = True
 video_profile['editor']['headline']['required'] = True
 
+audio_profile = copy.deepcopy(video_profile)
+
 graphic_profile = copy.deepcopy(picture_profile)
 graphic_profile['editor'].update({
     'bcoverage': {
@@ -157,11 +159,13 @@ graphic_profile['schema'].update({
 EDITOR = {
     'picture': picture_profile['editor'],
     'video': video_profile['editor'],
+    'audio': audio_profile['editor'],
     'graphic': graphic_profile['editor'],
 }
 SCHEMA = {
     'picture': picture_profile['schema'],
     'video': video_profile['schema'],
+    'audio': audio_profile['schema'],
     'graphic': graphic_profile['schema'],
 }
 
