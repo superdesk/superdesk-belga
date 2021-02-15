@@ -11,10 +11,10 @@ from copy import copy
 
 from flask import current_app
 
-from superdesk.commands.data_updates import DataUpdate
+from superdesk.commands.data_updates import BaseDataUpdate
 
 
-class DataUpdate(DataUpdate):
+class DataUpdate(BaseDataUpdate):
 
     resource = 'content_types'
 

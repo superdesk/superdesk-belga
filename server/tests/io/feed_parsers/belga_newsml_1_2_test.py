@@ -67,7 +67,6 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item["guid"], "98055801")
         self.assertEqual(item["headline"], "Mediawatch dinsdag 29/01/2019 - VTM Nieuws - 13 uur")
         self.assertEqual(item["item_id"], "98055798")
-        self.assertEqual(item["keywords"], ['ATTENTION USERS', 'PRESS', 'TV', 'MEDIA'])
         self.assertEqual(item['language'], 'nl')
         self.assertEqual(item['priority'], 3)
         self.assertEqual(item['urgency'], 3)
@@ -77,16 +76,36 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['slugline'], 'BelgaService')
         self.assertEqual(item['ednote'], "Qu'y a-t-il écrit ici?")
         self.assertEqual(item['source'], 'BELGA')
-        self.assertEqual(item['subject'], [
-            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-            {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products', 'parent': 'BIN'},
-            {'name': 'BIN/ECO', 'qcode': 'BIN/ECO', 'scheme': 'services-products', 'parent': 'BIN'},
-            {'name': 'NEWS/CULTURE_LIFESTYLE', 'qcode': 'NEWS/CULTURE_LIFESTYLE', 'scheme': 'services-products',
-             'parent': 'NEWS'},
-            {'name': 'Belgium', 'qcode': 'bel',
-             'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
-             'scheme': 'countries'}
-        ])
+        self.assertEqual(item['subject'], [{'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
+                                           {'name': 'ATTENTION USERS',
+                                            'qcode': 'ATTENTION USERS',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'ATTENTION USERS',
+                                                                      'nl': 'ATTENTION USERS'}}},
+                                           {'name': 'PRESS',
+                                            'qcode': 'PRESS',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'Press', 'nl': 'PRESS'}}},
+                                           {'name': 'TV',
+                                            'qcode': 'TV',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'TV', 'nl': 'TV'}}},
+                                           {'name': 'BIN/ALG',
+                                            'parent': 'BIN',
+                                            'qcode': 'BIN/ALG',
+                                            'scheme': 'services-products'},
+                                           {'name': 'BIN/ECO',
+                                            'parent': 'BIN',
+                                            'qcode': 'BIN/ECO',
+                                            'scheme': 'services-products'},
+                                           {'name': 'NEWS/CULTURE_LIFESTYLE',
+                                            'parent': 'NEWS',
+                                            'qcode': 'NEWS/CULTURE_LIFESTYLE',
+                                            'scheme': 'services-products'},
+                                           {'name': 'Belgium',
+                                            'qcode': 'bel',
+                                            'scheme': 'countries',
+                                            'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}}])
         self.assertEqual(item['type'], 'text')
         self.assertEqual(item['version'], 4)
         self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
@@ -119,8 +138,31 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["item_id"], "0")
         self.assertEqual(item["version"], 1)
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
-        self.assertEqual(item["subject"], [{'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products',
-                                            'parent': 'BIN'},
+        self.assertEqual(item["subject"], [{'name': 'MOBILITY',
+                                            'qcode': 'MOBILITY',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'Mobilité', 'nl': 'Mobiliteit'}}},
+                                           {'name': 'TRAFFIC',
+                                            'qcode': 'TRAFFIC',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'Circulation', 'nl': 'Verkeer'}}},
+                                           {'name': 'INFRASTRUCTURE',
+                                            'qcode': 'INFRASTRUCTURE',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'Infrastructure',
+                                                                      'nl': 'Infrastructuur'}}},
+                                           {'name': 'CITIES',
+                                            'qcode': 'CITIES',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'Villes', 'nl': 'Steden'}}},
+                                           {'name': 'BRIEF',
+                                            'qcode': 'BRIEF',
+                                            'scheme': 'belga-keywords',
+                                            'translations': {'name': {'fr': 'BRIEF', 'nl': 'BRIEF'}}},
+                                           {'name': 'BIN/ALG',
+                                            'parent': 'BIN',
+                                            'qcode': 'BIN/ALG',
+                                            'scheme': 'services-products'},
                                            {'name': 'S1', 'qcode': 'S1', 'scheme': 'label'}])
         self.assertEqual(str(item["firstcreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 14:02:17+00:00")
@@ -130,9 +172,8 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["headline"], "Knooppunt Schijnpoort in Antwerpen hele zomervakantie afgesloten")
         self.assertEqual(item["copyrightholder"], "Belga")
         self.assertEqual(item["line_type"], "1")
-        self.assertEqual(item["keywords"], ['BELGIUM', 'MOBILITEIT', 'VERKEER', 'INFRASTRUCTUUR', 'STEDEN', 'BRIEF'])
         self.assertEqual(item["administrative"], {'foreign_id': '0'})
-        self.assertEqual(item["authors"], [{'name': 'COR 360', 'role': 'CORRESPONDENT'}])
+        self.assertEqual(item["authors"], [{'name': 'COR360', 'role': 'CORRESPONDENT'}])
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["source"], "BELGA")
@@ -257,14 +298,22 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
         self.assertEqual(item['type'], 'video')
         self.assertEqual(
             item['subject'],
-            [{'name': 'INT/ECO',
+            [{'name': 'UNIONS',
+              'qcode': 'UNIONS',
+              'scheme': 'belga-keywords',
+              'translations': {'name': {'fr': 'Syndicats', 'nl': 'Vakbonden'}}},
+             {'name': 'BELGAINSERT',
+              'qcode': 'BELGAINSERT',
+              'scheme': 'belga-keywords',
+              'translations': {'name': {'fr': 'BelgaInsert', 'nl': 'BelgaInsert'}}},
+             {'name': 'INT/ECO',
               'parent': 'INT',
               'qcode': 'INT/ECO',
               'scheme': 'services-products'},
-             {'name': 'Belgium', 'qcode': 'bel',
-              'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
-              'scheme': 'countries'}
-             ]
+             {'name': 'Belgium',
+              'qcode': 'bel',
+              'scheme': 'countries',
+              'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}}]
         )
         self.assertIn('href', item['renditions']['original'])
         self.assertIn('media', item['renditions']['original'])

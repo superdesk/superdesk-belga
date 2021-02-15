@@ -5,8 +5,8 @@
         "postinstall": "node ./tasks/install-extensions.js"
     },
     "dependencies": {
-        "superdesk-analytics": "github:superdesk/superdesk-analytics#v2.0.0",
-        "superdesk-core": "github:superdesk/superdesk-client-core#v2.0.2",
-        "superdesk-planning": "github:superdesk/superdesk-planning#v2.0.0"
+        "superdesk-analytics": "github:superdesk/superdesk-analytics#v2.1.0",
+        "superdesk-core": "github:superdesk/superdesk-client-core#v2.1.0",
+        "superdesk-planning": "github:superdesk/superdesk-planning#v2.1.0"
     }
 }

@@ -605,10 +605,19 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.text:
             item['line_text'] = element.text
 
-        # keywords
+        # belga-keywords
         for element in newslines_el.findall('KeywordLine'):
             if element is not None and element.text:
-                item.setdefault('keywords', []).append(element.text)
+                belga_keywords = get_resource_service("vocabularies").get_items(
+                    _id='belga-keywords',
+                    name=element.text.strip(),
+                    lang=item['language'],
+                )
+
+                try:
+                    item.setdefault('subject', []).append(belga_keywords[0])
+                except (StopIteration, IndexError) as e:
+                    logger.error(e)
 
     def parse_administrativemetadata(self, item, admin_el):
         """Parse AdministrativeMetadata in 2nd level NewsComponent element."""
@@ -623,10 +632,20 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
-                item.setdefault('authors', []).append({
-                    'name': element.get('FormalName'),
+                author = {
+                    'name': element.get('FormalName', '').replace(' ', ''),
                     'role': element.get('Topic', '')
-                })
+                }
+                # try to find an author in DB
+                user = get_resource_service('users').find_one(req=None, username=author['name'])
+                if user:
+                    author['_id'] = [
+                        str(user['_id']),
+                        author['role']
+                    ]
+                    author['sub_label'] = user.get('display_name', author['name'])
+                    author['parent'] = str(user['_id'])
+                item.setdefault('authors', []).append(author)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
@@ -723,35 +742,14 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             for element in elements:
                 # country
                 if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
-                    country_name_regex = {
-                        '$regex': r'^{}$'.format(element.attrib.get('Value')),
-                        # case-insensitive
-                        '$options': 'i'
-                    }
-                    scheme = 'countries'
-                    country = get_resource_service('vocabularies').get_from_mongo(
-                        req=None,
-                        lookup={
-                            '_id': 'countries',
-                            'items.translations.name.{}'.format(item['language']): country_name_regex
-                        },
-                        projection={
-                            'items': {
-                                '$elemMatch': {
-                                    'translations.name.{}'.format(item['language']): country_name_regex
-                                }
-                            }
-                        }
+                    countries = get_resource_service('vocabularies').get_items(
+                        _id='countries',
+                        name=element.attrib.get('Value'),
+                        lang=item['language']
                     )
                     try:
-                        country = country.next()
-                        item.setdefault('subject', []).append({
-                            'name': country['items'][0]['name'],
-                            'qcode': country['items'][0]['qcode'],
-                            'translations': country['items'][0]['translations'],
-                            'scheme': scheme
-                        })
-                    except (StopIteration, KeyError, IndexError) as e:
+                        item.setdefault('subject', []).append(countries[0])
+                    except (StopIteration, IndexError) as e:
                         logger.error(e)
                 # city
                 if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):

@@ -59,7 +59,7 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:36:00+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:36:00+00:00")
         self.assertEqual(item["pubstatus"], "usable")
-        self.assertEqual(item["urgency"], "5")
+        self.assertEqual(item["urgency"], 5)
         self.assertEqual(item["role"], "Main")
         self.assertEqual(item["headline"], "Leones matan a un joven que se coló en un zoológico de la India")
         self.assertEqual(item["sub_head_line"], "INDIA SUCESOS")

@@ -164,5 +164,45 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             item['body_html'] = item.get('headline')
         return item
 
+    def parse_newslines(self, item, newslines_el):
+        """Parse NewsLines in 2nd level NewsComponent element."""
+        if newslines_el is None:
+            return
+
+        # dateline
+        element = newslines_el.find('DateLine')
+        if element is not None and element.text:
+            self.set_dateline(item, text=element.text)
+
+        # byline
+        element = newslines_el.find('CreditLine')
+        if element is not None and element.text:
+            item['byline'] = element.text
+
+        # headline
+        element = newslines_el.find('HeadLine')
+        if element is not None and element.text:
+            item['headline'] = element.text.strip()
+
+        # copyrightholder
+        element = newslines_el.find('CopyrightLine')
+        if element is not None and element.text:
+            item['copyrightholder'] = element.text
+
+        # line_type
+        element = newslines_el.find('NewsLine/NewsLineType')
+        if element is not None and element.get('FormalName'):
+            item['line_type'] = element.get('FormalName')
+
+        # line_text
+        element = newslines_el.find('NewsLine/NewsLineText')
+        if element is not None and element.text:
+            item['line_text'] = element.text
+
+        # keywords
+        for element in newslines_el.findall('KeywordLine'):
+            if element is not None and element.text:
+                item.setdefault('keywords', []).append(element.text)
+
 
 register_feed_parser(BelgaTipNewsMLOneFeedParser.NAME, BelgaTipNewsMLOneFeedParser())
