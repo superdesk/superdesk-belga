@@ -42,6 +42,7 @@ const extension: IExtension = {
                                     qcode: subj.qcode,
                                     scheme: scheme,
                                     translations: subj.translations,
+                                    source: '',
                                 });
                             });
                     });

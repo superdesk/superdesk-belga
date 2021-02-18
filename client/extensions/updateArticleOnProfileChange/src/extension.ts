@@ -3,6 +3,7 @@ import {
     IExtension,
     IExtensionActivationResult,
     IArticle,
+    ISubject,
 } from 'superdesk-api';
 
 const extension: IExtension = {
@@ -26,11 +27,12 @@ const extension: IExtension = {
                                     ...next,
                                     urgency: 3,
                                     subject: (next.subject ?? [])
-                                        .filter((item: any) => item?.scheme !== 'distribution')
+                                        .filter((item: ISubject) => item?.scheme !== 'distribution')
                                         .concat({
                                             qcode: 'default',
                                             name: 'default',
-                                            scheme: 'distribution'
+                                            scheme: 'distribution',
+                                            source: '',
                                         }),
                                 });
                             } else if (currentProfile.label !== 'ALERT' && nextProfile.label === 'ALERT') {
@@ -38,11 +40,12 @@ const extension: IExtension = {
                                     ...next,
                                     urgency: 1,
                                     subject: (next.subject ?? [])
-                                        .filter((item: any) => item?.scheme !== 'distribution')
+                                        .filter((item: ISubject) => item?.scheme !== 'distribution')
                                         .concat({
                                             qcode: 'bilingual',
                                             name: 'bilingual',
-                                            scheme: 'distribution'
+                                            scheme: 'distribution',
+                                            source: '',
                                         }),
                                 });
                             } else {
