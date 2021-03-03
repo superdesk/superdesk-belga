@@ -56,7 +56,7 @@
                         <Party FormalName="COR 360" Topic="CORRESPONDENT"/>
                     </Creator>
                     <Source>
-                        <Party FormalName="BELGA"/>
+                        <Party FormalName="ANP/BELGA"/>
                     </Source>
                     <Contributor>
                         <Party FormalName=""/>
@@ -152,7 +152,7 @@
                         <Party FormalName="COR 360" Topic="CORRESPONDENT"/>
                     </Creator>
                     <Source>
-                        <Party FormalName="BELGA"/>
+                        <Party FormalName="ANP/BELGA"/>
                     </Source>
                     <Contributor>
                         <Party FormalName=""/>

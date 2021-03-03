@@ -630,6 +630,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get('FormalName'):
             item['administrative']['provider'] = element.get('FormalName')
 
+        self.parse_sources(item, admin_el)
+
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
                 author = {
@@ -645,6 +647,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     ]
                     author['sub_label'] = user.get('display_name', author['name'])
                     author['parent'] = str(user['_id'])
+                    author['name'] = author['role']
                 item.setdefault('authors', []).append(author)
 
         element = admin_el.find('Contributor/Party')
@@ -835,6 +838,18 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             return {'attachment': next(iter(ids), None)}
         except Exception as ex:
             app.media.delete(media_id)
+
+    def parse_sources(self, item, admin_el):
+        names = []
+        source = admin_el.find('Source/Party')
+        if source is not None and source.get('FormalName'):
+            names.extend(source.get('FormalName').split('/'))
+        if not names:
+            names.append('BELGA')
+        sources = get_resource_service('vocabularies').get_items('sources')
+        for source in sources:
+            if source['name'] in names:
+                item.setdefault('subject', []).append(source)
 
     def _get_role(self, newscomponent_el):
         role = newscomponent_el.find('Role')
