@@ -76,36 +76,41 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['slugline'], 'BelgaService')
         self.assertEqual(item['ednote'], "Qu'y a-t-il écrit ici?")
         self.assertEqual(item['source'], 'BELGA')
-        self.assertEqual(item['subject'], [{'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-                                           {'name': 'ATTENTION USERS',
-                                            'qcode': 'ATTENTION USERS',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'ATTENTION USERS',
-                                                                      'nl': 'ATTENTION USERS'}}},
-                                           {'name': 'PRESS',
-                                            'qcode': 'PRESS',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'Press', 'nl': 'PRESS'}}},
-                                           {'name': 'TV',
-                                            'qcode': 'TV',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'TV', 'nl': 'TV'}}},
-                                           {'name': 'BIN/ALG',
-                                            'parent': 'BIN',
-                                            'qcode': 'BIN/ALG',
-                                            'scheme': 'services-products'},
-                                           {'name': 'BIN/ECO',
-                                            'parent': 'BIN',
-                                            'qcode': 'BIN/ECO',
-                                            'scheme': 'services-products'},
-                                           {'name': 'NEWS/CULTURE_LIFESTYLE',
-                                            'parent': 'NEWS',
-                                            'qcode': 'NEWS/CULTURE_LIFESTYLE',
-                                            'scheme': 'services-products'},
-                                           {'name': 'Belgium',
-                                            'qcode': 'bel',
-                                            'scheme': 'countries',
-                                            'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}}])
+        self.assertEqual(item['subject'], [
+            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
+            {'name': 'ATTENTION USERS',
+             'qcode': 'ATTENTION USERS',
+             'scheme': 'belga-keywords',
+             'translations': {'name': {'fr': 'ATTENTION USERS',
+                                       'nl': 'ATTENTION USERS'}}},
+            {'name': 'PRESS',
+             'qcode': 'PRESS',
+             'scheme': 'belga-keywords',
+             'translations': {'name': {'fr': 'Press', 'nl': 'PRESS'}}},
+            {'name': 'TV',
+             'qcode': 'TV',
+             'scheme': 'belga-keywords',
+             'translations': {'name': {'fr': 'TV', 'nl': 'TV'}}},
+            {'name': 'BELGA',
+             'qcode': 'BELGA',
+             'scheme': 'sources'},
+            {'name': 'BIN/ALG',
+             'parent': 'BIN',
+             'qcode': 'BIN/ALG',
+             'scheme': 'services-products'},
+            {'name': 'BIN/ECO',
+             'parent': 'BIN',
+             'qcode': 'BIN/ECO',
+             'scheme': 'services-products'},
+            {'name': 'NEWS/CULTURE_LIFESTYLE',
+             'parent': 'NEWS',
+             'qcode': 'NEWS/CULTURE_LIFESTYLE',
+             'scheme': 'services-products'},
+            {'name': 'Belgium',
+             'qcode': 'bel',
+             'scheme': 'countries',
+             'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}},
+        ])
         self.assertEqual(item['type'], 'text')
         self.assertEqual(item['version'], 4)
         self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
@@ -117,6 +122,8 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
+        self.users = [{"username": "COR360", "display_name": "John Doe"}]
+        get_resource_service("users").create(self.users)
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         media_fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.media_file))
@@ -159,6 +166,12 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
                                             'qcode': 'BRIEF',
                                             'scheme': 'belga-keywords',
                                             'translations': {'name': {'fr': 'BRIEF', 'nl': 'BRIEF'}}},
+                                           {'name': 'BELGA',
+                                            'qcode': 'BELGA',
+                                            'scheme': 'sources'},
+                                           {'name': 'ANP',
+                                            'qcode': 'ANP',
+                                            'scheme': 'sources'},
                                            {'name': 'BIN/ALG',
                                             'parent': 'BIN',
                                             'qcode': 'BIN/ALG',
@@ -173,10 +186,16 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["copyrightholder"], "Belga")
         self.assertEqual(item["line_type"], "1")
         self.assertEqual(item["administrative"], {'foreign_id': '0'})
-        self.assertEqual(item["authors"], [{'name': 'COR360', 'role': 'CORRESPONDENT'}])
+        self.assertEqual(item["authors"], [{
+            'name': 'CORRESPONDENT',
+            'role': 'CORRESPONDENT',
+            'sub_label': 'John Doe',
+            'parent': str(self.users[0]['_id']),
+            '_id': [str(self.users[0]['_id']), 'CORRESPONDENT'],
+        }])
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["urgency"], 3)
-        self.assertEqual(item["source"], "BELGA")
+        self.assertEqual(item["source"], "ANP/BELGA")
         self.assertEqual(item["extra"], {'city': 'ANTWERPEN'})
         self.assertEqual(item["type"], "text")
         self.assertEqual(
@@ -306,6 +325,9 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
               'qcode': 'BELGAINSERT',
               'scheme': 'belga-keywords',
               'translations': {'name': {'fr': 'BelgaInsert', 'nl': 'BelgaInsert'}}},
+             {'name': 'BELGA',
+              'qcode': 'BELGA',
+              'scheme': 'sources'},
              {'name': 'INT/ECO',
               'parent': 'INT',
               'qcode': 'INT/ECO',
