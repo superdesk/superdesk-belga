@@ -13,7 +13,6 @@ import logging
 from copy import deepcopy
 from typing import NamedTuple
 from urllib.parse import urljoin
-from collections import namedtuple
 from dateutil import parser as dateutil_parser
 
 from lxml import etree
@@ -962,8 +961,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     {'FormalName': 'NewsProduct', 'Value': news_product_value}
                 )
 
-        sources = [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'sources']
-        sources += [subj['qcode'] for subj in item.get('subject', []) if subj['scheme'] == 'media-source']
+        sources = [subj['qcode'] for subj in item.get('subject', []) if subj.get('scheme') == 'sources']
+        sources += [subj['qcode'] for subj in item.get('subject', []) if subj.get('scheme') == 'media-source']
         sources += [item['creditline']] if item.get('creditline') else []
         if sources:
             source_element = SubElement(administrative_metadata, 'Source')
@@ -991,7 +990,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         if item.get('extra', {}).get('city'):
             city_property.set('Value', item['extra']['city'])
 
-        countries = [subj for subj in item.get('subject', []) if subj['scheme'] == 'countries']
+        countries = [subj for subj in item.get('subject', []) if subj.get('scheme') == 'countries']
         for country in countries:
             country_property = SubElement(location, 'Property', {'FormalName': 'Country'})
             try:

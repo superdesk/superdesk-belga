@@ -14,7 +14,6 @@ import dateutil.parser
 from xml.etree import ElementTree
 
 from superdesk import etree as sd_etree
-from superdesk import get_resource_service
 from superdesk.io.feed_parsers.newsml_2_0 import NewsMLTwoFeedParser
 from superdesk.io.registry import register_feed_parser
 from superdesk.errors import ParserError
