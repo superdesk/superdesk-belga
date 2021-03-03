@@ -426,7 +426,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # SDBELGA-328
         if item.get('abstract'):
             abstract = '<p>' + item['abstract'] + '</p>'
-            item['body_html'] = abstract + item['body_html']
+            item['body_html'] = abstract + item.get('body_html', '')
 
         # type
         item[ITEM_TYPE] = CONTENT_TYPE.TEXT
