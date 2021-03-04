@@ -81,7 +81,7 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
         self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["extra"], {'city': 'Athen', 'country': 'Griechenland'})
         self.assertEqual(item["genre"], [])
-        self.assertEqual(item["authors"], [{'uri': None, 'role': 'tsafos'}])
+        self.assertEqual(item["authors"], [])
         self.assertEqual(item["dateline"], {'text': 'Athen (dpa) - '})
         self.assertEqual(item["credit_line"], "dpa")
         self.assertEqual(item["usageterms"], "Nutzung nur nach schriftlicher Vereinbarung mit dpa")

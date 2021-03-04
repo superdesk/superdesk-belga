@@ -184,13 +184,7 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
 
     def parse_authors(self, meta, item):
         item['authors'] = []
-        for creator in meta.findall(self.qname('creator')):
-            role = creator.find(self.qname('name'))
-            if role is not None:
-                item['authors'].append({
-                    'uri': creator.get('uri'),
-                    'role': role.text,
-                })
+        return
 
     def _get_data_subject(self, subject_elt):
         qcode_parts = subject_elt.get('qcode', '').split(':')
