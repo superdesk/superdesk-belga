@@ -31,6 +31,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     def parse_newsitem(self, item, newsitem_el):
         super().parse_newsitem(item, newsitem_el)
         # mapping services-products from category, and have only one product
+        matching = False
         for category in item.get('anpa_category', []):
             qcode = self.MAPPING_CATEGORY.get(category.get('qcode'), 'NEWS/GENERAL')
             item.setdefault('subject', []).append({
@@ -39,14 +40,15 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 'parent': 'NEWS',
                 'scheme': 'services-products'
             })
-            break
-        else:
+            matching = True
+        if not matching:
             item.setdefault('subject', []).append({
                 'name': 'NEWS/GENERAL',
                 'qcode': 'NEWS/GENERAL',
                 'parent': 'NEWS',
                 'scheme': 'services-products'
             })
+
         # add content for headline when it is empty
         if item.get('urgency') in (1, 2) and not item.get('headline'):
             for line in get_text(item.get('body_html', ''), lf_on_block=True).split('\n'):

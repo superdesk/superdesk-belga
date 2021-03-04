@@ -47,6 +47,8 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
             {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU', 'scheme': 'of_interest_to'},
             {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
             {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
+            {'name': 'NEWS/ECONOMY', 'parent': 'NEWS', 'qcode': 'NEWS/ECONOMY', 'scheme': 'services-products'},
+            {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
             {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
             {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
              'translations': {'name': {'fr': 'France', 'nl': 'Frankrijk'}}},
