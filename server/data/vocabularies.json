@@ -6658,7 +6658,7 @@
     },
     {
         "_id": "belga-keywords",
-        "init_version": 4,
+        "init_version": 5,
         "display_name": "Belga Keywords",
         "type": "manageable",
         "selection_type": "multi selection",
@@ -9467,6 +9467,17 @@
                 }
             },
             {
+                "name": "SHORTTRACK",
+                "qcode": "SHORTTRACK",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Shorttrack",
+                        "fr": "Shorttrack"
+                    }
+                }
+            },
+            {
                 "name": "ALPINE SKIING",
                 "qcode": "ALPINE SKIING",
                 "is_active": true,
@@ -10402,17 +10413,6 @@
                 }
             },
             {
-                "name": "MUSIC",
-                "qcode": "MUSIC",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "Music",
-                        "fr": "Music"
-                    }
-                }
-            },
-            {
                 "name": "MUSIC FESTIVALS",
                 "qcode": "MUSIC FESTIVALS",
                 "is_active": true,
@@ -10519,17 +10519,6 @@
                     "name": {
                         "nl": "Horror",
                         "fr": "Horror"
-                    }
-                }
-            },
-            {
-                "name": "MUSIC",
-                "qcode": "MUSIC",
-                "is_active": true,
-                "translations": {
-                    "name": {
-                        "nl": "Music",
-                        "fr": "Music"
                     }
                 }
             },
