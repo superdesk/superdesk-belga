@@ -58,7 +58,7 @@ def set_default_metadata_with_translate(item, **kwargs):
     # and now we apply the update
     new_item = archive_service.find_one(req=None, _id=new_id)
 
-    # set keep_keywords to False to keep the keywords of the originally article or not to overwrite the keywords.
+    # set keep_keywords to True to overwrite the keywords.
     kwargs['keep_keywords'] = False
 
     set_default_metadata(new_item, **kwargs)
