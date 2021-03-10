@@ -368,7 +368,6 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         self.assertEqual(['foo', 'bar'], new_item['keywords'])
 
-
     def test_keywords_to_overwrite(self):
         self.app.data.insert(
             'desks',
