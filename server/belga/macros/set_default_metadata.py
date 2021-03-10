@@ -65,7 +65,7 @@ def set_default_metadata(item, **kwargs):
 
     item['language'] = data.get('language')
 
-    if kwargs.get('keep_keywords', True):
+    if kwargs.get('overwrite_keywords', True):
         item['keywords'] = data.get('keywords')
 
     # subject contains remaining metadata to copy
