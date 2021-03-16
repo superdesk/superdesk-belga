@@ -6658,7 +6658,7 @@
     },
     {
         "_id": "belga-keywords",
-        "init_version": 5,
+        "init_version": 6,
         "display_name": "Belga Keywords",
         "type": "manageable",
         "selection_type": "multi selection",
@@ -9440,7 +9440,7 @@
                 "translations": {
                     "name": {
                         "nl": "Skeeleren",
-                        "fr": "Roller "
+                        "fr": "Roller "
                     }
                 }
             },
@@ -9638,7 +9638,7 @@
                 "translations": {
                     "name": {
                         "nl": "Trial",
-                        "fr": "Trial "
+                        "fr": "Trial "
                     }
                 }
             },
@@ -9755,11 +9755,33 @@
             {
                 "name": "PROXIMUSLEAGUE",
                 "qcode": "PROXIMUSLEAGUE",
-                "is_active": true,
+                "is_active": false,
                 "translations": {
                     "name": {
                         "nl": "ProximusLeague",
                         "fr": "ProximusLeague"
+                    }
+                }
+            },
+            {
+                "name": "1BPROLEAGUE",
+                "qcode": "1BPROLEAGUE",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "1BPROLEAGUE",
+                        "fr": "1BPROLEAGUE"
+                    }
+                }
+            },
+            {
+                "name": "SAILING",
+                "qcode": "SAILING",
+                "is_active": true,
+                "translations": {
+                    "name": {
+                        "nl": "Zeilen",
+                        "fr": "Voile"
                     }
                 }
             },
@@ -9863,8 +9885,8 @@
                 }
             },
             {
-                "name": "UCIWT ",
-                "qcode": "UCIWT ",
+                "name": "UCIWT ",
+                "qcode": "UCIWT ",
                 "is_active": true,
                 "translations": {
                     "name": {
