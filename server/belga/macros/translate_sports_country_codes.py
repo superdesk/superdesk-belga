@@ -207,6 +207,11 @@ COUNTRIES = {
         "ZKo",
         "Zwe",
         "Zwi",
+        "Wal",
+        "Sch",
+        "NIe",
+        "Eng",
+        "Fae",
     ],
     "fr": [
         "Afg",
@@ -414,6 +419,11 @@ COUNTRIES = {
         "CdS",
         "Suè",
         "Sui",
+        "PdG",
+        "Eco",
+        "IdN",
+        "Ang",
+        "Fer",
     ],
     "en": [
         "AFG",
@@ -621,6 +631,11 @@ COUNTRIES = {
         "KOR",
         "SWE",
         "SUI",
+        "WAL",
+        "SCO",
+        "NIR",
+        "ENG",
+        "FRO",
     ],
 }
 
