@@ -55,7 +55,7 @@ class BelgaEFENewsMLOneTestCase(TestCase):
         self.assertEqual(item["date_id"], "20190121T103600+0000")
         self.assertEqual(item["item_id"], "25413502")
         self.assertEqual(item["version"], "1")
-        self.assertEqual(item["guid"], "text_25413502.text")
+        self.assertEqual(item["guid"], "urn:newsml:texto.efeservicios.com:20190121T103600+0000:25413502:1")
         self.assertEqual(str(item["firstcreated"]), "2019-01-21 10:36:00+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-01-21 10:36:00+00:00")
         self.assertEqual(item["pubstatus"], "usable")

@@ -26,7 +26,7 @@ class BelgaKyodoNewsMLTestCase(TestCase):
         self.assertEqual(item["keywords"], [])
         self.assertEqual(item['date_id'], '20190723')
         self.assertEqual(item['format'], 'Nitf_v3.0')
-        self.assertEqual(item['guid'], 'NC0001')
+        self.assertEqual(item['guid'], 'urn:newsml:kyodonews.jp:20190723:20161021KW___0003800010:1')
         self.assertEqual(item['item_id'], '20161021KW___0003800010')
         self.assertEqual(item['priority'], 9)
         self.assertEqual(item['provider_id'], 'kyodonews.jp')
