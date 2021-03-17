@@ -925,6 +925,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Priority', 'Value': str(item['urgency'])}
             )
+        if item.get('label'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'Label', 'Value': str(item['label'])}
+            )
+        if item.get('distribution'):
+            SubElement(
+                administrative_metadata, 'Property',
+                {'FormalName': 'Distribution', 'Value': str(item['distribution'])}
+            )
         if item.get('slugline'):
             SubElement(
                 administrative_metadata, 'Property',
