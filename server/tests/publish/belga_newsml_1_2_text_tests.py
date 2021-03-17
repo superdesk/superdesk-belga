@@ -1167,6 +1167,10 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5'},
             {'FormalName': 'EditorialInfo', 'Value': 'Vestibulum ac diam sit amet quam vehicula elementum '
                                                      'sed sit amet dui.'},
+            {'FormalName': 'Distribution', 'Value': 'bilingual'},
+            {'FormalName': 'Label', 'Value': 'A1'},
+            {'FormalName': 'Label', 'Value': 'A2'},
+            {'FormalName': 'Label', 'Value': 'R1'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
             {'FormalName': 'NewsPackage'},
