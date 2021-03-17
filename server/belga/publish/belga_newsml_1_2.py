@@ -960,6 +960,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     property_newspackage, 'Property',
                     {'FormalName': 'NewsProduct', 'Value': news_product_value}
                 )
+            if subject.get('scheme') == 'label':
+                SubElement(
+                    administrative_metadata, 'Property',
+                    {'FormalName': 'Label', 'Value': str(subject['qcode'])}
+                )
+            if subject.get('scheme') == 'distribution':
+                SubElement(
+                    administrative_metadata, 'Property',
+                    {'FormalName': 'Distribution', 'Value': str(subject['qcode'])}
+                )
 
         sources = [subj['qcode'] for subj in item.get('subject', []) if subj.get('scheme') == 'sources']
         sources += [subj['qcode'] for subj in item.get('subject', []) if subj.get('scheme') == 'media-source']
