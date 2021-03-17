@@ -925,16 +925,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 administrative_metadata, 'Property',
                 {'FormalName': 'Priority', 'Value': str(item['urgency'])}
             )
-        if item.get('label'):
-            SubElement(
-                administrative_metadata, 'Property',
-                {'FormalName': 'Label', 'Value': str(item['label'])}
-            )
-        if item.get('distribution'):
-            SubElement(
-                administrative_metadata, 'Property',
-                {'FormalName': 'Distribution', 'Value': str(item['distribution'])}
-            )
         if item.get('slugline'):
             SubElement(
                 administrative_metadata, 'Property',
@@ -969,6 +959,16 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(
                     property_newspackage, 'Property',
                     {'FormalName': 'NewsProduct', 'Value': news_product_value}
+                )
+            if subject.get('scheme') == 'label':
+                SubElement(
+                    administrative_metadata, 'Property',
+                    {'FormalName': 'Label', 'Value': str(subject['qcode'])}
+                )
+            if subject.get('scheme') == 'distribution':
+                SubElement(
+                    administrative_metadata, 'Property',
+                    {'FormalName': 'Distribution', 'Value': str(subject['qcode'])}
                 )
 
         sources = [subj['qcode'] for subj in item.get('subject', []) if subj.get('scheme') == 'sources']
