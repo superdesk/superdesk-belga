@@ -9,10 +9,10 @@ def desk_incoming_rule_macro(item, **kwargs):
     macro_service = get_resource_service('macros')
     desk_routing_macro = macro_service.get_macro_by_name('desk_routing')
 
-    if item.get('state') in (CONTENT_STATE.FETCHED, CONTENT_STATE.ROUTED):
+    new_item = item
+    if item.get('state') == CONTENT_STATE.INGESTED:
         new_item = set_default_metadata(item, **kwargs)
-    else:
-        new_item = item.copy()
+
     desk_routing_macro['callback'](new_item, **kwargs)
 
 
