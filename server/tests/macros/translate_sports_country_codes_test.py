@@ -40,16 +40,16 @@ class TranslateSportsCountryCodesTestCase(unittest.TestCase):
         }
         item = macro.callback(item)
         self.assertEqual(
-            '<p>29. Thomas Tumler (Sui/549) 2:00.44 ( 59.67 + 1:00.77)</p>'
-            '<p>29. Thomas Tumler (Sui/) 2:00.44 ( 59.67 + 1:00.77)</p>'
+            '<p>29. Thomas Tumler (Sui/549) 2:00.44 ( 59.67 + 1:00.77)</p>\n'
+            '<p>29. Thomas Tumler (Sui/) 2:00.44 ( 59.67 + 1:00.77)</p>\n'
             '<p>29. Thomas Tumler (Sui) 2:00.44 ( 59.67 + 1:00.77)</p>',
             item['body_html'],
         )
         item['language'] = 'nl'
         macro.callback(item)
         self.assertEqual(
-            '<p>29. Thomas Tumler (Zwi/549) 2:00.44 ( 59.67 + 1:00.77)</p>'
-            '<p>29. Thomas Tumler (Zwi/) 2:00.44 ( 59.67 + 1:00.77)</p>'
+            '<p>29. Thomas Tumler (Zwi/549) 2:00.44 ( 59.67 + 1:00.77)</p>\n'
+            '<p>29. Thomas Tumler (Zwi/) 2:00.44 ( 59.67 + 1:00.77)</p>\n'
             '<p>29. Thomas Tumler (Zwi) 2:00.44 ( 59.67 + 1:00.77)</p>',
             item['body_html'],
         )
