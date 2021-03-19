@@ -226,3 +226,5 @@ GRAMMALECTE_CONFIG = {
 # Suffix used in belga URN schema generation for Belga NewsMl output
 # SDBELGA-355
 OUTPUT_BELGA_URN_SUFFIX = env('OUTPUT_BELGA_URN_SUFFIX', 'dev')
+
+GOOGLE_LOGIN = False
