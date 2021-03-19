@@ -8,9 +8,9 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
+from pytz import utc
 from superdesk.io.registry import register_feed_parser
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
-from superdesk.utc import local_to_utc
 
 
 class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -30,9 +30,8 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     def parse_newsmanagement(self, item, manage_el):
         super().parse_newsmanagement(item, manage_el)
-        tz = 'Europe/Moscow'
-        item['firstcreated'] = local_to_utc(tz, item['firstcreated'])
-        item['versioncreated'] = local_to_utc(tz, item['firstcreated'])
+        item['firstcreated'] = item['firstcreated'].replace(tzinfo=utc)
+        item['versioncreated'] = item['firstcreated']
 
     def parse_newsitem(self, item, newsitem_el):
         super().parse_newsitem(item, newsitem_el)
