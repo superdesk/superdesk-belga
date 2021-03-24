@@ -968,7 +968,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             if subject.get('scheme') == 'distribution':
                 SubElement(
                     administrative_metadata, 'Property',
-                    {'FormalName': 'Distribution', 'Value': str(subject['qcode'])}
+                    {'FormalName': 'Distribution', 'Value': get_distribution_value(subject['qcode'])}
                 )
 
         sources = [subj['qcode'] for subj in item.get('subject', []) if subj.get('scheme') == 'sources']
@@ -1304,3 +1304,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             sd_item.pop('fields_meta', None)
 
         return tuple(newsml_items_chain)
+
+
+def get_distribution_value(qcode):
+    if str(qcode).lower() == 'bilingual':
+        return 'B'
+    return 'Default'
