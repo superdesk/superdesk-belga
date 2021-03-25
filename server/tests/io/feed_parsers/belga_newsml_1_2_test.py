@@ -26,6 +26,13 @@ class BelgaNewsMLOneTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
+
+        self.users = [
+            {'username': 'DWM', 'display_name': 'DWM'},
+        ]
+
+        self.app.data.insert('users', self.users)
+
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
         provider = {'name': 'test'}
@@ -52,7 +59,15 @@ class BelgaNewsMLOneTestCase(TestCase):
             item['administrative']['validator'],
             'dwm'
         )
-        self.assertEquals(item['authors'], [{'name': 'DWM', 'role': 'AUTHOR'}])
+        self.assertEquals(item['authors'], [
+            {
+                '_id': [str(self.users[0]['_id']), 'AUTHOR'],
+                'name': 'AUTHOR',
+                'parent': str(self.users[0]['_id']),
+                'role': 'AUTHOR',
+                'sub_label': 'DWM',
+            },
+        ])
         self.assertEqual(
             item['body_html'],
             '<p>Steven &lt;b&gt;Van Geel&lt;/b&gt; gaf zich op 31 mei 2014 aan bij de politie van zijn '
@@ -278,10 +293,6 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
                 'validation_date': '20200609T152302',
                 'validator': 'mwe'
             }
-        )
-        self.assertEqual(
-            item['authors'],
-            [{'name': 'MWE', 'role': 'AUTHOR'}]
         )
         self.assertEqual(item['pubstatus'], 'usable')
         self.assertEqual(item['language'], 'fr')

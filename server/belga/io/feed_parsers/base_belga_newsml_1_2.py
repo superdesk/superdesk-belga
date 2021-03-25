@@ -440,14 +440,6 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             if element is not None:
                 item['administrative']['source'] = element.get('FormalName', '')
 
-            elements = admin_el.findall('Property')
-            for element in elements:
-                if element.get('FormalName', '') == 'author':
-                    item.setdefault('authors', []).append({
-                        'name': element.get('Value', '').replace(' ', ''),
-                        'role': element.get('FormalName', '')
-                    })
-
         # parser DescriptiveMetadata element
         if component_el.find('DescriptiveMetadata') is not None:
             self.parse_descriptivemetadata(item, component_el.find('DescriptiveMetadata'))
