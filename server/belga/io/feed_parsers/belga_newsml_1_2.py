@@ -643,12 +643,12 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 if user:
                     author['_id'] = [
                         str(user['_id']),
-                        author['role']
+                        author['role'],
                     ]
                     author['sub_label'] = user.get('display_name', author['name'])
                     author['parent'] = str(user['_id'])
                     author['name'] = author['role']
-                item.setdefault('authors', []).append(author)
+                    item.setdefault('authors', []).append(author)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
