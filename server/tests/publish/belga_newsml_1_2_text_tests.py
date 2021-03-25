@@ -2104,7 +2104,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Belgaimage:154670498:800x800:w?v=5d5aaa94&m=dnikoiil'
+            'Gallery',
         )
 
     def test_belga_coverage_custom_field(self):
@@ -2169,7 +2169,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa'
+            'Gallery',
         )
 
     def test_audio_in_editor_and_related(self):

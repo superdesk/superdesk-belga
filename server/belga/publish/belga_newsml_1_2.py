@@ -789,6 +789,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         format_name = filename.rsplit('.', 1)[-1].capitalize()
         format_name = FORMAT_MAP.get(format_name, format_name)
+        if 'belgagallery' in rendition.get('belga-urn'):
+            format_name = 'Gallery'
 
         SubElement(contentitem, 'Format', {'FormalName': format_name})
         if rendition.get('mimetype'):
