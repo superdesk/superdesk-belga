@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "superdesk-analytics": "github:superdesk/superdesk-analytics#v2.1.0",
-        "superdesk-core": "github:superdesk/superdesk-client-core#release/2.2",
+        "superdesk-core": "github:superdesk/superdesk-client-core#8869f50",
         "superdesk-planning": "github:superdesk/superdesk-planning#release/2.2"
     }
 }
