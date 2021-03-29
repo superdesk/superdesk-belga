@@ -2104,7 +2104,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Gallery',
+            'Jpeg',
         )
 
     def test_belga_coverage_custom_field(self):
@@ -2169,7 +2169,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             _format.attrib['FormalName'],
-            'Gallery',
+            'Jpeg',
         )
 
     def test_audio_in_editor_and_related(self):
