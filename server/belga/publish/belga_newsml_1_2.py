@@ -838,7 +838,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                         )
                     )
                     SubElement(newslines, 'KeywordLine').text = subject['name']
-                break
 
         # KeywordLine from belga-keywords
         for subject in item.get('subject', []):
