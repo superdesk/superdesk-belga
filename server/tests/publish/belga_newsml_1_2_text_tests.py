@@ -1201,11 +1201,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[0].attrib),
-            {'FormalName': 'DPA'}
-        )
-        self.assertDictEqual(
-            dict(newscomponent_2_level.xpath('AdministrativeMetadata/Source/Party')[1].attrib),
-            {'FormalName': 'ANP'}
+            {'FormalName': 'DPA/ANP'}
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> DescriptiveMetadata
         descriptivemetadata = newscomponent_2_level.xpath('DescriptiveMetadata')[0]

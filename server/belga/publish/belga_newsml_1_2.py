@@ -977,11 +977,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         sources += [item['creditline']] if item.get('creditline') else []
         if sources:
             source_element = SubElement(administrative_metadata, 'Source')
-            for source in sources:
-                SubElement(
-                    source_element,
-                    'Party', {'FormalName': source}
-                )
+            SubElement(
+                source_element,
+                'Party',
+                {'FormalName': '/'.join([source for source in sources])},
+            )
 
     def _format_descriptive_metadata(self, newscomponent_2_level, item):
         """
