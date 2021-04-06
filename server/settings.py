@@ -36,7 +36,7 @@ SECRET_KEY = env('SECRET_KEY', '')
 
 DEFAULT_TIMEZONE = "Europe/Brussels"
 
-DEFAULT_LANGUAGE = 'nl'
+DEFAULT_LANGUAGE = 'en'
 LANGUAGES = [
     {'language': 'nl', 'label': 'Dutch', 'source': True, 'destination': True},
     {'language': 'fr', 'label': 'French', 'source': True, 'destination': True},
