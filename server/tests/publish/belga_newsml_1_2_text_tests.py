@@ -1670,7 +1670,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )[0]
         self.assertEqual(
             mimetype.attrib['FormalName'],
-            'image/jpeg'
+            'image/jpg'
         )
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent'
