@@ -1235,43 +1235,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertDictEqual(
             dict(newscomponent_3_level.xpath('Role')[0].attrib),
             {
-                'FormalName': 'Body',
-            }
-        )
-        self.assertDictEqual(
-            dict(newscomponent_3_level.xpath('DescriptiveMetadata/Property')[0].attrib),
-            {
-                'FormalName': 'ComponentClass',
-                'Value': 'Text'
-            }
-        )
-        self.assertDictEqual(
-            dict(newscomponent_3_level.xpath('ContentItem/Format')[0].attrib),
-            {
-                'FormalName': 'Text'
-            }
-        )
-        self.assertEqual(
-            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
-            """Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
-     books
-     Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
-        )
-        self.assertEqual(
-            newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '530'
-        )
-        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
-        newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
-        self.assertDictEqual(
-            dict(newscomponent_3_level.attrib),
-            {
-                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
-            }
-        )
-        self.assertDictEqual(
-            dict(newscomponent_3_level.xpath('Role')[0].attrib),
-            {
                 'FormalName': 'Title',
             }
         )
@@ -1296,8 +1259,9 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
             '15'
         )
+
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
-        newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[2]
+        newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[1]
         self.assertDictEqual(
             dict(newscomponent_3_level.attrib),
             {
@@ -1330,6 +1294,44 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
             '160'
+        )
+
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent
+        newscomponent_3_level = newscomponent_2_level.xpath('NewsComponent')[2]
+        self.assertDictEqual(
+            dict(newscomponent_3_level.attrib),
+            {
+                '{http://www.w3.org/XML/1998/namespace}lang': 'fr'
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('Role')[0].attrib),
+            {
+                'FormalName': 'Body',
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('DescriptiveMetadata/Property')[0].attrib),
+            {
+                'FormalName': 'ComponentClass',
+                'Value': 'Text'
+            }
+        )
+        self.assertDictEqual(
+            dict(newscomponent_3_level.xpath('ContentItem/Format')[0].attrib),
+            {
+                'FormalName': 'Text'
+            }
+        )
+        self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
+            """Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
+     books
+     Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
+        )
+        self.assertEqual(
+            newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
+            '530'
         )
 
     def test_url_newscomponent(self):
