@@ -1,4 +1,5 @@
 from superdesk import get_resource_service
+from superdesk.metadata.item import CONTENT_STATE
 
 
 TEXT = 'TEXT'
@@ -23,3 +24,9 @@ def handle_update(sender, item, original, **kwargs):
                 'scheme': DISTRIBUTION_ID,
             })
             item['subject'] = subject
+
+
+def handle_coming_up_field(sender, item, original, **kwargs):
+    # Disable and empty date time for coming_up field
+    if original.get("extra", {}).get("DueBy") and original.get('state') != CONTENT_STATE.PUBLISHED:
+        item["extra"]["DueBy"] = None

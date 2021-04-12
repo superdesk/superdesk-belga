@@ -14,5 +14,7 @@ def init_app(_app):
     item_move.connect(unmark_user_when_moved_to_incoming_stage.unmark_user)
     # change profile from ALERT to TEXT on update
     item_rewrite.connect(update.handle_update)
+    # Disable and empty date time for coming_up field
+    item_rewrite.connect(update.handle_coming_up_field)
     # remove all belga archive 360 associations from a translation item
     item_duplicate.connect(handle_translate.handle_duplicate)
