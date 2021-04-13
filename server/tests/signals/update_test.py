@@ -1,6 +1,6 @@
 
 from superdesk.tests import TestCase
-from belga.signals.update import handle_update, ALERT, TEXT
+from belga.signals.update import handle_update, ALERT, TEXT, handle_coming_up_field
 
 
 class UpdateAlertTestCase(TestCase):
@@ -31,3 +31,21 @@ class UpdateAlertTestCase(TestCase):
             'qcode': 'default',
             'scheme': 'distribution',
         }, item['subject'])
+
+    def test_update_is_coming_up_field(self):
+        item = {
+            "extra": {
+                "DueBy": "2021-04-12T20:45:33+0000",
+            },
+            "state": "in_progress",
+        }
+        orig = {
+            "extra": {
+                "DueBy": "2021-04-12T20:45:33+0000",
+            },
+            "state": "in_progress",
+        }
+
+        handle_coming_up_field(None, item, orig)
+        self.assertEqual("2021-04-12T20:45:33+0000", orig["extra"]["DueBy"])
+        self.assertIsNone(item.get("extra", {}).get("DueBy"))
