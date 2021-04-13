@@ -28,5 +28,5 @@ def handle_update(sender, item, original, **kwargs):
 
 def handle_coming_up_field(sender, item, original, **kwargs):
     # Disable and empty date time for coming_up field
-    if original.get("extra", {}).get("DueBy") and original.get('state') != CONTENT_STATE.PUBLISHED:
+    if original.get("extra", {}).get("DueBy"):
         item["extra"]["DueBy"] = None
