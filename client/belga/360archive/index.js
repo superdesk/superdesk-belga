@@ -4,7 +4,7 @@ import BelgaSearchPanelController from './BelgaSearchPanelController';
 
 export default angular.module('belga.360archive', [
 ])
-    .controller('BelgaSearchPanelController', BelgaSearchPanelController)
+    .controller('Belga360ArchiveSearchPanelController', BelgaSearchPanelController)
     .run(['$templateCache',($templateCache) => {
         $templateCache.put(
             'search-panel-belga_360archive.html',

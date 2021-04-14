@@ -1,17 +1,25 @@
 import hmac
-from typing import Any, Dict, Optional
+import time
 import uuid
 import arrow
 import hashlib
 import requests
 import superdesk
+import logging
 
+from pytz import utc
+from datetime import datetime
 from urllib.parse import urljoin
+from typing import Any, Dict, Optional
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.text_utils import get_text as _get_text
 
 BELGA_TZ = 'Europe/Brussels'
+TIMEOUT = (5, 30)
+
+logger = logging.getLogger(__name__)
+session = requests.Session()
 
 
 def get_text(value, strip_html=True):
@@ -51,7 +59,6 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 
     def __init__(self, provider, **kwargs):
         super().__init__(provider, **kwargs)
-        self.session = requests.Session()
         self._id_token = None
         self._auth_token = None
         if self.provider.get('config') and self.provider['config'].get('username'):
@@ -84,7 +91,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
     def auth(self):
         url = '/authorizeUser?l={}'.format(self.provider['config']['username'])
         headers = self.auth_headers(url, self.provider['config'].get('password'))
-        resp = self.session.get(self.url(url), headers=headers)
+        resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
         resp.raise_for_status()
         if resp.status_code == 200 and resp.content:
             data = resp.json()
@@ -130,7 +137,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
     def api_get(self, endpoint, params):
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         headers = self.auth_headers(url.replace('%2C', ','))  # decode spaces
-        resp = self.session.get(self.url(url), headers=headers)
+        resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
         resp.raise_for_status()
         return resp.json()
 
@@ -231,7 +238,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
     search_endpoint = 'archivenewsobjects'
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
-    TYPE_SUPPORT = ('TEXT', 'BRIEF', 'ALERT', 'SHORT')
+    TYPE_SUPPORT = ('Text', 'Brieft', 'Alert', 'Short')
     PERIODS = {
         'day': {'days': -1},
         'week': {'weeks': -1},
@@ -241,7 +248,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
 
     def __init__(self, provider):
         super().__init__(provider)
-        self.session = requests.Session()
         self.content_types = {
             c['_id'] for c in superdesk.get_resource_service('content_types').find({})
         }
@@ -256,9 +262,14 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         }
 
         if params:
-            for api_param, param in {'language': 'languages', 'assetType': 'types'}.items():
-                if params.get(param):
-                    api_params[api_param] = params.get(param)
+            if params.get('languages'):
+                api_params['language'] = params['languages'].lower()
+
+            api_params['assetType'] = ' OR '.join([
+                _type for _type in self.TYPE_SUPPORT
+                if not params.get('types') or params['types'].lower() == _type.lower()
+            ])
+
             if params.get('credits'):
                 api_params['credits'] = params['credits'].strip().upper()
 
@@ -279,8 +290,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             api_params['searchText'] = ''
 
         data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.format_list_item(item) for item in data[self.items_field]
-                if item['assetType'].upper() in self.TYPE_SUPPORT]
+        docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
 
     def fetch(self, guid):
@@ -289,7 +299,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         return self.format_list_item(data)
 
     def api_get(self, endpoint, params):
-        resp = self.session.get(self.url(endpoint), params=params)
+        resp = session.get(self.url(endpoint), params=params, timeout=TIMEOUT)
         resp.raise_for_status()
         return resp.json()
 
@@ -323,8 +333,10 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
 
     def _get_datetime(self, date=None):
         if not date:
-            return get_datetime(date)
-        return get_datetime(date / 1000)
+            date = time.time()
+        else:
+            date = date / 1000
+        return datetime.fromtimestamp(date, utc)
 
     def _get_profile(self, profile):
         label = profile.lower()
@@ -382,18 +394,17 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
 
     def __init__(self, provider: Dict[str, Dict], **kwargs):
         super().__init__(provider, **kwargs)
-        self.session = requests.Session()
         self._access_token = None
         config = provider.get('config', {})
         if config.get('username') and config.get('password'):
             self.auth()
 
     def auth(self):
-        resp = self.session.post(f'{self.openid_provider_url}?scope=openid%20profile', data={
+        resp = session.post(f'{self.openid_provider_url}?scope=openid%20profile', data={
             'client_id': self.provider.get('config', {}).get('username'),
             'client_secret': self.provider.get('config', {}).get('password'),
             'grant_type': 'client_credentials'
-        })
+        }, timeout=TIMEOUT)
         resp.raise_for_status()
         if resp.status_code == 200 and resp.content:
             data = resp.json()
@@ -442,10 +453,10 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
         return BelgaListCursor(docs, data.get('_meta', {}).get('total', len(docs)))
 
     def api_get(self, endpoint: str, params: Dict) -> Dict:
-        resp = self.session.get(f'{self.base_url}/{endpoint}', headers={
+        resp = session.get(f'{self.base_url}/{endpoint}', headers={
             'Authorization': f'Bearer {self._access_token}',
             'X-Belga-Context': 'API'
-        }, params=params)
+        }, params=params, timeout=TIMEOUT)
         resp.raise_for_status()
         return resp.json()
 
