@@ -4,8 +4,8 @@ import superdesk
 import arrow
 from flask import json
 from httmock import all_requests, HTTMock
-from unittest.mock import MagicMock
-from belga.search_providers import BelgaPressSearchProvider, get_datetime
+from unittest.mock import MagicMock, patch
+from belga.search_providers import BelgaPressSearchProvider, TIMEOUT, get_datetime
 from superdesk.tests import TestCase
 
 
@@ -55,14 +55,15 @@ class BelgaPressTestCase(TestCase):
         self.assertEqual('Belga Press', self.provider.label)
         self.assertIsInstance(self.provider, superdesk.SearchProvider)
 
-    def test_find_params(self):
+    @patch('belga.search_providers.session.get')
+    @patch('belga.search_providers.session.post')
+    def test_find_params(self, session_post, session_get):
         params = {
             'types': 'ONLINE',
             'dates': {'start': '25/11/2020', 'end': '26/11/2020'},
             'languages': 'EN',
         }
-        self.provider.session.get = MagicMock()
-        self.provider.session.post = MagicMock(return_value={'access_token': 'abc'})
+        session_post.return_value = {'access_token': 'abc'}
         self.provider.find(self.query, params)
         url = self.provider.base_url + '/' + self.provider.search_endpoint
         api_params = {
@@ -70,7 +71,7 @@ class BelgaPressTestCase(TestCase):
             'start': '2020-11-25', 'end': '2020-11-26', 'order': 'PUBLISHDATE', 'searchtext': 'test query',
         }
         headers = {'Authorization': 'Bearer abc', 'X-Belga-Context': 'API'}
-        self.provider.session.get.assert_called_with(url, headers=headers, params=api_params)
+        session_get.assert_called_with(url, headers=headers, params=api_params, timeout=TIMEOUT)
         # Test combine period and date
         arrow.now = MagicMock(return_value=arrow.get('2020-11-26'))
         params = {
@@ -79,10 +80,10 @@ class BelgaPressTestCase(TestCase):
         }
 
         self.provider.find(self.query, params)
-        self.provider.session.get.assert_called_with(url, headers=headers, params={
+        session_get.assert_called_with(url, headers=headers, params={
             'offset': 50, 'count': 25, 'start': '2020-10-26', 'end': '2020-11-25',
             'order': 'PUBLISHDATE', 'searchtext': 'test query',
-        })
+        }, timeout=TIMEOUT)
 
     def test_format_list_item(self):
         item = self.provider.format_list_item(get_item())
@@ -112,16 +113,17 @@ class BelgaPressTestCase(TestCase):
         self.assertEqual(len(items.docs), 2)
         self.assertEqual(items._count, 3000)
 
-    def test_fetch(self):
+    @patch('belga.search_providers.session.get')
+    def test_fetch(self, session_get):
         response = DetailResponse()
         response.json = MagicMock(return_value=get_item())
-        self.provider.session.get = MagicMock(return_value=response)
+        session_get.return_value = response
 
         item = self.provider.fetch('urn:belga.be:belgapress:4fe4c785-b4d4-43f9-b6e1-c28bbc53363c')
         url = self.provider.base_url + '/newsobject/4fe4c785-b4d4-43f9-b6e1-c28bbc53363c'
 
-        self.provider.session.get.assert_called_with(
-            url, headers={'Authorization': 'Bearer abc', 'X-Belga-Context': 'API'}, params={})
+        session_get.assert_called_with(
+            url, headers={'Authorization': 'Bearer abc', 'X-Belga-Context': 'API'}, params={}, timeout=TIMEOUT)
         self.assertEqual('urn:belga.be:belgapress:4fe4c785-b4d4-43f9-b6e1-c28bbc53363c', item['guid'])
 
     def test_get_periods(self):

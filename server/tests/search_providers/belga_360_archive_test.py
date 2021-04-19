@@ -1,11 +1,13 @@
 import os
+import arrow
 import superdesk
 
-import arrow
+from pytz import utc
 from flask import json
+from datetime import datetime
 from httmock import all_requests, HTTMock
-from unittest.mock import MagicMock
-from belga.search_providers import Belga360ArchiveSearchProvider, get_datetime
+from unittest.mock import patch, MagicMock
+from belga.search_providers import Belga360ArchiveSearchProvider, TIMEOUT
 from superdesk.tests import TestCase
 
 
@@ -53,21 +55,21 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual('Belga 360 Archive', self.provider.label)
         self.assertIsInstance(self.provider, superdesk.SearchProvider)
 
-    def test_find_params(self):
+    @patch('belga.search_providers.session.get')
+    def test_find_params(self, session_get):
         params = {
             'credits': 'afp',
             'dates': {'start': '02/02/2020', 'end': '14/02/2020'},
             'languages': 'en',
             'types': 'Short',
         }
-        self.provider.session.get = MagicMock()
         self.provider.find(self.query, params)
         url = self.provider.base_url + 'archivenewsobjects'
         params = {
             'start': 50, 'pageSize': 50, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
             'fromDate': '20200202', 'toDate': '20200214', 'searchText': 'test query',
         }
-        self.provider.session.get.assert_called_with(url, params=params)
+        session_get.assert_called_with(url, params=params, timeout=TIMEOUT)
 
     def test_format_list_item(self):
         self.app.data.insert(
@@ -92,8 +94,8 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['creditline'], 'BELGA')
         self.assertEqual(item['source'], 'BELGA')
         self.assertEqual(item['language'], 'fr')
-        self.assertEqual(item['firstcreated'], get_datetime(1581646440))
-        self.assertEqual(item['versioncreated'], get_datetime(1581654480))
+        self.assertEqual(item['firstcreated'], datetime.fromtimestamp(1581646440, utc))
+        self.assertEqual(item['versioncreated'], datetime.fromtimestamp(1581654480, utc))
         self.assertEqual(item['abstract'], (
             'Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin'
             ' finibus diam in urna vehicula accumsan'
@@ -115,15 +117,16 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(len(items.docs), 2)
         self.assertEqual(items._count, 25000)
 
-    def test_fetch(self):
+    @patch('belga.search_providers.session.get')
+    def test_fetch(self, session_get):
         response = DetailResponse()
         response.json = MagicMock(return_value=get_belga360_item())
-        self.provider.session.get = MagicMock(return_value=response)
+        session_get.return_value = response
 
         item = self.provider.fetch('urn:belga.be:360archive:39670442')
 
         url = self.provider.base_url + 'archivenewsobjects/39670442'
-        self.provider.session.get.assert_called_with(url, params={})
+        session_get.assert_called_with(url, params={}, timeout=TIMEOUT)
 
         self.assertEqual('urn:belga.be:360archive:39670442', item['guid'])
 

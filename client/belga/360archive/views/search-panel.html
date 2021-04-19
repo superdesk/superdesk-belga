@@ -1,4 +1,4 @@
-<fieldset ng-controller="BelgaSearchPanelController as searchPanel">
+<fieldset ng-controller="Belga360ArchiveSearchPanelController as searchPanel">
     <div class="field">
         <label class="search-label">Language</label>
         <select ng-model="params.languages">
@@ -12,6 +12,8 @@
             <option ng-repeat="type in searchPanel.types" value="{{ type.id }}">{{ type.name }}</option>
         </select>
     </div>
+
+    <pre>{{ searchPanel.types | json }}</pre>
 
     <div class="field">
         <label for="search-headline">{{:: 'Credits' | translate}}</label>

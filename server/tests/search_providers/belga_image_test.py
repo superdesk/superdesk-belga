@@ -7,9 +7,9 @@ import superdesk
 
 from flask import json
 from httmock import all_requests, HTTMock
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
-from belga.search_providers import BelgaImageSearchProvider
+from belga.search_providers import BelgaImageSearchProvider, TIMEOUT
 
 
 def fixture(filename):
@@ -77,7 +77,8 @@ class BelgaImageTestCase(unittest.TestCase):
         self.assertEqual(4300, renditions['original']['width'])
         self.assertEqual(2868, renditions['original']['height'])
 
-    def test_find_params(self):
+    @patch('belga.search_providers.session.get')
+    def test_find_params(self, session_get):
         query = {
             'size': 20,
             'from': 10,
@@ -108,7 +109,6 @@ class BelgaImageTestCase(unittest.TestCase):
         }
 
         provider = BelgaImageSearchProvider(dict())
-        provider.session.get = MagicMock()
 
         provider.find(query, params)
 
@@ -122,18 +122,19 @@ class BelgaImageTestCase(unittest.TestCase):
             'p': 'TODAY',
             't': 'test AND query',
         }).prepare().url
-        provider.session.get.assert_called_with(url, headers={})
+        session_get.assert_called_with(url, headers={}, timeout=TIMEOUT)
 
-    def test_fetch(self):
+    @patch('belga.search_providers.session.get')
+    def test_fetch(self, session_get):
         provider = BelgaImageSearchProvider(dict())
-        provider.session.get = MagicMock(return_value=DetailResponse())
+        session_get.return_value = DetailResponse()
 
         item = provider.fetch('urn:belga.be:image:143831778')
 
         url = requests.Request('GET', provider.base_url + 'getImageById', params={
             'i': '143831778',
         }).prepare().url
-        provider.session.get.assert_called_with(url, headers={})
+        session_get.assert_called_with(url, headers={}, timeout=TIMEOUT)
 
         self.assertEqual('urn:belga.be:image:143831778', item['guid'])
         self.assertEqual('Belloumi', item['byline'])

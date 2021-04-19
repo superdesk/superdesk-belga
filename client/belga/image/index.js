@@ -4,7 +4,7 @@ import BelgaSearchPanelController from './BelgaSearchPanelController';
 
 export default angular.module('belga.image', [
 ])
-    .controller('BelgaSearchPanel', BelgaSearchPanelController)
+    .controller('BelgaImageSearchPanel', BelgaSearchPanelController)
     .run(['$templateCache',($templateCache) => {
         $templateCache.put(
             'search-panel-belga_image.html',
