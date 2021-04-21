@@ -19,6 +19,10 @@
         "type": "list",
         "required": false,
         "nullable": false
+      },
+      "language": {
+        "type": "string",
+        "required": true
       }
     },
     "editor": {
@@ -30,6 +34,9 @@
       },
       "subject": {
         "enabled": false
+      },
+      "language": {
+        "enabled": true
       }
     }
   },
@@ -80,6 +87,10 @@
       "files": {
         "required": false,
         "type": "list"
+      },
+      "language": {
+        "type": "string",
+        "required": true
       }
     },
     "editor": {
@@ -121,6 +132,9 @@
       },
       "subject": {
         "enabled": false
+      },
+      "language": {
+        "enabled": true
       }
     },
     "list": {
