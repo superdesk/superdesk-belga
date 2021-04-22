@@ -248,6 +248,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
 
     def __init__(self, provider):
         super().__init__(provider)
+        self.base_url = provider.get("config",{}).get("url") or self.base_url
         self.content_types = {
             c['_id'] for c in superdesk.get_resource_service('content_types').find({})
         }
