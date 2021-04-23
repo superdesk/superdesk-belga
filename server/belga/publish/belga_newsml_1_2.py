@@ -831,7 +831,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         )
 
         if not belga_format:
-            print("what", filename, mimetype, rendition)
             logger.warning('unknown format filename=%s', filename)
             return
 
