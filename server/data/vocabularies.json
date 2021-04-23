@@ -3299,7 +3299,7 @@
     	},
     	"init_version": 3,
     	"items": [{
-    			"name": "ARUBA",
+    			"name": "Aruba",
     			"qcode": "country_abw",
     			"is_active": true,
     			"translations": {
@@ -3310,7 +3310,7 @@
     			}
     		},
     		{
-    			"name": "AFGHANISTAN",
+    			"name": "Afghanistan",
     			"qcode": "country_afg",
     			"is_active": true,
     			"translations": {
@@ -3321,7 +3321,7 @@
     			}
     		},
     		{
-    			"name": "ANGOLA",
+    			"name": "Angola",
     			"qcode": "country_ago",
     			"is_active": true,
     			"translations": {
@@ -3332,7 +3332,7 @@
     			}
     		},
     		{
-    			"name": "ANGUILLA",
+    			"name": "Anguilla",
     			"qcode": "country_aia",
     			"is_active": true,
     			"translations": {
@@ -3343,7 +3343,7 @@
     			}
     		},
     		{
-    			"name": "ÅLAND ISLANDS",
+    			"name": "Åland Islands",
     			"qcode": "country_ala",
     			"is_active": true,
     			"translations": {
@@ -3354,7 +3354,7 @@
     			}
     		},
     		{
-    			"name": "ALBANIA",
+    			"name": "Albania",
     			"qcode": "country_alb",
     			"is_active": true,
     			"translations": {
@@ -3365,7 +3365,7 @@
     			}
     		},
     		{
-    			"name": "ANDORRA",
+    			"name": "Andorra",
     			"qcode": "country_and",
     			"is_active": true,
     			"translations": {
@@ -3376,7 +3376,7 @@
     			}
     		},
     		{
-    			"name": "UNITED ARAB EMIRATES",
+    			"name": "United Arab Emirates",
     			"qcode": "country_are",
     			"is_active": true,
     			"translations": {
@@ -3387,7 +3387,7 @@
     			}
     		},
     		{
-    			"name": "ARGENTINA",
+    			"name": "Argentina",
     			"qcode": "country_arg",
     			"is_active": true,
     			"translations": {
@@ -3398,7 +3398,7 @@
     			}
     		},
     		{
-    			"name": "ARMENIA",
+    			"name": "Armenia",
     			"qcode": "country_arm",
     			"is_active": true,
     			"translations": {
@@ -3409,7 +3409,7 @@
     			}
     		},
     		{
-    			"name": "AMERICAN SAMOA",
+    			"name": "American Samoa",
     			"qcode": "country_asm",
     			"is_active": true,
     			"translations": {
@@ -3420,7 +3420,7 @@
     			}
     		},
     		{
-    			"name": "ANTARCTICA",
+    			"name": "Antarctica",
     			"qcode": "country_ata",
     			"is_active": true,
     			"translations": {
@@ -3431,7 +3431,7 @@
     			}
     		},
     		{
-    			"name": "FRENCH SOUTHERN TERRITORIES",
+    			"name": "French Southern Territories",
     			"qcode": "country_atf",
     			"is_active": true,
     			"translations": {
@@ -3442,7 +3442,7 @@
     			}
     		},
     		{
-    			"name": "ANTIGUA AND BARBUDA",
+    			"name": "Antigua and Barbuda",
     			"qcode": "country_atg",
     			"is_active": true,
     			"translations": {
@@ -3453,7 +3453,7 @@
     			}
     		},
     		{
-    			"name": "AUSTRALIA",
+    			"name": "Australia",
     			"qcode": "country_aus",
     			"is_active": true,
     			"translations": {
@@ -3464,7 +3464,7 @@
     			}
     		},
     		{
-    			"name": "AUSTRIA",
+    			"name": "Austria",
     			"qcode": "country_aut",
     			"is_active": true,
     			"translations": {
@@ -3475,7 +3475,7 @@
     			}
     		},
     		{
-    			"name": "AZERBAIJAN",
+    			"name": "Azerbaijan",
     			"qcode": "country_aze",
     			"is_active": true,
     			"translations": {
@@ -3486,7 +3486,7 @@
     			}
     		},
     		{
-    			"name": "BURUNDI",
+    			"name": "Burundi",
     			"qcode": "country_bdi",
     			"is_active": true,
     			"translations": {
@@ -3497,7 +3497,7 @@
     			}
     		},
     		{
-    			"name": "BELGIUM",
+    			"name": "Belgium",
     			"qcode": "country_bel",
     			"is_active": true,
     			"translations": {
@@ -3508,7 +3508,7 @@
     			}
     		},
     		{
-    			"name": "BENIN",
+    			"name": "Benin",
     			"qcode": "country_ben",
     			"is_active": true,
     			"translations": {
@@ -3519,7 +3519,7 @@
     			}
     		},
     		{
-    			"name": "BONAIRE, SINT EUSTATIUS AND SABA",
+    			"name": "Bonaire, Sint Eustatius and Saba",
     			"qcode": "country_bes",
     			"is_active": true,
     			"translations": {
@@ -3530,7 +3530,7 @@
     			}
     		},
     		{
-    			"name": "BURKINA FASO",
+    			"name": "Burkina Faso",
     			"qcode": "country_bfa",
     			"is_active": true,
     			"translations": {
@@ -3541,7 +3541,7 @@
     			}
     		},
     		{
-    			"name": "BANGLADESH",
+    			"name": "Bangladesh",
     			"qcode": "country_bgd",
     			"is_active": true,
     			"translations": {
@@ -3552,7 +3552,7 @@
     			}
     		},
     		{
-    			"name": "BULGARIA",
+    			"name": "Bulgaria",
     			"qcode": "country_bgr",
     			"is_active": true,
     			"translations": {
@@ -3563,7 +3563,7 @@
     			}
     		},
     		{
-    			"name": "BAHRAIN",
+    			"name": "Bahrain",
     			"qcode": "country_bhr",
     			"is_active": true,
     			"translations": {
@@ -3574,7 +3574,7 @@
     			}
     		},
     		{
-    			"name": "BAHAMAS",
+    			"name": "Bahamas",
     			"qcode": "country_bhs",
     			"is_active": true,
     			"translations": {
@@ -3585,7 +3585,7 @@
     			}
     		},
     		{
-    			"name": "BOSNIA AND HERZEGOVINA",
+    			"name": "Bosnia and Herzegovina",
     			"qcode": "country_bih",
     			"is_active": true,
     			"translations": {
@@ -3596,7 +3596,7 @@
     			}
     		},
     		{
-    			"name": "SAINT BARTHÉLEMY",
+    			"name": "Saint Barthélemy",
     			"qcode": "country_blm",
     			"is_active": true,
     			"translations": {
@@ -3607,7 +3607,7 @@
     			}
     		},
     		{
-    			"name": "BELARUS",
+    			"name": "Belarus",
     			"qcode": "country_blr",
     			"is_active": true,
     			"translations": {
@@ -3618,7 +3618,7 @@
     			}
     		},
     		{
-    			"name": "BELIZE",
+    			"name": "Belize",
     			"qcode": "country_blz",
     			"is_active": true,
     			"translations": {
@@ -3629,7 +3629,7 @@
     			}
     		},
     		{
-    			"name": "BERMUDA",
+    			"name": "Bermuda",
     			"qcode": "country_bmu",
     			"is_active": true,
     			"translations": {
@@ -3640,7 +3640,7 @@
     			}
     		},
     		{
-    			"name": "BOLIVIA (PLURINATIONAL STATE OF)",
+    			"name": "Bolivia (Plurinational State of)",
     			"qcode": "country_bol",
     			"is_active": true,
     			"translations": {
@@ -3651,7 +3651,7 @@
     			}
     		},
     		{
-    			"name": "BRAZIL",
+    			"name": "Brazil",
     			"qcode": "country_bra",
     			"is_active": true,
     			"translations": {
@@ -3662,7 +3662,7 @@
     			}
     		},
     		{
-    			"name": "BARBADOS",
+    			"name": "Barbados",
     			"qcode": "country_brb",
     			"is_active": true,
     			"translations": {
@@ -3673,7 +3673,7 @@
     			}
     		},
     		{
-    			"name": "BRUNEI DARUSSALAM",
+    			"name": "Brunei Darussalam",
     			"qcode": "country_brn",
     			"is_active": true,
     			"translations": {
@@ -3684,7 +3684,7 @@
     			}
     		},
     		{
-    			"name": "BHUTAN",
+    			"name": "Bhutan",
     			"qcode": "country_btn",
     			"is_active": true,
     			"translations": {
@@ -3695,7 +3695,7 @@
     			}
     		},
     		{
-    			"name": "BOUVET ISLAND",
+    			"name": "Bouvet Island",
     			"qcode": "country_bvt",
     			"is_active": true,
     			"translations": {
@@ -3706,7 +3706,7 @@
     			}
     		},
     		{
-    			"name": "BOTSWANA",
+    			"name": "Botswana",
     			"qcode": "country_bwa",
     			"is_active": true,
     			"translations": {
@@ -3717,7 +3717,7 @@
     			}
     		},
     		{
-    			"name": "CENTRAL AFRICAN REPUBLIC",
+    			"name": "Central African Republic",
     			"qcode": "country_caf",
     			"is_active": true,
     			"translations": {
@@ -3728,7 +3728,7 @@
     			}
     		},
     		{
-    			"name": "CANADA",
+    			"name": "Canada",
     			"qcode": "country_can",
     			"is_active": true,
     			"translations": {
@@ -3739,7 +3739,7 @@
     			}
     		},
     		{
-    			"name": "COCOS (KEELING) ISLANDS",
+    			"name": "Cocos (Keeling) Islands",
     			"qcode": "country_cck",
     			"is_active": true,
     			"translations": {
@@ -3750,7 +3750,7 @@
     			}
     		},
     		{
-    			"name": "CÔTE D'IVOIRE",
+    			"name": "Côte d'Ivoire",
     			"qcode": "country_civ",
     			"is_active": true,
     			"translations": {
@@ -3761,7 +3761,7 @@
     			}
     		},
     		{
-    			"name": "CAMEROON",
+    			"name": "Cameroon",
     			"qcode": "country_cmr",
     			"is_active": true,
     			"translations": {
@@ -3772,7 +3772,7 @@
     			}
     		},
     		{
-    			"name": "CONGO, DEMOCRATIC REPUBLIC OF THE",
+    			"name": "Congo, Democratic Republic of the",
     			"qcode": "country_cod",
     			"is_active": true,
     			"translations": {
@@ -3783,7 +3783,7 @@
     			}
     		},
     		{
-    			"name": "CONGO",
+    			"name": "Congo",
     			"qcode": "country_cog",
     			"is_active": true,
     			"translations": {
@@ -3794,7 +3794,7 @@
     			}
     		},
     		{
-    			"name": "COOK ISLANDS",
+    			"name": "Cook Islands",
     			"qcode": "country_cok",
     			"is_active": true,
     			"translations": {
@@ -3805,7 +3805,7 @@
     			}
     		},
     		{
-    			"name": "COLOMBIA",
+    			"name": "Colombia",
     			"qcode": "country_col",
     			"is_active": true,
     			"translations": {
@@ -3816,7 +3816,7 @@
     			}
     		},
     		{
-    			"name": "COMOROS",
+    			"name": "Comoros",
     			"qcode": "country_com",
     			"is_active": true,
     			"translations": {
@@ -3827,7 +3827,7 @@
     			}
     		},
     		{
-    			"name": "CABO VERDE",
+    			"name": "Cabo Verde",
     			"qcode": "country_cpv",
     			"is_active": true,
     			"translations": {
@@ -3838,7 +3838,7 @@
     			}
     		},
     		{
-    			"name": "COSTA RICA",
+    			"name": "Costa Rica",
     			"qcode": "country_cri",
     			"is_active": true,
     			"translations": {
@@ -3849,7 +3849,7 @@
     			}
     		},
     		{
-    			"name": "CUBA",
+    			"name": "Cuba",
     			"qcode": "country_cub",
     			"is_active": true,
     			"translations": {
@@ -3860,7 +3860,7 @@
     			}
     		},
     		{
-    			"name": "CURAÇAO",
+    			"name": "Curaçao",
     			"qcode": "country_cuw",
     			"is_active": true,
     			"translations": {
@@ -3871,7 +3871,7 @@
     			}
     		},
     		{
-    			"name": "CHRISTMAS ISLAND",
+    			"name": "Christmas Island",
     			"qcode": "country_cxr",
     			"is_active": true,
     			"translations": {
@@ -3882,7 +3882,7 @@
     			}
     		},
     		{
-    			"name": "CAYMAN ISLANDS",
+    			"name": "Cayman Islands",
     			"qcode": "country_cym",
     			"is_active": true,
     			"translations": {
@@ -3893,7 +3893,7 @@
     			}
     		},
     		{
-    			"name": "CYPRUS",
+    			"name": "Cyprus",
     			"qcode": "country_cyp",
     			"is_active": true,
     			"translations": {
@@ -3904,7 +3904,7 @@
     			}
     		},
     		{
-    			"name": "CZECHIA",
+    			"name": "Czechia",
     			"qcode": "country_cze",
     			"is_active": true,
     			"translations": {
@@ -3915,7 +3915,7 @@
     			}
     		},
     		{
-    			"name": "GERMANY",
+    			"name": "Germany",
     			"qcode": "country_deu",
     			"is_active": true,
     			"translations": {
@@ -3926,7 +3926,7 @@
     			}
     		},
     		{
-    			"name": "DJIBOUTI",
+    			"name": "Djibouti",
     			"qcode": "country_dji",
     			"is_active": true,
     			"translations": {
@@ -3937,7 +3937,7 @@
     			}
     		},
     		{
-    			"name": "DOMINICA",
+    			"name": "Dominica",
     			"qcode": "country_dma",
     			"is_active": true,
     			"translations": {
@@ -3948,7 +3948,7 @@
     			}
     		},
     		{
-    			"name": "DENMARK",
+    			"name": "Denmark",
     			"qcode": "country_dnk",
     			"is_active": true,
     			"translations": {
@@ -3959,7 +3959,7 @@
     			}
     		},
     		{
-    			"name": "DOMINICAN REPUBLIC",
+    			"name": "Dominican Republic",
     			"qcode": "country_dom",
     			"is_active": true,
     			"translations": {
@@ -3970,7 +3970,7 @@
     			}
     		},
     		{
-    			"name": "ALGERIA",
+    			"name": "Algeria",
     			"qcode": "country_dza",
     			"is_active": true,
     			"translations": {
@@ -3981,7 +3981,7 @@
     			}
     		},
     		{
-    			"name": "ECUADOR",
+    			"name": "Ecuador",
     			"qcode": "country_ecu",
     			"is_active": true,
     			"translations": {
@@ -3992,7 +3992,7 @@
     			}
     		},
     		{
-    			"name": "EGYPT",
+    			"name": "Egypt",
     			"qcode": "country_egy",
     			"is_active": true,
     			"translations": {
@@ -4003,7 +4003,7 @@
     			}
     		},
     		{
-    			"name": "ERITREA",
+    			"name": "Eritrea",
     			"qcode": "country_eri",
     			"is_active": true,
     			"translations": {
@@ -4014,7 +4014,7 @@
     			}
     		},
     		{
-    			"name": "WESTERN SAHARA",
+    			"name": "Western Sahara",
     			"qcode": "country_esh",
     			"is_active": true,
     			"translations": {
@@ -4025,7 +4025,7 @@
     			}
     		},
     		{
-    			"name": "SPAIN",
+    			"name": "Spain",
     			"qcode": "country_esp",
     			"is_active": true,
     			"translations": {
@@ -4036,7 +4036,7 @@
     			}
     		},
     		{
-    			"name": "ESTONIA",
+    			"name": "Estonia",
     			"qcode": "country_est",
     			"is_active": true,
     			"translations": {
@@ -4047,7 +4047,7 @@
     			}
     		},
     		{
-    			"name": "ETHIOPIA",
+    			"name": "Ethiopia",
     			"qcode": "country_eth",
     			"is_active": true,
     			"translations": {
@@ -4058,7 +4058,7 @@
     			}
     		},
     		{
-    			"name": "FINLAND",
+    			"name": "Finland",
     			"qcode": "country_fin",
     			"is_active": true,
     			"translations": {
@@ -4069,7 +4069,7 @@
     			}
     		},
     		{
-    			"name": "FIJI",
+    			"name": "Fiji",
     			"qcode": "country_fji",
     			"is_active": true,
     			"translations": {
@@ -4080,7 +4080,7 @@
     			}
     		},
     		{
-    			"name": "FALKLAND ISLANDS (MALVINAS)",
+    			"name": "Falkland Islands (Malvinas)",
     			"qcode": "country_flk",
     			"is_active": true,
     			"translations": {
@@ -4091,7 +4091,7 @@
     			}
     		},
     		{
-    			"name": "FRANCE",
+    			"name": "France",
     			"qcode": "country_fra",
     			"is_active": true,
     			"translations": {
@@ -4102,7 +4102,7 @@
     			}
     		},
     		{
-    			"name": "FAROE ISLANDS",
+    			"name": "Faroe Islands",
     			"qcode": "country_fro",
     			"is_active": true,
     			"translations": {
@@ -4113,7 +4113,7 @@
     			}
     		},
     		{
-    			"name": "MICRONESIA (FEDERATED STATES OF)",
+    			"name": "Micronesia (Federated States of)",
     			"qcode": "country_fsm",
     			"is_active": true,
     			"translations": {
@@ -4124,7 +4124,7 @@
     			}
     		},
     		{
-    			"name": "GABON",
+    			"name": "Gabon",
     			"qcode": "country_gab",
     			"is_active": true,
     			"translations": {
@@ -4135,7 +4135,7 @@
     			}
     		},
     		{
-    			"name": "UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND",
+    			"name": "United Kingdom of Great Britain and Northern Ireland",
     			"qcode": "country_gbr",
     			"is_active": true,
     			"translations": {
@@ -4146,7 +4146,7 @@
     			}
     		},
     		{
-    			"name": "GEORGIA",
+    			"name": "Georgia",
     			"qcode": "country_geo",
     			"is_active": true,
     			"translations": {
@@ -4157,7 +4157,7 @@
     			}
     		},
     		{
-    			"name": "GUERNSEY",
+    			"name": "Guernsey",
     			"qcode": "country_ggy",
     			"is_active": true,
     			"translations": {
@@ -4168,7 +4168,7 @@
     			}
     		},
     		{
-    			"name": "GHANA",
+    			"name": "Ghana",
     			"qcode": "country_gha",
     			"is_active": true,
     			"translations": {
@@ -4179,7 +4179,7 @@
     			}
     		},
     		{
-    			"name": "GIBRALTAR",
+    			"name": "Gibraltar",
     			"qcode": "country_gib",
     			"is_active": true,
     			"translations": {
@@ -4190,7 +4190,7 @@
     			}
     		},
     		{
-    			"name": "GUINEA",
+    			"name": "Guinea",
     			"qcode": "country_gin",
     			"is_active": true,
     			"translations": {
@@ -4201,7 +4201,7 @@
     			}
     		},
     		{
-    			"name": "GUADELOUPE",
+    			"name": "Guadeloupe",
     			"qcode": "country_glp",
     			"is_active": true,
     			"translations": {
@@ -4212,7 +4212,7 @@
     			}
     		},
     		{
-    			"name": "GAMBIA",
+    			"name": "Gambia",
     			"qcode": "country_gmb",
     			"is_active": true,
     			"translations": {
@@ -4223,7 +4223,7 @@
     			}
     		},
     		{
-    			"name": "GUINEA-BISSAU",
+    			"name": "Guinea-Bissau",
     			"qcode": "country_gnb",
     			"is_active": true,
     			"translations": {
@@ -4234,7 +4234,7 @@
     			}
     		},
     		{
-    			"name": "EQUATORIAL GUINEA",
+    			"name": "Equatorial Guinea",
     			"qcode": "country_gnq",
     			"is_active": true,
     			"translations": {
@@ -4245,7 +4245,7 @@
     			}
     		},
     		{
-    			"name": "GREECE",
+    			"name": "Greece",
     			"qcode": "country_grc",
     			"is_active": true,
     			"translations": {
@@ -4256,7 +4256,7 @@
     			}
     		},
     		{
-    			"name": "GRENADA",
+    			"name": "Grenada",
     			"qcode": "country_grd",
     			"is_active": true,
     			"translations": {
@@ -4267,7 +4267,7 @@
     			}
     		},
     		{
-    			"name": "GREENLAND",
+    			"name": "Greenland",
     			"qcode": "country_grl",
     			"is_active": true,
     			"translations": {
@@ -4278,7 +4278,7 @@
     			}
     		},
     		{
-    			"name": "GUATEMALA",
+    			"name": "Guatemala",
     			"qcode": "country_gtm",
     			"is_active": true,
     			"translations": {
@@ -4289,7 +4289,7 @@
     			}
     		},
     		{
-    			"name": "FRENCH GUIANA",
+    			"name": "French Guiana",
     			"qcode": "country_guf",
     			"is_active": true,
     			"translations": {
@@ -4300,7 +4300,7 @@
     			}
     		},
     		{
-    			"name": "GUAM",
+    			"name": "Guam",
     			"qcode": "country_gum",
     			"is_active": true,
     			"translations": {
@@ -4311,7 +4311,7 @@
     			}
     		},
     		{
-    			"name": "GUYANA",
+    			"name": "Guyana",
     			"qcode": "country_guy",
     			"is_active": true,
     			"translations": {
@@ -4322,7 +4322,7 @@
     			}
     		},
     		{
-    			"name": "HONG KONG",
+    			"name": "Hong Kong",
     			"qcode": "country_hkg",
     			"is_active": true,
     			"translations": {
@@ -4333,7 +4333,7 @@
     			}
     		},
     		{
-    			"name": "HEARD ISLAND AND MCDONALD ISLANDS",
+    			"name": "Heard Island and McDonald Islands",
     			"qcode": "country_hmd",
     			"is_active": true,
     			"translations": {
@@ -4344,7 +4344,7 @@
     			}
     		},
     		{
-    			"name": "HONDURAS",
+    			"name": "Honduras",
     			"qcode": "country_hnd",
     			"is_active": true,
     			"translations": {
@@ -4355,7 +4355,7 @@
     			}
     		},
     		{
-    			"name": "CROATIA",
+    			"name": "Croatia",
     			"qcode": "country_hrv",
     			"is_active": true,
     			"translations": {
@@ -4366,7 +4366,7 @@
     			}
     		},
     		{
-    			"name": "HAITI",
+    			"name": "Haiti",
     			"qcode": "country_hti",
     			"is_active": true,
     			"translations": {
@@ -4377,7 +4377,7 @@
     			}
     		},
     		{
-    			"name": "HUNGARY",
+    			"name": "Hungary",
     			"qcode": "country_hun",
     			"is_active": true,
     			"translations": {
@@ -4388,7 +4388,7 @@
     			}
     		},
     		{
-    			"name": "SWITZERLAND",
+    			"name": "Switzerland",
     			"qcode": "country_che",
     			"is_active": true,
     			"translations": {
@@ -4399,7 +4399,7 @@
     			}
     		},
     		{
-    			"name": "CHILE",
+    			"name": "Chile",
     			"qcode": "country_chl",
     			"is_active": true,
     			"translations": {
@@ -4410,7 +4410,7 @@
     			}
     		},
     		{
-    			"name": "CHINA",
+    			"name": "China",
     			"qcode": "country_chn",
     			"is_active": true,
     			"translations": {
@@ -4421,7 +4421,7 @@
     			}
     		},
     		{
-    			"name": "INDONESIA",
+    			"name": "Indonesia",
     			"qcode": "country_idn",
     			"is_active": true,
     			"translations": {
@@ -4432,7 +4432,7 @@
     			}
     		},
     		{
-    			"name": "ISLE OF MAN",
+    			"name": "Isle of Man",
     			"qcode": "country_imn",
     			"is_active": true,
     			"translations": {
@@ -4443,7 +4443,7 @@
     			}
     		},
     		{
-    			"name": "INDIA",
+    			"name": "India",
     			"qcode": "country_ind",
     			"is_active": true,
     			"translations": {
@@ -4454,7 +4454,7 @@
     			}
     		},
     		{
-    			"name": "BRITISH INDIAN OCEAN TERRITORY",
+    			"name": "British Indian Ocean Territory",
     			"qcode": "country_iot",
     			"is_active": true,
     			"translations": {
@@ -4465,7 +4465,7 @@
     			}
     		},
     		{
-    			"name": "IRELAND",
+    			"name": "Ireland",
     			"qcode": "country_irl",
     			"is_active": true,
     			"translations": {
@@ -4476,7 +4476,7 @@
     			}
     		},
     		{
-    			"name": "IRAN (ISLAMIC REPUBLIC OF)",
+    			"name": "Iran (Islamic Republic of)",
     			"qcode": "country_irn",
     			"is_active": true,
     			"translations": {
@@ -4487,7 +4487,7 @@
     			}
     		},
     		{
-    			"name": "IRAQ",
+    			"name": "Iraq",
     			"qcode": "country_irq",
     			"is_active": true,
     			"translations": {
@@ -4498,7 +4498,7 @@
     			}
     		},
     		{
-    			"name": "ICELAND",
+    			"name": "Iceland",
     			"qcode": "country_isl",
     			"is_active": true,
     			"translations": {
@@ -4509,7 +4509,7 @@
     			}
     		},
     		{
-    			"name": "ISRAEL",
+    			"name": "Israel",
     			"qcode": "country_isr",
     			"is_active": true,
     			"translations": {
@@ -4520,7 +4520,7 @@
     			}
     		},
     		{
-    			"name": "ITALY",
+    			"name": "Italy",
     			"qcode": "country_ita",
     			"is_active": true,
     			"translations": {
@@ -4531,7 +4531,7 @@
     			}
     		},
     		{
-    			"name": "JAMAICA",
+    			"name": "Jamaica",
     			"qcode": "country_jam",
     			"is_active": true,
     			"translations": {
@@ -4542,7 +4542,7 @@
     			}
     		},
     		{
-    			"name": "JERSEY",
+    			"name": "Jersey",
     			"qcode": "country_jey",
     			"is_active": true,
     			"translations": {
@@ -4553,7 +4553,7 @@
     			}
     		},
     		{
-    			"name": "JORDAN",
+    			"name": "Jordan",
     			"qcode": "country_jor",
     			"is_active": true,
     			"translations": {
@@ -4564,7 +4564,7 @@
     			}
     		},
     		{
-    			"name": "JAPAN",
+    			"name": "Japan",
     			"qcode": "country_jpn",
     			"is_active": true,
     			"translations": {
@@ -4575,7 +4575,7 @@
     			}
     		},
     		{
-    			"name": "KAZAKHSTAN",
+    			"name": "Kazakhstan",
     			"qcode": "country_kaz",
     			"is_active": true,
     			"translations": {
@@ -4586,7 +4586,7 @@
     			}
     		},
     		{
-    			"name": "KENYA",
+    			"name": "Kenya",
     			"qcode": "country_ken",
     			"is_active": true,
     			"translations": {
@@ -4597,7 +4597,7 @@
     			}
     		},
     		{
-    			"name": "KYRGYZSTAN",
+    			"name": "Kyrgyzstan",
     			"qcode": "country_kgz",
     			"is_active": true,
     			"translations": {
@@ -4608,7 +4608,7 @@
     			}
     		},
     		{
-    			"name": "CAMBODIA",
+    			"name": "Cambodia",
     			"qcode": "country_khm",
     			"is_active": true,
     			"translations": {
@@ -4619,7 +4619,7 @@
     			}
     		},
     		{
-    			"name": "KIRIBATI",
+    			"name": "Kiribati",
     			"qcode": "country_kir",
     			"is_active": true,
     			"translations": {
@@ -4630,7 +4630,7 @@
     			}
     		},
     		{
-    			"name": "SAINT KITTS AND NEVIS",
+    			"name": "Saint Kitts and Nevis",
     			"qcode": "country_kna",
     			"is_active": true,
     			"translations": {
@@ -4641,7 +4641,7 @@
     			}
     		},
     		{
-    			"name": "KOREA, REPUBLIC OF",
+    			"name": "Korea, Republic of",
     			"qcode": "country_kor",
     			"is_active": true,
     			"translations": {
@@ -4652,7 +4652,7 @@
     			}
     		},
     		{
-    			"name": "KUWAIT",
+    			"name": "Kuwait",
     			"qcode": "country_kwt",
     			"is_active": true,
     			"translations": {
@@ -4663,7 +4663,7 @@
     			}
     		},
     		{
-    			"name": "LAO PEOPLE'S DEMOCRATIC REPUBLIC",
+    			"name": "Lao People's Democratic Republic",
     			"qcode": "country_lao",
     			"is_active": true,
     			"translations": {
@@ -4674,7 +4674,7 @@
     			}
     		},
     		{
-    			"name": "LEBANON",
+    			"name": "Lebanon",
     			"qcode": "country_lbn",
     			"is_active": true,
     			"translations": {
@@ -4685,7 +4685,7 @@
     			}
     		},
     		{
-    			"name": "LIBERIA",
+    			"name": "Liberia",
     			"qcode": "country_lbr",
     			"is_active": true,
     			"translations": {
@@ -4696,7 +4696,7 @@
     			}
     		},
     		{
-    			"name": "LIBYA",
+    			"name": "Libya",
     			"qcode": "country_lby",
     			"is_active": true,
     			"translations": {
@@ -4707,7 +4707,7 @@
     			}
     		},
     		{
-    			"name": "SAINT LUCIA",
+    			"name": "Saint Lucia",
     			"qcode": "country_lca",
     			"is_active": true,
     			"translations": {
@@ -4718,7 +4718,7 @@
     			}
     		},
     		{
-    			"name": "LIECHTENSTEIN",
+    			"name": "Liechtenstein",
     			"qcode": "country_lie",
     			"is_active": true,
     			"translations": {
@@ -4729,7 +4729,7 @@
     			}
     		},
     		{
-    			"name": "SRI LANKA",
+    			"name": "Sri Lanka",
     			"qcode": "country_lka",
     			"is_active": true,
     			"translations": {
@@ -4740,7 +4740,7 @@
     			}
     		},
     		{
-    			"name": "LESOTHO",
+    			"name": "Lesotho",
     			"qcode": "country_lso",
     			"is_active": true,
     			"translations": {
@@ -4751,7 +4751,7 @@
     			}
     		},
     		{
-    			"name": "LITHUANIA",
+    			"name": "Lithuania",
     			"qcode": "country_ltu",
     			"is_active": true,
     			"translations": {
@@ -4762,7 +4762,7 @@
     			}
     		},
     		{
-    			"name": "LUXEMBOURG",
+    			"name": "Luxembourg",
     			"qcode": "country_lux",
     			"is_active": true,
     			"translations": {
@@ -4773,7 +4773,7 @@
     			}
     		},
     		{
-    			"name": "LATVIA",
+    			"name": "Latvia",
     			"qcode": "country_lva",
     			"is_active": true,
     			"translations": {
@@ -4784,7 +4784,7 @@
     			}
     		},
     		{
-    			"name": "MACAO",
+    			"name": "Macao",
     			"qcode": "country_mac",
     			"is_active": true,
     			"translations": {
@@ -4795,7 +4795,7 @@
     			}
     		},
     		{
-    			"name": "SAINT MARTIN (FRENCH PART)",
+    			"name": "Saint Martin (French part)",
     			"qcode": "country_maf",
     			"is_active": true,
     			"translations": {
@@ -4806,7 +4806,7 @@
     			}
     		},
     		{
-    			"name": "MOROCCO",
+    			"name": "Morocco",
     			"qcode": "country_mar",
     			"is_active": true,
     			"translations": {
@@ -4817,7 +4817,7 @@
     			}
     		},
     		{
-    			"name": "MONACO",
+    			"name": "Monaco",
     			"qcode": "country_mco",
     			"is_active": true,
     			"translations": {
@@ -4828,7 +4828,7 @@
     			}
     		},
     		{
-    			"name": "MOLDOVA, REPUBLIC OF",
+    			"name": "Moldova, Republic of",
     			"qcode": "country_mda",
     			"is_active": true,
     			"translations": {
@@ -4839,7 +4839,7 @@
     			}
     		},
     		{
-    			"name": "MADAGASCAR",
+    			"name": "Madagascar",
     			"qcode": "country_mdg",
     			"is_active": true,
     			"translations": {
@@ -4850,7 +4850,7 @@
     			}
     		},
     		{
-    			"name": "MALDIVES",
+    			"name": "Maldives",
     			"qcode": "country_mdv",
     			"is_active": true,
     			"translations": {
@@ -4861,7 +4861,7 @@
     			}
     		},
     		{
-    			"name": "MEXICO",
+    			"name": "Mexico",
     			"qcode": "country_mex",
     			"is_active": true,
     			"translations": {
@@ -4872,7 +4872,7 @@
     			}
     		},
     		{
-    			"name": "MARSHALL ISLANDS",
+    			"name": "Marshall Islands",
     			"qcode": "country_mhl",
     			"is_active": true,
     			"translations": {
@@ -4883,7 +4883,7 @@
     			}
     		},
     		{
-    			"name": "NORTH MACEDONIA",
+    			"name": "North Macedonia",
     			"qcode": "country_mkd",
     			"is_active": true,
     			"translations": {
@@ -4894,7 +4894,7 @@
     			}
     		},
     		{
-    			"name": "MALI",
+    			"name": "Mali",
     			"qcode": "country_mli",
     			"is_active": true,
     			"translations": {
@@ -4905,7 +4905,7 @@
     			}
     		},
     		{
-    			"name": "MALTA",
+    			"name": "Malta",
     			"qcode": "country_mlt",
     			"is_active": true,
     			"translations": {
@@ -4916,7 +4916,7 @@
     			}
     		},
     		{
-    			"name": "MYANMAR",
+    			"name": "Myanmar",
     			"qcode": "country_mmr",
     			"is_active": true,
     			"translations": {
@@ -4927,7 +4927,7 @@
     			}
     		},
     		{
-    			"name": "MONTENEGRO",
+    			"name": "Montenegro",
     			"qcode": "country_mne",
     			"is_active": true,
     			"translations": {
@@ -4938,7 +4938,7 @@
     			}
     		},
     		{
-    			"name": "MONGOLIA",
+    			"name": "Mongolia",
     			"qcode": "country_mng",
     			"is_active": true,
     			"translations": {
@@ -4949,7 +4949,7 @@
     			}
     		},
     		{
-    			"name": "NORTHERN MARIANA ISLANDS",
+    			"name": "Northern Mariana Islands",
     			"qcode": "country_mnp",
     			"is_active": true,
     			"translations": {
@@ -4960,7 +4960,7 @@
     			}
     		},
     		{
-    			"name": "MOZAMBIQUE",
+    			"name": "Mozambique",
     			"qcode": "country_moz",
     			"is_active": true,
     			"translations": {
@@ -4971,7 +4971,7 @@
     			}
     		},
     		{
-    			"name": "MAURITANIA",
+    			"name": "Mauritania",
     			"qcode": "country_mrt",
     			"is_active": true,
     			"translations": {
@@ -4982,7 +4982,7 @@
     			}
     		},
     		{
-    			"name": "MONTSERRAT",
+    			"name": "Montserrat",
     			"qcode": "country_msr",
     			"is_active": true,
     			"translations": {
@@ -4993,7 +4993,7 @@
     			}
     		},
     		{
-    			"name": "MARTINIQUE",
+    			"name": "Martinique",
     			"qcode": "country_mtq",
     			"is_active": true,
     			"translations": {
@@ -5004,7 +5004,7 @@
     			}
     		},
     		{
-    			"name": "MAURITIUS",
+    			"name": "Mauritius",
     			"qcode": "country_mus",
     			"is_active": true,
     			"translations": {
@@ -5015,7 +5015,7 @@
     			}
     		},
     		{
-    			"name": "MALAWI",
+    			"name": "Malawi",
     			"qcode": "country_mwi",
     			"is_active": true,
     			"translations": {
@@ -5026,7 +5026,7 @@
     			}
     		},
     		{
-    			"name": "MALAYSIA",
+    			"name": "Malaysia",
     			"qcode": "country_mys",
     			"is_active": true,
     			"translations": {
@@ -5037,7 +5037,7 @@
     			}
     		},
     		{
-    			"name": "MAYOTTE",
+    			"name": "Mayotte",
     			"qcode": "country_myt",
     			"is_active": true,
     			"translations": {
@@ -5048,7 +5048,7 @@
     			}
     		},
     		{
-    			"name": "NAMIBIA",
+    			"name": "Namibia",
     			"qcode": "country_nam",
     			"is_active": true,
     			"translations": {
@@ -5059,7 +5059,7 @@
     			}
     		},
     		{
-    			"name": "NEW CALEDONIA",
+    			"name": "New Caledonia",
     			"qcode": "country_ncl",
     			"is_active": true,
     			"translations": {
@@ -5070,7 +5070,7 @@
     			}
     		},
     		{
-    			"name": "NIGER",
+    			"name": "Niger",
     			"qcode": "country_ner",
     			"is_active": true,
     			"translations": {
@@ -5081,7 +5081,7 @@
     			}
     		},
     		{
-    			"name": "NORFOLK ISLAND",
+    			"name": "Norfolk Island",
     			"qcode": "country_nfk",
     			"is_active": true,
     			"translations": {
@@ -5092,7 +5092,7 @@
     			}
     		},
     		{
-    			"name": "NIGERIA",
+    			"name": "Nigeria",
     			"qcode": "country_nga",
     			"is_active": true,
     			"translations": {
@@ -5103,7 +5103,7 @@
     			}
     		},
     		{
-    			"name": "NICARAGUA",
+    			"name": "Nicaragua",
     			"qcode": "country_nic",
     			"is_active": true,
     			"translations": {
@@ -5114,7 +5114,7 @@
     			}
     		},
     		{
-    			"name": "NIUE",
+    			"name": "Niue",
     			"qcode": "country_niu",
     			"is_active": true,
     			"translations": {
@@ -5125,7 +5125,7 @@
     			}
     		},
     		{
-    			"name": "NETHERLANDS",
+    			"name": "Netherlands",
     			"qcode": "country_nld",
     			"is_active": true,
     			"translations": {
@@ -5136,7 +5136,7 @@
     			}
     		},
     		{
-    			"name": "NORWAY",
+    			"name": "Norway",
     			"qcode": "country_nor",
     			"is_active": true,
     			"translations": {
@@ -5147,7 +5147,7 @@
     			}
     		},
     		{
-    			"name": "NEPAL",
+    			"name": "Nepal",
     			"qcode": "country_npl",
     			"is_active": true,
     			"translations": {
@@ -5158,7 +5158,7 @@
     			}
     		},
     		{
-    			"name": "NAURU",
+    			"name": "Nauru",
     			"qcode": "country_nru",
     			"is_active": true,
     			"translations": {
@@ -5169,7 +5169,7 @@
     			}
     		},
     		{
-    			"name": "NEW ZEALAND",
+    			"name": "New Zealand",
     			"qcode": "country_nzl",
     			"is_active": true,
     			"translations": {
@@ -5180,7 +5180,7 @@
     			}
     		},
     		{
-    			"name": "OMAN",
+    			"name": "Oman",
     			"qcode": "country_omn",
     			"is_active": true,
     			"translations": {
@@ -5191,7 +5191,7 @@
     			}
     		},
     		{
-    			"name": "PAKISTAN",
+    			"name": "Pakistan",
     			"qcode": "country_pak",
     			"is_active": true,
     			"translations": {
@@ -5202,7 +5202,7 @@
     			}
     		},
     		{
-    			"name": "PANAMA",
+    			"name": "Panama",
     			"qcode": "country_pan",
     			"is_active": true,
     			"translations": {
@@ -5213,7 +5213,7 @@
     			}
     		},
     		{
-    			"name": "PITCAIRN",
+    			"name": "Pitcairn",
     			"qcode": "country_pcn",
     			"is_active": true,
     			"translations": {
@@ -5224,7 +5224,7 @@
     			}
     		},
     		{
-    			"name": "PERU",
+    			"name": "Peru",
     			"qcode": "country_per",
     			"is_active": true,
     			"translations": {
@@ -5235,7 +5235,7 @@
     			}
     		},
     		{
-    			"name": "PHILIPPINES",
+    			"name": "Philippines",
     			"qcode": "country_phl",
     			"is_active": true,
     			"translations": {
@@ -5246,7 +5246,7 @@
     			}
     		},
     		{
-    			"name": "PALAU",
+    			"name": "Palau",
     			"qcode": "country_plw",
     			"is_active": true,
     			"translations": {
@@ -5257,7 +5257,7 @@
     			}
     		},
     		{
-    			"name": "PAPUA NEW GUINEA",
+    			"name": "Papua New Guinea",
     			"qcode": "country_png",
     			"is_active": true,
     			"translations": {
@@ -5268,7 +5268,7 @@
     			}
     		},
     		{
-    			"name": "POLAND",
+    			"name": "Poland",
     			"qcode": "country_pol",
     			"is_active": true,
     			"translations": {
@@ -5279,7 +5279,7 @@
     			}
     		},
     		{
-    			"name": "PUERTO RICO",
+    			"name": "Puerto Rico",
     			"qcode": "country_pri",
     			"is_active": true,
     			"translations": {
@@ -5290,7 +5290,7 @@
     			}
     		},
     		{
-    			"name": "KOREA (DEMOCRATIC PEOPLE'S REPUBLIC OF)",
+    			"name": "Korea (Democratic People's Republic of)",
     			"qcode": "country_prk",
     			"is_active": true,
     			"translations": {
@@ -5301,7 +5301,7 @@
     			}
     		},
     		{
-    			"name": "PORTUGAL",
+    			"name": "Portugal",
     			"qcode": "country_prt",
     			"is_active": true,
     			"translations": {
@@ -5312,7 +5312,7 @@
     			}
     		},
     		{
-    			"name": "PARAGUAY",
+    			"name": "Paraguay",
     			"qcode": "country_pry",
     			"is_active": true,
     			"translations": {
@@ -5323,7 +5323,7 @@
     			}
     		},
     		{
-    			"name": "PALESTINE, STATE OF",
+    			"name": "Palestine, State of",
     			"qcode": "country_pse",
     			"is_active": true,
     			"translations": {
@@ -5334,7 +5334,7 @@
     			}
     		},
     		{
-    			"name": "FRENCH POLYNESIA",
+    			"name": "French Polynesia",
     			"qcode": "country_pyf",
     			"is_active": true,
     			"translations": {
@@ -5345,7 +5345,7 @@
     			}
     		},
     		{
-    			"name": "QATAR",
+    			"name": "Qatar",
     			"qcode": "country_qat",
     			"is_active": true,
     			"translations": {
@@ -5356,7 +5356,7 @@
     			}
     		},
     		{
-    			"name": "RÉUNION",
+    			"name": "Réunion",
     			"qcode": "country_reu",
     			"is_active": true,
     			"translations": {
@@ -5367,7 +5367,7 @@
     			}
     		},
     		{
-    			"name": "ROMANIA",
+    			"name": "Romania",
     			"qcode": "country_rou",
     			"is_active": true,
     			"translations": {
@@ -5378,7 +5378,7 @@
     			}
     		},
     		{
-    			"name": "RUSSIAN FEDERATION",
+    			"name": "Russian Federation",
     			"qcode": "country_rus",
     			"is_active": true,
     			"translations": {
@@ -5389,7 +5389,7 @@
     			}
     		},
     		{
-    			"name": "RWANDA",
+    			"name": "Rwanda",
     			"qcode": "country_rwa",
     			"is_active": true,
     			"translations": {
@@ -5400,7 +5400,7 @@
     			}
     		},
     		{
-    			"name": "SAUDI ARABIA",
+    			"name": "Saudi Arabia",
     			"qcode": "country_sau",
     			"is_active": true,
     			"translations": {
@@ -5411,7 +5411,7 @@
     			}
     		},
     		{
-    			"name": "SUDAN",
+    			"name": "Sudan",
     			"qcode": "country_sdn",
     			"is_active": true,
     			"translations": {
@@ -5422,7 +5422,7 @@
     			}
     		},
     		{
-    			"name": "SENEGAL",
+    			"name": "Senegal",
     			"qcode": "country_sen",
     			"is_active": true,
     			"translations": {
@@ -5433,7 +5433,7 @@
     			}
     		},
     		{
-    			"name": "SINGAPORE",
+    			"name": "Singapore",
     			"qcode": "country_sgp",
     			"is_active": true,
     			"translations": {
@@ -5444,7 +5444,7 @@
     			}
     		},
     		{
-    			"name": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS",
+    			"name": "South Georgia and the South Sandwich Islands",
     			"qcode": "country_sgs",
     			"is_active": true,
     			"translations": {
@@ -5455,7 +5455,7 @@
     			}
     		},
     		{
-    			"name": "SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA",
+    			"name": "Saint Helena, Ascension and Tristan da Cunha",
     			"qcode": "country_shn",
     			"is_active": true,
     			"translations": {
@@ -5466,7 +5466,7 @@
     			}
     		},
     		{
-    			"name": "SVALBARD AND JAN MAYEN",
+    			"name": "Svalbard and Jan Mayen",
     			"qcode": "country_sjm",
     			"is_active": true,
     			"translations": {
@@ -5477,7 +5477,7 @@
     			}
     		},
     		{
-    			"name": "SOLOMON ISLANDS",
+    			"name": "Solomon Islands",
     			"qcode": "country_slb",
     			"is_active": true,
     			"translations": {
@@ -5488,7 +5488,7 @@
     			}
     		},
     		{
-    			"name": "SIERRA LEONE",
+    			"name": "Sierra Leone",
     			"qcode": "country_sle",
     			"is_active": true,
     			"translations": {
@@ -5499,7 +5499,7 @@
     			}
     		},
     		{
-    			"name": "EL SALVADOR",
+    			"name": "El Salvador",
     			"qcode": "country_slv",
     			"is_active": true,
     			"translations": {
@@ -5510,7 +5510,7 @@
     			}
     		},
     		{
-    			"name": "SAN MARINO",
+    			"name": "San Marino",
     			"qcode": "country_smr",
     			"is_active": true,
     			"translations": {
@@ -5521,7 +5521,7 @@
     			}
     		},
     		{
-    			"name": "SOMALIA",
+    			"name": "Somalia",
     			"qcode": "country_som",
     			"is_active": true,
     			"translations": {
@@ -5532,7 +5532,7 @@
     			}
     		},
     		{
-    			"name": "SAINT PIERRE AND MIQUELON",
+    			"name": "Saint Pierre and Miquelon",
     			"qcode": "country_spm",
     			"is_active": true,
     			"translations": {
@@ -5543,7 +5543,7 @@
     			}
     		},
     		{
-    			"name": "SERBIA",
+    			"name": "Serbia",
     			"qcode": "country_srb",
     			"is_active": true,
     			"translations": {
@@ -5554,7 +5554,7 @@
     			}
     		},
     		{
-    			"name": "SOUTH SUDAN",
+    			"name": "South Sudan",
     			"qcode": "country_ssd",
     			"is_active": true,
     			"translations": {
@@ -5565,7 +5565,7 @@
     			}
     		},
     		{
-    			"name": "SAO TOME AND PRINCIPE",
+    			"name": "Sao Tome and Principe",
     			"qcode": "country_stp",
     			"is_active": true,
     			"translations": {
@@ -5576,7 +5576,7 @@
     			}
     		},
     		{
-    			"name": "SURINAME",
+    			"name": "Suriname",
     			"qcode": "country_sur",
     			"is_active": true,
     			"translations": {
@@ -5587,7 +5587,7 @@
     			}
     		},
     		{
-    			"name": "SLOVAKIA",
+    			"name": "Slovakia",
     			"qcode": "country_svk",
     			"is_active": true,
     			"translations": {
@@ -5598,7 +5598,7 @@
     			}
     		},
     		{
-    			"name": "SLOVENIA",
+    			"name": "Slovenia",
     			"qcode": "country_svn",
     			"is_active": true,
     			"translations": {
@@ -5609,7 +5609,7 @@
     			}
     		},
     		{
-    			"name": "SWEDEN",
+    			"name": "Sweden",
     			"qcode": "country_swe",
     			"is_active": true,
     			"translations": {
@@ -5620,7 +5620,7 @@
     			}
     		},
     		{
-    			"name": "ESWATINI",
+    			"name": "Eswatini",
     			"qcode": "country_swz",
     			"is_active": true,
     			"translations": {
@@ -5631,7 +5631,7 @@
     			}
     		},
     		{
-    			"name": "SINT MAARTEN (DUTCH PART)",
+    			"name": "Sint Maarten (Dutch part)",
     			"qcode": "country_sxm",
     			"is_active": true,
     			"translations": {
@@ -5642,7 +5642,7 @@
     			}
     		},
     		{
-    			"name": "SEYCHELLES",
+    			"name": "Seychelles",
     			"qcode": "country_syc",
     			"is_active": true,
     			"translations": {
@@ -5653,7 +5653,7 @@
     			}
     		},
     		{
-    			"name": "SYRIAN ARAB REPUBLIC",
+    			"name": "Syrian Arab Republic",
     			"qcode": "country_syr",
     			"is_active": true,
     			"translations": {
@@ -5664,7 +5664,7 @@
     			}
     		},
     		{
-    			"name": "TURKS AND CAICOS ISLANDS",
+    			"name": "Turks and Caicos Islands",
     			"qcode": "country_tca",
     			"is_active": true,
     			"translations": {
@@ -5675,7 +5675,7 @@
     			}
     		},
     		{
-    			"name": "CHAD",
+    			"name": "Chad",
     			"qcode": "country_tcd",
     			"is_active": true,
     			"translations": {
@@ -5686,7 +5686,7 @@
     			}
     		},
     		{
-    			"name": "TOGO",
+    			"name": "Togo",
     			"qcode": "country_tgo",
     			"is_active": true,
     			"translations": {
@@ -5697,7 +5697,7 @@
     			}
     		},
     		{
-    			"name": "THAILAND",
+    			"name": "Thailand",
     			"qcode": "country_tha",
     			"is_active": true,
     			"translations": {
@@ -5708,7 +5708,7 @@
     			}
     		},
     		{
-    			"name": "TAJIKISTAN",
+    			"name": "Tajikistan",
     			"qcode": "country_tjk",
     			"is_active": true,
     			"translations": {
@@ -5719,7 +5719,7 @@
     			}
     		},
     		{
-    			"name": "TOKELAU",
+    			"name": "Tokelau",
     			"qcode": "country_tkl",
     			"is_active": true,
     			"translations": {
@@ -5730,7 +5730,7 @@
     			}
     		},
     		{
-    			"name": "TURKMENISTAN",
+    			"name": "Turkmenistan",
     			"qcode": "country_tkm",
     			"is_active": true,
     			"translations": {
@@ -5741,7 +5741,7 @@
     			}
     		},
     		{
-    			"name": "TIMOR-LESTE",
+    			"name": "Timor-Leste",
     			"qcode": "country_tls",
     			"is_active": true,
     			"translations": {
@@ -5752,7 +5752,7 @@
     			}
     		},
     		{
-    			"name": "TONGA",
+    			"name": "Tonga",
     			"qcode": "country_ton",
     			"is_active": true,
     			"translations": {
@@ -5763,7 +5763,7 @@
     			}
     		},
     		{
-    			"name": "TRINIDAD AND TOBAGO",
+    			"name": "Trinidad and Tobago",
     			"qcode": "country_tto",
     			"is_active": true,
     			"translations": {
@@ -5774,7 +5774,7 @@
     			}
     		},
     		{
-    			"name": "TUNISIA",
+    			"name": "Tunisia",
     			"qcode": "country_tun",
     			"is_active": true,
     			"translations": {
@@ -5785,7 +5785,7 @@
     			}
     		},
     		{
-    			"name": "TURKEY",
+    			"name": "Turkey",
     			"qcode": "country_tur",
     			"is_active": true,
     			"translations": {
@@ -5796,7 +5796,7 @@
     			}
     		},
     		{
-    			"name": "TUVALU",
+    			"name": "Tuvalu",
     			"qcode": "country_tuv",
     			"is_active": true,
     			"translations": {
@@ -5807,7 +5807,7 @@
     			}
     		},
     		{
-    			"name": "TAIWAN, PROVINCE OF CHINA",
+    			"name": "Taiwan, Province of China",
     			"qcode": "country_twn",
     			"is_active": true,
     			"translations": {
@@ -5818,7 +5818,7 @@
     			}
     		},
     		{
-    			"name": "TANZANIA, UNITED REPUBLIC OF",
+    			"name": "Tanzania, United Republic of",
     			"qcode": "country_tza",
     			"is_active": true,
     			"translations": {
@@ -5829,7 +5829,7 @@
     			}
     		},
     		{
-    			"name": "UGANDA",
+    			"name": "Uganda",
     			"qcode": "country_uga",
     			"is_active": true,
     			"translations": {
@@ -5840,7 +5840,7 @@
     			}
     		},
     		{
-    			"name": "UKRAINE",
+    			"name": "Ukraine",
     			"qcode": "country_ukr",
     			"is_active": true,
     			"translations": {
@@ -5851,7 +5851,7 @@
     			}
     		},
     		{
-    			"name": "UNITED STATES MINOR OUTLYING ISLANDS",
+    			"name": "United States Minor Outlying Islands",
     			"qcode": "country_umi",
     			"is_active": true,
     			"translations": {
@@ -5862,7 +5862,7 @@
     			}
     		},
     		{
-    			"name": "URUGUAY",
+    			"name": "Uruguay",
     			"qcode": "country_ury",
     			"is_active": true,
     			"translations": {
@@ -5873,7 +5873,7 @@
     			}
     		},
     		{
-    			"name": "UNITED STATES OF AMERICA",
+    			"name": "United States of America",
     			"qcode": "country_usa",
     			"is_active": true,
     			"translations": {
@@ -5884,7 +5884,7 @@
     			}
     		},
     		{
-    			"name": "UZBEKISTAN",
+    			"name": "Uzbekistan",
     			"qcode": "country_uzb",
     			"is_active": true,
     			"translations": {
@@ -5895,7 +5895,7 @@
     			}
     		},
     		{
-    			"name": "HOLY SEE",
+    			"name": "Holy See",
     			"qcode": "country_vat",
     			"is_active": true,
     			"translations": {
@@ -5906,7 +5906,7 @@
     			}
     		},
     		{
-    			"name": "SAINT VINCENT AND THE GRENADINES",
+    			"name": "Saint Vincent and the Grenadines",
     			"qcode": "country_vct",
     			"is_active": true,
     			"translations": {
@@ -5917,7 +5917,7 @@
     			}
     		},
     		{
-    			"name": "VENEZUELA (BOLIVARIAN REPUBLIC OF)",
+    			"name": "Venezuela (Bolivarian Republic of)",
     			"qcode": "country_ven",
     			"is_active": true,
     			"translations": {
@@ -5928,7 +5928,7 @@
     			}
     		},
     		{
-    			"name": "VIRGIN ISLANDS (BRITISH)",
+    			"name": "Virgin Islands (British)",
     			"qcode": "country_vgb",
     			"is_active": true,
     			"translations": {
@@ -5939,7 +5939,7 @@
     			}
     		},
     		{
-    			"name": "VIRGIN ISLANDS (U.S.)",
+    			"name": "Virgin Islands (U.S.)",
     			"qcode": "country_vir",
     			"is_active": true,
     			"translations": {
@@ -5950,7 +5950,7 @@
     			}
     		},
     		{
-    			"name": "VIET NAM",
+    			"name": "Viet Nam",
     			"qcode": "country_vnm",
     			"is_active": true,
     			"translations": {
@@ -5961,7 +5961,7 @@
     			}
     		},
     		{
-    			"name": "VANUATU",
+    			"name": "Vanuatu",
     			"qcode": "country_vut",
     			"is_active": true,
     			"translations": {
@@ -5972,7 +5972,7 @@
     			}
     		},
     		{
-    			"name": "WALLIS AND FUTUNA",
+    			"name": "Wallis and Futuna",
     			"qcode": "country_wlf",
     			"is_active": true,
     			"translations": {
@@ -5983,7 +5983,7 @@
     			}
     		},
     		{
-    			"name": "SAMOA",
+    			"name": "Samoa",
     			"qcode": "country_wsm",
     			"is_active": true,
     			"translations": {
@@ -5994,7 +5994,7 @@
     			}
     		},
     		{
-    			"name": "YEMEN",
+    			"name": "Yemen",
     			"qcode": "country_yem",
     			"is_active": true,
     			"translations": {
@@ -6005,7 +6005,7 @@
     			}
     		},
     		{
-    			"name": "SOUTH AFRICA",
+    			"name": "South Africa",
     			"qcode": "country_zaf",
     			"is_active": true,
     			"translations": {
@@ -6016,7 +6016,7 @@
     			}
     		},
     		{
-    			"name": "ZAMBIA",
+    			"name": "Zambia",
     			"qcode": "country_zmb",
     			"is_active": true,
     			"translations": {
@@ -6027,7 +6027,7 @@
     			}
     		},
     		{
-    			"name": "ZIMBABWE",
+    			"name": "Zimbabwe",
     			"qcode": "country_zwe",
     			"is_active": true,
     			"translations": {
@@ -6038,7 +6038,7 @@
     			}
     		},
     		{
-    			"name": "MIDDLE EAST",
+    			"name": "Middle East",
     			"qcode": "country_Middle-East",
     			"is_active": true,
     			"translations": {
@@ -6049,7 +6049,7 @@
     			}
     		},
     		{
-    			"name": "GULF STATES",
+    			"name": "Gulf states",
     			"qcode": "country_Gulf-states",
     			"is_active": true,
     			"translations": {
@@ -6060,7 +6060,7 @@
     			}
     		},
     		{
-    			"name": "CENTRAL AMERICA",
+    			"name": "Central America",
     			"qcode": "country_Central-America",
     			"is_active": true,
     			"translations": {
@@ -6071,7 +6071,7 @@
     			}
     		},
     		{
-    			"name": "SOUTH AMERICA",
+    			"name": "South America",
     			"qcode": "country_South-America",
     			"is_active": true,
     			"translations": {
@@ -6082,7 +6082,7 @@
     			}
     		},
     		{
-    			"name": "LATIN AMERICA",
+    			"name": "Latin America",
     			"qcode": "country_Latin-America",
     			"is_active": true,
     			"translations": {
@@ -6093,7 +6093,7 @@
     			}
     		},
     		{
-    			"name": "BALTIC STATES",
+    			"name": "Baltic states",
     			"qcode": "country_Baltic-states",
     			"is_active": true,
     			"translations": {
@@ -6104,7 +6104,7 @@
     			}
     		},
     		{
-    			"name": "BALKANS",
+    			"name": "Balkans",
     			"qcode": "country_Balkans",
     			"is_active": true,
     			"translations": {
@@ -6115,7 +6115,7 @@
     			}
     		},
     		{
-    			"name": "FLANDERS",
+    			"name": "Flanders",
     			"qcode": "country_Flanders",
     			"is_active": true,
     			"translations": {
@@ -6126,7 +6126,7 @@
     			}
     		},
     		{
-    			"name": "WALLONIA",
+    			"name": "Wallonia",
     			"qcode": "country_Wallonia",
     			"is_active": true,
     			"translations": {
@@ -6137,7 +6137,7 @@
     			}
     		},
     		{
-    			"name": "ANTARCTIC",
+    			"name": "Antarctic",
     			"qcode": "country_Antarctic",
     			"is_active": true,
     			"translations": {
@@ -6148,7 +6148,7 @@
     			}
     		},
     		{
-    			"name": "ASIA",
+    			"name": "Asia",
     			"qcode": "country_Asia",
     			"is_active": true,
     			"translations": {
@@ -6159,7 +6159,7 @@
     			}
     		},
     		{
-    			"name": "EUROPE",
+    			"name": "Europe",
     			"qcode": "country_Europe",
     			"is_active": true,
     			"translations": {
@@ -6170,7 +6170,7 @@
     			}
     		},
     		{
-    			"name": "AFRICA",
+    			"name": "Africa",
     			"qcode": "country_Africa",
     			"is_active": true,
     			"translations": {
@@ -6181,7 +6181,7 @@
     			}
     		},
     		{
-    			"name": "OCEANIA",
+    			"name": "Oceania",
     			"qcode": "country_Oceania",
     			"is_active": true,
     			"translations": {
