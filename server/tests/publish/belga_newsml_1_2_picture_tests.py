@@ -379,5 +379,5 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             mimetype.attrib['FormalName'],
-            'image/jpeg'
+            'image/jpg'
         )

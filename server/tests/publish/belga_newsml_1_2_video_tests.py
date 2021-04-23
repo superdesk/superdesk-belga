@@ -438,7 +438,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             mimetype.attrib['FormalName'],
-            'image/jpeg'
+            'image/jpg'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail)
         contentitem = newscomponent_2_level.xpath(
@@ -460,5 +460,5 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )[0]
         self.assertEqual(
             mimetype.attrib['FormalName'],
-            'image/jpeg'
+            'image/jpg'
         )

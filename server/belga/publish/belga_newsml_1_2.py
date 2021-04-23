@@ -10,6 +10,8 @@
 
 import pytz
 import logging
+import mimetypes
+
 from copy import deepcopy
 from typing import NamedTuple
 from urllib.parse import urljoin
@@ -761,6 +763,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
                 belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
                 rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
+                rendition['mimetype'] = 'image/jpeg'
             # the rest are internaly uploaded media: pictures, video and audio
             elif 'media' in rendition:
                 rendition['belga-urn'] = 'urn:www.belga.be:superdesk:{}:{}'.format(
@@ -775,26 +778,64 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param dict rendition: rendition info
         """
 
-        FORMAT_MAP = {
-            'Mp4': 'Mpeg4',
-            'Jpg': 'Jpeg',
+        BELGA_MIMETYPE = {
+            'video/x-msvideo': 'image/avi',
+            'image/jpeg': 'image/jpg',
+            'application/vnd.ms-excel': 'application/excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'application/excelx',
+            'application/vnd.ms-powerpoint': 'application/ppt',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'application/pptx',
+            'application/msword': 'application/word',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'application/wordx',
+            'video/mpeg': 'video/mp4',
+            'audio/x-ms-wma': 'sound/wma',
+            'video/x-ms-wmv': 'image/wmv',
         }
+
+        FORMAT_MAP = {
+            'image/avi': 'Avi',
+            'image/gif': 'Gif',
+            'image/jpg': 'Jpeg',
+            'application/excel': 'MSExcel',
+            'application/excelx': 'MSExcelx',
+            'application/ppt': 'MSPowerpoint',
+            'application/pptx': 'MSPowerpointx',
+            'application/word': 'MSWord',
+            'application/wordx': 'MSWordx',
+            'video/mov': 'Mov',
+            'image/mpeg2': 'Mpeg2',
+            'image/mpeg3': 'Mpeg3',
+            'video/mp4': 'Mpeg4',
+            'application/pdf': 'Pdf',
+            'image/png': 'Ping',
+            'application/table': 'Table',
+            'text/plain': 'Text',
+            'sound/wma': 'Wma',
+            'image/wmv': 'Wmv',
+            'application/zip': 'Zip',
+            'audio/mp3': 'Mp3',
+        }
+
+        filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
+        mimetype = rendition.get('mimetype') or mimetypes.guess_type(filename)[0]
+        belga_mimetype = None
+        belga_format = None
+
+        if mimetype:
+            belga_mimetype = BELGA_MIMETYPE.get(mimetype, mimetype)
+            belga_format = FORMAT_MAP.get(belga_mimetype)
 
         contentitem = SubElement(
             newscomponent_3_level, 'ContentItem',
             {'Href': r'{}'.format(rendition.get('belga-urn', rendition['href']))}
         )
 
-        filename = rendition['filename'] if rendition.get('filename') else rendition['href'].rsplit('/', 1)[-1]
+        if not belga_format:
+            logger.warning('unknown format filename=%s', filename)
+            return
 
-        format_name = filename.rsplit('.', 1)[-1].capitalize()
-        format_name = FORMAT_MAP.get(format_name, format_name)
-        if 'belgagallery' in rendition.get('belga-urn'):
-            format_name = FORMAT_MAP['Jpg']
-
-        SubElement(contentitem, 'Format', {'FormalName': format_name})
-        if rendition.get('mimetype'):
-            SubElement(contentitem, 'MimeType', {'FormalName': rendition['mimetype']})
+        SubElement(contentitem, 'Format', {'FormalName': belga_format})
+        SubElement(contentitem, 'MimeType', {'FormalName': belga_mimetype})
         characteristics = SubElement(contentitem, 'Characteristics')
 
         if rendition.get('media'):
