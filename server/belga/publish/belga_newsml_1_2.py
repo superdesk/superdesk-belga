@@ -680,65 +680,66 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param dict attachment: attachment
         """
 
-        attachment['_id'] = str(attachment['_id'])
-        attachment[GUID_FIELD] = attachment['_id']
-        attachment['headline'] = attachment.pop('title')
-        attachment['description_text'] = attachment.pop('description', '')
-        attachment['firstcreated'] = attachment['_created']
+        if not attachment.get('internal'):
+            attachment['_id'] = str(attachment['_id'])
+            attachment[GUID_FIELD] = attachment['_id']
+            attachment['headline'] = attachment.pop('title')
+            attachment['description_text'] = attachment.pop('description', '')
+            attachment['firstcreated'] = attachment['_created']
 
-        newscomponent_2_level = SubElement(
-            newscomponent_1_level, 'NewsComponent',
-            {
-                XML_LANG: attachment.get('language'),
-                'Duid': str(attachment.get('_id'))
-            }
-        )
+            newscomponent_2_level = SubElement(
+                newscomponent_1_level, 'NewsComponent',
+                {
+                    XML_LANG: attachment.get('language'),
+                    'Duid': str(attachment.get('_id'))
+                }
+            )
 
-        SubElement(newscomponent_2_level, 'Role', {'FormalName': attachment['_role']})
-        self._format_newslines(newscomponent_2_level, item=attachment)
-        self._format_administrative_metadata(newscomponent_2_level, item=attachment)
-        self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
+            SubElement(newscomponent_2_level, 'Role', {'FormalName': attachment['_role']})
+            self._format_newslines(newscomponent_2_level, item=attachment)
+            self._format_administrative_metadata(newscomponent_2_level, item=attachment)
+            self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
 
-        for role, key in (('Title', 'headline'), ('Body', 'description_text')):
+            for role, key in (('Title', 'headline'), ('Body', 'description_text')):
+                newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
+                SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+                SubElement(
+                    SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
+                    'Property',
+                    {'FormalName': 'ComponentClass', 'Value': 'Text'}
+                )
+                contentitem = SubElement(newscomponent_3_level, 'ContentItem')
+                SubElement(contentitem, 'Format', {'FormalName': 'Text'})
+                SubElement(contentitem, 'DataContent').text = attachment.get(key)
+                characteristics = SubElement(contentitem, 'Characteristics')
+                # string's length is used in original belga's newsml
+                SubElement(characteristics, 'SizeInBytes').text = str(len(attachment[key])) if attachment.get(key) else '0'
+                SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
+
+            # Component
             newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
-            SubElement(newscomponent_3_level, 'Role', {'FormalName': role})
+            newscomponent_3_level.attrib['Duid'] = attachment.get(GUID_FIELD)
+
+            SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Component'})
             SubElement(
                 SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
                 'Property',
-                {'FormalName': 'ComponentClass', 'Value': 'Text'}
+                {'FormalName': 'ComponentClass', 'Value': 'Binary'}
             )
-            contentitem = SubElement(newscomponent_3_level, 'ContentItem')
-            SubElement(contentitem, 'Format', {'FormalName': 'Text'})
-            SubElement(contentitem, 'DataContent').text = attachment.get(key)
-            characteristics = SubElement(contentitem, 'Characteristics')
-            # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment[key])) if attachment.get(key) else '0'
-            SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
-        # Component
-        newscomponent_3_level = SubElement(newscomponent_2_level, 'NewsComponent')
-        newscomponent_3_level.attrib['Duid'] = attachment.get(GUID_FIELD)
-
-        SubElement(newscomponent_3_level, 'Role', {'FormalName': 'Component'})
-        SubElement(
-            SubElement(newscomponent_3_level, 'DescriptiveMetadata'),
-            'Property',
-            {'FormalName': 'ComponentClass', 'Value': 'Binary'}
-        )
-
-        self._format_media_contentitem(
-            newscomponent_3_level,
-            rendition={
-                'filename': attachment['filename'],
-                'media': attachment['media'],
-                'mimetype': attachment['mimetype'],
-                'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}'.format(attachment['media'])),
-                'belga-urn': 'urn:www.belga.be:superdesk:{}:{}'.format(
-                    app.config['OUTPUT_BELGA_URN_SUFFIX'],
-                    attachment['media']
-                )
-            }
-        )
+            self._format_media_contentitem(
+                newscomponent_3_level,
+                rendition={
+                    'filename': attachment['filename'],
+                    'media': attachment['media'],
+                    'mimetype': attachment['mimetype'],
+                    'href': urljoin(app.config['MEDIA_PREFIX'] + '/', '{}'.format(attachment['media'])),
+                    'belga-urn': 'urn:www.belga.be:superdesk:{}:{}'.format(
+                        app.config['OUTPUT_BELGA_URN_SUFFIX'],
+                        attachment['media']
+                    )
+                }
+            )
 
     def _set_belga_urn(self, media_item):
         """
