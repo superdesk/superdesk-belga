@@ -713,7 +713,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(contentitem, 'DataContent').text = attachment.get(key)
                 characteristics = SubElement(contentitem, 'Characteristics')
                 # string's length is used in original belga's newsml
-                SubElement(characteristics, 'SizeInBytes').text = str(len(attachment[key])) if attachment.get(key) else '0'
+                SubElement(characteristics, "SizeInBytes").text = (
+                    str(len(attachment[key])) if attachment.get(key) else "0"
+                )
                 SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
             # Component
