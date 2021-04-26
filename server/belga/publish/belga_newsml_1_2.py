@@ -679,7 +679,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict attachment: attachment
         """
-
+        if attachment.get('internal'):
+            return
         attachment['_id'] = str(attachment['_id'])
         attachment[GUID_FIELD] = attachment['_id']
         attachment['headline'] = attachment.pop('title')
@@ -712,7 +713,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             SubElement(contentitem, 'DataContent').text = attachment.get(key)
             characteristics = SubElement(contentitem, 'Characteristics')
             # string's length is used in original belga's newsml
-            SubElement(characteristics, 'SizeInBytes').text = str(len(attachment[key])) if attachment.get(key) else '0'
+            SubElement(characteristics, 'SizeInBytes').text = (
+                str(len(attachment[key])) if attachment.get(key) else '0'
+            )
             SubElement(characteristics, 'Property', {'FormalName': 'maxCharCount', 'Value': '0'})
 
         # Component
