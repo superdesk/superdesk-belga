@@ -124,7 +124,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "extra": {
                     "belga-keywords": "japan, tokyo, mazda",
                     "city": "Tokio",
-                    "country": "Japan"
+                    "country": "JAPAN"
                 },
                 "_id": "urn:newsml:localhost:5000:2019-08-19T15:15:01.015742:0976acf1-6956-4e03-beb1-e1c84833df45",
                 "guid": "tag:localhost:5000:2019:7999396b-23a7-4642-94f4-55a09624d7ec",
@@ -167,7 +167,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                         "scheme": "media-source"
                     },
                     {
-                        "name": "Czechia",
+                        "name": "CZECHIA",
                         "qcode": "cze",
                         "translations": {
                             "name": {
@@ -390,7 +390,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "extra": {
                     "belga-keywords": "japan, tokyo, mazda",
                     "city": "Tokio",
-                    "country": "Japan"
+                    "country": "JAPAN"
                 },
                 "_id": "urn:newsml:localhost:5000:2019-08-19T15:16:08.719058:f5628876-33e5-4dd1-89f0-1d9e792eebaa",
                 "guid": "tag:localhost:5000:2019:c9d059aa-4056-4009-9e26-06cf718badaa",
@@ -625,12 +625,12 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
             {'name': 'R1', 'qcode': 'R1', 'scheme': 'label'},
             {
-                'name': 'Aruba',
+                'name': 'ARUBA',
                 'qcode': 'country_abw',
                 'translations': {
                     'name': {
-                        'nl': 'Aruba',
-                        'fr': 'Aruba'
+                        'nl': 'ARUBA',
+                        'fr': 'ARUBA'
                     }
                 },
                 'scheme': 'country'
@@ -644,7 +644,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'sources'},
             {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
             {
-                "name": "Belgium",
+                "name": "BELGIUM",
                 "qcode": "bel",
                 "translations": {
                     "name": {
@@ -773,7 +773,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     "scheme": "credit"
                 },
                 {
-                    "name": "Belgium",
+                    "name": "BELGIUM",
                     "qcode": "bel",
                     "translations": {
                         "name": {
@@ -1130,7 +1130,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertListEqual(
             [kw.text for kw in newscomponent_2_level.xpath('NewsLines/KeywordLine')],
-            ['Aruba', 'europe', 'Prague', 'CZ', 'Skoda']
+            ['ARUBA', 'europe', 'Prague', 'CZ', 'Skoda']
         )
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath('NewsLines/NewsLine/NewsLineType')[0].attrib),

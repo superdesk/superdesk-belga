@@ -73,9 +73,9 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
             {'name': 'DPA', 'qcode': 'DPA', 'scheme': 'sources'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'Greece', 'qcode': 'country_grc', 'scheme': 'country',
-             'translations': {'name': {'nl': 'Griekenland', 'fr': 'Grèce'}}},
+             'translations': {'name': {'nl': 'GRIEKENLAND', 'fr': 'GRECE'}}},
             {'name': 'Turkey', 'qcode': 'country_tur', 'scheme': 'country',
-             'translations': {'name': {'nl': 'Turkije', 'fr': 'Turquie'}}},
+             'translations': {'name': {'nl': 'TURKIJE', 'fr': 'TURQUIE'}}},
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["subject"], expected_subjects)

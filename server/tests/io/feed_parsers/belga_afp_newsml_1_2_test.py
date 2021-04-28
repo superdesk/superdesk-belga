@@ -51,7 +51,7 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
             {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
             {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
             {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
-             'translations': {'name': {'fr': 'France', 'nl': 'Frankrijk'}}},
+             'translations': {'name': {'fr': 'FRANCE', 'nl': 'FRANKRIJK'}}},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
