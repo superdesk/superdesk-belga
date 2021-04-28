@@ -1078,7 +1078,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 break
 
         # Title, Lead, Body
-        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'lead')):
+        for formalname, item_key in (('Title', 'headline'), ('Lead', 'lead'), ('Body', 'body_html')):
             if item.get(item_key):
                 newscomponent_3_level = SubElement(
                     newscomponent_2_level, 'NewsComponent',
