@@ -101,15 +101,16 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     # Slugline and keywords is epmty
                     item['slugline'] = None
                     item['keywords'] = []
+                    genre_qcode = item_tree.xpath("//iptc:genre", namespaces=NS)[0].get('qcode')
+                    genre_role = item_tree.xpath("//iptc:genre/iptc:name", namespaces=NS)[0].get('role')
                     headline = item['headline']
                     if len(item['genre']) > 0:
                         genre = item['genre'][0]
-                        genre_qcode = genre.get('qcode')
                         genre_name = genre.get('name')
-                        genre_role = genre.get('role')
                         if genre_qcode and genre_role:
-                            if genre_qcode != "dpatextgenre:1" and genre_role == 'nrol:display':
+                            if genre_qcode != 'dpatextgenre:1' and genre_role == 'nrol:display':
                                 item['headline'] = '(' + genre_name + ') : ' + headline
+
                     items.append(item)
             return items
         except Exception as ex:
