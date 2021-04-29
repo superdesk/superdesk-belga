@@ -106,8 +106,8 @@
         <altId environment="dpasrv:edt" type="dpa7901rendition:iptc7901Id">edt:0223:4:pl:152:cccce dpa-euro:1196::20190603150008MESZ</altId>
         <altId environment="dpasrv:erd" type="dpa7901rendition:iptc7901Id">erd:0224:4:pl:152:dpa-euro:1196::20190603150008MESZ</altId>
         <altId environment="dpasrv:edi" type="dpa7901rendition:iptc7901Id">edi:0223:4:pl:152:cccce dpa-euro:1196::20190603150008MESZ</altId>
-        <genre qcode="dpatextgenre:1">
-          <name xml:lang="de">Meldung</name>
+        <genre qcode="dpatextgenre:7">
+          <name role="nrol:display" xml:lang="en">Extra</name>
         </genre>
         <subject qcode="dpacountry:53" rank="1" type="cpnat:geoArea">
           <name role="nrol:display" xml:lang="de">Griechenland</name>
