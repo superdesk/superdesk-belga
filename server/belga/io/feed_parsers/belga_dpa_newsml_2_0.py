@@ -102,18 +102,18 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     item['slugline'] = None
                     item['keywords'] = []
                     # Find genres and verify their roles and qcodes to acceptance criteria.
-                    genres = item_tree.xpath("//iptc:genre", namespaces=NS)
+                    genres = item_tree.xpath('//iptc:genre', namespaces=NS)
                     for genre in genres:
                         genre_qcode = genre.get('qcode')
-                        if genre_qcode != "dpatextgenre:1":
+                        if genre_qcode and genre_qcode != 'dpatextgenre:1':
                             genre_names = genre.findall(self.qname('name'))
                             if genre_names:
                                 for genre_name in genre_names:
                                     try:
-                                        genre_role = genre_name.attrib["role"]
+                                        genre_role = genre_name.attrib['role']
                                         if genre_role == 'nrol:display':
-                                            item["headline"] = "({genre}): {headline}".format(
-                                                genre=genre_name.text, headline=item["headline"]
+                                            item['headline'] = "({genre}): {headline}".format(
+                                                genre=genre_name.text, headline=item['headline']
                                             )
                                             break
                                     except KeyError:
