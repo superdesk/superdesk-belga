@@ -2,6 +2,7 @@
   {
     "_id": "event",
     "name": "event",
+    "init_version": 1,
     "schema": {
       "calendars": {
         "type": "list",
@@ -43,6 +44,7 @@
   {
     "_id": "planning",
     "name": "planning",
+    "init_version": 1,
     "schema": {
       "agendas": {
         "required": false,
