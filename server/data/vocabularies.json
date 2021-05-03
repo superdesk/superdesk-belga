@@ -3287,7 +3287,7 @@
     	"_id": "country",
     	"display_name": "Countries keywords",
     	"type": "manageable",
-    	"selection_type": "single selection",
+    	"selection_type": "multi selection",
     	"unique_field": "qcode",
     	"schema": {
     		"name": {},
@@ -3297,7 +3297,7 @@
     	"service": {
     		"all": 1
     	},
-    	"init_version": 3,
+    	"init_version": 4,
     	"items": [{
     			"name": "Aruba",
     			"qcode": "country_abw",
