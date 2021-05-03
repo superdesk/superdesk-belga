@@ -1069,7 +1069,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # output first paragraph of the body as a lead
         item['lead'] = ''
         if item.get('body_html'):
-            tree = parse_html(item['body_html'])
+            tree = parse_html(item['body_html'], content="html")
             for el in tree:
                 if el.tag == 'p':
                     item['lead'] = to_string(el)

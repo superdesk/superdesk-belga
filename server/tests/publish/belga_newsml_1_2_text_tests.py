@@ -1325,13 +1325,15 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/DataContent')[0].text,
-            """Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.
-     books
-     Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.""" # noqa
+            "Donec rutrum congue leo eget malesuada. Sed porttitor lectus nibh. Pellentesque in ipsum id orci porta dap"
+            "ibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.\n   books\n   Praesent sapien"
+            " massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Viv"
+            "amus suscipit tortor eget felis porttitor volutpat. Praesent sapien massa, convallis a pellentesque nec, e"
+            "gestas non nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae."
         )
         self.assertEqual(
             newscomponent_3_level.xpath('ContentItem/Characteristics/SizeInBytes')[0].text,
-            '530'
+            '526'
         )
 
     def test_url_newscomponent(self):
@@ -2419,16 +2421,16 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             sizeinbytes[0].text,
             '7'
         )
-        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Lead) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+            'NewsComponent/Role[@FormalName="Lead"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
         self.assertEqual(
             datacontent.text,
             '100 let of citroen in body'
         )
         sizeinbytes = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            'NewsComponent/Role[@FormalName="Lead"]/ancestor::NewsComponent'
             '/ContentItem/Characteristics/SizeInBytes'
         )[0]
         self.assertEqual(
@@ -2477,16 +2479,16 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             sizeinbytes[0].text,
             '64'
         )
-        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
+        # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Lead) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
+            'NewsComponent/Role[@FormalName="Lead"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
         self.assertEqual(
             datacontent.text,
             'Kiryienka werd dit jaar opgeschrikt door een hartprobleem.'
         )
         sizeinbytes = newscomponent_2_level.xpath(
-            'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
+            'NewsComponent/Role[@FormalName="Lead"]/ancestor::NewsComponent'
             '/ContentItem/Characteristics/SizeInBytes'
         )[0]
         self.assertEqual(
