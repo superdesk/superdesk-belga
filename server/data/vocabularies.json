@@ -6657,7 +6657,7 @@
     },
     {
     	"_id": "belga-keywords",
-    	"init_version": 8,
+    	"init_version": 9,
     	"display_name": "Belga Keywords",
     	"type": "manageable",
     	"selection_type": "multi selection",
@@ -10850,6 +10850,17 @@
     				}
     			}
     		},
+            {
+    			"name": "RUSHES",
+    			"qcode": "RUSHES",
+    			"is_active": true,
+    			"translations": {
+    				"name": {
+    					"nl": "RUSHES",
+    					"fr": "RUSHES"
+    				}
+    			}
+    		},      
     		{
     			"name": "BELGAINSERT",
     			"qcode": "BELGAINSERT",
