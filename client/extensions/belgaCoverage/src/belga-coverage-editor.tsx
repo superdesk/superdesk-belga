@@ -23,7 +23,7 @@ function removeId(ids: Array<string>, id: string) : string {
 }
 
 function addId(ids: Array<string>, id: string) : string {
-    return ids.concat([id]).join(SEPARATOR);
+    return ids.filter((_id) => _id !== id).concat([id]).join(SEPARATOR);
 }
 
 export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessComponent<IEditorComponentProps<string | null, never>> {
