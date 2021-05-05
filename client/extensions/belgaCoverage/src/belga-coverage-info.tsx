@@ -40,7 +40,7 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
             return null;
         }
 
-        if (this.state.coverage === null) {
+        if (this.state.coverage == null) {
             return <Alert type="error">{'There was an error when fetching coverage.'}</Alert>;
         } else {
             return (
