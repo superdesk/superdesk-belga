@@ -1,4 +1,7 @@
 export interface IBelgaCoverage {
+    name: string;
+    nrImages: number;
+    createDate: string;
     description: string;
     iconThumbnailUrl: string;
 }

@@ -4,6 +4,7 @@ import BelgaCoverageImages from './belga-coverage-images';
 import {IEditorComponentProps, ISuperdesk} from 'superdesk-api';
 
 const ALLOWED = 'application/vnd.belga.coverage';
+const SEPARATOR = ';';
 
 function isAllowedType(event: DragEvent) {
     return !!event.dataTransfer && event.dataTransfer.types.includes(ALLOWED);
@@ -13,45 +14,56 @@ function getData(event: DragEvent) {
     return event.dataTransfer ? event.dataTransfer.getData(ALLOWED) : '';
 }
 
+export function parseIds(value: string | null) : Array<string> {
+    return value != null ? value.split(SEPARATOR) : [];
+}
+
+function removeId(ids: Array<string>, id: string) : string {
+    return ids.filter((_id) => _id !== id).join(SEPARATOR);
+}
+
+function addId(ids: Array<string>, id: string) : string {
+    return ids.filter((_id) => _id !== id).concat([id]).join(SEPARATOR);
+}
+
 export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessComponent<IEditorComponentProps<string | null, never>> {
     return function BelgaCoverageEditor(props: IEditorComponentProps<string | null, never>) {
-        if (props.value) {
-            return (
-                <div>
-                    <BelgaCoverageInfo
-                        key={props.value}
-                        coverageId={props.value}
-                        removeCoverage={props.readOnly ? undefined : () => props.setValue(null)}
-                        superdesk={superdesk}
-                    />
-                    <BelgaCoverageImages
-                        key={props.value}
-                        coverageId={props.value}
-                        rendition={'thumbnail'}
-                        maxImages={3}
-                        superdesk={superdesk}
-                    />
-                </div>
-            );
-        }
-
         const {gettext} = superdesk.localization;
         const {DropZone} = superdesk.components;
+        const ids = parseIds(props.value);
 
         return (
-            <DropZone
-                label={gettext('Drop coverage here')}
-                canDrop={isAllowedType}
-                onDrop={(event) => {
-                    try {
-                        const coverage = JSON.parse(getData(event));
+            <React.Fragment>
+                {ids.map((id) => (
+                    <div key={id}>
+                        <BelgaCoverageInfo
+                            coverageId={id}
+                            removeCoverage={props.readOnly ? undefined : () => props.setValue(removeId(ids, id))}
+                            superdesk={superdesk}
+                        />
+                        <BelgaCoverageImages
+                            coverageId={id}
+                            rendition={'thumbnail'}
+                            maxImages={3}
+                            superdesk={superdesk}
+                        />
+                    </div>
+                ))}
 
-                        props.setValue(coverage.guid);
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }}
-            />
+                <DropZone
+                    label={gettext('Add coverage here')}
+                    canDrop={isAllowedType}
+                    onDrop={(event) => {
+                        try {
+                            const coverage = JSON.parse(getData(event));
+
+                            props.setValue(addId(ids, coverage.guid));
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }}
+                />
+            </React.Fragment>
         );
     }
 }
