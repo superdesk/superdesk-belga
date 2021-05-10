@@ -51,7 +51,7 @@ def update_translation_metadata_macro(item, **kwargs):
 
 
 name = "Update Translation Metadata Macro"
-label = lazy_gettext("Update Translation Metadata Macro")
+label = name
 callback = update_translation_metadata_macro
 access_type = "backend"
 action_type = "interactive"
