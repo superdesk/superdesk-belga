@@ -21,7 +21,9 @@ jobs:
           python-version: 3.6
 
       - name: apt-get
-        run: sudo apt-get -y install libxml2-dev libxmlsec1-dev libxmlsec1-openssl libexempi-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install libxml2-dev libxmlsec1-dev libxmlsec1-openssl libexempi-dev
 
       - name: docker-compose
         run: docker-compose -f ../.travis-docker-compose.yml up -d
