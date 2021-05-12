@@ -13,7 +13,7 @@ from superdesk import get_resource_service
 from superdesk.errors import StopDuplication
 from apps.archive.common import ITEM_DUPLICATE
 from .set_default_metadata import get_default_content_template, set_default_metadata
-
+from .update_translation_metadata_macro import update_translation_metadata_macro
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +67,9 @@ def set_default_metadata_with_translate(item, **kwargs):
     # untoggle coming up
     if new_item.get('extra', {}).get('DueBy'):
         del new_item['extra']['DueBy']
+
+    # Change the correspondent author role to editor on translation
+    update_translation_metadata_macro(new_item)
 
     archive_service.put(new_id, new_item)
 
