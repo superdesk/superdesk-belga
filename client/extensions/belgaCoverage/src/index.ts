@@ -4,7 +4,6 @@ import {getBelgaCoverageEditor} from './belga-coverage-editor';
 import {getBelgaCoveragePreview} from './belga-coverage-preview';
 
 const extension: IExtension = {
-    id: 'belgaCoverage',
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
         const result: IExtensionActivationResult = {

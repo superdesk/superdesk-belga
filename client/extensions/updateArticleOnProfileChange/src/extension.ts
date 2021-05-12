@@ -7,7 +7,6 @@ import {
 } from 'superdesk-api';
 
 const extension: IExtension = {
-    id: 'updateArticleOnContentProfileChange',
     activate: (superdesk: ISuperdesk) => {
         const result: IExtensionActivationResult = {
             contributions: {
