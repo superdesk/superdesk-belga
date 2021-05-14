@@ -18,12 +18,17 @@ class DataUpdate(BaseDataUpdate):
     Refer to https://dev.sourcefabric.org/browse/SDBELGA-512 for more information
     """
 
-    resource = 'archive' # will use multiple resources, keeping this here so validation passes
+    resource = "archive" # will use multiple resources, keeping this here so validation passes
 
     def forwards(self, mongodb_collection, mongodb_database):
         for resource in ["archive", "published"]:
             service = get_resource_service(resource)
-            for doc in service.find({"marked_for_user": {"$exists": True}, "state": "published"}):
+            for doc in service.find(
+                {
+                    "marked_for_user": {"$exists": True},
+                    "state": {"$in": ["published", "recalled", "corrected", "unpublished", "killed"]}
+                }
+            ):
                 if doc.get("marked_for_user"):
                     service.system_update(
                         doc.get(config.ID_FIELD),
