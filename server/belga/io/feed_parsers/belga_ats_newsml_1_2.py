@@ -39,9 +39,23 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         super().parse_newsmanagement(item, manage_el)
         item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
         item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
+
+        if item.get('pubstatus') == 'embargoed':
+            item['pubstatus'] = 'usable'
+
         # Source is ATS
         credit = {"name": 'ATS', "qcode": 'ATS', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
+
+    def parse_contentitem(self, item, content_el):
+        super().parse_contentitem(item, content_el)
+
+        if content_el is None:
+            return
+
+        element = content_el.find('Comment')
+        if element is not None and element.get('FormalName') == 'Editorial Note':
+            item['ednote'] = element.text
 
     def parse_newscomponent(self, item, newscomponent_el):
         """
