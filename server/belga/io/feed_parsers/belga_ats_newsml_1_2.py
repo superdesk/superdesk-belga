@@ -48,11 +48,10 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         item.setdefault('subject', []).append(credit)
 
     def parse_contentitem(self, item, content_el):
-        super().parse_contentitem(item, content_el)
-
         if content_el is None:
             return
 
+        super().parse_contentitem(item, content_el)
         element = content_el.find('Comment')
         if element is not None and element.get('FormalName') == 'Editorial Note':
             item['ednote'] = element.text
