@@ -11867,6 +11867,7 @@
         "field_type": "text",
         "items": [],
         "type": "manageable",
+        "init_version": 1,
         "schema": {
             "name": {},
             "qcode": {},
@@ -11875,7 +11876,7 @@
         "service": {
             "all": 1
         },
-        "display_name": "Event description",
+        "display_name": "Transcription",
         "description": "",
         "helper_text": "",
         "field_options": {
