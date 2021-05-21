@@ -9,7 +9,7 @@ const DEFAULT_SUBJECT = {
     'belga-keywords': ['RUSHES', 'BELGAILLUSTRATION', 'BELGAINTERVIEW', 'BELGAINSERT'],
     'country': ['COUNTRY_BEL'],
     'distribution': ['BILINGUAL'],
-    'services-products': ['BIN/ALG', 'INT/GEN'],
+    'services-products': ['NEWS/GENERAL'],
 };
 
 const COPY_FROM_PARENT_SCHEMAS = [
