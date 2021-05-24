@@ -1,0 +1,326 @@
+[
+    {
+        "_id": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "type": "text",
+        "version": 1,
+        "headline": "test_ct",
+        "subject": [
+            {
+                "name": "INT/GENERAL",
+                "qcode": "INT/GENERAL",
+                "parent": "INT",
+                "scheme": "services-products"
+            }
+        ],
+        "flags": {
+            "marked_for_not_publication": false,
+            "marked_for_legal": false,
+            "marked_archived_only": false,
+            "marked_for_sms": false
+        },
+        "language": "en",
+        "keywords": [
+            "some",
+            "keyword"
+        ],
+        "profile": "belga_text",
+        "pubstatus": "usable",
+        "body_html": "",
+        "format": "HTML",
+        "template": "5ddfdb9a3b6d46194318584d",
+        "task": {
+            "desk": "5ddfdba16dd032cb672d4790",
+            "stage": "5ddfdba16dd032cb672d478e",
+            "user": "5ddfdba06dd032cb672d4780"
+        },
+        "_updated": "2021-05-18T15:29:02Z",
+        "_created": "2021-05-18T15:24:07Z",
+        "_current_version": 2,
+        "firstcreated": "2021-05-18T15:24:07Z",
+        "versioncreated": "2021-05-18T15:27:15Z",
+        "original_creator": "5ddfdba06dd032cb672d4780",
+        "guid": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "unique_id": 18,
+        "unique_name": "#18",
+        "family_id": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "event_id": "147a0fdd-3b23-46ee-9414-6e33500d6119",
+        "state": "published",
+        "source": "politic",
+        "priority": 6,
+        "urgency": 3,
+        "genre": [
+            {
+                "qcode": "Article",
+                "name": "Article (news)"
+            }
+        ],
+        "place": [],
+        "sign_off": "fl",
+        "operation": "publish",
+        "version_creator": "5ddfdba06dd032cb672d4780",
+        "expiry": null,
+        "schedule_settings": {
+            "utc_publish_schedule": null,
+            "time_zone": null,
+            "utc_embargo": null
+        },
+        "_etag": "3e2efee9ba9c72be026bc1ffba8adf8970c2ca7f",
+        "lock_action": null,
+        "lock_session": null,
+        "lock_time": null,
+        "lock_user": null,
+        "associations": {
+            "belga_related_images--1": {
+                "type": "picture",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:image:176523591",
+                "guid": "urn:belga.be:image:176523591",
+                "headline": "P2021051805095",
+                "description_text": "Election motto of the Czech opposition tandem of the Pirates and Mayors and Independents (STAN) on a steamer during the launching of election campaign of the Czech opposition tandem of the Pirates and Mayors and Independents (STAN) in Prague, Czech Republic, May 18, 2021. (CTK Photo/Michaela Rihova)\nCZECH REPUBLIC OUT,SLOVAKIA OUT",
+                "versioncreated": "2021-05-18T13:59:34+0000",
+                "firstcreated": "2021-05-18T13:59:34+0000",
+                "byline": "OXZMXX",
+                "creditline": "CTK",
+                "source": "CTK",
+                "renditions": {
+                    "original": {
+                        "width": 4701,
+                        "height": 3200,
+                        "href": "https://2.t.cdn.belga.be/belgaimage:176523591:1800x650:w?v=60a046ab&m=knojipdk"
+                    },
+                    "thumbnail": {
+                        "href": "https://p.cdn.belga.be/belgaimage:176523591:600x140?v=60a046ab&m=cekojacd"
+                    },
+                    "viewImage": {
+                        "href": "https://0.t.cdn.belga.be/belgaimage:176523591:800x800:w?v=60a046ab&m=cbmjkhhd"
+                    },
+                    "baseImage": {
+                        "href": "https://2.t.cdn.belga.be/belgaimage:176523591:1800x650:w?v=60a046ab&m=knojipdk"
+                    }
+                },
+                "_fetchable": false,
+                "_type": "externalsource",
+                "fetch_endpoint": "search_providers_proxy",
+                "ingest_provider": "60a29bcfab5a4a3827174e7b",
+                "_created": "1970-01-01T00:00:00+0000",
+                "_updated": "1970-01-01T00:00:00+0000",
+                "_etag": "c936bba92480433e39f182cd78c06eeb0a7fc0f8",
+                "_links": {
+                    "self": {
+                        "title": "Search_providers_proxy",
+                        "href": "search_providers_proxy/urn:belga.be:image:176523591"
+                    },
+                    "related": {
+                        "ingest_provider": {
+                            "title": "Ingest_provider",
+                            "href": "ingest_providers/60a29bcfab5a4a3827174e7b"
+                        }
+                    }
+                },
+                "es_highlight": [],
+                "selected": false,
+                "order": 1,
+                "state": "published",
+                "operation": "publish"
+            }
+        },
+        "fields_meta": {
+            "headline": {
+                "draftjsState": [
+                    {
+                        "blocks": [
+                            {
+                                "key": "b8u3j",
+                                "text": "test_ct",
+                                "type": "unstyled",
+                                "depth": 0,
+                                "inlineStyleRanges": [],
+                                "entityRanges": [],
+                                "data": {
+                                    "MULTIPLE_HIGHLIGHTS": {}
+                                }
+                            }
+                        ],
+                        "entityMap": {}
+                    }
+                ]
+            }
+        },
+        "refs": [
+            {
+                "key": "belga_related_images--1",
+                "_id": "urn:belga.be:image:176523591",
+                "uri": null,
+                "guid": "urn:belga.be:image:176523591",
+                "type": "picture"
+            }
+        ],
+        "slugline": "test_ct",
+        "firstpublished": "2021-05-18T15:27:27Z",
+        "publish_schedule": null,
+        "translation_id": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "translations": [
+            "8defee37-1ff8-4fcc-b35d-612aa4be9014"
+        ]
+        ,
+        "force_unlock": true
+    },
+    {
+        "_id": "8defee37-1ff8-4fcc-b35d-612aa4be9014",
+        "type": "text",
+        "version": 1,
+        "headline": "test_ct",
+        "subject": [
+            {
+                "name": "INT/GENERAL",
+                "qcode": "INT/GENERAL",
+                "parent": "INT",
+                "scheme": "services-products"
+            }
+        ],
+        "flags": {
+            "marked_for_not_publication": false,
+            "marked_for_legal": false,
+            "marked_archived_only": false,
+            "marked_for_sms": false
+        },
+        "language": "fr",
+        "keywords": [
+            "some",
+            "keyword"
+        ],
+        "profile": "belga_text",
+        "pubstatus": "usable",
+        "body_html": "",
+        "format": "HTML",
+        "template": "5ddfdb9a3b6d46194318584d",
+        "task": {
+            "desk": "5ddfdba16dd032cb672d4790",
+            "stage": "5ddfdba16dd032cb672d478e",
+            "user": "5ddfdba06dd032cb672d4780"
+        },
+        "_updated": "2021-05-18T15:28:10Z",
+        "_created": "2021-05-18T15:24:07Z",
+        "_current_version": 3,
+        "firstcreated": "2021-05-18T15:27:49Z",
+        "versioncreated": "2021-05-18T15:27:49Z",
+        "firstpublished": "2021-05-18T15:27:27Z",
+        "original_creator": "5ddfdba06dd032cb672d4780",
+        "unique_id": 19,
+        "unique_name": "#19",
+        "family_id": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "state": "published",
+        "source": "politic",
+        "priority": 6,
+        "urgency": 3,
+        "genre": [
+            {
+                "qcode": "Article",
+                "name": "Article (news)"
+            }
+        ],
+        "place": [],
+        "operation": "translate",
+        "version_creator": "5ddfdba06dd032cb672d4780",
+        "expiry": null,
+        "_etag": "7f28b1ae404dcf3d34c6f93953c3acde977c8125",
+        "associations": {
+            "belga_related_images--1": {
+                "type": "picture",
+                "pubstatus": "usable",
+                "_id": "urn:belga.be:image:176523591",
+                "guid": "urn:belga.be:image:176523591",
+                "headline": "P2021051805095",
+                "description_text": "Election motto of the Czech opposition tandem of the Pirates and Mayors and Independents (STAN) on a steamer during the launching of election campaign of the Czech opposition tandem of the Pirates and Mayors and Independents (STAN) in Prague, Czech Republic, May 18, 2021. (CTK Photo/Michaela Rihova)\nCZECH REPUBLIC OUT,SLOVAKIA OUT",
+                "versioncreated": "2021-05-18T13:59:34+0000",
+                "firstcreated": "2021-05-18T13:59:34+0000",
+                "byline": "OXZMXX",
+                "creditline": "CTK",
+                "source": "CTK",
+                "renditions": {
+                    "original": {
+                        "width": 4701,
+                        "height": 3200,
+                        "href": "https://2.t.cdn.belga.be/belgaimage:176523591:1800x650:w?v=60a046ab&m=knojipdk"
+                    },
+                    "thumbnail": {
+                        "href": "https://p.cdn.belga.be/belgaimage:176523591:600x140?v=60a046ab&m=cekojacd"
+                    },
+                    "viewImage": {
+                        "href": "https://0.t.cdn.belga.be/belgaimage:176523591:800x800:w?v=60a046ab&m=cbmjkhhd"
+                    },
+                    "baseImage": {
+                        "href": "https://2.t.cdn.belga.be/belgaimage:176523591:1800x650:w?v=60a046ab&m=knojipdk"
+                    }
+                },
+                "_fetchable": false,
+                "_type": "externalsource",
+                "fetch_endpoint": "search_providers_proxy",
+                "ingest_provider": "60a29bcfab5a4a3827174e7b",
+                "_created": "1970-01-01T00:00:00+0000",
+                "_updated": "1970-01-01T00:00:00+0000",
+                "_etag": "c936bba92480433e39f182cd78c06eeb0a7fc0f8",
+                "_links": {
+                    "self": {
+                        "title": "Search_providers_proxy",
+                        "href": "search_providers_proxy/urn:belga.be:image:176523591"
+                    },
+                    "related": {
+                        "ingest_provider": {
+                            "title": "Ingest_provider",
+                            "href": "ingest_providers/60a29bcfab5a4a3827174e7b"
+                        }
+                    }
+                },
+                "es_highlight": [],
+                "selected": false,
+                "order": 1,
+                "state": "published",
+                "operation": "publish"
+            }
+        },
+        "fields_meta": {
+            "headline": {
+                "draftjsState": [
+                    {
+                        "blocks": [
+                            {
+                                "key": "b8u3j",
+                                "text": "test_ct",
+                                "type": "unstyled",
+                                "depth": 0,
+                                "inlineStyleRanges": [],
+                                "entityRanges": [],
+                                "data": {
+                                    "MULTIPLE_HIGHLIGHTS": {}
+                                }
+                            }
+                        ],
+                        "entityMap": {}
+                    }
+                ]
+            }
+        },
+        "refs": [
+            {
+                "key": "belga_related_images--1",
+                "_id": "urn:belga.be:image:176523591",
+                "uri": null,
+                "guid": "urn:belga.be:image:176523591",
+                "type": "picture"
+            }
+        ],
+        "slugline": "test_ct",
+        "translation_id": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "translated_from": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "guid": "8defee37-1ff8-4fcc-b35d-612aa4be9014",
+        "event_id": "c0ca4ebc-2bcc-418c-af39-5b8fce3c6bf2",
+        "sign_off": "fl",
+        "force_unlock": true,
+        "original_id": "566a192e-b1eb-440c-afca-3bd9fabb2805",
+        "lock_action": null,
+        "lock_session": null,
+        "lock_time": null,
+        "lock_user": null
+    }
+]

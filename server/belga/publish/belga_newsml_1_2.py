@@ -118,9 +118,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             publish sequence number and formatted output string.
         :raises FormatterError: if the formatter fails to format an article
         """
+        self._seen_pictures = set()
 
         try:
-            self.arhive_service = superdesk.get_resource_service('archive')
+            self.archive_service = superdesk.get_resource_service('archive')
             self.content_types_service = superdesk.get_resource_service('content_types')
             self.roles_service = superdesk.get_resource_service('roles')
             self.users_service = superdesk.get_resource_service('users')
@@ -131,7 +132,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
 
             # original/initial item
-            items_chain = self.arhive_service.get_items_chain(article)
+            items_chain = self.archive_service.get_items_chain(article)
             self._original_item = items_chain[0]
             # the actual item which was selected for publishing in the UI.
             # just fetched doc from the db (the one in `items_chain`) is used instead of `article` to avoid
@@ -412,6 +413,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict picture: picture item
         """
+        guid = picture.get('guid') or picture['_id']
+        if guid in self._seen_pictures:
+            return
+        self._seen_pictures.add(guid)
 
         self._set_belga_urn(picture)
 
@@ -1249,7 +1254,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # fetch associated docs by _id
             if media_items_ids:
-                media_items += list(self.arhive_service.find({
+                media_items += list(self.archive_service.find({
                     '_id': {'$in': media_items_ids}}
                 ))
             # pictures
@@ -1336,7 +1341,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # fetch associated docs by _id
             if rel_text_items_ids:
-                rel_text_items += list(self.arhive_service.find({'_id': {'$in': rel_text_items_ids}}))
+                rel_text_items += list(self.archive_service.find({'_id': {'$in': rel_text_items_ids}}))
             for rel_text_item in rel_text_items:
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(rel_text_item)
