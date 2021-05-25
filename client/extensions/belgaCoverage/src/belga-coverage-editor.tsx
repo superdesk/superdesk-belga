@@ -1,6 +1,5 @@
 import * as React from 'react';
-import BelgaCoverageInfo from './belga-coverage-info';
-import BelgaCoverageImages from './belga-coverage-images';
+import BelgaCoverageCarousel from './belga-coverage-carousel';
 import {IEditorComponentProps, ISuperdesk} from 'superdesk-api';
 
 const ALLOWED = 'application/vnd.belga.coverage';
@@ -36,15 +35,9 @@ export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessCo
             <React.Fragment>
                 {ids.map((id) => (
                     <div key={id}>
-                        <BelgaCoverageInfo
+                        <BelgaCoverageCarousel
                             coverageId={id}
                             removeCoverage={props.readOnly ? undefined : () => props.setValue(removeId(ids, id))}
-                            superdesk={superdesk}
-                        />
-                        <BelgaCoverageImages
-                            coverageId={id}
-                            rendition={'thumbnail'}
-                            maxImages={3}
                             superdesk={superdesk}
                         />
                     </div>

@@ -40,15 +40,16 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
             return null;
         }
 
-        if (this.state.coverage == null) {
-            return <Alert type="error">{'There was an error when fetching coverage.'}</Alert>;
-        } else {
-            return (
-                <Figure caption={this.state.coverage.description}
-                    onRemove={this.props.removeCoverage}>
+        return (
+            <Figure caption={this.state.coverage?.description || ''}
+                onRemove={this.props.removeCoverage}>
+                {this.state.coverage == null && (
+                    <Alert type="error">{'There was an error when fetching coverage.'}</Alert>
+                )}
+                {this.state.coverage != null && (
                     <img src={this.state.coverage.iconThumbnailUrl} />
-                </Figure>
-            );
-        }
+                )}
+            </Figure>
+        );
     }
 }
