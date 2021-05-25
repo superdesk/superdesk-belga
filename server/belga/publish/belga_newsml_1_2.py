@@ -118,9 +118,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             publish sequence number and formatted output string.
         :raises FormatterError: if the formatter fails to format an article
         """
+        self._seen_pictures = set()
 
         try:
-            self.arhive_service = superdesk.get_resource_service('archive')
+            self.archive_service = superdesk.get_resource_service('archive')
             self.content_types_service = superdesk.get_resource_service('content_types')
             self.roles_service = superdesk.get_resource_service('roles')
             self.users_service = superdesk.get_resource_service('users')
@@ -131,7 +132,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
 
             # original/initial item
-            items_chain = self.arhive_service.get_items_chain(article)
+            items_chain = self.archive_service.get_items_chain(article)
             self._original_item = items_chain[0]
             # the actual item which was selected for publishing in the UI.
             # just fetched doc from the db (the one in `items_chain`) is used instead of `article` to avoid
@@ -412,6 +413,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict picture: picture item
         """
+        guid = picture.get('guid') or picture['_id']
+        if guid in self._seen_pictures:
+            return
+        self._seen_pictures.add(guid)
 
         self._set_belga_urn(picture)
 
@@ -1249,7 +1254,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # fetch associated docs by _id
             if media_items_ids:
-                media_items += list(self.arhive_service.find({
+                media_items += list(self.archive_service.find({
                     '_id': {'$in': media_items_ids}}
                 ))
             # pictures
@@ -1298,21 +1303,21 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 newsml_items_chain.append(newsml_item)
             # belga.coverage custom fields
             for field_id in self._belga_coverage_field_ids:
-                if field_id in sd_item_extra:
-                    belga_item_id = sd_item_extra[field_id]
-                    belga_cov_search_provider = BelgaCoverageSearchProvider({})
-                    try:
-                        data = belga_cov_search_provider.api_get('/getGalleryById',
-                                                                 {'i': belga_item_id.rsplit(':', 1)[-1]})
-                    except Exception as e:
-                        logger.warning("Failed to fetch belga coverage: {}".format(e))
-                    else:
-                        newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
-                        newsml_item.update(
-                            belga_cov_search_provider.format_list_item(data)
-                        )
-                        newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
-                        newsml_items_chain.append(newsml_item)
+                if sd_item_extra.get(field_id):
+                    for belga_item_id in sd_item_extra[field_id].split(';'):
+                        belga_cov_search_provider = BelgaCoverageSearchProvider({})
+                        try:
+                            data = belga_cov_search_provider.api_get('/getGalleryById',
+                                                                     {'i': belga_item_id.rsplit(':', 1)[-1]})
+                        except Exception as e:
+                            logger.warning("Failed to fetch belga coverage: {}".format(e))
+                        else:
+                            newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
+                            newsml_item.update(
+                                belga_cov_search_provider.format_list_item(data)
+                            )
+                            newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
+                            newsml_items_chain.append(newsml_item)
             # attachments
             attachments_ids = [i['attachment'] for i in sd_item.get('attachments', [])]
             attachments = list(self.attachments_service.find({'_id': {'$in': attachments_ids}}))
@@ -1336,7 +1341,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # fetch associated docs by _id
             if rel_text_items_ids:
-                rel_text_items += list(self.arhive_service.find({'_id': {'$in': rel_text_items_ids}}))
+                rel_text_items += list(self.archive_service.find({'_id': {'$in': rel_text_items_ids}}))
             for rel_text_item in rel_text_items:
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(rel_text_item)

@@ -9,7 +9,9 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import pytz
+import json
 import datetime
+from pathlib import Path
 from lxml import etree
 from unittest import mock
 from bson.objectid import ObjectId
@@ -17,6 +19,9 @@ from bson.objectid import ObjectId
 from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
 from .. import TestCase
+
+
+fixtures_path = Path(__file__).parent.parent / "fixtures"
 
 
 belga_apiget_response = {
@@ -675,8 +680,6 @@ class BelgaNewsML12Formatter_ItemsChainTest(TestCase):
             ('urn:belga.be:coverage:6690595', 'nl'),
             ('urn:belga.be:360archive:77777777', 'nl'),
             ('original-fr', 'fr'),
-            ('urn:belga.be:image:154620545', 'fr'),
-            ('urn:belga.be:image:154670415', 'fr'),
             ('urn:belga.be:coverage:6690595', 'fr'),
             ('urn:belga.be:360archive:77777777', 'nl'),
             ('update-1', 'nl'),
@@ -887,3 +890,79 @@ class BelgaNewsML12Formatter_NotPublishedItemsChainTest(BelgaNewsML12Formatter_I
                     '{http://www.w3.org/XML/1998/namespace}lang': expected[i][1]
                 }
             )
+
+
+belga_514_fixture = fixtures_path / "belga-newsml-1.2-SDBELGA-514.json"
+with belga_514_fixture.open() as f:
+    belga_514_articles = json.load(f)
+
+
+class BelgaNewsML12Formatter_ItemsChainImageTest(TestCase):
+    article = belga_514_articles[0]
+    archive = belga_514_articles
+
+    users = ({
+        "_id": "5ddfdba06dd032cb672d4780",
+        "username": "adm",
+        "password": "blabla",
+        "email": "admin@example.com",
+        "user_type": "administrator",
+        "is_active": True,
+        "needs_activation": False,
+        "is_author": True,
+        "is_enabled": True,
+        "display_name": "John Smith",
+        "sign_off": "ADM",
+        "first_name": "John",
+        "last_name": "Smith",
+        "role": ObjectId("5d542206c04280bc6d6157f9"),
+    },)
+
+    roles = ({
+        "_id": ObjectId("5d542206c04280bc6d6157f9"),
+        "author_role": "AUTHOR",
+        "editor_role": "AUTHOR"
+    },)
+
+    vocabularies = (
+        {
+            "_id": "belga-coverage-new",
+            "field_type": "custom",
+            "items": [],
+            "type": "manageable",
+            "schema": {
+                "name": {},
+                "qcode": {},
+                "parent": {}
+            },
+            "service": {
+                "all": 1
+            },
+            "custom_field_type": "belga.coverage",
+            "display_name": "belga coverage new",
+            "unique_field": "qcode",
+        },
+    )
+
+    subscriber = {
+        '_id': 'some_id',
+        'name': 'Dev Subscriber',
+    }
+
+    @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
+    def setUp(self):
+        init_app(self.app)
+        self.app.data.insert('users', self.users)
+        self.app.data.insert('archive', self.archive)
+        self.app.data.insert('roles', self.roles)
+        self.app.data.insert('vocabularies', self.vocabularies)
+
+        self.formatter = BelgaNewsML12Formatter()
+        seq, doc = self.formatter.format(self.article, self.subscriber)[0]
+        self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
+
+    def test_picture_not_exported_multiple_times(self):
+        """SDBELGA-514 regression test"""
+        image_roles = self.newsml.xpath('//Role[@FormalName="Image"]')
+        # with unfixed SDBELGA-514, we would have 2 times the image role
+        self.assertEqual(len(image_roles), 1)

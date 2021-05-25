@@ -585,7 +585,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 }
             ],
             "city": "Prague",
-            "belga-coverage-new": "urn:belga.be:coverage:6666666"
+            "belga-coverage-new": "urn:belga.be:coverage:6666666;urn:belga.be:coverage:12345678"
         },
         'fields_meta': {
             'extracountry': {'draftjsState': [{'blocks': [
@@ -1524,7 +1524,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         roles = self.newsml.xpath('NewsItem/NewsComponent/NewsComponent/Role[@FormalName="Gallery"]')
         # count
-        self.assertEqual(len(roles), 2)
+        self.assertEqual(len(roles), 3)
 
     def test_audio_count(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
