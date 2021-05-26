@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {ISuperdesk} from 'superdesk-api';
-import {Badge, Carousel, IconButton} from 'superdesk-ui-framework';
+import {Carousel, IconButton} from 'superdesk-ui-framework/app-typescript';
 import {IBelgaCoverage, getCoverageInfo, getCoverageImages, IBelgaImage} from './belga-image-api';
 import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 
@@ -55,7 +55,7 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
         }
 
         const {Alert} = this.props.superdesk.components;
-        const {formatDate} = this.props.superdesk.localization;
+        const {gettext, formatDate} = this.props.superdesk.localization;
 
         if (this.state.coverage == null || this.state.images == null) {
             return (
@@ -66,46 +66,29 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
         const {preview} = this.props;
         const {coverage, images} = this.state;
 
-
-        const itemTemplate = (props: IBelgaImage) => (
-            <div className="sd-thumb-carousel__item">
-                <div className="sd-thumb-carousel__item-inner">
-                    <img src={props.thumbnailUrl} alt={props.name} />
-                </div>
-            </div>
-        );
-
-        const headerTemplate = (
-            <div className="sd-thumb-carousel__header">
-                <h4 className="sd-thumb-carousel__heading">{coverage.name}</h4>
-                <Badge text={'' + coverage.nrImages} type='light' />
-                {preview !== true && (
-                    <div className="sd-thumb-carousel__header-block--r">
-                        <time>{formatDate(coverage.createDate)}</time>
-                        {this.props.removeCoverage != null && (
-                            <IconButton icon="trash" ariaValue="Remove" onClick={() => this.props.removeCoverage ? this.props.removeCoverage() : null} />
-                        )}
-                    </div>
+        const headerActions = preview !== true ? (
+            <React.Fragment>
+                <time>{formatDate(coverage.createDate)}</time>
+                {this.props.removeCoverage != null && (
+                    <IconButton icon="trash" ariaValue={gettext("Remove")} onClick={() => this.props.removeCoverage ? this.props.removeCoverage() : null} />
                 )}
-            </div>
-        );
-
-        const footerTemplate = (
-            <div className="sd-thumb-carousel__description">
-                {coverage.description}
-            </div>
-        );
+            </React.Fragment>
+        ) : undefined;
 
         const numImages = preview === true ? 1 : 3;
 
         return (
             <Carousel
-                items={images}
-                itemTemplate={itemTemplate}
-                headerTemplate={headerTemplate}
-                footerTemplate={footerTemplate}
+                images={images.map((image) => ({
+                    src: image.thumbnailUrl,
+                    alt: image.name,
+                }))}
                 numVisible={numImages}
                 numScroll={numImages}
+                title={coverage.name}
+                imageCount={coverage.nrImages}
+                description={coverage.description}
+                headerActions={headerActions}
             />
         );
     }
