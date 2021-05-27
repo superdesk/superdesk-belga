@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {ISuperdesk} from 'superdesk-api';
-import {Carousel, IconButton} from 'superdesk-ui-framework/app-typescript';
+import {Carousel, IconButton} from 'superdesk-ui-framework';
 import {IBelgaCoverage, getCoverageInfo, getCoverageImages, IBelgaImage} from './belga-image-api';
 import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 
@@ -66,7 +66,7 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
         const {preview} = this.props;
         const {coverage, images} = this.state;
 
-        const headerActions = preview !== true ? (
+        const headerMeta = preview !== true ? (
             <React.Fragment>
                 <time>{formatDate(coverage.createDate)}</time>
                 {this.props.removeCoverage != null && (
@@ -88,7 +88,7 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
                 title={coverage.name}
                 imageCount={coverage.nrImages}
                 description={coverage.description}
-                headerActions={headerActions}
+                headerMeta={headerMeta}
             />
         );
     }
