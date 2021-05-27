@@ -1,5 +1,6 @@
 export interface IBelgaCoverage {
     name: string;
+    /** total number of images in the coverage */
     nrImages: number;
     createDate: string;
     description: string;
