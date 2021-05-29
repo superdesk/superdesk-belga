@@ -48,6 +48,10 @@ const extension: IExtension = {
                                             source: '',
                                         }),
                                 });
+                            } else if (currentProfile.label === 'TEXT' && nextProfile.label === 'TIP') {
+                                return Promise.resolve({...next, urgency: 5});
+                            } else if (currentProfile.label === 'TIP' && nextProfile.label === 'TEXT') {
+                                return Promise.resolve({...next, urgency: 3});
                             } else {
                                 return Promise.resolve(next);
                             }
