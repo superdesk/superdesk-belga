@@ -1303,21 +1303,21 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 newsml_items_chain.append(newsml_item)
             # belga.coverage custom fields
             for field_id in self._belga_coverage_field_ids:
-                if field_id in sd_item_extra:
-                    belga_item_id = sd_item_extra[field_id]
-                    belga_cov_search_provider = BelgaCoverageSearchProvider({})
-                    try:
-                        data = belga_cov_search_provider.api_get('/getGalleryById',
-                                                                 {'i': belga_item_id.rsplit(':', 1)[-1]})
-                    except Exception as e:
-                        logger.warning("Failed to fetch belga coverage: {}".format(e))
-                    else:
-                        newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
-                        newsml_item.update(
-                            belga_cov_search_provider.format_list_item(data)
-                        )
-                        newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
-                        newsml_items_chain.append(newsml_item)
+                if sd_item_extra.get(field_id):
+                    for belga_item_id in sd_item_extra[field_id].split(';'):
+                        belga_cov_search_provider = BelgaCoverageSearchProvider({})
+                        try:
+                            data = belga_cov_search_provider.api_get('/getGalleryById',
+                                                                     {'i': belga_item_id.rsplit(':', 1)[-1]})
+                        except Exception as e:
+                            logger.warning("Failed to fetch belga coverage: {}".format(e))
+                        else:
+                            newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
+                            newsml_item.update(
+                                belga_cov_search_provider.format_list_item(data)
+                            )
+                            newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
+                            newsml_items_chain.append(newsml_item)
             # attachments
             attachments_ids = [i['attachment'] for i in sd_item.get('attachments', [])]
             attachments = list(self.attachments_service.find({'_id': {'$in': attachments_ids}}))
