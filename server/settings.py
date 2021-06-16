@@ -229,3 +229,73 @@ OUTPUT_BELGA_URN_SUFFIX = env('OUTPUT_BELGA_URN_SUFFIX', 'dev')
 
 GOOGLE_LOGIN = False
 UPDATE_TRANSLATION_METADATA_MACRO = "Update Translation Metadata Macro"
+
+# belga specific elastic filter, handles french l'...
+# plus french and dutch stopwords
+belga_elastic_filter = {
+    "french_elision": {
+        "type": "elision",
+        "article_case": True,
+        "articles": [
+            "l", "m", "t", "qu", "n", "s",
+            "j", "d", "c", "jusqu", "quoiqu",
+            "lorsqu", "puisqu"
+        ]
+    },
+    "french_lowercase": {
+        "type": "lowercase"
+    },
+    "stopwords": {
+        "type": "stop",
+        "stopwords": ["_french_", "_dutch_"]
+    }
+}
+
+ELASTICSEARCH_SETTINGS = {
+    "settings": {
+        "analysis": {
+            "filter": {
+                "remove_hyphen": {"pattern": "[-]", "type": "pattern_replace", "replacement": " "},
+                "french_elision": {
+                    "type": "elision",
+                    "article_case": True,
+                    "articles": [
+                        "l", "m", "t", "qu", "n", "s",
+                        "j", "d", "c", "jusqu", "quoiqu",
+                        "lorsqu", "puisqu"
+                    ]
+                },
+                "belga_stopwords": {
+                    "type": "stop",
+                    "stopwords": ["_french_", "_dutch_", "_english_"]
+                },
+            },
+            "char_filter": {
+                "html_strip_filter": {"type": "html_strip"},
+            },
+            "analyzer": {
+                "phrase_prefix_analyzer": {
+                    "type": "custom",
+                    "filter": ["remove_hyphen", "lowercase"],
+                    "tokenizer": "keyword",
+                },
+                "html_field_analyzer": {
+                    "char_filter": ["html_strip"],
+                    "filter": ["french_elision", "lowercase", "belga_stopwords"],
+                    "tokenizer": "standard",
+                },
+                "default": {
+                    "char_filter": ["html_strip"],
+                    "filter": ["french_elision", "lowercase", "belga_stopwords"],
+                    "tokenizer": "standard"
+                },
+            },
+        },
+    },
+}
+
+
+CONTENTAPI_ELASTICSEARCH_SETTINGS = ELASTICSEARCH_SETTINGS.copy()
+
+# ver. 1: update schema to use new analyzer
+SCHEMA_VERSION = 1
