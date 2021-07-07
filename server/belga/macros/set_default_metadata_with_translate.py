@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 def set_belga_keywords(item):
     """This field is used to set belga keyword field with the value "Brief" upon translation
     """
-    subjects = item.get("subject", [])
+    subjects = item.setdefault("subject", [])
 
     # check brief value is already exists in subjects
     brief_already_exists = any(
-        subject for subject in subjects if subject["qcode"] == "BRIEF"
+        subject for subject in subjects if subject["qcode"] == "BRIEF" and subject["scheme"] == "belga-keywords"
     )
     if brief_already_exists:
         return
@@ -34,6 +34,7 @@ def set_belga_keywords(item):
     belga_keywords = get_resource_service("vocabularies").find_one(
         req=None, _id="belga-keywords"
     )
+
     if not belga_keywords or not belga_keywords.get("items"):
         logger.warning("Belga keywords are not specified")
         return

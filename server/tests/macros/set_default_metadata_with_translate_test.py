@@ -445,3 +445,133 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         )
 
         self.assertEqual(['some', 'keyword'], new_item['keywords'])
+
+    def test_belga_keywords(self):
+        self.app.data.insert(
+            'desks',
+            [{
+                '_id': ObjectId('5d385f17fe985ec5e1a78b49'),
+                'name': 'Politic Desk',
+                'default_content_profile': 'belga_text',
+                'default_content_template': 'content_template_1',
+                'desk_language': 'fr',
+                'source': 'politic'
+            }]
+        )
+        self.app.data.insert(
+            'stages',
+            [{
+                '_id': ObjectId('5d385f31fe985ec67a0ca583'),
+                'name': 'Incoming Stage',
+                'default_incoming': True,
+                'desk_order': 2,
+                'content_expiry': None,
+                'working_stage': False,
+                'is_visible': True,
+
+                'desk': ObjectId('5d385f17fe985ec5e1a78b49')
+            }]
+        )
+        self.app.data.insert(
+            'vocabularies',
+            [{
+                "_id": "belga-keywords",
+                "display_name": "Belga Keywords",
+                "type": "manageable",
+                "selection_type": "multi selection",
+                "unique_field": "qcode",
+                "schema": {
+                    "name": {},
+                    "qcode": {},
+                    "translations": {}
+                },
+                "service": {
+                    "all": 1
+                },
+                "items": [
+                    {
+                        "name": "BRIEF",
+                        "qcode": "BRIEF",
+                        "is_active": True,
+                        "translations": {
+                            "name": {
+                                "nl": "BRIEF",
+                                "fr": "BRIEF"
+                            }
+                        }
+                    },
+                    {
+                        "name": "PREVIEW",
+                        "qcode": "PREVIEW",
+                        "is_active": True,
+                        "translations": {
+                            "name": {
+                                "nl": "VOORBERICHT",
+                                "fr": "AVANT-PAPIER"
+                            }
+                        }
+                    }
+                ]
+            }]
+        )
+        self.app.data.insert(
+            'content_templates',
+            [{
+
+                '_id': 'content_template_1',
+                'template_name': 'belga text',
+                'is_public': True,
+                'data': {
+                    'profile': 'belga_text',
+                    'type': 'text',
+                    'pubstatus': 'usable',
+                    'format': 'HTML',
+                    'headline': '',
+                    'language': 'en',
+                    'keywords': [
+                        'some',
+                        'keyword'
+                    ],
+                    'body_html': ''
+                },
+                'template_type': 'create',
+            }])
+        item = {
+            '_id': 'urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564',
+            'guid': 'urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564',
+            'headline': 'test headline',
+            'slugine': 'test slugline',
+            'state': 'published',
+            'type': 'text',
+            "subject": [{
+                'name': 'BRIEF',
+                'qcode': 'BRIEF',
+                'translations': {
+                    'name': {
+                        'nl': 'BRIEF',
+                        'fr': 'BRIEF'
+                    }
+                },
+                'scheme': 'belga-keywords'
+            }],
+            'keywords': ['foo', 'bar'],
+            'language': 'fr'
+        }
+        self.app.data.insert(
+            'archive',
+            [item]
+        )
+        self.assertRaises(
+            StopDuplication,
+            set_default_metadata_with_translate,
+            item,
+            dest_desk_id=ObjectId('5d385f17fe985ec5e1a78b49'),
+            dest_stage_id=ObjectId('5d385f31fe985ec67a0ca583')
+        )
+        archive_service = get_resource_service('archive')
+        new_item = archive_service.find_one(
+            req=None,
+            original_id='urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564'
+        )
+
+        self.assertEqual(item["subject"], new_item["subject"])
