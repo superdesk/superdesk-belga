@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         importApps: [
             'superdesk-analytics',
             'superdesk-planning',
-            '../belga',
+            '../index',
         ],
         defaultRoute: '/workspace/monitoring',
 
