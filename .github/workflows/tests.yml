@@ -81,5 +81,5 @@ jobs:
       - name: npm ci
         run: npm ci
 
-      - name: grunt build
-        run: node --max_old_space_size=4098 ./node_modules/.bin/grunt build
+      - name: build
+        run: npm run build
