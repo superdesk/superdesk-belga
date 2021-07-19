@@ -3,7 +3,6 @@ import * as React from 'react';
 import {ISuperdesk} from 'superdesk-api';
 import {Carousel, IconButton} from 'superdesk-ui-framework';
 import {IBelgaCoverage, getCoverageInfo, getCoverageImages, IBelgaImage} from './belga-image-api';
-import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 
 interface IProps {
     preview?: boolean;
