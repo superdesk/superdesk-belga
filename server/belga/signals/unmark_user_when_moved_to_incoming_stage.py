@@ -18,6 +18,7 @@ def unmark_user(sender, item, original):
         if desk['incoming_stage'] == new_stage:
             item['previous_marked_user'] = marked_for_user
             item['marked_for_user'] = None
+            item['marked_for_sign_off'] = None
             logger.info('unmarked user on item %s', item['guid'])
     except KeyError as err:
         logger.error('key error %s', err)
