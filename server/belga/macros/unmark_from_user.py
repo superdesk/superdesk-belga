@@ -9,6 +9,7 @@ def callback(item, **kwargs):
         orig = item.copy()
         item['previous_marked_user'] = item['marked_for_user']
         item['marked_for_user'] = None
+        item['marked_for_sign_off'] = None
         logger.info('unset marked for user for item %s', item['guid'])
     return item
 
