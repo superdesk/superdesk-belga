@@ -286,7 +286,7 @@ ELASTICSEARCH_SETTINGS = {
                 },
                 "default": {
                     "char_filter": ["html_strip"],
-                    "filter": ["french_elision", "lowercase", "belga_stopwords"],
+                    "filter": ["french_elision", "lowercase"],
                     "tokenizer": "standard"
                 },
             },
@@ -298,4 +298,5 @@ ELASTICSEARCH_SETTINGS = {
 CONTENTAPI_ELASTICSEARCH_SETTINGS = ELASTICSEARCH_SETTINGS.copy()
 
 # ver. 1: update schema to use new analyzer
-SCHEMA_VERSION = 1
+# ver. 2: change default analyzer config
+SCHEMA_VERSION = 2
