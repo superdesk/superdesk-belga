@@ -580,6 +580,14 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 else:
                     item['keywords'] = [data]
 
+                # save all keywords as subject with scheme original-metadata
+                item.setdefault('subject', []).append({
+                    'name': data,
+                    'qcode': data,
+                    'scheme': 'original-metadata'
+                })
+
+
     def parse_contentitem(self, item, content_el):
         """
         Function parser DescriptiveMetadata in NewsComponent element.

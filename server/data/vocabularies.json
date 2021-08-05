@@ -6656,6 +6656,21 @@
         "unique_field": "qcode"
     },
     {
+		"_id": "original-metadata",
+		"display_name": "original metadata",
+		"type": "manageable",
+		"selection_type": "multi selection",
+		"unique_field": "qcode",
+		"schema": {
+			"name": {},
+			"qcode": {}
+		},
+		"service": {
+			"all": 1
+		},
+		"items": []
+	},
+    {
     	"_id": "belga-keywords",
     	"init_version": 9,
     	"display_name": "Belga Keywords",
