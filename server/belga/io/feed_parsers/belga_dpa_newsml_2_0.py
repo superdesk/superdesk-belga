@@ -10,6 +10,7 @@
 
 import pytz
 import logging
+import itertools
 import dateutil.parser
 from xml.etree import ElementTree
 
@@ -119,6 +120,10 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                                     except KeyError:
                                         continue
 
+                    # remove duplicated subject
+                    item['subject'] = [
+                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['name']))
+                    ]
                     items.append(item)
             return items
         except Exception as ex:
@@ -169,6 +174,15 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
             name_elt = elem.find(self.qname('name'))
             if name_elt is not None:
                 item.setdefault('extra', {})['city'] = name_elt.text
+
+        # save all keywords as subject with scheme original-metadata
+        for elem in meta.findall(self.qname('keyword')):
+            data = elem.text.strip()
+            item.setdefault('subject', []).append({
+                'name': data,
+                'qcode': data,
+                'scheme': 'original-metadata'
+            })
         return meta
 
     def parse_content_subject(self, tree, item):

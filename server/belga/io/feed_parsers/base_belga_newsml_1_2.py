@@ -16,7 +16,6 @@ from superdesk.errors import ParserError
 from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser
 from superdesk.io.iptc import subject_codes
-
 from .belga_newsml_mixin import BelgaNewsMLMixin
 
 
@@ -586,7 +585,6 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     'qcode': data,
                     'scheme': 'original-metadata'
                 })
-
 
     def parse_contentitem(self, item, content_el):
         """

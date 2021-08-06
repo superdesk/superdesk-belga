@@ -42,7 +42,8 @@ class BelgaANPNewsMLOneTestCase(TestCase):
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'}
+            {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
+            {'name': 'POST-CAO', 'qcode': 'POST-CAO', 'scheme': 'original-metadata'}
         ]
         expected_subjects.sort(key=lambda i: i['scheme'])
         self.assertEqual(item["subject"], expected_subjects)
