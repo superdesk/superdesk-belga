@@ -6658,7 +6658,7 @@
     {
 		"_id": "original-metadata",
 		"display_name": "original metadata",
-		"type": "manageable",
+		"type": "unmanageable",
 		"selection_type": "multi selection",
 		"read_only": true,
 		"unique_field": "qcode",
