@@ -175,6 +175,9 @@
         <subject literal="ID0EIE" type="cpnat:poi">
           <name>Kleininsel Agathonisi, Agathonisi, Griechenland</name>
         </subject>
+        <keyword rank="1">Meiden</keyword>
+        <keyword rank="2">Zeitungen</keyword>
+        <keyword rank="3">Verlage</keyword>
         <language tag="de"/>
       </contentMeta>
       <assert qcode="dpapconstraint:nonpublic">
