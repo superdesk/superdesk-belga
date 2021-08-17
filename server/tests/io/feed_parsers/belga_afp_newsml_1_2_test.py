@@ -58,7 +58,11 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
             {'name': 'assises', 'qcode': 'assises', 'scheme': 'original-metadata'},
             {'name': 'drogues', 'qcode': 'drogues', 'scheme': 'original-metadata'},
             {'name': 'police', 'qcode': 'police', 'scheme': 'original-metadata'},
-            {'name': 'marches_test', 'qcode': 'marches_test', 'scheme': 'original-metadata'}
+            {'name': 'marches_test', 'qcode': 'marches_test', 'scheme': 'original-metadata'},
+            {'name': 'France', 'qcode': 'fra', 'scheme': 'countries',
+             'translations': {'name': {'nl': 'Frankrijk', 'fr': 'France'}}},
+            {'name': 'POLICE', 'qcode': 'POLICE', 'scheme': 'belga-keywords',
+             'translations': {'name': {'nl': 'POLITIE', 'fr': 'POLICE'}}}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["subject"], expected_subjects)
