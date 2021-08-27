@@ -6673,7 +6673,7 @@
 	},
     {
     	"_id": "belga-keywords",
-    	"init_version": 10,
+		"init_version": 11,
     	"display_name": "Belga Keywords",
     	"type": "manageable",
     	"selection_type": "multi selection",
@@ -6686,7 +6686,8 @@
     	"service": {
     		"all": 1
     	},
-    	"items": [{
+		"items": [
+			{
     			"name": "BRIEF",
     			"qcode": "BRIEF",
     			"is_active": true,
@@ -9564,7 +9565,7 @@
     			"translations": {
     				"name": {
     					"nl": "SNOWBOARD",
-    					"fr": "PARALYMPISMESNOWBOARD"
+						"fr": "SNOWBOARD"
     				}
     			}
     		},
@@ -11096,8 +11097,19 @@
     					"fr": "SURF"
     				}
     			}
-    		}
-    	]
+			},
+			{
+				"name": "SKATEBOARD",
+				"qcode": "SKATEBOARD",
+				"is_active": true,
+				"translations": {
+					"name": {
+						"nl": "SKATEBOARD",
+						"fr": "SKATEBOARD"
+					}
+				}
+			}
+		]
     },
     {
         "_id": "desk_types",
