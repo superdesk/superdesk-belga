@@ -6673,7 +6673,7 @@
 	},
     {
     	"_id": "belga-keywords",
-    	"init_version": 9,
+		"init_version": 11,
     	"display_name": "Belga Keywords",
     	"type": "manageable",
     	"selection_type": "multi selection",
@@ -6686,7 +6686,8 @@
     	"service": {
     		"all": 1
     	},
-    	"items": [{
+		"items": [
+			{
     			"name": "BRIEF",
     			"qcode": "BRIEF",
     			"is_active": true,
@@ -9564,7 +9565,7 @@
     			"translations": {
     				"name": {
     					"nl": "SNOWBOARD",
-    					"fr": "SNOWBOARD"
+						"fr": "SNOWBOARD"
     				}
     			}
     		},
@@ -9690,12 +9691,12 @@
     			}
     		},
     		{
-    			"name": "OLYMPIC GAMES",
+    			"name": "OLYMPISM",
     			"qcode": "OLYMPIC GAMES",
     			"is_active": true,
     			"translations": {
     				"name": {
-    					"nl": "OS",
+    					"nl": "OLYMPISCHE BEWEGING",
     					"fr": "OLYMPISME"
     				}
     			}
@@ -10041,6 +10042,28 @@
     				}
     			}
     		},
+			{
+    			"name": "OLYMPICS2032",
+    			"qcode": "OLYMPICS2032",
+    			"is_active": true,
+    			"translations": {
+    				"name": {
+    					"nl": "OS2032",
+    					"fr": "JO2032"
+    				}
+    			}
+    		},
+			{
+    			"name": "PARALYMPISM",
+    			"qcode": "PARALYMPIC MOVEMENT",
+    			"is_active": true,
+    			"translations": {
+    				"name": {
+    					"nl": "PARALYMPISCHE BEWEGING",
+    					"fr": "PARALYMPISME"
+    				}
+    			}
+    		},
     		{
     			"name": "PARALYMPICS2020",
     			"qcode": "PARALYMPICS2020",
@@ -10104,6 +10127,17 @@
     				"name": {
     					"nl": "PARALYMPICS2030",
     					"fr": "PARALYMPICS2030"
+    				}
+    			}
+    		},
+			{
+    			"name": "PARALYMPICS2032",
+    			"qcode": "PARALYMPICS2032",
+    			"is_active": true,
+    			"translations": {
+    				"name": {
+    					"nl": "PARALYMPICS2032",
+    					"fr": "PARALYMPICS2032"
     				}
     			}
     		},
@@ -11052,8 +11086,30 @@
     					"fr": "BELGAMOMENT"
     				}
     			}
-    		}
-    	]
+    		},
+			{
+    			"name": "SURF",
+    			"qcode": "SURF",
+    			"is_active": true,
+    			"translations": {
+    				"name": {
+    					"nl": "SURF",
+    					"fr": "SURF"
+    				}
+    			}
+			},
+			{
+				"name": "SKATEBOARD",
+				"qcode": "SKATEBOARD",
+				"is_active": true,
+				"translations": {
+					"name": {
+						"nl": "SKATEBOARD",
+						"fr": "SKATEBOARD"
+					}
+				}
+			}
+		]
     },
     {
         "_id": "desk_types",
