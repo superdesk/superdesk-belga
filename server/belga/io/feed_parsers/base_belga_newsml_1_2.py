@@ -11,6 +11,7 @@
 import itertools
 import html
 import datetime
+from flask.globals import g
 import superdesk
 from superdesk.errors import ParserError
 from superdesk.etree import etree
@@ -500,12 +501,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
         for element in descript_el.findall('Genre'):
             if element is not None and element.get('FormalName'):
-                # genre CV
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "genre"
-                })
+                self._add_genre(item, element.get('FormalName'))
 
         element = descript_el.find('guid')
         if element is not None:
@@ -717,3 +713,22 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
     def _get_cv(self, _id):
         return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
+
+    def _add_genre(self, item, name, qcode=None):
+        genre = dict(
+            name=name,
+            qcode=qcode if qcode is not None else name,
+        )
+
+        item.setdefault("genre", []).append(genre.copy())  # use copy so scheme is not added later
+
+        # keep genre in subject for BC
+        genre["scheme"] = "genre"
+        item.setdefault('subject', []).append(genre)
+
+    def _get_genre(self, item):
+        return item["genre"] if item.get("genre") else [
+            subj
+            for subj in item.get("subject", [])
+            if subj.get("scheme") == "genre"
+        ]

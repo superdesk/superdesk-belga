@@ -6456,8 +6456,10 @@
     {
         "_id": "genre",
         "display_name": "Genre",
+        "field": "genre",
         "type": "manageable",
         "unique_field": "qcode",
+        "init_version": 1,
         "service": {
             "all": 1
         },

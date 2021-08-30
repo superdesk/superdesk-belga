@@ -54,12 +54,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             # Genre from NewsComponent 1st level
             for element in news_component_1.findall('DescriptiveMetadata/Genre'):
                 if element.get('FormalName'):
-                    # genre CV
-                    self._item_seed.setdefault('subject', []).append({
-                        "name": element.get('FormalName'),
-                        "qcode": element.get('FormalName'),
-                        "scheme": "genre"
-                    })
+                    self._add_genre(self._item_seed, element.get('FormalName'))
 
             # NewsComponent 2nd level
             # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID

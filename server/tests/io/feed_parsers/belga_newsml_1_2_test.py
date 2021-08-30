@@ -127,6 +127,7 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['type'], 'text')
         self.assertEqual(item['version'], 4)
         self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
+        self.assertEqual(item["genre"], [{'name': 'CURRENT', 'qcode': 'CURRENT'}])
 
 
 class BelgaRemoteNewsMLOneTestCase(TestCase):
