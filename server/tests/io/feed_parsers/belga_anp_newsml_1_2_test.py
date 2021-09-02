@@ -78,6 +78,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["characteristics"],
                          {'creator': 'redsys v4.30', 'word_count': '177', 'characters': '1043',
                           'format_version': '3.3'})
+        self.assertEqual(item["genre"], [{'name': 'ECO', 'qcode': 'ECO'}])
         expected_body = \
             (
                 '\n\t\t\t\t\t\t\t\t<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan Post'

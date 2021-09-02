@@ -183,12 +183,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # Genre from NewsComponent 1st level
         for element in news_component_1.findall('DescriptiveMetadata/Genre'):
             if element.get('FormalName'):
-                # genre CV
-                self._item_seed.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "genre"
-                })
+                self._add_genre(self._item_seed, element.get('FormalName'))
 
         # check if all roles are in `SUPPORTED_MEDIA_ASSET_TYPES`
         is_media_roles = [
