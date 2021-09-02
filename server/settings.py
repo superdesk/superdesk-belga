@@ -12,7 +12,7 @@
 import copy
 from flask import json
 from pathlib import Path
-from superdesk.default_settings import INSTALLED_APPS, env
+from superdesk.default_settings import DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES, INSTALLED_APPS, env
 
 ABS_PATH = str(Path(__file__).resolve().parent)
 
@@ -300,3 +300,5 @@ CONTENTAPI_ELASTICSEARCH_SETTINGS = ELASTICSEARCH_SETTINGS.copy()
 # ver. 1: update schema to use new analyzer
 # ver. 2: change default analyzer config
 SCHEMA_VERSION = 2
+
+DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES = []

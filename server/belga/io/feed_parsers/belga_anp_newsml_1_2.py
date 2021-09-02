@@ -38,16 +38,15 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     def parse_newsitem(self, item, newsitem_el):
         super().parse_newsitem(item, newsitem_el)
-        for subject in item.get('subject', []):
-            if subject.get('scheme', '') == 'genre':
-                qcode = self.MAPPING_PRODUCTS.get(subject.get('name'), 'NEWS/GENERAL')
-                item.setdefault('subject', []).append({
-                    'name': qcode,
-                    'qcode': qcode,
-                    'parent': 'NEWS',
-                    'scheme': 'services-products'
-                })
-                break
+        for genre in self._get_genre(item):
+            qcode = self.MAPPING_PRODUCTS.get(genre.get('name'), 'NEWS/GENERAL')
+            item.setdefault('subject', []).append({
+                'name': qcode,
+                'qcode': qcode,
+                'parent': 'NEWS',
+                'scheme': 'services-products'
+            })
+            break
         else:
             item.setdefault('subject', []).append({
                 'name': 'NEWS/GENERAL',

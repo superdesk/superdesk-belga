@@ -286,6 +286,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             if subject.get('scheme') == 'genre':
                 genre_formalname = subject['qcode']
                 break
+        else:
+            for genre in self._current_item.get("genre", []):
+                if genre.get("qcode") != "Article":  # ignore core default value
+                    genre_formalname = genre["qcode"]
+                    break
         SubElement(
             descriptivemetadata, 'Genre',
             {'FormalName': genre_formalname}
