@@ -6456,10 +6456,10 @@
     {
         "_id": "genre",
         "display_name": "Genre",
-        "field": "genre",
         "type": "manageable",
         "unique_field": "qcode",
-        "init_version": 1,
+		"schema_field": "genre",
+        "init_version": 3,
         "service": {
             "all": 1
         },
