@@ -55,6 +55,7 @@ module.exports = function(grunt) {
                 publishAndContinue: true,
                 closeAndContinue: true,
             },
+            confirmDueDate: true,
         },
 
         workspace: {
