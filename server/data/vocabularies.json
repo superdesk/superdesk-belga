@@ -6458,6 +6458,8 @@
         "display_name": "Genre",
         "type": "manageable",
         "unique_field": "qcode",
+		"schema_field": "genre",
+        "init_version": 3,
         "service": {
             "all": 1
         },
