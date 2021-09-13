@@ -11,8 +11,8 @@
 import itertools
 import html
 import datetime
-from flask.globals import g
 import superdesk
+
 from superdesk.errors import ParserError
 from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser
