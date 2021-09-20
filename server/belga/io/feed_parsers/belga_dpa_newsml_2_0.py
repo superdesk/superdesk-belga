@@ -175,14 +175,18 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
             if name_elt is not None:
                 item.setdefault('extra', {})['city'] = name_elt.text
 
-        # save all keywords as subject with scheme original-metadata
         for elem in meta.findall(self.qname('keyword')):
             data = elem.text.strip()
-            item.setdefault('subject', []).append({
-                'name': data,
-                'qcode': data,
-                'scheme': 'original-metadata'
-            })
+            belga_keywords = get_resource_service('vocabularies').get_items(_id='belga-keywords', qcode=data.upper())
+            if len(belga_keywords) > 0:
+                item.setdefault('subject', []).append(belga_keywords[0])
+            else:
+                # save all other unmapped keywords as subject with scheme original-metadata
+                item.setdefault('subject', []).append({
+                    'name': data,
+                    'qcode': data,
+                    'scheme': 'original-metadata'
+                })
         return meta
 
     def parse_content_subject(self, tree, item):
@@ -212,6 +216,10 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     if len(code) == 3:
                         country_keyword = self._get_country(code)
                         item.setdefault('subject', []).extend(country_keyword)
+                        # countries
+                        countries = get_resource_service('vocabularies').get_items(_id='countries', qcode=code.lower())
+                        if len(countries) > 0:
+                            item.setdefault('subject', []).append(countries[0])
                         break
 
     def parse_authors(self, meta, item):

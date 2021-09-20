@@ -55,5 +55,34 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         item.setdefault('subject', []).append(credit)
         return item
 
+    def parse_descriptivemetadata(self, item, descript_el):
+        super().parse_descriptivemetadata(item, descript_el)
+
+        location_el = descript_el.find('Location')
+        if location_el is not None:
+            for element in location_el.findall('Property'):
+                # country
+                if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
+                    countries = get_resource_service('vocabularies').get_items(
+                        _id='countries',
+                        qcode=element.attrib.get('Value').lower()
+                    )
+                    try:
+                        item.setdefault('subject', []).append(countries[0])
+                    except (StopIteration, IndexError) as e:
+                        logger.error(e)
+
+        elements = descript_el.findall('Property')
+        for element in elements:
+            # belga keywords
+            if element.attrib.get('FormalName', '') == 'Keyword' and element.attrib.get('Value'):
+                belga_keywords = get_resource_service('vocabularies').get_items(
+                    _id='belga-keywords',
+                    qcode=element.attrib.get('Value').upper()
+                )
+                try:
+                    item.setdefault('subject', []).append(belga_keywords[0])
+                except (StopIteration, IndexError) as e:
+                    logger.error(e)
 
 register_feed_parser(BelgaANPNewsMLOneFeedParser.NAME, BelgaANPNewsMLOneFeedParser())
