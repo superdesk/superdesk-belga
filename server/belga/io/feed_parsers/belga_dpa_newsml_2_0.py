@@ -21,6 +21,7 @@ from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
 
 from .belga_newsml_mixin import BelgaNewsMLMixin
+from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 NS = {'xhtml': 'http://www.w3.org/1999/xhtml',

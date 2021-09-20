@@ -13,6 +13,10 @@ import pytz
 from superdesk.io.registry import register_feed_parser
 
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
+import logging
+from superdesk import get_resource_service
+
+logger = logging.getLogger(__name__)
 
 
 class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
@@ -84,5 +88,6 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     item.setdefault('subject', []).append(belga_keywords[0])
                 except (StopIteration, IndexError) as e:
                     logger.error(e)
+
 
 register_feed_parser(BelgaANPNewsMLOneFeedParser.NAME, BelgaANPNewsMLOneFeedParser())
