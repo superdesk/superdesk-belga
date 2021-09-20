@@ -37,32 +37,31 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["ingest_provider_sequence"], "0579")
         item["subject"].sort(key=lambda i: i['name'])
         expected_subjects = [
-            {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB', 'scheme': 'of_interest_to'},
-            {'name': 'drug trafficking', 'qcode': '02001004', 'scheme': 'iptc_subject_codes'},
-            {'name': 'trials', 'qcode': '02008000', 'scheme': 'iptc_subject_codes'},
-            {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW', 'scheme': 'of_interest_to'},
-            {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
             {'name': 'AFP', 'qcode': 'AFP', 'scheme': 'sources'},
-            {'name': 'crime, law and justice', 'qcode': '02000000', 'scheme': 'iptc_subject_codes'},
+            {'name': 'AMN-TFG-1=AMW', 'qcode': 'AMN-TFG-1=AMW', 'scheme': 'of_interest_to'},
             {'name': 'ARC-TFG-1=ELU', 'qcode': 'ARC-TFG-1=ELU', 'scheme': 'of_interest_to'},
-            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
-            {'name': 'police', 'qcode': '02003000', 'scheme': 'iptc_subject_codes'},
-            {'name': 'NEWS/ECONOMY', 'parent': 'NEWS', 'qcode': 'NEWS/ECONOMY', 'scheme': 'services-products'},
-            {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
-            {'name': 'NEWS/SPORTS', 'parent': 'NEWS', 'qcode': 'NEWS/SPORTS', 'scheme': 'services-products'},
-            {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
-             'translations': {'name': {'fr': 'FRANCE', 'nl': 'FRANKRIJK'}}},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
+            {'name': 'DAB-TFG-1=DAB', 'qcode': 'DAB-TFG-1=DAB', 'scheme': 'of_interest_to'},
+            {'name': 'EUA-TFG-1=EUA', 'qcode': 'EUA-TFG-1=EUA', 'scheme': 'of_interest_to'},
+            {'name': 'France', 'qcode': 'country_fra', 'translations': {
+                'name': {'nl': 'FRANKRIJK', 'fr': 'FRANCE'}}, 'scheme': 'country'},
+            {'name': 'France', 'qcode': 'fra', 'translations': {
+                'name': {'nl': 'Frankrijk', 'fr': 'France'}}, 'scheme': 'countries'},
             {'name': 'France', 'qcode': 'France', 'scheme': 'original-metadata'},
-            {'name': 'procès', 'qcode': 'procès', 'scheme': 'original-metadata'},
+            {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
+            {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'NEWS/GENERAL', 'qcode': 'NEWS/GENERAL', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'NEWS/SPORTS', 'qcode': 'NEWS/SPORTS', 'parent': 'NEWS', 'scheme': 'services-products'},
+            {'name': 'POLICE', 'qcode': 'POLICE', 'translations': {
+                'name': {'nl': 'POLITIE', 'fr': 'POLICE'}}, 'scheme': 'belga-keywords'},
             {'name': 'assises', 'qcode': 'assises', 'scheme': 'original-metadata'},
+            {'qcode': '02000000', 'name': 'crime, law and justice', 'scheme': 'iptc_subject_codes'},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'drogues', 'qcode': 'drogues', 'scheme': 'original-metadata'},
-            {'name': 'police', 'qcode': 'police', 'scheme': 'original-metadata'},
+            {'qcode': '02001004', 'name': 'drug trafficking', 'scheme': 'iptc_subject_codes'},
             {'name': 'marches_test', 'qcode': 'marches_test', 'scheme': 'original-metadata'},
-            {'name': 'France', 'qcode': 'fra', 'scheme': 'countries',
-             'translations': {'name': {'nl': 'Frankrijk', 'fr': 'France'}}},
-            {'name': 'POLICE', 'qcode': 'POLICE', 'scheme': 'belga-keywords',
-             'translations': {'name': {'nl': 'POLITIE', 'fr': 'POLICE'}}}
+            {'qcode': '02003000', 'name': 'police', 'scheme': 'iptc_subject_codes'},
+            {'name': 'procès', 'qcode': 'procès', 'scheme': 'original-metadata'},
+            {'qcode': '02008000', 'name': 'trials', 'scheme': 'iptc_subject_codes'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["subject"], expected_subjects)

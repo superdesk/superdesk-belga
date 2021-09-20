@@ -217,10 +217,8 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     if len(code) == 3:
                         country_keyword = self._get_country(code)
                         item.setdefault('subject', []).extend(country_keyword)
-                        # countries
-                        countries = get_resource_service('vocabularies').get_items(_id='countries', qcode=code.lower())
-                        if len(countries) > 0:
-                            item.setdefault('subject', []).append(countries[0])
+                        # country is cv
+                        item.setdefault('subject', []).extend(self._get_countries(code))
                         break
 
     def parse_authors(self, meta, item):

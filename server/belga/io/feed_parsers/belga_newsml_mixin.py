@@ -25,3 +25,12 @@ class BelgaNewsMLMixin:
             for c in self._countries
             if c.get('qcode') == 'country_' + country_code.lower() and c.get('is_active')
         ]
+
+    def _get_countries(self, country_code):
+        countries = get_resource_service('vocabularies').find_one(req=None, _id='countries').get('items', [])
+
+        return [
+            {'name': c['name'], 'qcode': c['qcode'], 'translations': c['translations'], 'scheme': 'countries'}
+            for c in countries
+            if c.get('qcode') == country_code.lower() and c.get('is_active')
+        ]

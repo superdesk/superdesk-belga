@@ -55,10 +55,11 @@
 					<Subject Vocabulary="urn:newsml:anp.nl:20090407:ANPCatCodes:Webfeed" FormalName="ECO"/>
 				</SubjectCode>
 				<Location HowPresent="Origin">
-					<Property FormalName="Country" Value="NL"/>
+					<Property FormalName="Country" Value="NLD"/>
 					<Property FormalName="City" Value="UTRECHT"/>
 				</Location>
 				<Property FormalName="Keyword" Value="POST-CAO"/>
+				<Property FormalName="Keyword" Value="BRIEF"/>
 				<Property FormalName="Isin" Value=""/>
 				<Property FormalName="Ticker" Value=""/>
 				<Property FormalName="Company" Value=""/>
