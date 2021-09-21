@@ -42,6 +42,8 @@ class BelgaEFENewsMLOneTestCase(TestCase):
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'India', 'qcode': 'country_ind', 'scheme': 'country',
              'translations': {'name': {'fr': 'INDE', 'nl': 'INDIA'}}},
+            {'name': 'India', 'qcode': 'ind', 'translations': {
+             'name': {'nl': 'India', 'fr': 'Inde'}}, 'scheme': 'countries'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["slugline"], None)
