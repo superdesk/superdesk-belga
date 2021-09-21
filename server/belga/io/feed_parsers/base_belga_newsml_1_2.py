@@ -578,19 +578,8 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 else:
                     item['keywords'] = [data]
 
-                belga_keywords = get_resource_service('vocabularies').get_items(
-                    _id='belga-keywords',
-                    qcode=data.upper()
-                )
-                if len(belga_keywords) > 0:
-                    item.setdefault('subject', []).append(belga_keywords[0])
-                else:
-                    # save all other unmapped keywords as subject with scheme original-metadata
-                    item.setdefault('subject', []).append({
-                        'name': data,
-                        'qcode': data,
-                        'scheme': 'original-metadata'
-                    })
+                # store data in original_metadata and belga-keyword CV
+                item.setdefault('subject', []).extend(self._get_keywords(data))
 
     def parse_contentitem(self, item, content_el):
         """

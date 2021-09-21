@@ -34,3 +34,17 @@ class BelgaNewsMLMixin:
             for c in countries
             if c.get('qcode') == country_code.lower() and c.get('is_active')
         ]
+
+    def _get_keywords(self, data):
+        belga_keywords = get_resource_service('vocabularies').find_one(req=None, _id='belga-keywords').get('items', [])
+
+        _belga_keyword_list = [
+            {'name': c['name'], 'qcode': c['qcode'], 'translations': c['translations'], 'scheme': 'belga-keywords'}
+            for c in belga_keywords
+            if c.get('qcode') == data.upper() and c.get('is_active')
+        ]
+        return (
+            _belga_keyword_list
+            if len(_belga_keyword_list) > 0
+            else [{"name": data, "qcode": data, "scheme": "original-metadata"}]
+        )

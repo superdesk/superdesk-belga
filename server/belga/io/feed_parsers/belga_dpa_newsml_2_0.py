@@ -178,16 +178,8 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
 
         for elem in meta.findall(self.qname('keyword')):
             data = elem.text.strip()
-            belga_keywords = get_resource_service('vocabularies').get_items(_id='belga-keywords', qcode=data.upper())
-            if len(belga_keywords) > 0:
-                item.setdefault('subject', []).append(belga_keywords[0])
-            else:
-                # save all other unmapped keywords as subject with scheme original-metadata
-                item.setdefault('subject', []).append({
-                    'name': data,
-                    'qcode': data,
-                    'scheme': 'original-metadata'
-                })
+            # store data in original_metadata and belga-keyword CV
+            item.setdefault('subject', []).extend(self._get_keywords(data))
         return meta
 
     def parse_content_subject(self, tree, item):
