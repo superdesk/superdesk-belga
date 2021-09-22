@@ -403,10 +403,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     formalname = format.attrib.get('FormalName')
                     if not formalname or formalname != 'Text':
                         logger.warning(
-                            'ContentItem/FormalName was not found or not supported: "{}". '
-                            'Skiping an "{}" item.'.format(formalname, item['guid'])
+                            'ContentItem/FormalName format "{}" not in Text for "{}" item.'
+                            .format(formalname, item['guid'])
                         )
-                        raise SkipItemException
                     if datacontent.text:
                         item[item_key] = datacontent.text.strip()
 
