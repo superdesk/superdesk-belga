@@ -43,7 +43,13 @@ class BelgaANPNewsMLOneTestCase(TestCase):
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
-            {'name': 'POST-CAO', 'qcode': 'POST-CAO', 'scheme': 'original-metadata'}
+            {'name': 'POST-CAO', 'qcode': 'POST-CAO', 'scheme': 'original-metadata'},
+            {'name': 'Netherlands', 'qcode': 'country_nld', 'translations': {
+                'name': {'nl': 'NEDERLAND', 'fr': 'PAYS-BAS'}}, 'scheme': 'country'},
+            {'name': 'BRIEF', 'qcode': 'BRIEF', 'translations': {
+                'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}}, 'scheme': 'belga-keywords'},
+            {'name': 'Netherlands', 'qcode': 'nld', 'translations': {
+                'name': {'nl': 'Nederland', 'fr': 'Pays-Bas'}}, 'scheme': 'countries'}
         ]
         expected_subjects.sort(key=lambda i: i['scheme'])
         self.assertEqual(item["subject"], expected_subjects)
@@ -71,7 +77,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["keyword_line"], "ECO/ECO10;ECO-POST-CAO")
         self.assertEqual(item["administrative"], {'provider': 'ANP'})
         self.assertEqual(item["language"], "nl-nl")
-        self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'NL', 'city': 'UTRECHT'})
+        self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'NLD', 'city': 'UTRECHT'})
         self.assertEqual(item["keywords"], [])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF")

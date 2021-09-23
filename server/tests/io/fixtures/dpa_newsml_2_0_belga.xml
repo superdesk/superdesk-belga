@@ -178,6 +178,7 @@
         <keyword rank="1">Meiden</keyword>
         <keyword rank="2">Zeitungen</keyword>
         <keyword rank="3">Verlage</keyword>
+        <keyword rank="4">Brief</keyword>
         <language tag="de"/>
       </contentMeta>
       <assert qcode="dpapconstraint:nonpublic">

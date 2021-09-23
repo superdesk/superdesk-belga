@@ -36,6 +36,8 @@ class BelgaKyodoNewsMLTestCase(TestCase):
         self.assertEqual(item['subject'], [
             {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
              'translations': {'name': {'fr': 'FRANCE', 'nl': 'FRANKRIJK'}}},
+            {'name': 'France', 'qcode': 'fra', 'translations': {
+             'name': {'nl': 'Frankrijk', 'fr': 'France'}}, 'scheme': 'countries'},
             {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},

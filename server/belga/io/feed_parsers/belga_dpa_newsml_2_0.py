@@ -21,6 +21,7 @@ from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
 
 from .belga_newsml_mixin import BelgaNewsMLMixin
+from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 NS = {'xhtml': 'http://www.w3.org/1999/xhtml',
@@ -175,14 +176,10 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
             if name_elt is not None:
                 item.setdefault('extra', {})['city'] = name_elt.text
 
-        # save all keywords as subject with scheme original-metadata
         for elem in meta.findall(self.qname('keyword')):
             data = elem.text.strip()
-            item.setdefault('subject', []).append({
-                'name': data,
-                'qcode': data,
-                'scheme': 'original-metadata'
-            })
+            # store data in original_metadata and belga-keyword CV
+            item.setdefault('subject', []).extend(self._get_keywords(data))
         return meta
 
     def parse_content_subject(self, tree, item):
@@ -212,6 +209,8 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     if len(code) == 3:
                         country_keyword = self._get_country(code)
                         item.setdefault('subject', []).extend(country_keyword)
+                        # country is cv
+                        item.setdefault('subject', []).extend(self._get_countries(code))
                         break
 
     def parse_authors(self, meta, item):
