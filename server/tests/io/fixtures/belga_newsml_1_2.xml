@@ -101,7 +101,7 @@
                         <Property FormalName="ComponentClass" Value="Text"/>
                     </DescriptiveMetadata>
                     <ContentItem>
-                        <Format FormalName="Text"/>
+                        <Format FormalName=""/>
                         <Characteristics>
                             <SizeInBytes>51</SizeInBytes>
                             <Property FormalName="maxCharCount" Value="90"/>
@@ -129,7 +129,7 @@
                         <Property FormalName="ComponentClass" Value="Text"/>
                     </DescriptiveMetadata>
                     <ContentItem>
-                        <Format FormalName="Text"/>
+                        <Format FormalName=""/>
                         <Characteristics>
                             <SizeInBytes>1228</SizeInBytes>
                             <Property FormalName="maxCharCount" Value="0"/>
