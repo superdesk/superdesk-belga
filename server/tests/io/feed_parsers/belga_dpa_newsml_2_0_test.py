@@ -76,9 +76,15 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
              'translations': {'name': {'nl': 'GRIEKENLAND', 'fr': 'GRECE'}}},
             {'name': 'Turkey', 'qcode': 'country_tur', 'scheme': 'country',
              'translations': {'name': {'nl': 'TURKIJE', 'fr': 'TURQUIE'}}},
+            {'name': 'Greece', 'qcode': 'grc', 'scheme': 'countries',
+             'translations': {'name': {'nl': 'Griekenland', 'fr': 'Grèce'}}},
+            {'name': 'Turkey', 'qcode': 'tur', 'scheme': 'countries',
+             'translations': {'name': {'nl': 'Turkije', 'fr': 'Turquie'}}},
             {'name': 'Meiden', 'qcode': 'Meiden', 'scheme': 'original-metadata'},
             {'name': 'Zeitungen', 'qcode': 'Zeitungen', 'scheme': 'original-metadata'},
-            {'name': 'Verlage', 'qcode': 'Verlage', 'scheme': 'original-metadata'}
+            {'name': 'Verlage', 'qcode': 'Verlage', 'scheme': 'original-metadata'},
+            {'name': 'BRIEF', 'qcode': 'BRIEF', 'translations': {
+                'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}}, 'scheme': 'belga-keywords'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["subject"], expected_subjects)

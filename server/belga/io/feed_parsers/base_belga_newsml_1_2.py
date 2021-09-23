@@ -18,6 +18,7 @@ from superdesk.etree import etree
 from superdesk.io.feed_parsers.newsml_1_2 import NewsMLOneFeedParser
 from superdesk.io.iptc import subject_codes
 from .belga_newsml_mixin import BelgaNewsMLMixin
+from superdesk import get_resource_service
 
 
 class SkipItemException(Exception):
@@ -546,6 +547,8 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     item['extra']['country'] = country
                     # country keywords is CV
                     item.setdefault('subject', []).extend(self._get_country(country))
+                    # country is cv
+                    item.setdefault('subject', []).extend(self._get_countries(country))
                 if element.attrib.get('FormalName', '') == 'City':
                     item['extra']['city'] = element.attrib.get('Value')
                 if element.attrib.get('FormalName', '') == 'CountryArea':
@@ -575,12 +578,8 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 else:
                     item['keywords'] = [data]
 
-                # save all keywords as subject with scheme original-metadata
-                item.setdefault('subject', []).append({
-                    'name': data,
-                    'qcode': data,
-                    'scheme': 'original-metadata'
-                })
+                # store data in original_metadata and belga-keyword CV
+                item.setdefault('subject', []).extend(self._get_keywords(data))
 
     def parse_contentitem(self, item, content_el):
         """
