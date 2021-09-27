@@ -10,6 +10,6 @@
         "@superdesk/build-tools": "^1.0.14"
     },
     "scripts": {
-        "build": "npx @superdesk/build-tools build-root-repo ./"
+        "build": "npx --no-install @superdesk/build-tools build-root-repo ./"
     }
 }
