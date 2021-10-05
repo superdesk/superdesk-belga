@@ -51,6 +51,11 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # source is EFE
         credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
+
+        # store data in original_metadata and belga-keyword CV
+        for ele in content_el.findall('DataContent/nitf/head/docdata/key-list/keyword'):
+            item.setdefault('subject', []).extend(self._get_keywords(ele.attrib.get('key')))
+
         return item
 
 

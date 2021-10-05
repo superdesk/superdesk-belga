@@ -94,5 +94,9 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 "scheme": "equivalents_list"
             })
 
+        # store data in original_metadata and belga-keyword CV
+        for ele in newscomponent_el.findall('NewsComponent/NewsComponent/item_keywords/item_keyword'):
+            item.setdefault('subject', []).extend(self._get_keywords(ele.text))
+
 
 register_feed_parser(BelgaTASSNewsMLOneFeedParser.NAME, BelgaTASSNewsMLOneFeedParser())
