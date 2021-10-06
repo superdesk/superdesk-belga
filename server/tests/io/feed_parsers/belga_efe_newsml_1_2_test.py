@@ -43,7 +43,8 @@ class BelgaEFENewsMLOneTestCase(TestCase):
             {'name': 'India', 'qcode': 'country_ind', 'scheme': 'country',
              'translations': {'name': {'fr': 'INDE', 'nl': 'INDIA'}}},
             {'name': 'India', 'qcode': 'ind', 'translations': {
-             'name': {'nl': 'India', 'fr': 'Inde'}}, 'scheme': 'countries'}
+             'name': {'nl': 'India', 'fr': 'Inde'}}, 'scheme': 'countries'},
+            {'name': 'INDIA SUCESOS', 'qcode': 'INDIA SUCESOS', 'scheme': 'original-metadata'}
         ]
         expected_subjects.sort(key=lambda i: i['name'])
         self.assertEqual(item["slugline"], None)
