@@ -42,10 +42,13 @@ class BelgaTASSNewsMLOneTestCase(TestCase):
             {'name': 'TASS', 'qcode': 'TASS', 'scheme': 'sources'},
             {'name': 'normal', 'qcode': 'normal', 'scheme': 'link_type'},
             {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'Russian Federation', 'qcode': 'country_rus', 'scheme': 'country',
-             'translations': {'name': {'nl': 'RUSLAND', 'fr': 'RUSSIE'}}},
+            {'name': 'Russian Federation', 'qcode': 'country_rus', 'translations': {
+             'name': {'nl': 'RUSLAND', 'fr': 'RUSSIE'}}, 'scheme': 'country'},
             {'name': 'Russian Federation', 'qcode': 'rus', 'translations': {
-             'name': {'nl': 'Rusland', 'fr': 'Russie'}}, 'scheme': 'countries'}
+             'name': {'nl': 'Rusland', 'fr': 'Russie'}}, 'scheme': 'countries'},
+            {'name': 'URGENT', 'qcode': 'URGENT', 'scheme': 'original-metadata'},
+            {'name': 'itartassrubric_ECONOMY', 'qcode': 'itartassrubric_ECONOMY',
+             'scheme': 'original-metadata'}
         ]
         expected_subjects.sort(key=lambda i: i['scheme'])
         self.assertEqual(item["subject"], expected_subjects)
