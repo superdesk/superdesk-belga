@@ -44,7 +44,7 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
             <Figure caption={this.state.coverage?.description || ''}
                 onRemove={this.props.removeCoverage}>
                 {this.state.coverage == null && (
-                    <Alert type="error">{'There was an error when fetching coverage.'}</Alert>
+                    <Alert type="error" message="There was an error when fetching coverage." />
                 )}
                 {this.state.coverage != null && (
                     <img src={this.state.coverage.iconThumbnailUrl} />

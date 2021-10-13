@@ -58,7 +58,7 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
 
         if (this.state.coverage == null || this.state.images == null) {
             return (
-                <Alert type="error">{'There was an error when fetching coverage ' + this.props.coverageId}</Alert>
+                <Alert type="error" message={`There was an error when fetching coverage ${this.props.coverageId}`} />
             );
         }
 
