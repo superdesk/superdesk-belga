@@ -31,27 +31,27 @@ setTimeout(() => {
             load: () => import('superdesk-planning/client/planning-extension'),
         },
         {
-            id: 'mark-for-user',
+            id: 'markForUser',
             load: () => import('superdesk-core/scripts/extensions/markForUser'),
         },
         {
-            id: 'datetime-field',
+            id: 'datetimeField',
             load: () => import('superdesk-core/scripts/extensions/datetimeField'),
         },
         {
-            id: 'belga-coverage',
+            id: 'belgaCoverage',
             load: () => import('./extensions/belgaCoverage'),
         },
         {
-            id: 'update-article-on-profile-change',
+            id: 'updateArticleOnProfileChange',
             load: () => import('./extensions/updateArticleOnProfileChange'),
         },
         {
-            id: 'save-article-on-coming-up-change',
+            id: 'saveArticleOnComingUpChange',
             load: () => import('./extensions/saveArticleOnComingUpChange'),
         },
         {
-            id: 'upload-parse-iptc',
+            id: 'iptc',
             load: () => import('./extensions/iptc'),
         },
     ], {

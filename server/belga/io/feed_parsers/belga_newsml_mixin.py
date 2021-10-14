@@ -27,6 +27,9 @@ class BelgaNewsMLMixin:
         ]
 
     def _get_countries(self, country_code):
+        if not country_code:
+            return []
+
         countries = get_resource_service('vocabularies').get_items(
             _id='countries',
             qcode=country_code.lower()
@@ -35,6 +38,9 @@ class BelgaNewsMLMixin:
         return countries
 
     def _get_keywords(self, data):
+        if not data:
+            return []
+
         _belga_keyword_list = get_resource_service('vocabularies').get_items(
             _id='belga-keywords',
             qcode=data.upper()

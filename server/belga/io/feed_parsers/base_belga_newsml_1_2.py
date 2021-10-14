@@ -11,6 +11,7 @@
 import itertools
 import html
 import datetime
+from flask.globals import g
 import superdesk
 
 from superdesk.errors import ParserError

@@ -54,7 +54,7 @@ export default class BelgaCoverage extends React.PureComponent<IProps, IState> {
 
         if (this.state.images.length === 0) {
             return (
-                <Alert type="warning" message={'Coverage is empty.'} />
+                <Alert type="warning" message="Coverage is empty." />
             );
         }
 
