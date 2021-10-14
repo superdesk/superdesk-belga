@@ -122,6 +122,13 @@ def brief_internal_routing(item: dict, **kwargs):
     _fix_headline(item)
     _fix_body_html(item)
 
+    # Do not set publish schedule for auto publish between 4 to 7 am
+    is_press_headline = item.get('headline') and 'press' in item['headline'].lower()
+    current_time = utc_to_local(superdesk.app.config['DEFAULT_TIMEZONE'], utcnow()).time()
+    if is_press_headline and time(4, 00) <= current_time <= time(7, 00):
+        logger.info('macro stopped:do not autopublish between 4 to 7 am item=%s', item.get('guid', 'unknown'))
+        return
+
     # schedule +30m
     UTC_FIELD = 'utc_{}'.format(PUBLISH_SCHEDULE)
     try:
@@ -134,12 +141,6 @@ def brief_internal_routing(item: dict, **kwargs):
     item[PUBLISH_SCHEDULE] = utc_to_local(item[SCHEDULE_SETTINGS]['time_zone'], published_at + timedelta(minutes=30))
     update_schedule_settings(item, PUBLISH_SCHEDULE, item[PUBLISH_SCHEDULE])
     item[PUBLISH_SCHEDULE] = item[PUBLISH_SCHEDULE].replace(tzinfo=None)
-
-    # Do not auto publish between 4 to 7 am
-    publish_time = utc_to_local(item[SCHEDULE_SETTINGS]['time_zone'], published_at).time()
-    if time(4, 00) <= publish_time and time(7, 00) >= publish_time:
-        logger.info('macro stopped:do not autopublish between 4 to 7 am item=%s', guid)
-        raise StopDuplication()
 
     # publish
     try:
