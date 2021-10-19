@@ -125,7 +125,7 @@ def brief_internal_routing(item: dict, **kwargs):
     # Do not set publish schedule for auto publish between 4 to 7 am
     is_press_headline = item.get('headline') and 'press' in item['headline'].lower()
     current_time = utc_to_local(superdesk.app.config['DEFAULT_TIMEZONE'], utcnow()).time()
-    if is_press_headline and time(4, 00) <= current_time <= time(7, 00):
+    if is_press_headline and time(16, 00) <= current_time <= time(19, 00):
         logger.info('macro stopped:do not autopublish between 4 to 7 am item=%s', item.get('guid', 'unknown'))
         return
 
