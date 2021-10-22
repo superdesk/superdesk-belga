@@ -6660,7 +6660,7 @@
     {
 		"_id": "original-metadata",
 		"display_name": "original metadata",
-		"type": "unmanageable",
+		"type": "manageable",
 		"selection_type": "multi selection",
 		"read_only": true,
 		"unique_field": "qcode",
