@@ -41,12 +41,30 @@ class BelgaNewsMLMixin:
         if not data:
             return []
 
-        _belga_keyword_list = get_resource_service('vocabularies').get_items(
-            _id='belga-keywords',
-            qcode=data.upper()
+        belga_keyword = self._get_mapped_keywords(data.upper(), data.upper(), "belga-keywords")
+        if belga_keyword:
+            return belga_keyword
+
+        countries = self._get_mapped_keywords(data.lower(), data.capitalize(), "countries")
+        if countries:
+            return countries + self._get_country(countries[0]["qcode"])
+
+        return [{"name": data, "qcode": data, "scheme": "original-metadata"}]
+
+    def _get_mapped_keywords(self, _key, _translation_key, _id_name):
+        _all_keywords = (
+            get_resource_service("vocabularies").find_one(req=None, _id=_id_name).get("items", [])
         )
-        return (
-            _belga_keyword_list
-            if len(_belga_keyword_list) > 0
-            else [{"name": data, "qcode": data, "scheme": "original-metadata"}]
-        )
+
+        for _keyword in _all_keywords:
+            if (
+                _keyword["qcode"] == _key
+                or _translation_key in _keyword.get("translations", {}).get("name", {}).values()
+            ):
+                return [{
+                    "name": _keyword["name"],
+                    "qcode": _keyword["qcode"],
+                    "translations": _keyword["translations"],
+                    "scheme": _id_name,
+                }]
+        return []
