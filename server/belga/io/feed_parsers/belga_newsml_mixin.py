@@ -45,7 +45,7 @@ class BelgaNewsMLMixin:
         if belga_keyword:
             return belga_keyword
 
-        countries = self._get_mapped_keywords(data.lower(), data.capitalize(), "countries")
+        countries = self._get_mapped_keywords(data.lower(), data.title(), "countries")
         if countries:
             return countries + self._get_country(countries[0]["qcode"])
 
