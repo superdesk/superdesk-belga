@@ -122,14 +122,6 @@ def brief_internal_routing(item: dict, **kwargs):
     _fix_headline(item)
     _fix_body_html(item)
 
-    # Do not set publish schedule for auto publish between 4 to 7 am
-    is_press_headline = item.get('headline') and 'press' in item['headline'].lower()
-    current_time = utc_to_local(superdesk.app.config['DEFAULT_TIMEZONE'], utcnow()).time()
-    if is_press_headline and time(4, 00) <= current_time <= time(7, 00):
-        logger.info('macro stopped:do not autopublish between 4 to 7 am item=%s', item.get('guid', 'unknown'))
-        return
-
-    # schedule +30m
     UTC_FIELD = 'utc_{}'.format(PUBLISH_SCHEDULE)
     try:
         published_at = item[SCHEDULE_SETTINGS][UTC_FIELD]
@@ -138,7 +130,21 @@ def brief_internal_routing(item: dict, **kwargs):
     item[SCHEDULE_SETTINGS] = {
         'time_zone': 'Europe/Brussels',
     }
-    item[PUBLISH_SCHEDULE] = utc_to_local(item[SCHEDULE_SETTINGS]['time_zone'], published_at + timedelta(minutes=30))
+
+    # Set item publish schedule to 7:30 am for autopublish between 4 to 7 am
+    is_press_headline = item.get('headline') and 'press' in item['headline'].lower()
+    current_datetime = utc_to_local(superdesk.app.config['DEFAULT_TIMEZONE'], utcnow())
+    if is_press_headline and time(4, 00) <= current_datetime.time() <= time(7, 00):
+        item[PUBLISH_SCHEDULE] = current_datetime.replace(hour=7, minute=30, second=00)
+        logger.info(
+            'Set publish schedule to 7:30 am for autopublish between 4 to 7 am item=%s', item.get('guid', 'unknown')
+        )
+    else:
+        # schedule +30m
+        item[PUBLISH_SCHEDULE] = utc_to_local(
+            item[SCHEDULE_SETTINGS]['time_zone'], published_at + timedelta(minutes=30)
+        )
+
     update_schedule_settings(item, PUBLISH_SCHEDULE, item[PUBLISH_SCHEDULE])
     item[PUBLISH_SCHEDULE] = item[PUBLISH_SCHEDULE].replace(tzinfo=None)
 
