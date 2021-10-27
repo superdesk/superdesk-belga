@@ -3,7 +3,7 @@
         "_id": "alert",
         "label": "ALERT",
         "description": "Alert",
-        "init_version": 5,
+        "init_version": 4,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -91,7 +91,7 @@
                 "sdWidth": "half"
             },
             "slugline": {
-                "order": 24,
+                "order": 0,
                 "sdWidth": "full",
                 "section": "header",
                 "required": false
@@ -306,7 +306,7 @@
         "_id": "brief",
         "label": "BRIEF",
         "description": "Brief",
-        "init_version": 5,
+        "init_version": 4,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -395,7 +395,7 @@
                 "sdWidth": "half"
             },
             "slugline": {
-                "order": 24,
+                "order": 0,
                 "sdWidth": "full",
                 "section": "header",
                 "required": false
@@ -957,7 +957,7 @@
         "_id": "text",
         "label": "TEXT",
         "description": "Text",
-        "init_version": 5,
+        "init_version": 4,
         "enabled": true,
         "priority": 0,
         "editor": {
@@ -1046,7 +1046,7 @@
                 "sdWidth": "half"
             },
             "slugline": {
-                "order": 24,
+                "order": 0,
                 "sdWidth": "full",
                 "section": "header",
                 "required": false
