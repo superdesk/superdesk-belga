@@ -134,8 +134,8 @@ def brief_internal_routing(item: dict, **kwargs):
     # Set item publish schedule to 7:30 am for autopublish between 4 to 7 am
     is_press_headline = item.get('headline') and 'press' in item['headline'].lower()
     current_datetime = utc_to_local(superdesk.app.config['DEFAULT_TIMEZONE'], utcnow())
-    if is_press_headline and time(4, 00) <= current_datetime.time() <= time(7, 00):
-        item[PUBLISH_SCHEDULE] = current_datetime.replace(hour=7, minute=30, second=00)
+    if is_press_headline and time(15, 00) <= current_datetime.time() <= time(16, 00):
+        item[PUBLISH_SCHEDULE] = current_datetime.replace(hour=16, minute=30, second=00)
         logger.info(
             'Set publish schedule to 7:30 am for autopublish between 4 to 7 am item=%s', item.get('guid', 'unknown')
         )
