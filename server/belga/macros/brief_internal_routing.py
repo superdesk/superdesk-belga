@@ -1,4 +1,5 @@
 
+import re
 import logging
 import superdesk
 from typing import List
@@ -147,6 +148,11 @@ def brief_internal_routing(item: dict, **kwargs):
 
     update_schedule_settings(item, PUBLISH_SCHEDULE, item[PUBLISH_SCHEDULE])
     item[PUBLISH_SCHEDULE] = item[PUBLISH_SCHEDULE].replace(tzinfo=None)
+
+    # remove text in () brackets along with brackets
+    if item.get("headline"):
+        title = re.sub(r"\([^()]*\)", "", item['headline'])
+        item['headline'] = " ".join(title.split())
 
     # publish
     try:
