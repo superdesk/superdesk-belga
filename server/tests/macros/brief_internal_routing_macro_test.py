@@ -73,7 +73,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
             'task': {},
             'profile': self.profiles[1],
             'versioncreated': self.now - timedelta(minutes=5),
-            'headline': 'foo BELGANIGHT bar',
+            'headline': 'foo BELGANIGHT bar (test)',
             'body_html': ''.join([
                 '<p>foo</p>',
                 '<p>Disclaimer:</p>',
