@@ -34,12 +34,12 @@ class BelgaKyodoNewsMLTestCase(TestCase):
         self.assertEqual(item['firstcreated'].isoformat(), '2019-07-23T20:21:19+09:00')
         self.assertEqual(item['versioncreated'].isoformat(), '2019-07-23T20:21:19+09:00')
         self.assertEqual(item['subject'], [
+            {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
             {'name': 'France', 'qcode': 'country_fra', 'scheme': 'country',
              'translations': {'name': {'fr': 'FRANCE', 'nl': 'FRANKRIJK'}}},
+            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'France', 'qcode': 'fra', 'translations': {
              'name': {'nl': 'Frankrijk', 'fr': 'France'}}, 'scheme': 'countries'},
-            {'name': 'NEWS/GENERAL', 'parent': 'NEWS', 'qcode': 'NEWS/GENERAL', 'scheme': 'services-products'},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
             {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
         ])

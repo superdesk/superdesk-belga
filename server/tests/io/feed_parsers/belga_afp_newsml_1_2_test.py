@@ -46,7 +46,6 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                 'name': {'nl': 'FRANKRIJK', 'fr': 'FRANCE'}}, 'scheme': 'country'},
             {'name': 'France', 'qcode': 'fra', 'translations': {
                 'name': {'nl': 'Frankrijk', 'fr': 'France'}}, 'scheme': 'countries'},
-            {'name': 'France', 'qcode': 'France', 'scheme': 'original-metadata'},
             {'name': 'MOA-TFG-1=MOA', 'qcode': 'MOA-TFG-1=MOA', 'scheme': 'of_interest_to'},
             {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
             {'name': 'NEWS/GENERAL', 'qcode': 'NEWS/GENERAL', 'parent': 'NEWS', 'scheme': 'services-products'},

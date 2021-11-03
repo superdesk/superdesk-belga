@@ -92,7 +92,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     item['keywords'] = []
                     # remove duplicated subject
                     item['subject'] = [
-                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['name']))
+                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['qcode']))
                     ]
                     item = self.populate_fields(item)
                 except SkipItemException:
