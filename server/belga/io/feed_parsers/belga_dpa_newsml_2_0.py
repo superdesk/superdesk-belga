@@ -123,7 +123,7 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
 
                     # remove duplicated subject
                     item['subject'] = [
-                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['name']))
+                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['qcode']))
                     ]
                     items.append(item)
             return items
