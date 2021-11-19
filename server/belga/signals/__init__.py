@@ -10,8 +10,6 @@ def init_app(_app):
     # generate id for belga url
     item_create.connect(generate_id_for_url.handle_create)
     item_update.connect(generate_id_for_url.handle_update)
-    # update date time for coming up field
-    item_create.connect(update.set_coming_up_field)
     # unmark user when moved to incoming stage
     item_move.connect(unmark_user_when_moved_to_incoming_stage.unmark_user)
     # change profile from ALERT to TEXT on update

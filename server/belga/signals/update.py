@@ -31,9 +31,3 @@ def handle_coming_up_field(sender, item, original, **kwargs):
     # Disable and empty date time for coming_up field
     if original.get("extra", {}).get("DueBy"):
         item["extra"]["DueBy"] = None
-
-
-def set_coming_up_field(sender, item):
-    # update date time for coming up field
-    if item.get("extra", {}).get("DueBy"):
-        item["extra"]["DueBy"] = utcnow() + timedelta(minutes=45)
