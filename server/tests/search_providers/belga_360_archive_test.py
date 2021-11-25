@@ -102,7 +102,7 @@ class Belga360ArchiveTestCase(TestCase):
         ))
         self.assertEqual(item['body_html'], (
             '&nbsp;&nbsp;&nbsp;&nbsp;'
-            'Morbi lacus ex, molestie id ullamcorper quis & scelerisque quis lectus.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
+            'Morbi lacus ex, molestie id ullamcorper quis co&v scelerisque quis lectus.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
             ' Phasellus laoreet turpis nunc, vitae porttitor sapien ultricies non.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
             ' Nullam fringilla justo vitae ex commodo vulputate.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
             ' In bibendum diam vitae condimentum scelerisque.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
