@@ -26,6 +26,8 @@ def get_text(value, strip_html=True):
     try:
         text = value.strip()
         if strip_html:
+            # Preserve ampersand character
+            text = text.replace("&", "&amp;")
             text = _get_text(text, lf_on_block=True)
         return text
     except AttributeError:
