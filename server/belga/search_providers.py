@@ -363,7 +363,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'slugline': get_text(data['topic']),
             'name': get_text(data['name']),
             'description_text': get_text(data.get('description')),
-            'versioncreated': self._get_datetime(data.get('validateDate')),
+            'versioncreated': self._get_datetime(
+                data["validateDate"] if data.get("validateDate") else data.get("createDate")),
             'firstcreated': self._get_datetime(data.get('createDate')),
             'creditline': get_text(data['credit']),
             'source': get_text(data['source']),
