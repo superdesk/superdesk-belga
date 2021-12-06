@@ -11658,6 +11658,7 @@
     {
         "_id": "iptc_subject_codes",
         "display_name": "Subject",
+		"init_version": 1,
         "type": "manageable",
         "selection_type": "multi selection",
         "service": {"all": 1},
@@ -11890,7 +11891,7 @@
             {"is_active": true, "name": "weather", "qcode": "17000000", "parent": "None"},
             {"is_active": true, "name": "forecast", "qcode": "17001000", "parent": "17000000"},
             {"is_active": true, "name": "global change", "qcode": "17002000", "parent": "17000000"},
-            {"is_active": true, "name": "report", "qcode": "17004000", "parent": "17000000"},
+            {"is_active": true, "name": "report", "qcode": "17003000", "parent": "17000000"},
             {"is_active": true, "name": "statistic", "qcode": "17004000", "parent": "17000000"},
             {"is_active": true, "name": "warning", "qcode": "17005000", "parent": "17000000"}
         ]
