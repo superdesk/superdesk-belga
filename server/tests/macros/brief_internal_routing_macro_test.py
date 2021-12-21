@@ -92,6 +92,11 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
             'qcode': 'BELGA/AG',
             'scheme': 'credits',
         }, item['subject'])
+        self.assertIn({
+            'name': 'BELGA/AG',
+            'qcode': 'BELGA/AG',
+            'scheme': 'sources',
+        }, item['subject'])
 
         # test published
         published = self.app.data.find_one('published', req=None, original_id=item['_id'])
