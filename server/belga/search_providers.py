@@ -6,6 +6,7 @@ import hashlib
 import requests
 import superdesk
 import logging
+import itertools
 
 from pytz import utc
 from datetime import datetime
@@ -14,6 +15,7 @@ from typing import Any, Dict, Optional
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.text_utils import get_text as _get_text
+from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
 
 BELGA_TZ = 'Europe/Brussels'
 TIMEOUT = (5, 30)
@@ -231,7 +233,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
         }
 
 
-class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
+class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
     GUID_PREFIX = 'urn:belga.be:360archive:'
 
@@ -254,6 +256,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         self.content_types = {
             c['_id'] for c in superdesk.get_resource_service('content_types').find({})
         }
+        self._countries = []
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip('/'))
@@ -332,7 +335,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
         return body.replace('\n', '<br/>&nbsp;&nbsp;&nbsp;&nbsp;')
 
     def _get_abstract(self, item):
-        return self._get_newscomponent(item, 'lead')
+        return '&nbsp;&nbsp;&nbsp;&nbsp;' + get_text(self._get_newscomponent(item, 'lead')) + '<br/><br/>'
 
     def _get_datetime(self, date=None):
         if not date:
@@ -351,6 +354,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
 
     def format_list_item(self, data):
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
+
         return {
             'type': 'text',
             'mimetype': 'application/superdesk.item.text',
@@ -369,13 +373,33 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider):
             'creditline': get_text(data['credit']),
             'source': get_text(data['source']),
             'language': get_text(data['language']),
-            'abstract': get_text(self._get_abstract(data)),
-            'body_html': self._get_body_html(data),
+            'body_html': self._get_abstract(data) + self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
             },
             '_fetchable': False,
+            'keywords': data.get("keywords"),
+            'sign_off': self.get_sign_off(data.get('authors')),
+            'subject': self.get_subjects(data.get('keywords'))
         }
+
+    def get_sign_off(self, authors):
+        if not authors:
+            return
+        return ', '.join(map(lambda x: x['name'] + '/' + x['type'], authors))
+
+    def get_subjects(self, keywords):
+        if not keywords:
+            return
+        subjects = []
+        for key in keywords:
+            subjects += self._get_keywords(key)
+
+        # remove duplicated subject
+        subjects = [
+            dict(i) for i, _ in itertools.groupby(sorted(subjects, key=lambda k: k['qcode']))
+        ]
+        return subjects
 
 
 class BelgaPressSearchProvider(superdesk.SearchProvider):
