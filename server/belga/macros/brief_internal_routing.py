@@ -15,10 +15,11 @@ from superdesk.utc import utcnow, utc_to_local
 
 
 CREDITS = 'credits'
+SOURCES = 'sources'
 COUNTRY = 'country'
 PRODUCTS = 'services-products'
 
-BRIEF_CREDIT = 'BELGA/AG'
+BRIEF_SOURCE = BRIEF_CREDIT = 'BELGA/AG'
 DEFAULT_PRODUCT = 'NEWS/GENERAL'
 PRODUCT_MAPPING = {
     'NEWS/SPORTS': ('SPN/', 'SPF/'),
@@ -54,6 +55,15 @@ def _get_brief_subject(subject: List) -> List:
             'name': BRIEF_CREDIT,
             'qcode': BRIEF_CREDIT,
             'scheme': CREDITS,
+        })
+    source = _find_subj(subject, SOURCES)
+    if source and 'BELGA' not in source.get('qcode'):
+        source['name'] = source['qcode'] = BRIEF_SOURCE
+    elif not source:
+        subject.append({
+            'name': BRIEF_SOURCE,
+            'qcode': BRIEF_SOURCE,
+            'scheme': SOURCES,
         })
     return subject
 
