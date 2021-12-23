@@ -335,7 +335,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         return body.replace('\n', '<br/>&nbsp;&nbsp;&nbsp;&nbsp;')
 
     def _get_abstract(self, item):
-        return '&nbsp;&nbsp;&nbsp;&nbsp;' + get_text(self._get_newscomponent(item, 'lead')) + '<br/><br/>'
+        return '&nbsp;&nbsp;&nbsp;&nbsp;' + get_text(self._get_newscomponent(item, 'lead'))
 
     def _get_datetime(self, date=None):
         if not date:
@@ -373,7 +373,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             'creditline': get_text(data['credit']),
             'source': get_text(data['source']),
             'language': get_text(data['language']),
-            'body_html': self._get_abstract(data) + self._get_body_html(data),
+            'body_html': self._get_abstract(data) + '<br/><br/>' + self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
             },
@@ -386,7 +386,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def get_sign_off(self, authors):
         if not authors:
             return
-        return ', '.join(map(lambda x: x['name'] + '/' + x['type'], authors))
+        return ', '.join(map(lambda x: x['name'] + '/' + x['type'].capitalize(), authors))
 
     def get_subjects(self, keywords):
         if not keywords:

@@ -96,6 +96,8 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['language'], 'fr')
         self.assertEqual(item['firstcreated'], datetime.fromtimestamp(1581646440, utc))
         self.assertEqual(item['versioncreated'], datetime.fromtimestamp(1581654480, utc))
+        self.assertEqual(item['keywords'], ['VS', 'HOCKEY', 'BRIEF', 'OS2022', 'GEZONDHEID', '#CORONAVIRUS', 'SPORTS'])
+        self.assertEqual(item['sign_off'], 'BRV/Author')
         self.assertEqual(item['body_html'], (
             '&nbsp;&nbsp;&nbsp;&nbsp;'
             'Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin'
