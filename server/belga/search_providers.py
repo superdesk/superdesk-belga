@@ -335,7 +335,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         return body.replace('\n', '<br/>&nbsp;&nbsp;&nbsp;&nbsp;')
 
     def _get_abstract(self, item):
-        return '&nbsp;&nbsp;&nbsp;&nbsp;' + get_text(self._get_newscomponent(item, 'lead'))
+        return get_text(self._get_newscomponent(item, 'lead'))
 
     def _get_datetime(self, date=None):
         if not date:

@@ -99,7 +99,6 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['keywords'], ['VS', 'HOCKEY', 'BRIEF', 'OS2022', 'GEZONDHEID', '#CORONAVIRUS', 'SPORTS'])
         self.assertEqual(item['sign_off'], 'BRV/Author')
         self.assertEqual(item['body_html'], (
-            '&nbsp;&nbsp;&nbsp;&nbsp;'
             'Vivamus rutrum sapien a purus posuere eleifend. Integer non feugiat sapien. Proin'
             ' finibus diam in urna vehicula accumsan<br/><br/>'
             '&nbsp;&nbsp;&nbsp;&nbsp;'
