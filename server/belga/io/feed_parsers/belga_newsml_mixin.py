@@ -53,10 +53,11 @@ class BelgaNewsMLMixin:
 
     def _get_mapped_keywords(self, _key, _translation_key, _id_name):
         _all_keywords = (
-            get_resource_service("vocabularies").find_one(req=None, _id=_id_name).get("items", [])
+            get_resource_service("vocabularies").find_one(req=None, _id=_id_name)
         )
-
-        for _keyword in _all_keywords:
+        if not _all_keywords:
+            return
+        for _keyword in _all_keywords.get("items", []):
             if (
                 _keyword["qcode"] == _key
                 or _translation_key in _keyword.get("translations", {}).get("name", {}).values()

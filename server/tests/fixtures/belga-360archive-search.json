@@ -7,6 +7,13 @@
             "credit": "BELGA",
             "topic": "Belga 360 slugline",
             "headLine": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "keywords": ["VS", "HOCKEY", "BRIEF", "OS2022", "GEZONDHEID", "#CORONAVIRUS", "SPORTS"],
+            "authors": [
+                {
+                    "name": "BRV",
+                    "type": "AUTHOR"
+                }
+            ],
             "language": "fr",
             "source": "BELGA",
             "createDate": 1581646440000,
