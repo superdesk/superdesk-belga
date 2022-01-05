@@ -680,6 +680,8 @@ class BelgaNewsML12Formatter_ItemsChainTest(TestCase):
             ('urn:belga.be:coverage:6690595', 'nl'),
             ('urn:belga.be:360archive:77777777', 'nl'),
             ('original-fr', 'fr'),
+            ('urn:belga.be:image:154620545', 'fr'),
+            ('urn:belga.be:image:154670415', 'fr'),
             ('urn:belga.be:coverage:6690595', 'fr'),
             ('urn:belga.be:360archive:77777777', 'nl'),
             ('update-1', 'nl'),
