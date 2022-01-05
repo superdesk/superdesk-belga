@@ -961,8 +961,8 @@ class BelgaNewsML12Formatter_ItemsChainImageTest(TestCase):
         seq, doc = self.formatter.format(self.article, self.subscriber)[0]
         self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
 
-    def test_picture_not_exported_multiple_times(self):
-        """SDBELGA-514 regression test"""
+    def test_picture_with_same_language_not_exported_multiple_times(self):
+        """SDBELGA-514 and SDBELGA-597 regression test"""
         image_roles = self.newsml.xpath('//Role[@FormalName="Image"]')
-        # with unfixed SDBELGA-514, we would have 2 times the image role
-        self.assertEqual(len(image_roles), 1)
+        # modification in SDBELGA-514 for SDBELGA-597
+        self.assertEqual(len(image_roles), 2)

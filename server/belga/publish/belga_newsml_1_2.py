@@ -418,10 +418,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict picture: picture item
         """
-        guid = picture.get('guid') or picture['_id']
-        if guid in self._seen_pictures:
+        # picture with same language not exported multiple times in output
+        image_id = (picture.get('guid') or picture['_id']) + picture.get('language', 'en')
+        if image_id in self._seen_pictures:
             return
-        self._seen_pictures.add(guid)
+        self._seen_pictures.add(image_id)
 
         self._set_belga_urn(picture)
 
