@@ -419,6 +419,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param dict picture: picture item
         """
         # picture with same language not exported multiple times in output
+        # here picture language is inherited from the main item language
         image_id = (picture.get('guid') or picture['_id']) + picture.get('language', 'en')
         if image_id in self._seen_pictures:
             return
