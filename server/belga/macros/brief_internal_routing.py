@@ -116,6 +116,10 @@ def brief_internal_routing(item: dict, **kwargs):
     try:
         assert str(item['profile']) == str(_get_profile_id(TEXT_PROFILE)), 'profile is not text'
         assert get_word_count(item['body_html']) < 301, 'body is too long'
+        # The title should not start with the word "CORRECTION"
+        if item.get('headline'):
+            title_start_with_correction = item['headline'].lstrip().startswith('CORRECTION')
+            assert not title_start_with_correction, 'The headline/title should not start with word CORRECTION'
     except AssertionError as err:
         logger.info('macro stop on assert item=%s error=%s', guid, err)
         raise StopDuplication()
