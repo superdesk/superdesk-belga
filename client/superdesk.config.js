@@ -48,6 +48,7 @@ module.exports = function(grunt) {
             editFeaturedImage: true,
             hideCreatePackage: true,
             noPublishOnAuthoringDesk: true,
+            autorefreshContent: true,
             customAuthoringTopbar: {
                 publish: true,
                 publishAndContinue: true,
