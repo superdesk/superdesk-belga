@@ -74,7 +74,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'source': 'Belga',
         'priority': 6,
         'urgency': 4,
-        'genre': [{'qcode': 'Article', 'name': 'Article (news)'}],
         'place': [],
         'sign_off': 'ADM',
         'language': 'fr',
@@ -618,9 +617,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'slugline': 'skoda scala',
         'subject': [
             {'name': 'bilingual', 'qcode': 'bilingual', 'scheme': 'distribution'},
-            {'name': 'ANALYSIS', 'qcode': 'ANALYSIS', 'scheme': 'genre'},
-            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-            {'name': 'FORECAST', 'qcode': 'FORECAST', 'scheme': 'genre'},
             {'name': 'A1', 'qcode': 'A1', 'scheme': 'label'},
             {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
             {'name': 'R1', 'qcode': 'R1', 'scheme': 'label'},
@@ -669,7 +665,10 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {
                 'attachment': ObjectId('5d692b76c8f549e289b0270b')
             }
-        ]
+        ],
+        'genre': [
+            {'name': 'ANALYSIS'},
+        ],
     }
 
     attachments = (
@@ -1095,7 +1094,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> DescriptiveMetadata -> Genre
         self.assertDictEqual(
             dict(self.newsml.xpath('NewsItem/NewsComponent/DescriptiveMetadata/Genre')[0].attrib),
-            {'FormalName': 'ANALYSIS'}
+            {'FormalName': ''}
         )
 
     def test_belga_text_newscomponent(self):
