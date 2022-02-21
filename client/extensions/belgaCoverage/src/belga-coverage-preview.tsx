@@ -5,8 +5,10 @@ import {parseIds} from './belga-coverage-editor';
 import BelgaCoverageImages from './belga-coverage-images';
 import BelgaCoverageCarousel from './belga-coverage-carousel';
 
-export function getBelgaCoveragePreview(superdesk: ISuperdesk): React.StatelessComponent<IPreviewComponentProps> {
-    return function BelgaCoveragePreview(props: IPreviewComponentProps) {
+type IValue = string | null;
+
+export function getBelgaCoveragePreview(superdesk: ISuperdesk): React.StatelessComponent<IPreviewComponentProps<IValue>> {
+    return function BelgaCoveragePreview(props: IPreviewComponentProps<IValue>) {
         const ids = parseIds(props.value);
 
         return (
