@@ -296,6 +296,7 @@ ELASTICSEARCH_SETTINGS = {
 
 
 CONTENTAPI_ELASTICSEARCH_SETTINGS = ELASTICSEARCH_SETTINGS.copy()
+STATISTICS_ELASTIC_SETTINGS = ELASTICSEARCH_SETTINGS.copy()
 
 # ver. 1: update schema to use new analyzer
 # ver. 2: change default analyzer config
