@@ -380,8 +380,19 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             '_fetchable': False,
             'keywords': data.get("keywords"),
             'sign_off': self.get_sign_off(data.get('authors')),
+            'authors': self.get_authors(data.get('authors')),
             'subject': self.get_subjects(data.get('keywords'))
         }
+
+    def get_authors(self, authors):
+        author_data = []
+        if authors:
+            for author in authors:
+                author_data.append({
+                    'name': author['name'],
+                    'role': author['type']
+                })
+        return author_data
 
     def get_sign_off(self, authors):
         if not authors:
