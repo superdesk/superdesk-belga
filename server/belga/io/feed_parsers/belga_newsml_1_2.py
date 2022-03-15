@@ -11,6 +11,7 @@
 import os
 import hashlib
 import logging
+import itertools
 from io import BytesIO
 from copy import deepcopy
 from uuid import uuid4
@@ -600,17 +601,11 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.text:
             item['line_text'] = element.text
 
-        # belga-keywords
+        # Set keywords like belga-keywords, original-metadata etc
         for element in newslines_el.findall('KeywordLine'):
             if element is not None and element.text:
-                belga_keywords = get_resource_service("vocabularies").get_items(
-                    _id='belga-keywords',
-                    name=element.text.strip(),
-                    lang=item['language'],
-                )
-
                 try:
-                    item.setdefault('subject', []).append(belga_keywords[0])
+                    item.setdefault('subject', []).extend(self._get_keywords(element.text.strip()))
                 except (StopIteration, IndexError) as e:
                     logger.error(e)
 
@@ -629,9 +624,12 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
+                author_name = element.get('FormalName', '').replace(' ', '')
+                item['sign_off'] = author_name
                 author = {
-                    'name': element.get('FormalName', '').replace(' ', ''),
-                    'role': element.get('Topic', '')
+                    'name': author_name,
+                    'role': element.get('Topic', ''),
+                    'sub_label': element.get('Topic', '')
                 }
                 # try to find an author in DB
                 user = get_resource_service('users').find_one(req=None, username=author['name'])
@@ -643,7 +641,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     author['sub_label'] = user.get('display_name', author['name'])
                     author['parent'] = str(user['_id'])
                     author['name'] = author['role']
-                    item.setdefault('authors', []).append(author)
+                    if user.get('sign_off'):
+                        item['sign_off'] = user['sign_off']
+
+                item.setdefault('authors', []).append(author)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
@@ -740,18 +741,19 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             for element in elements:
                 # country
                 if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
-                    countries = get_resource_service('vocabularies').get_items(
-                        _id='countries',
-                        name=element.attrib.get('Value'),
-                        lang=item['language']
-                    )
-                    try:
-                        item.setdefault('subject', []).append(countries[0])
-                    except (StopIteration, IndexError) as e:
-                        logger.error(e)
+                    country_val = element.attrib.get('Value')
+                    countries = self._get_mapped_keywords(country_val, country_val.capitalize(), 'countries')
+                    if countries:
+                        item.setdefault('subject', []).extend(countries + self._get_country(countries[0]["qcode"]))
+
                 # city
                 if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):
                     item.setdefault('extra', {})['city'] = element.attrib.get('Value')
+
+        # remove duplicated subject
+        item['subject'] = [
+            dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['qcode']))
+        ]
 
     def parse_attachments(self, news_component_1):
         attachments = []

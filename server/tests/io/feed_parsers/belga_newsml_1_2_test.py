@@ -28,7 +28,7 @@ class BelgaNewsMLOneTestCase(TestCase):
         super().setUp()
 
         self.users = [
-            {'username': 'DWM', 'display_name': 'DWM'},
+            {'username': 'DWM', 'display_name': 'DWM', 'sign_off': 'DWM'},
         ]
 
         self.app.data.insert('users', self.users)
@@ -91,40 +91,49 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['slugline'], 'BelgaService')
         self.assertEqual(item['ednote'], "Qu'y a-t-il écrit ici?")
         self.assertEqual(item['source'], 'BELGA')
-        self.assertEqual(item['subject'], [
-            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-            {'name': 'ATTENTION USERS',
-             'qcode': 'ATTENTION USERS',
-             'scheme': 'belga-keywords',
-             'translations': {'name': {'fr': 'ATTENTION USERS', 'nl': 'ATTENTION USERS'}}},
-            {'name': 'PRESS',
-             'qcode': 'PRESS',
-             'scheme': 'belga-keywords',
-             'translations': {'name': {'fr': 'PRESS', 'nl': 'PRESS'}}},
-            {'name': 'TV',
-             'qcode': 'TV',
-             'scheme': 'belga-keywords',
-             'translations': {'name': {'fr': 'TV', 'nl': 'TV'}}},
-            {'name': 'BELGA', 'qcode': 'BELGA', 'scheme': 'sources'},
-            {'name': 'BIN/ALG',
-             'parent': 'BIN',
-             'qcode': 'BIN/ALG',
-             'scheme': 'services-products'},
-            {'name': 'BIN/ECO',
-             'parent': 'BIN',
-             'qcode': 'BIN/ECO',
-             'scheme': 'services-products'},
-            {'name': 'NEWS/CULTURE_LIFESTYLE',
-             'parent': 'NEWS',
-             'qcode': 'NEWS/CULTURE_LIFESTYLE',
-             'scheme': 'services-products'},
-            {'name': 'Belgium',
-             'qcode': 'bel',
-             'scheme': 'countries',
-             'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}},
-        ])
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
+            {
+                'name': 'ATTENTION USERS', 'qcode': 'ATTENTION USERS',
+                'translations': {'name': {'nl': 'ATTENTION USERS', 'fr': 'ATTENTION USERS'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'BELGA', 'qcode': 'BELGA', 'scheme': 'sources'
+            }, {
+                'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'parent': 'BIN', 'scheme': 'services-products'
+            }, {
+                'name': 'BIN/ECO', 'qcode': 'BIN/ECO', 'parent': 'BIN', 'scheme': 'services-products'
+            }, {
+                'name': 'Belgium', 'qcode': 'bel',
+                'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+                'scheme': 'countries'
+            }, {
+                'name': 'Belgium', 'qcode': 'country_bel',
+                'translations': {'name': {'nl': 'BELGIE', 'fr': 'BELGIQUE'}},
+                'scheme': 'country'
+            }, {
+                'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'
+            }, {
+                'name': 'MEDIA', 'qcode': 'MEDIA',
+                'translations': {'name': {'nl': 'MEDIA ', 'fr': 'MEDIA'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'NEWS/CULTURE_LIFESTYLE', 'qcode': 'NEWS/CULTURE_LIFESTYLE',
+                'parent': 'NEWS', 'scheme': 'services-products'
+            }, {
+                'name': 'PRESS', 'qcode': 'PRESS',
+                'translations': {'name': {'nl': 'PRESS', 'fr': 'PRESS'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'TV', 'qcode': 'TV',
+                'translations': {'name': {'nl': 'TV', 'fr': 'TV'}},
+                'scheme': 'belga-keywords'
+            }
+        ]
+        self.assertEqual(item['subject'], expected_subjects)
 
         self.assertEqual(item['type'], 'text')
+        self.assertEqual(item['sign_off'], 'DWM')
         self.assertEqual(item['version'], 4)
         self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
         self.assertEqual(item["genre"], [{'name': 'CURRENT', 'qcode': 'CURRENT'}])
