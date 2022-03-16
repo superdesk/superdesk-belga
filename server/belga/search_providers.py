@@ -401,7 +401,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             return
         return ', '.join(map(lambda x: x['name'] + '/' + x['type'].capitalize(), authors))
 
-
     def get_subjects(self, data):
         subjects = []
         if data.get('keywords'):
