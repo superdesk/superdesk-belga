@@ -7,8 +7,8 @@
             "credit": "BELGA",
             "topic": "Belga 360 slugline",
             "headLine": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            "keywords": ["VS", "HOCKEY", "BRIEF", "OS2022", "GEZONDHEID", "#CORONAVIRUS", "SPORTS"],
-            "authors": [
+            "keywords": ["BRIEF", "#CORONAVIRUS", "SPORTS", "INTERNET"],
+            "authors": [ 
                 {
                     "name": "BRV",
                     "type": "AUTHOR"
@@ -16,6 +16,14 @@
             ],
             "language": "fr",
             "source": "BELGA",
+            "city": "Bruxelles",
+            "country": "Belgique",
+            "packages": [
+                {
+                   "newsProduct": "POL",
+                   "newsService": "INT"
+                }
+            ],
             "createDate": 1581646440000,
             "validateDate": 1581654480000,
             "newsComponents": [
