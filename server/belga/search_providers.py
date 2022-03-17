@@ -243,7 +243,10 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     search_endpoint = 'archivenewsobjects'
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
-    TYPE_SUPPORT = ('Text', 'Brieft', 'Alert', 'Short')
+    TYPE_SUPPORT = (
+        'Text', 'Brief', 'Alert', 'Short', 'Coverage', 'RelatedDocument',
+        'RelatedArticle', 'Audio', 'Picture', 'SMS', 'Video'
+    )
     PERIODS = {
         'day': {'days': -1},
         'week': {'weeks': -1},
@@ -265,7 +268,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def find(self, query, params=None):
         api_params = {
             'start': query.get('from', 0),
-            'pageSize': query.get('size', 25),
+            'pageSize': 25, # set pagsize 25, to resolve issue of timeout as calling detailed API
         }
 
         if params:
@@ -274,7 +277,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
             api_params['assetType'] = ' OR '.join([
                 _type for _type in self.TYPE_SUPPORT
-                if not params.get('types') or params['types'].lower() == _type.lower()
+                if not params.get('types') or _type in params['types']
             ])
 
             if params.get('credits'):
@@ -297,8 +300,29 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             api_params['searchText'] = ''
 
         data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        docs = [self.get_detailed_info(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
+
+    def get_detailed_info(self, item):
+        try:
+            detailed_resp = self.api_get('archivenewsitems/' + str(item['newsItemId']), {})
+            formatted_data = self.format_list_item(detailed_resp)
+            formatted_data["associations"] = self.get_related_article(detailed_resp)
+            return formatted_data
+        except Exception as e:
+            logger.warning(
+                "Detailed information not found for Belga Archive Item {}".format(item.get("newsObjectId"))
+            )
+            return self.format_list_item(item)
+
+    def get_related_article(self, data):
+        associations = {}
+        related_articles = [
+            item for item in data.get(self.items_field, [])[1:] if item["assetType"] == "RelatedArticle"
+        ]
+        for idx, item in enumerate(related_articles):
+            associations["belga_related_articles--" + str(idx)] = self.format_list_item(item)
+        return associations
 
     def fetch(self, guid):
         _id = guid.replace(self.GUID_PREFIX, '')
@@ -354,6 +378,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         return label
 
     def format_list_item(self, data):
+        data = data[self.items_field][0] if data.get(self.items_field) else data
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
 
         return {

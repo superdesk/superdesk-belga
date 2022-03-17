@@ -66,7 +66,7 @@ class Belga360ArchiveTestCase(TestCase):
         self.provider.find(self.query, params)
         url = self.provider.base_url + 'archivenewsobjects'
         params = {
-            'start': 50, 'pageSize': 50, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
+            'start': 50, 'pageSize': 25, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
             'fromDate': '20200202', 'toDate': '20200214', 'searchText': 'test query',
         }
         session_get.assert_called_with(url, params=params, timeout=TIMEOUT)
@@ -192,10 +192,38 @@ class Belga360ArchiveTestCase(TestCase):
         ])
         self.assertFalse(item['_fetchable'])
 
+    def test_get_related_article(self):
+        self.provider = Belga360ArchiveSearchProvider(dict())
+
+        with open(fixture('belga-360archive-search.json')) as _file:
+            items = self.provider.get_related_article(json.load(_file))
+            self.assertIn('belga_related_articles--0', items)
+            self.assertEqual(len(items), 1)
+
+            item = items['belga_related_articles--0']
+            guid = 'urn:belga.be:360archive:44690231'
+            self.assertEqual(item['_id'], guid)
+            self.assertEqual(item['state'], 'published')
+            self.assertEqual(item['guid'], guid)
+            self.assertEqual(item['extra']['bcoverage'], guid)
+            self.assertEqual(item['headline'], 'Related item headline')
+            self.assertEqual(item['slugline'], 'Related item slugline')
+            self.assertEqual(item['description_text'], '')
+            self.assertEqual(item['creditline'], 'BELGA')
+            self.assertEqual(item['source'], 'BELGA')
+            self.assertEqual(item['language'], 'fr')
+            self.assertEqual(item['firstcreated'], datetime.fromtimestamp(1638953020, utc))
+            self.assertEqual(item['versioncreated'], datetime.fromtimestamp(1638952985, utc))
+            self.assertEqual(item['sign_off'], 'TOB/Author, EDS/Editor')
+            self.assertEqual(item['authors'], [
+                {'name': 'TOB', 'role': 'AUTHOR'},
+                {'name': 'EDS', 'role': 'EDITOR'}
+            ])
+
     def test_find_item(self):
         with HTTMock(archive_mock):
             items = self.provider.find(self.query)
-        self.assertEqual(len(items.docs), 2)
+        self.assertEqual(len(items.docs), 3)
         self.assertEqual(items._count, 25000)
 
     @patch('belga.search_providers.session.get')
