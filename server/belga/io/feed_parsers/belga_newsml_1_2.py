@@ -622,17 +622,17 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         self.parse_sources(item, admin_el)
 
+        signoff_list = []
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
-                author_name = element.get('FormalName', '').replace(' ', '')
-                item['sign_off'] = author_name
+                _sign_off = author_name = element.get('FormalName', '').replace(' ', '')
+                _topic = element.get('Topic', '')
                 author = {
-                    'name': author_name,
-                    'role': element.get('Topic', ''),
-                    'sub_label': element.get('Topic', '')
+                    '_id': [_topic], 'name': _topic, 'role': _topic,
+                    'sub_label': author_name
                 }
                 # try to find an author in DB
-                user = get_resource_service('users').find_one(req=None, username=author['name'])
+                user = get_resource_service('users').find_one(req=None, username=author_name)
                 if user:
                     author['_id'] = [
                         str(user['_id']),
@@ -642,9 +642,13 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     author['parent'] = str(user['_id'])
                     author['name'] = author['role']
                     if user.get('sign_off'):
-                        item['sign_off'] = user['sign_off']
+                        _sign_off = user['sign_off']
 
+                signoff_list.append(_sign_off)
                 item.setdefault('authors', []).append(author)
+
+        if signoff_list:
+            item["sign_off"] = ", ".join(signoff_list)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
