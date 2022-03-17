@@ -28,7 +28,7 @@ class BelgaNewsMLOneTestCase(TestCase):
         super().setUp()
 
         self.users = [
-            {'username': 'DWM', 'display_name': 'DWM'},
+            {'username': 'DWM', 'display_name': 'DWM', 'sign_off': 'DWM'},
         ]
 
         self.app.data.insert('users', self.users)
@@ -91,40 +91,49 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['slugline'], 'BelgaService')
         self.assertEqual(item['ednote'], "Qu'y a-t-il écrit ici?")
         self.assertEqual(item['source'], 'BELGA')
-        self.assertEqual(item['subject'], [
-            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-            {'name': 'ATTENTION USERS',
-             'qcode': 'ATTENTION USERS',
-             'scheme': 'belga-keywords',
-             'translations': {'name': {'fr': 'ATTENTION USERS', 'nl': 'ATTENTION USERS'}}},
-            {'name': 'PRESS',
-             'qcode': 'PRESS',
-             'scheme': 'belga-keywords',
-             'translations': {'name': {'fr': 'PRESS', 'nl': 'PRESS'}}},
-            {'name': 'TV',
-             'qcode': 'TV',
-             'scheme': 'belga-keywords',
-             'translations': {'name': {'fr': 'TV', 'nl': 'TV'}}},
-            {'name': 'BELGA', 'qcode': 'BELGA', 'scheme': 'sources'},
-            {'name': 'BIN/ALG',
-             'parent': 'BIN',
-             'qcode': 'BIN/ALG',
-             'scheme': 'services-products'},
-            {'name': 'BIN/ECO',
-             'parent': 'BIN',
-             'qcode': 'BIN/ECO',
-             'scheme': 'services-products'},
-            {'name': 'NEWS/CULTURE_LIFESTYLE',
-             'parent': 'NEWS',
-             'qcode': 'NEWS/CULTURE_LIFESTYLE',
-             'scheme': 'services-products'},
-            {'name': 'Belgium',
-             'qcode': 'bel',
-             'scheme': 'countries',
-             'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}},
-        ])
+        item["subject"].sort(key=lambda i: i['name'])
+        expected_subjects = [
+            {
+                'name': 'ATTENTION USERS', 'qcode': 'ATTENTION USERS',
+                'translations': {'name': {'nl': 'ATTENTION USERS', 'fr': 'ATTENTION USERS'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'BELGA', 'qcode': 'BELGA', 'scheme': 'sources'
+            }, {
+                'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'parent': 'BIN', 'scheme': 'services-products'
+            }, {
+                'name': 'BIN/ECO', 'qcode': 'BIN/ECO', 'parent': 'BIN', 'scheme': 'services-products'
+            }, {
+                'name': 'Belgium', 'qcode': 'bel',
+                'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+                'scheme': 'countries'
+            }, {
+                'name': 'Belgium', 'qcode': 'country_bel',
+                'translations': {'name': {'nl': 'BELGIE', 'fr': 'BELGIQUE'}},
+                'scheme': 'country'
+            }, {
+                'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'
+            }, {
+                'name': 'MEDIA', 'qcode': 'MEDIA',
+                'translations': {'name': {'nl': 'MEDIA ', 'fr': 'MEDIA'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'NEWS/CULTURE_LIFESTYLE', 'qcode': 'NEWS/CULTURE_LIFESTYLE',
+                'parent': 'NEWS', 'scheme': 'services-products'
+            }, {
+                'name': 'PRESS', 'qcode': 'PRESS',
+                'translations': {'name': {'nl': 'PRESS', 'fr': 'PRESS'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'TV', 'qcode': 'TV',
+                'translations': {'name': {'nl': 'TV', 'fr': 'TV'}},
+                'scheme': 'belga-keywords'
+            }
+        ]
+        self.assertEqual(item['subject'], expected_subjects)
 
         self.assertEqual(item['type'], 'text')
+        self.assertEqual(item['sign_off'], 'DWM')
         self.assertEqual(item['version'], 4)
         self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
         self.assertEqual(item["genre"], [{'name': 'CURRENT', 'qcode': 'CURRENT'}])
@@ -159,38 +168,39 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["item_id"], "0")
         self.assertEqual(item["version"], 1)
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
-        self.assertEqual(item["subject"], [{'name': 'MOBILITY',
-                                            'qcode': 'MOBILITY',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'MOBILITE', 'nl': 'MOBILITEIT'}}},
-                                           {'name': 'TRAFFIC',
-                                            'qcode': 'TRAFFIC',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'CIRCULATION', 'nl': 'VERKEER'}}},
-                                           {'name': 'INFRASTRUCTURE',
-                                            'qcode': 'INFRASTRUCTURE',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'INFRASTRUCTURE',
-                                                                      'nl': 'INFRASTRUCTUUR'}}},
-                                           {'name': 'CITIES',
-                                            'qcode': 'CITIES',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'VILLES', 'nl': 'STEDEN'}}},
-                                           {'name': 'BRIEF',
-                                            'qcode': 'BRIEF',
-                                            'scheme': 'belga-keywords',
-                                            'translations': {'name': {'fr': 'BRIEF', 'nl': 'BRIEF'}}},
-                                           {'name': 'BELGA',
-                                            'qcode': 'BELGA',
-                                            'scheme': 'sources'},
-                                           {'name': 'ANP',
-                                            'qcode': 'ANP',
-                                            'scheme': 'sources'},
-                                           {'name': 'BIN/ALG',
-                                            'parent': 'BIN',
-                                            'qcode': 'BIN/ALG',
-                                            'scheme': 'services-products'},
-                                           {'name': 'S1', 'qcode': 'S1', 'scheme': 'label'}])
+        self.assertEqual(item["subject"], [
+            {
+                'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'
+            }, {
+                'name': 'BELGA', 'qcode': 'BELGA', 'scheme': 'sources'
+            }, {
+                'name': 'BELGIUM', 'qcode': 'BELGIUM', 'scheme': 'original-metadata'
+            }, {
+                'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'parent': 'BIN', 'scheme': 'services-products'
+            }, {
+                'name': 'BRIEF', 'qcode': 'BRIEF',
+                'translations': {'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'CITIES', 'qcode': 'CITIES',
+                'translations': {'name': {'nl': 'STEDEN', 'fr': 'VILLES'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'INFRASTRUCTURE', 'qcode': 'INFRASTRUCTURE',
+                'translations': {'name': {'nl': 'INFRASTRUCTUUR', 'fr': 'INFRASTRUCTURE'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'MOBILITY', 'qcode': 'MOBILITY',
+                'translations': {'name': {'nl': 'MOBILITEIT', 'fr': 'MOBILITE'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'S1', 'qcode': 'S1', 'scheme': 'label'
+            }, {
+                'name': 'TRAFFIC', 'qcode': 'TRAFFIC',
+                'translations': {'name': {'nl': 'VERKEER', 'fr': 'CIRCULATION'}},
+                'scheme': 'belga-keywords'
+            }
+        ])
         self.assertEqual(str(item["firstcreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 14:02:17+00:00")
         self.assertEqual(item["pubstatus"], "usable")
@@ -212,18 +222,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["source"], "ANP/BELGA")
         self.assertEqual(item["extra"], {'city': 'ANTWERPEN'})
         self.assertEqual(item["type"], "text")
-        self.assertEqual(
-            item['abstract'],
-            'In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en Sla'
-            'chthuislaan in juli en augustus volledig afgesloten worden voor nutswerken. Er w'
-            'orden waterleidingen en gasleidingen onder het kruispunt geplaatst en de afwater'
-            'ing van de Antwerpse ring en de Schijn-Scheldeverbinding krijgen nieuwe kokers, '
-            'zo meldt de Beheersmaatschappij Antwerpen Mobiel (BAM) vrijdag. Na die werken wo'
-            'rdt bovendien ook het kruispunt zelf heraangelegd. De BAM hoopt de hinder zoveel'
-            ' mogelijk te beperken door de werken in de zomermaanden uit te voeren, wanneer e'
-            'r sowieso minder verkeer is en bovendien de naburige concertzalen geen evenement'
-            'en organiseren.'
-        )
+        self.assertEqual(item['abstract'], '')
         self.assertEqual(
             item['body_html'],
             '<p>In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en '
@@ -325,32 +324,33 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
         self.assertEqual(item['type'], 'video')
         self.assertEqual(item['urgency'], 3)
         self.assertEqual(item['type'], 'video')
-        self.assertEqual(
-            item['subject'],
-            [{'name': 'UNIONS',
-              'qcode': 'UNIONS',
-              'scheme': 'belga-keywords',
-              'translations': {'name': {'fr': 'SYNDICATS', 'nl': 'VAKBONDEN'}}},
-             {'name': 'BELGAINSERT',
-              'qcode': 'BELGAINSERT',
-              'scheme': 'belga-keywords',
-              'translations': {'name': {'fr': 'BELGAINSERT', 'nl': 'BELGAINSERT'}}},
-             {'name': 'RUSHES',
-              'qcode': 'RUSHES',
-              'scheme': 'belga-keywords',
-              'translations': {'name': {'fr': 'RUSHES', 'nl': 'RUSHES'}}},
-             {'name': 'BELGA',
-              'qcode': 'BELGA',
-              'scheme': 'sources'},
-             {'name': 'INT/ECO',
-              'parent': 'INT',
-              'qcode': 'INT/ECO',
-              'scheme': 'services-products'},
-             {'name': 'Belgium',
-              'qcode': 'bel',
-              'scheme': 'countries',
-              'translations': {'name': {'fr': 'Belgique', 'nl': 'België'}}}]
-        )
+        self.assertEqual(item['subject'], [
+            {
+                'name': 'BELGA', 'qcode': 'BELGA', 'scheme': 'sources'
+            }, {
+                'name': 'BELGAINSERT', 'qcode': 'BELGAINSERT',
+                'translations': {'name': {'nl': 'BELGAINSERT', 'fr': 'BELGAINSERT'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'INT/ECO', 'qcode': 'INT/ECO', 'parent': 'INT', 'scheme': 'services-products'
+            }, {
+                'name': 'RUSHES', 'qcode': 'RUSHES',
+                'translations': {'name': {'nl': 'RUSHES', 'fr': 'RUSHES'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'UNIONS', 'qcode': 'UNIONS',
+                'translations': {'name': {'nl': 'VAKBONDEN', 'fr': 'SYNDICATS'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'Belgium', 'qcode': 'bel',
+                'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+                'scheme': 'countries'
+            }, {
+                'name': 'Belgium', 'qcode': 'country_bel',
+                'translations': {'name': {'nl': 'BELGIE', 'fr': 'BELGIQUE'}},
+                'scheme': 'country'
+            }
+        ])
         self.assertIn('href', item['renditions']['original'])
         self.assertIn('media', item['renditions']['original'])
         self.assertEqual(item['renditions']['original']['mimetype'], 'video/mp4')
