@@ -222,6 +222,7 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         self.assertEqual(item["source"], "ANP/BELGA")
         self.assertEqual(item["extra"], {'city': 'ANTWERPEN'})
         self.assertEqual(item["type"], "text")
+        self.assertEqual(item['abstract'], '')
         self.assertEqual(
             item['body_html'],
             '<p>In Antwerpen zal het kruispunt van de Schijnpoortweg met de Noordersingel en '
