@@ -76,6 +76,60 @@ class Belga360ArchiveTestCase(TestCase):
             'content_types',
             [{'_id': 'text', 'label': 'text'}]
         )
+
+        self.app.data.insert(
+            'vocabularies',
+            [{
+                "_id": "belga-keywords",
+                "display_name": "Belga Keywords",
+                "type": "manageable",
+                "selection_type": "multi selection",
+                "unique_field": "qcode",
+                "schema": {"name": {}, "qcode": {}, "translations": {}},
+                "service": {"all": 1},
+                "items": [{
+                    "name": "BRIEF", "qcode": "BRIEF", "is_active": True,
+                    "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}}
+                }, {
+                    "name": "SPORTS", "qcode": "SPORTS", "is_active": True,
+                    "translations": {"name": {"nl": "SPORTS", "fr": "SPORTS"}}
+                }]
+            }, {
+                "_id": "countries",
+                "display_name": "Country",
+                "type": "manageable",
+                "selection_type": "single selection",
+                "unique_field": "qcode",
+                "schema": {"name": {}, "qcode": {}, "translations": {}},
+                "service": {"all": 1},
+                "items": [{
+                    "name": "Belgium", "qcode": "bel", "is_active": True,
+                    "translations": {"name": {"nl": "België", "fr": "Belgique"}}
+                }]
+            }, {
+                "_id": "country",
+                "display_name": "Countries keywords",
+                "type": "manageable",
+                "selection_type": "multi selection",
+                "unique_field": "qcode",
+                "schema": {"name": {}, "qcode": {}, "translations": {}},
+                "service": {"all": 1},
+                "items": [{
+                    "name": "Belgium", "qcode": "country_bel", "is_active": True,
+                    "translations": {"name": {"nl": "België", "fr": "Belgique"}}
+                }]
+            }, {
+                "_id": "services-products",
+                "display_name": "Packages",
+                "type": "manageable",
+                "selection_type": "multi selection",
+                "unique_field": "qcode",
+                "service": {"all": 1},
+                "items": [{
+                    "name": "INT/POL", "qcode": "INT/POL", "is_active": True, "parent": "INT"
+                }]
+            }])
+
         # reload content profiles
         self.provider = Belga360ArchiveSearchProvider(dict())
         item = self.provider.format_list_item(get_belga360_item())
@@ -87,6 +141,7 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['profile'], 'text')
         self.assertEqual(item['guid'], guid)
         self.assertEqual(item['extra']['bcoverage'], guid)
+        self.assertEqual(item['extra']['city'], 'Bruxelles')
         self.assertEqual(item['headline'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
         self.assertEqual(item['name'], '')
         self.assertEqual(item['slugline'], 'Belga 360 slugline')
@@ -96,7 +151,7 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['language'], 'fr')
         self.assertEqual(item['firstcreated'], datetime.fromtimestamp(1581646440, utc))
         self.assertEqual(item['versioncreated'], datetime.fromtimestamp(1581654480, utc))
-        self.assertEqual(item['keywords'], ['VS', 'HOCKEY', 'BRIEF', 'OS2022', 'GEZONDHEID', '#CORONAVIRUS', 'SPORTS'])
+        self.assertEqual(item['keywords'], ["BRIEF", "#CORONAVIRUS", "SPORTS", "INTERNET"])
         self.assertEqual(item['sign_off'], 'BRV/Author')
         self.assertEqual(item['authors'], [{'name': 'BRV', "role": "AUTHOR"}])
         self.assertEqual(item['body_html'], (
@@ -110,6 +165,31 @@ class Belga360ArchiveTestCase(TestCase):
             ' Integer dapibus turpis augue, a varius diam ornare in.<br/>&nbsp;&nbsp;&nbsp;&nbsp;'
             ' Donec aliquam cursus posuere.'
         ))
+        self.assertEqual(item['subject'], [
+            {
+                'name': '#CORONAVIRUS', 'qcode': '#CORONAVIRUS', 'scheme': 'original-metadata'
+            }, {
+                'name': 'BRIEF', 'qcode': 'BRIEF',
+                'translations': {'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'INT/POL', 'qcode': 'INT/POL', 'parent': 'INT', 'scheme': 'services-products'
+            }, {
+                'name': 'INTERNET', 'qcode': 'INTERNET', 'scheme': 'original-metadata'
+            }, {
+                'name': 'SPORTS', 'qcode': 'SPORTS',
+                'translations': {'name': {'nl': 'SPORTS', 'fr': 'SPORTS'}},
+                'scheme': 'belga-keywords'
+            }, {
+                'name': 'Belgium', 'qcode': 'bel',
+                'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+                'scheme': 'countries'
+            }, {
+                'name': 'Belgium', 'qcode': 'country_bel',
+                'translations': {'name': {'nl': 'België', 'fr': 'Belgique'}},
+                'scheme': 'country'
+            }
+        ])
         self.assertFalse(item['_fetchable'])
 
     def test_find_item(self):
