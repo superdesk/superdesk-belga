@@ -1,6 +1,7 @@
 interface Subject {
-  id: string;
+  id?: string;
   name: string;
+  qcode?: string;
 }
 
 export default class BelgaSearchPanelController {
@@ -18,10 +19,17 @@ export default class BelgaSearchPanelController {
     ];
 
     this.types = [
-      { name: "Alert", id: "Alert" },
-      { name: "Text", id: "Text" },
-      { name: "Brief", id: "Brief" },
-      { name: "Short", id: "Short" }
+      { name: "Alert",qcode: "Alert" },
+      { name: "Text", qcode: "Text" },
+      { name: "Brief",qcode: "Brief" },
+      { name: "Short",qcode: "Short" },
+      { name: "Coverage",qcode: "Coverage" },
+      { name: "RelatedDocument",qcode: "RelatedDocument" },
+      { name: "RelatedArticle",qcode: "RelatedArticle" },
+      { name: "Audio",qcode: "Audio" },
+      { name: "Picture",qcode: "Picture" },
+      { name: "SMS",qcode: "SMS" },
+      { name: "Video",qcode: "Video" }
     ];
 
     this.periods = [

@@ -8,9 +8,9 @@
 
     <div class="field">
         <label class="search-label">Content type</label>
-        <select ng-model="params.types">
-            <option ng-repeat="type in searchPanel.types" value="{{ type.id }}">{{ type.name }}</option>
-        </select>
+        <div id="types" sd-meta-terms data-item="selecteditems" data-field="types" data-list="searchPanel.types"
+            data-unique="qcode" data-header="true" data-reload-list="true"
+            data-change="setParamsTypes(selecteditems,'types')"></div>
     </div>
 
     <div class="field">
