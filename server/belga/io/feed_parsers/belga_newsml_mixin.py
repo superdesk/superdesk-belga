@@ -61,6 +61,7 @@ class BelgaNewsMLMixin:
             if (
                 _keyword["qcode"] == _key
                 or _translation_key in _keyword.get("translations", {}).get("name", {}).values()
+                or _keyword["name"] == _key
             ):
                 return [{
                     "name": _keyword["name"],

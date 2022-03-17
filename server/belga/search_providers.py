@@ -16,6 +16,7 @@ from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.text_utils import get_text as _get_text
 from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
+from superdesk import get_resource_service
 
 BELGA_TZ = 'Europe/Brussels'
 TIMEOUT = (5, 30)
@@ -376,12 +377,13 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             'body_html': self._get_abstract(data) + '<br/><br/>' + self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
+                'city': data.get('city')
             },
             '_fetchable': False,
             'keywords': data.get("keywords"),
             'sign_off': self.get_sign_off(data.get('authors')),
             'authors': self.get_authors(data.get('authors')),
-            'subject': self.get_subjects(data.get('keywords'))
+            'subject': self.get_subjects(data)
         }
 
     def get_authors(self, authors):
@@ -399,17 +401,26 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             return
         return ', '.join(map(lambda x: x['name'] + '/' + x['type'].capitalize(), authors))
 
-    def get_subjects(self, keywords):
-        if not keywords:
-            return
+    def get_subjects(self, data):
         subjects = []
-        for key in keywords:
-            subjects += self._get_keywords(key)
+        if data.get('keywords'):
+            for key in data['keywords']:
+                subjects += self._get_keywords(key)
 
-        # remove duplicated subject
-        subjects = [
-            dict(i) for i, _ in itertools.groupby(sorted(subjects, key=lambda k: k['qcode']))
-        ]
+        if data.get('country'):
+            countries = self._get_mapped_keywords(data['country'].lower(), data['country'].title(), "countries")
+            if countries:
+                subjects += countries + self._get_country(countries[0]["qcode"])
+
+        if data.get("packages"):
+            for package in data["packages"]:
+                key = package["newsService"] + "/" + package["newsProduct"]
+                serviceProduct = get_resource_service('vocabularies').get_items(_id='services-products', qcode=key)
+                if serviceProduct:
+                    subjects += serviceProduct
+
+        # remove Duplicates
+        subjects = [dict(i) for i, _ in itertools.groupby(sorted(subjects, key=lambda k: k['qcode']))]
         return subjects
 
 
