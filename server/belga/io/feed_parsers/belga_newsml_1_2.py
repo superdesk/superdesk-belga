@@ -648,7 +648,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 item.setdefault('authors', []).append(author)
 
         if signoff_list:
-            item["sign_off"] = ", ".join(signoff_list)
+            item["sign_off"] = "/".join(signoff_list)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
