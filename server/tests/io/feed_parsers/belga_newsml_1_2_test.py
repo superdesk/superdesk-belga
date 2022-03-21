@@ -46,7 +46,6 @@ class BelgaNewsMLOneTestCase(TestCase):
 
     def test_content(self):
         item = self.item[0]
-
         self.assertEqual(
             item['administrative']['foreign_id'],
             'BIN118'
@@ -67,7 +66,14 @@ class BelgaNewsMLOneTestCase(TestCase):
                 'role': 'AUTHOR',
                 'sub_label': 'DWM',
             },
-        ])
+            {
+                '_id': ['TIP', 'EDITOR'],
+                'name': 'EDITOR',
+                'role': 'EDITOR',
+                'sub_label': 'TIP',
+            }
+        ]
+        )
         self.assertEqual(
             item['body_html'],
             '<p>Steven &lt;b&gt;Van Geel&lt;/b&gt; gaf zich op 31 mei 2014 aan bij de politie van zijn '
@@ -133,7 +139,7 @@ class BelgaNewsMLOneTestCase(TestCase):
         self.assertEqual(item['subject'], expected_subjects)
 
         self.assertEqual(item['type'], 'text')
-        self.assertEqual(item['sign_off'], 'DWM')
+        self.assertEqual(item['sign_off'], 'DWM/TIP')
         self.assertEqual(item['version'], 4)
         self.assertEqual(item['versioncreated'], datetime.datetime(2019, 1, 29, 12, 34, tzinfo=pytz.utc))
         self.assertEqual(item["genre"], [{'name': 'CURRENT', 'qcode': 'CURRENT'}])
