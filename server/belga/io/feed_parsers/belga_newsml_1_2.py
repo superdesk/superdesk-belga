@@ -625,11 +625,11 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         signoff_list = []
         for element in admin_el.findall('Creator/Party'):
             if element is not None and element.get('FormalName'):
-                _sign_off = author_name = element.get('FormalName', '').replace(' ', '')
+                _sign_off = author_name = element.get('FormalName', '').replace(' ', '').strip('()')
                 _topic = element.get('Topic', '')
                 author = {
-                    '_id': [_topic], 'name': _topic, 'role': _topic,
-                    'sub_label': author_name
+                    '_id': [author_name, _topic], 'role': _topic,
+                    'name': _topic, 'sub_label': author_name
                 }
                 # try to find an author in DB
                 user = get_resource_service('users').find_one(req=None, username=author_name)
@@ -646,6 +646,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
                 signoff_list.append(_sign_off)
                 item.setdefault('authors', []).append(author)
+
+        # Check and remove duplicates authors if any
+        item['authors'] = [dict(i) for i, _ in itertools.groupby(sorted(item['authors'], key=lambda k: k['_id']))]
 
         if signoff_list:
             item["sign_off"] = "/".join(signoff_list)
