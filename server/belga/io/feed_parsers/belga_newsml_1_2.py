@@ -648,10 +648,11 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 item.setdefault('authors', []).append(author)
 
         # Check and remove duplicates authors if any
-        item['authors'] = [dict(i) for i, _ in itertools.groupby(sorted(item['authors'], key=lambda k: k['_id']))]
+        if item.get('authors'):
+            item['authors'] = [dict(i) for i, _ in itertools.groupby(sorted(item['authors'], key=lambda k: k['_id']))]
 
         if signoff_list:
-            item["sign_off"] = "/".join(signoff_list)
+            item['sign_off'] = "/".join(signoff_list)
 
         element = admin_el.find('Contributor/Party')
         if element is not None and element.get('FormalName'):
