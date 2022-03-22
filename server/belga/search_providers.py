@@ -1,3 +1,4 @@
+from email import header
 import hmac
 import time
 import uuid
@@ -12,7 +13,7 @@ from pytz import utc
 from datetime import datetime
 from urllib.parse import urljoin
 from typing import Any, Dict, Optional
-from flask import json, current_app as app
+from flask import json, current_app as app, request, jsonify, Response
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.timer import timer
@@ -566,6 +567,31 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
         }
 
 
+def belga_image_proxy(url):
+    headers = {
+        'Access-Control-Allow-Origin': app.config['CLIENT_URL'],
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Max-Age': '300'
+    }
+    if request.method == 'OPTIONS':
+        return Response(headers=headers)
+    resp = session.get(
+        urljoin(BelgaCoverageV2SearchProvider.base_url, url),
+        params=request.args,
+        headers={
+            'X-Authorization': app.config['BELGA_IMAGE_APIKEY'],
+        },
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    print(json.dumps(data, indent=2))
+    response = jsonify(data)
+    response.headers = headers
+    return response
+
+
 def init_app(app):
     superdesk.register_search_provider('belga_image', provider_class=BelgaImageSearchProvider)
     superdesk.register_search_provider('belga_coverage', provider_class=BelgaCoverageSearchProvider)
@@ -573,3 +599,5 @@ def init_app(app):
     superdesk.register_search_provider('belga_press', provider_class=BelgaPressSearchProvider)
     superdesk.register_search_provider('belga_image_v2', provider_class=BelgaImageV2SearchProvider)
     superdesk.register_search_provider('belga_coverage_v2', provider_class=BelgaCoverageV2SearchProvider)
+
+    app.add_url_rule('/api/belga_image_api/<url>', view_func=belga_image_proxy, methods=['GET', 'OPTIONS'])

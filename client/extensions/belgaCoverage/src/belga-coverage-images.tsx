@@ -38,7 +38,7 @@ export default class BelgaCoverage extends React.PureComponent<IProps, IState> {
     fetchImages() {
         this.setState({loading: true});
 
-        getCoverageImages(this.props.coverageId, this.props.maxImages)
+        getCoverageImages(this.props.superdesk, this.props.coverageId, this.props.maxImages)
             .then((images) => this.setState({loading: false, images: images}))
             .catch(() => {
                 this.setState({loading: false});

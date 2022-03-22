@@ -1,3 +1,5 @@
+import { ISuperdesk } from "superdesk-api";
+
 export interface IBelgaCoverage {
     name: string;
     /** total number of images in the coverage */
@@ -16,25 +18,20 @@ export interface IBelgaImage {
     thumbnailUrl: string;
 }
 
-const API_URL = 'https://api.ssl.belga.be/belgaimage-api/';
-
-const callApi = (endpoint: string, params: {[key: string]: string}) => {
-    const queryString = Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
-
-    return fetch(API_URL + endpoint + '?' + queryString)
-        .then((response) => response.json())
+function callApi<T>(superdesk: ISuperdesk, endpoint: string, params: {[key: string]: string}): Promise<T> {
+    return superdesk.dataApi.queryRawJson<T>(`belga_image_api/${endpoint}`, params)
         .catch((reason) => {
             console.error('belga api error', reason);
             return Promise.reject(reason);
         });
-};
+}
 
 const parseCoverageId = (coverageId: string) => coverageId.split(':')[3];
 
-export function getCoverageInfo(coverageId: string) : Promise<IBelgaCoverage> {
-    return callApi('getGalleryById', {i: parseCoverageId(coverageId)});
+export function getCoverageInfo(superdesk: ISuperdesk, coverageId: string) : Promise<IBelgaCoverage> {
+    return callApi<IBelgaCoverage>(superdesk, 'getGalleryById', {i: parseCoverageId(coverageId)});
 }
 
-export function getCoverageImages(coverageId: string, max: number): Promise<Array<IBelgaImage>> {
-    return callApi('getGalleryItems', {i: parseCoverageId(coverageId), n: '' + max});
+export function getCoverageImages(superdesk: ISuperdesk, coverageId: string, max: number): Promise<Array<IBelgaImage>> {
+    return callApi<Array<IBelgaImage>>(superdesk, 'getGalleryItems', {i: parseCoverageId(coverageId), n: '' + max});
 }
