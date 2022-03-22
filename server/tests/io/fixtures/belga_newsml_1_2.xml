@@ -52,6 +52,7 @@
                     </Provider>
                     <Creator>
                         <Party FormalName="DWM" Topic="AUTHOR"/>
+                        <Party FormalName="(TIP)" Topic="EDITOR"/>
                     </Creator>
                     <Source>
                         <Party FormalName="BELGA"/>
