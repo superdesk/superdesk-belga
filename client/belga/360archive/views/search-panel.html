@@ -2,15 +2,17 @@
     <div class="field">
         <label class="search-label">Language</label>
         <select ng-model="params.languages">
-            <option ng-repeat="language in searchPanel.languages" value="{{ language.id }}">{{ language.name }}</option>
+            <option ng-repeat="language in languages" value="{{ language.id }}">{{ language.name }}</option>
         </select>
     </div>
 
     <div class="field">
         <label class="search-label">Content type</label>
-        <div id="types" sd-meta-terms data-item="selecteditems" data-field="types" data-list="searchPanel.types"
-            data-unique="qcode" data-header="true" data-reload-list="true"
-            data-change="setParamsTypes(selecteditems,'types')"></div>
+        <label class="search-label" ng-repeat="types in typesOptions">
+            <input type="checkbox" value={{type.id}} ng-model="params.types[types.id]"
+                ng-init="params.types[types.id]" />
+            {{ types.name }}
+        </label>
     </div>
 
     <div class="field">

@@ -66,7 +66,7 @@ class Belga360ArchiveTestCase(TestCase):
         self.provider.find(self.query, params)
         url = self.provider.base_url + 'archivenewsobjects'
         params = {
-            'start': 50, 'pageSize': 25, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
+            'start': 50, 'pageSize': 50, 'language': 'en', 'assetType': 'Short', 'credits': 'AFP',
             'fromDate': '20200202', 'toDate': '20200214', 'searchText': 'test query',
         }
         session_get.assert_called_with(url, params=params, timeout=TIMEOUT)
@@ -196,7 +196,7 @@ class Belga360ArchiveTestCase(TestCase):
         self.provider = Belga360ArchiveSearchProvider(dict())
 
         with open(fixture('belga-360archive-search.json')) as _file:
-            items = self.provider.get_related_article(json.load(_file))
+            items = self.provider.get_related_article(json.load(_file)['newsObjects'])
             self.assertIn('belga_related_articles--0', items)
             self.assertEqual(len(items), 1)
 

@@ -14,6 +14,7 @@ from urllib.parse import urljoin
 from typing import Any, Dict, Optional
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
+from superdesk.metadata.item import MEDIA_TYPES
 from superdesk.text_utils import get_text as _get_text
 from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
 from superdesk import get_resource_service
@@ -268,16 +269,19 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def find(self, query, params=None):
         api_params = {
             'start': query.get('from', 0),
-            'pageSize': 25, # set pagsize 25, to resolve issue of timeout as calling detailed API
+            'pageSize': query.get('size', 25),
         }
 
         if params:
+            if params.get('detailed_info'):
+                return self.get_detailed_info(params['detailed_info'])
+
             if params.get('languages'):
                 api_params['language'] = params['languages'].lower()
 
             api_params['assetType'] = ' OR '.join([
-                _type for _type in self.TYPE_SUPPORT
-                if not params.get('types') or _type in params['types']
+                key for key, values in params['types'].items()
+                if values
             ])
 
             if params.get('credits'):
@@ -300,25 +304,29 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             api_params['searchText'] = ''
 
         data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.get_detailed_info(item) for item in data[self.items_field]]
+        docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
 
-    def get_detailed_info(self, item):
-        try:
-            detailed_resp = self.api_get('archivenewsitems/' + str(item['newsItemId']), {})
-            formatted_data = self.format_list_item(detailed_resp)
-            formatted_data["associations"] = self.get_related_article(detailed_resp)
-            return formatted_data
-        except Exception as e:
-            logger.warning(
-                "Detailed information not found for Belga Archive Item {}".format(item.get("newsObjectId"))
-            )
-            return self.format_list_item(item)
+    def get_detailed_info(self, detailed_info):
+        newsObjectId = detailed_info['guid'].replace(self.GUID_PREFIX, '')
+        detailed_resp = self.api_get('archivenewsitems/' + str(detailed_info['newsItemId']), {})
+
+        data = detailed_resp.get(self.items_field)
+        if data:
+            if str(data[0]['newsObjectId']) == newsObjectId:
+                formatted_data = [self.format_list_item(data[0])]
+                formatted_data[0]["associations"] = self.get_related_article(data)
+            else:
+                formatted_data = [
+                    self.format_list_item(d) for d in data[1:] if str(d["newsObjectId"]) == newsObjectId
+                ]
+
+        return formatted_data
 
     def get_related_article(self, data):
         associations = {}
         related_articles = [
-            item for item in data.get(self.items_field, [])[1:] if item["assetType"] == "RelatedArticle"
+            item for item in data[1:] if item["assetType"] == "RelatedArticle"
         ]
         for idx, item in enumerate(related_articles):
             associations["belga_related_articles--" + str(idx)] = self.format_list_item(item)
@@ -377,12 +385,14 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             return
         return label
 
+    def get_type(self, assetType):
+        return assetType.lower() if assetType.lower() in MEDIA_TYPES else 'text'
+
     def format_list_item(self, data):
-        data = data[self.items_field][0] if data.get(self.items_field) else data
         guid = '%s%d' % (self.GUID_PREFIX, data['newsObjectId'])
 
         return {
-            'type': 'text',
+            'type': self.get_type(data.get('assetType', 'text')),
             'mimetype': 'application/superdesk.item.text',
             'pubstatus': 'usable',
             '_id': guid,
@@ -402,6 +412,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             'body_html': self._get_abstract(data) + '<br/><br/>' + self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
+                'itemid': str(data['newsItemId']),
                 'city': data.get('city')
             },
             '_fetchable': False,
