@@ -2,6 +2,7 @@
     "newsObjects": [
         {
             "newsObjectId": 39670442,
+            "newsItemId": 39670441,
             "assetType": "Short",
             "name": "",
             "credit": "BELGA",
@@ -77,6 +78,7 @@
         },
         {
             "newsObjectId": 39670019,
+            "newsItemId": 39670018,
             "assetType": "Text",
             "name": "",
             "credit": "BELGA",
@@ -130,6 +132,103 @@
                             "urn": null
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "newsObjectId": 44690231,
+            "newsItemId": 44690222,
+            "assetType": "RelatedArticle",
+            "name": "no name",
+            "credit": "BELGA",
+            "topic": "Related item slugline",
+            "headLine": "Related item headline",
+            "language": "fr",
+            "source": "BELGA",
+            "city": null,
+            "country": null,
+            "createDate": 1638953020000,
+            "validateDate": 1638952985000,
+            "editorialInfo": null,
+            "authors": [{
+                "name": "TOB",
+                "type": "AUTHOR"
+            }, {
+                "name": "EDS",
+                "type": "EDITOR"
+            }],
+            "keywords": [],
+            "packages": [],
+            "newsComponents": [
+                {
+                    "newsComponentId": 44690232,
+                    "name": "no name",
+                    "assetType": "Title",
+                    "assetFormat": "Text",
+                    "componentClass": "Text",
+                    "width": null,
+                    "height": null,
+                    "alternateComponents": [],
+                    "proxies": [{
+                        "proxyId": 29706687,
+                        "assetFormat": "Text",
+                        "dataFileName": "pxy_44690232_29706687.txt",
+                        "dataDirName": "varchar/1",
+                        "physicalDataDirName": "varchar/1",
+                        "ingestPath": "",
+                        "varcharData": "Démission fracassante au sein de l'Autorité de protection des données (PRESS)",
+                        "clobData": null,
+                        "status": "FREE",
+                        "protocol": "VARCHAR",
+                        "size": 77,
+                        "urn": null
+                    }]
+                }, {
+                    "newsComponentId": 44690233,
+                    "name": "no name",
+                    "assetType": "Lead",
+                    "assetFormat": "Text",
+                    "componentClass": "Text",
+                    "width": null,
+                    "height": null,
+                    "alternateComponents": [],
+                    "proxies": [{
+                        "proxyId": 29706688,
+                        "assetFormat": "Text",
+                        "dataFileName": "pxy_44690233_29706688.txt",
+                        "dataDirName": "varchar/1",
+                        "physicalDataDirName": "varchar/1",
+                        "ingestPath": "",
+                        "varcharData": "\"Je prends cette décision avec beaucoup d'amertume, ayant eu à cœur de mettre mon temps, mon expérience et mon intégrité au service de l'intérêt général\", fait part Mme Jaspar, qui démissionne de son poste de directrice de cet organe amené à vérifier le respect de la vie privée dans les textes de rang législatif.",
+                        "clobData": null,
+                        "status": "FREE",
+                        "protocol": "VARCHAR",
+                        "size": 2408,
+                        "urn": null
+                    }]
+                }, {
+                    "newsComponentId": 44690234,
+                    "name": "no name",
+                    "assetType": "Body",
+                    "assetFormat": "Text",
+                    "componentClass": "Text",
+                    "width": null,
+                    "height": null,
+                    "alternateComponents": [],
+                    "proxies": [{
+                        "proxyId": 29706689,
+                        "assetFormat": "Text",
+                        "dataFileName": "pxy_44690234_29706689.txt",
+                        "dataDirName": "varchar/1",
+                        "physicalDataDirName": "varchar/1",
+                        "ingestPath": "",
+                        "varcharData": null,
+                        "clobData": null,
+                        "status": "FREE",
+                        "protocol": "VARCHAR",
+                        "size": 0,
+                        "urn": null
+                    }]
                 }
             ]
         }
