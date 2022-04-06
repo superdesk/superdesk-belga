@@ -19,7 +19,7 @@ export default class BelgaSearchPanelController {
     this.$rootScope = $rootScope;
     let defaultSelected = {
       "Alert": true, "Text": true, "Brief": true, "Short": true, "Coverage": true,
-      "RelatedDocument": true, "RelatedArticle": true, "Audio": true, "Picture": true, "SMS": true, "Video": true
+      "RelatedDocument": false, "RelatedArticle": false, "Audio": false, "Picture": false, "SMS": false, "Video": false
     }
     $scope.params.types = $scope.params.types ? $scope.params.types : defaultSelected;
     $rootScope.$broadcast('search:parameters');

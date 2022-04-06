@@ -244,10 +244,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     search_endpoint = 'archivenewsobjects'
     items_field = 'newsObjects'
     count_field = 'nrNewsObjects'
-    TYPE_SUPPORT = (
-        'Text', 'Brief', 'Alert', 'Short', 'Coverage', 'RelatedDocument',
-        'RelatedArticle', 'Audio', 'Picture', 'SMS', 'Video'
-    )
+
     PERIODS = {
         'day': {'days': -1},
         'week': {'weeks': -1},
