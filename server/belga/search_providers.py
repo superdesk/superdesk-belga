@@ -270,8 +270,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         }
 
         if params:
-            if params.get('detailed_info'):
-                return self.get_detailed_info(params['detailed_info'])
+            if params.get('preview_id'):
+                return self.get_detailed_info(params['preview_id'])
 
             if params.get('languages'):
                 api_params['language'] = params['languages'].lower()
@@ -304,10 +304,16 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
 
-    def get_detailed_info(self, detailed_info):
-        newsObjectId = detailed_info['guid'].replace(self.GUID_PREFIX, '')
-        detailed_resp = self.api_get('archivenewsitems/' + str(detailed_info['newsItemId']), {})
+    def get_detailed_info(self, newsObjectId):
+        formatted_data = []
+        resp = self.api_get(self.search_endpoint + '/' + newsObjectId, {})
+        if not resp.get('newsItemId'):
+            logger.warning(
+                'Unable to fetch detailed information for guid: {}'.format(str(newsObjectId))
+            )
+            return [self.format_list_item(resp)]
 
+        detailed_resp = self.api_get('archivenewsitems/' + str(resp['newsItemId']), {})
         data = detailed_resp.get(self.items_field)
         if data:
             if str(data[0]['newsObjectId']) == newsObjectId:
@@ -409,7 +415,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             'body_html': self._get_abstract(data) + '<br/><br/>' + self._get_body_html(data),
             'extra': {
                 'bcoverage': guid,
-                'itemid': str(data['newsItemId']),
+                'previewid': str(data['newsObjectId']),
                 'city': data.get('city')
             },
             '_fetchable': False,
