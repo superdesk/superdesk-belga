@@ -3,6 +3,6 @@ honcho==1.0.1
 gspread==3.1.0
 oauth2client==4.1.3
 
-git+https://github.com/superdesk/superdesk-core.git@develop#egg=Superdesk-Core
+git+https://github.com/superdesk/superdesk-core.git@3bb873c01967923b2d34907c5c6197682fd1e9b2#egg=Superdesk-Core
 git+https://github.com/superdesk/superdesk-analytics.git@v2.1.2#egg=superdesk-analytics
 git+https://github.com/superdesk/superdesk-planning.git@v2.3.1#egg=superdesk-planning
