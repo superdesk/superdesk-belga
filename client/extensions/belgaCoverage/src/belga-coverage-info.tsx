@@ -5,6 +5,7 @@ import {IBelgaCoverage, getCoverageInfo} from './belga-image-api';
 
 interface IProps {
     coverageId: string;
+    coverageProvider: string;
     removeCoverage?: () => void;
     superdesk: ISuperdesk;
 }
@@ -26,7 +27,7 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
     }
 
     fetchCoverage() {
-        getCoverageInfo(this.props.superdesk, this.props.coverageId)
+        getCoverageInfo(this.props.superdesk, this.props.coverageId, this.props.coverageProvider)
             .then((coverage) => this.setState({coverage: coverage, loading: false}))
             .catch(() => {
                 this.setState({loading: false});

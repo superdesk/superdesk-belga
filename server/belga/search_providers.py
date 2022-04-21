@@ -1,4 +1,3 @@
-from email import header
 import hmac
 import time
 import uuid
@@ -13,12 +12,13 @@ from pytz import utc
 from datetime import datetime
 from urllib.parse import urljoin
 from typing import Any, Dict, Optional
-from flask import json, current_app as app, request, jsonify, Response
+from flask import json, current_app as app, request, jsonify, Response, abort
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.timer import timer
 from superdesk.text_utils import get_text as _get_text
 from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
+from apps.search_providers.registry import registered_search_providers
 
 BELGA_TZ = 'Europe/Brussels'
 TIMEOUT = (5, 30)
@@ -145,7 +145,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
     def api_get(self, endpoint, params):
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         headers = self.auth_headers(url.replace('%2C', ','))  # decode spaces
-        with timer('api'):
+        with timer(self.label):
             resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
         resp.raise_for_status()
         return resp.json()
@@ -190,6 +190,9 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
             '_fetchable': False,
         }
 
+    def proxy(self, url, params):
+        return self.api_get(url, params)
+
 
 class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
 
@@ -209,7 +212,8 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         }
 
     def api_get(self, endpoint, params):
-        params.setdefault('p', 'last72h')
+        if app.config.get("BELGA_IMAGE_LIMIT"):
+            params.setdefault('p', app.config["BELGA_IMAGE_LIMIT"])
         return super().api_get(endpoint, params)
 
     def url(self, resource):
@@ -575,21 +579,23 @@ def belga_image_proxy(url):
         'Access-Control-Allow-Credentials': 'true',
         'Access-Control-Max-Age': '300'
     }
+
     if request.method == 'OPTIONS':
         return Response(headers=headers)
-    resp = session.get(
-        urljoin(BelgaCoverageV2SearchProvider.base_url, url),
-        params=request.args,
-        headers={
-            'X-Authorization': app.config['BELGA_IMAGE_APIKEY'],
-        },
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    print(json.dumps(data, indent=2))
-    response = jsonify(data)
-    response.headers = headers
-    return response
+
+    params = request.args.copy()
+    provider_id = params.pop("provider", None)
+    if provider_id:
+        provider = superdesk.get_resource_service('search_providers').find_one(req=None, _id=provider_id)
+        assert provider
+        service = registered_search_providers[provider["search_provider"]]["class"](provider)
+        data = service.proxy(url, params)
+        if app.debug:
+            print(json.dumps(data, indent=2))
+        response = jsonify(data)
+        response.headers = headers
+        return response
+    return abort(400)
 
 
 def init_app(app):
