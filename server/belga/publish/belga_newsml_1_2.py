@@ -33,7 +33,7 @@ from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
                                      ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
-from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider
+from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider, get_service_by_id
 
 logger = logging.getLogger(__name__)
 
@@ -168,6 +168,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
             return [(pub_seq_num, xml_string)]
         except Exception as ex:
+            raise
             raise FormatterError.newml12FormatterError(ex, subscriber)
 
     def can_format(self, format_type, item):
@@ -766,7 +767,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     rendition['filename'] = '{}.jpeg'.format(belga_id)
             # rendition is from Belga coverage search provider
             elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
-                belga_id = media_item[GUID_FIELD].split(BelgaCoverageSearchProvider.GUID_PREFIX, 1)[-1]
+                belga_id = media_item[GUID_FIELD].split(":")[-1]
                 rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
                 rendition['mimetype'] = 'image/jpeg'
             # the rest are internaly uploaded media: pictures, video and audio
@@ -1302,10 +1303,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             for field_id in self._belga_coverage_field_ids:
                 if sd_item_extra.get(field_id):
                     for belga_item_id in sd_item_extra[field_id].split(';'):
-                        belga_cov_search_provider = BelgaCoverageSearchProvider({})
+                        provider_id = belga_item_id.split(':')[-2]
+                        gallery_id = belga_item_id.split(':')[-1]
+                        belga_cov_search_provider = get_service_by_id(provider_id)
                         try:
-                            data = belga_cov_search_provider.api_get('/getGalleryById',
-                                                                     {'i': belga_item_id.rsplit(':', 1)[-1]})
+                            data = belga_cov_search_provider.proxy('getGalleryById', {'i': gallery_id})
                         except Exception as e:
                             logger.warning("Failed to fetch belga coverage: {}".format(e))
                         else:
@@ -1313,6 +1315,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                             newsml_item.update(
                                 belga_cov_search_provider.format_list_item(data)
                             )
+                            newsml_item['guid'] = belga_item_id.replace(provider_id, '').replace('::', ':')
                             newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
                             newsml_items_chain.append(newsml_item)
             # attachments

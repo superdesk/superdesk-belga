@@ -14,11 +14,10 @@ export function getBelgaCoveragePreview(superdesk: ISuperdesk): React.StatelessC
                 {ids.map((id) => (
                     <div key={id}>
                         {props.item.type !== 'graphic' ? ( // belga coverage in an article
-                            <BelgaCoverageCarousel coverageId={id} coverageProvider={props.item.ingest_provider} superdesk={superdesk} preview={true} />
+                            <BelgaCoverageCarousel coverageId={id} superdesk={superdesk} preview={true} />
                         ) : ( // single belga coverage in the search, there is description already
                             <BelgaCoverageImages
                                 coverageId={id}
-                                coverageProvider={props.item.ingest_provider}
                                 rendition={'preview'}
                                 maxImages={10}
                                 superdesk={superdesk}

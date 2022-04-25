@@ -17,6 +17,7 @@ from bson.objectid import ObjectId
 
 from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
+from belga.search_providers import BelgaCoverageSearchProvider
 from .. import TestCase
 
 belga_apiget_response = {
@@ -487,7 +488,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     }
                 },
                 "extra": {
-                    "bcoverage": "urn:belga.be:coverage:6690595"
+                    "bcoverage": "urn:belga.be:coverage:provider:6690595"
                 },
                 "_links": {
                     "self": {
@@ -584,7 +585,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 }
             ],
             "city": "Prague",
-            "belga-coverage-new": "urn:belga.be:coverage:6666666;urn:belga.be:coverage:12345678"
+            "belga-coverage-new": "urn:belga.be:coverage:provider:6666666;urn:belga.be:coverage:provider:12345678"
         },
         'fields_meta': {
             'extracountry': {'draftjsState': [{'blocks': [
@@ -941,6 +942,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
     @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
     @mock.patch('belga.search_providers.BelgaCoverageSearchProvider.api_get', lambda self,
                 endpoint, params: belga_apiget_response)
+    @mock.patch('belga.publish.belga_newsml_1_2.get_service_by_id', lambda _:
+                BelgaCoverageSearchProvider({"_id": "test"}))
     def setUp(self):
         init_app(self.app)
         self.app.data.insert('users', self.users)

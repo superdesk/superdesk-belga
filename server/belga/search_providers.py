@@ -143,6 +143,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         return BelgaListCursor(docs, data[self.count_field])
 
     def api_get(self, endpoint, params):
+        print("params", params)
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         headers = self.auth_headers(url.replace('%2C', ','))  # decode spaces
         with timer(self.label):
@@ -212,7 +213,10 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         }
 
     def api_get(self, endpoint, params):
-        if app.config.get("BELGA_IMAGE_LIMIT"):
+        print("params", params)
+        if app.config.get("BELGA_IMAGE_LIMIT") and not any([param in params for param in ['c', 'h', 'e']]):
+            # set limit when not doing any filtering
+            # to avoid some images from the future
             params.setdefault('p', app.config["BELGA_IMAGE_LIMIT"])
         return super().api_get(endpoint, params)
 
@@ -234,7 +238,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
     def format_list_item(self, data):
         if app.debug:
             print(json.dumps(data, indent=2))
-        guid = '%s%d' % (self.GUID_PREFIX, data['galleryId'])
+        guid = '%s%s:%d' % (self.GUID_PREFIX, self.provider["_id"], data['galleryId'])
         created = get_datetime(data['createDate'])
         thumbnail = data['iconThumbnailUrl']
         return {
@@ -585,10 +589,11 @@ def belga_image_proxy(url):
 
     params = request.args.copy()
     provider_id = params.pop("provider", None)
+    if params.get("i") and ":" in params["i"]:
+        provider_id = params["i"].split(":")[-2]
+        params["i"] = params["i"].split(":")[-1]
     if provider_id:
-        provider = superdesk.get_resource_service('search_providers').find_one(req=None, _id=provider_id)
-        assert provider
-        service = registered_search_providers[provider["search_provider"]]["class"](provider)
+        service = get_service_by_id(provider_id)
         data = service.proxy(url, params)
         if app.debug:
             print(json.dumps(data, indent=2))
@@ -596,6 +601,12 @@ def belga_image_proxy(url):
         response.headers = headers
         return response
     return abort(400)
+
+
+def get_service_by_id(provider_id):
+    provider = superdesk.get_resource_service('search_providers').find_one(req=None, _id=provider_id)
+    service = registered_search_providers[provider["search_provider"]]["class"](provider)
+    return service
 
 
 def init_app(app):

@@ -37,7 +37,6 @@ export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessCo
                     <div key={id}>
                         <BelgaCoverageCarousel
                             coverageId={id}
-                            coverageProvider={props.item.ingest_provider}
                             removeCoverage={props.readOnly ? undefined : () => props.setValue(removeId(ids, id))}
                             superdesk={superdesk}
                         />

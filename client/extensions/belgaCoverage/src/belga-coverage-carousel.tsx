@@ -7,7 +7,6 @@ import {IBelgaCoverage, getCoverageInfo, getCoverageImages, IBelgaImage} from '.
 interface IProps {
     preview?: boolean;
     coverageId: string;
-    coverageProvider: string;
     removeCoverage?: () => void;
     superdesk: ISuperdesk;
 }
@@ -31,8 +30,8 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
 
     componentDidMount() {
         Promise.all([
-            getCoverageInfo(this.props.superdesk, this.props.coverageId, this.props.coverageProvider),
-            getCoverageImages(this.props.superdesk, this.props.coverageId, this.props.coverageProvider, 8),
+            getCoverageInfo(this.props.superdesk, this.props.coverageId),
+            getCoverageImages(this.props.superdesk, this.props.coverageId, 8),
         ]).then(([coverage, images]) => {
             this.setState({
                 loading: false,

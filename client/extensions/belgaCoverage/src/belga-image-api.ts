@@ -26,12 +26,10 @@ function callApi<T>(superdesk: ISuperdesk, endpoint: string, params: {[key: stri
         });
 }
 
-const parseCoverageId = (coverageId: string) => coverageId.split(':')[3];
-
-export function getCoverageInfo(superdesk: ISuperdesk, coverageId: string, coverageProvider: string) : Promise<IBelgaCoverage> {
-    return callApi<IBelgaCoverage>(superdesk, 'getGalleryById', {i: parseCoverageId(coverageId), provider: coverageProvider});
+export function getCoverageInfo(superdesk: ISuperdesk, coverageId: string) : Promise<IBelgaCoverage> {
+    return callApi<IBelgaCoverage>(superdesk, 'getGalleryById', {i: coverageId});
 }
 
-export function getCoverageImages(superdesk: ISuperdesk, coverageId: string, coverageProvider: string, max: number): Promise<Array<IBelgaImage>> {
-    return callApi<Array<IBelgaImage>>(superdesk, 'getGalleryItems', {i: parseCoverageId(coverageId), provider: coverageProvider, n: '' + max});
+export function getCoverageImages(superdesk: ISuperdesk, coverageId: string, max: number): Promise<Array<IBelgaImage>> {
+    return callApi<Array<IBelgaImage>>(superdesk, 'getGalleryItems', {i: coverageId, n: '' + max});
 }

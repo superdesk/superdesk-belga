@@ -6,7 +6,6 @@ import {getCoverageImages, IBelgaImage} from './belga-image-api';
 interface IProps {
     maxImages: number;
     coverageId: string;
-    coverageProvider: string;
     rendition: 'preview' | 'thumbnail';
     superdesk: ISuperdesk;
 }
@@ -39,7 +38,7 @@ export default class BelgaCoverage extends React.PureComponent<IProps, IState> {
     fetchImages() {
         this.setState({loading: true});
 
-        getCoverageImages(this.props.superdesk, this.props.coverageId, this.props.coverageProvider, this.props.maxImages)
+        getCoverageImages(this.props.superdesk, this.props.coverageId, this.props.maxImages)
             .then((images) => this.setState({loading: false, images: images}))
             .catch(() => {
                 this.setState({loading: false});

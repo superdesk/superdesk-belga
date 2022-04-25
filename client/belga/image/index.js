@@ -10,5 +10,10 @@ export default angular.module('belga.image', [
             'search-panel-belga_image.html',
             require('./views/search-panel.html')
         );
+
+        $templateCache.put(
+            'search-panel-belga_image_v2.html',
+            require('./views/search-panel.html')
+        );
     }])
 ;
