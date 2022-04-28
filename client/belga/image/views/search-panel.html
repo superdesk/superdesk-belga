@@ -1,14 +1,5 @@
 <fieldset ng-controller="BelgaImageSearchPanel as searchPanel">
     <div class="field">
-        <label class="search-label">Subject</label>
-
-        <label class="search-label" ng-repeat="subject in searchPanel.subjects">
-            <input type="checkbox" ng-model="params.subject[subject.id]" />
-            {{ subject.name }}
-        </label>
-    </div>
-
-    <div class="field">
         <label class="search-label">Source</label>
 
         <label class="search-label" ng-repeat="source in searchPanel.sources">
