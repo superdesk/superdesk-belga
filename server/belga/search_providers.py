@@ -143,7 +143,8 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         return BelgaListCursor(docs, data[self.count_field])
 
     def api_get(self, endpoint, params):
-        print("params", params)
+        if app.debug:
+            print("params", params)
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         headers = self.auth_headers(url.replace('%2C', ','))  # decode spaces
         with timer(self.label):
