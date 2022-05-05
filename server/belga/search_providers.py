@@ -431,7 +431,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             for author in authors:
                 author_data.append({
                     'name': author['name'],
-                    'sub_label':author['name'],
+                    'sub_label': author['name'],
                     'role': author['type']
                 })
         return author_data
