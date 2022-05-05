@@ -50,7 +50,7 @@ export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessCo
                         try {
                             const coverage = JSON.parse(getData(event));
 
-                            props.setValue(addId(ids, coverage.guid));
+                            props.setValue(addId(ids, coverage.extra.bcoverage));
                         } catch (e) {
                             console.error(e);
                         }

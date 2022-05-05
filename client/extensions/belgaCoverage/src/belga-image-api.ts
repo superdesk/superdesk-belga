@@ -14,6 +14,7 @@ export interface IBelgaImage {
     name: string;
     caption: string;
     gridUrl: string;
+    smallUrl: string;
     previewUrl: string;
     thumbnailUrl: string;
 }

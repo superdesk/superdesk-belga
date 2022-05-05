@@ -33,7 +33,7 @@ from superdesk.metadata.item import (CONTENT_TYPE, EMBARGO, GUID_FIELD,
                                      ITEM_TYPE, ITEM_STATE, CONTENT_STATE)
 from superdesk.publish.formatters import NewsML12Formatter
 from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
-from ..search_providers import BelgaImageSearchProvider, BelgaCoverageSearchProvider, get_service_by_id
+from ..search_providers import get_service_by_id, get_provider_by_guid
 
 logger = logging.getLogger(__name__)
 
@@ -491,7 +491,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param Element newscomponent_1_level: NewsComponent of 1st level
         :param dict coverage: coverage data
         """
-
         self._set_belga_urn(coverage)
 
         newscomponent_2_level = SubElement(newscomponent_1_level, 'NewsComponent')
@@ -754,21 +753,21 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :param media_item: media item
         :type media_item: dict
         """
-
+        provider = get_provider_by_guid(media_item.get(GUID_FIELD, ''))
         for key, rendition in media_item.get('renditions', {}).items():
             # rendition is from Belga image search provider
-            if BelgaImageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
+            if provider and not hasattr(provider, 'GALLERY_URN'):
                 if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
-                    belga_id = media_item[GUID_FIELD].split(BelgaImageSearchProvider.GUID_PREFIX, 1)[-1]
-                    rendition['belga-urn'] = 'urn:www.belga.be:picturestore:{}:{}:true'.format(
-                        belga_id,
-                        self.SD_BELGA_IMAGE_RENDITIONS_MAP[key]
+                    belga_id = media_item[GUID_FIELD].split(':')[-1]
+                    rendition['belga-urn'] = provider.IMAGE_URN.format(
+                        id=belga_id,
+                        rendition=self.SD_BELGA_IMAGE_RENDITIONS_MAP[key],
                     )
                     rendition['filename'] = '{}.jpeg'.format(belga_id)
             # rendition is from Belga coverage search provider
-            elif BelgaCoverageSearchProvider.GUID_PREFIX in media_item.get(GUID_FIELD, ''):
-                belga_id = media_item[GUID_FIELD].split(":")[-1]
-                rendition['belga-urn'] = 'urn:www.belga.be:belgagallery:{}'.format(belga_id)
+            elif provider:
+                belga_id = media_item[GUID_FIELD].split(':')[-1]
+                rendition['belga-urn'] = provider.GALLERY_URN.format(id=belga_id)
                 rendition['mimetype'] = 'image/jpeg'
             # the rest are internaly uploaded media: pictures, video and audio
             elif 'media' in rendition:
@@ -1308,6 +1307,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                         belga_cov_search_provider = get_service_by_id(provider_id)
                         try:
                             data = belga_cov_search_provider.proxy('getGalleryById', {'i': gallery_id})
+                            print("DATA", data, belga_cov_search_provider, provider_id, gallery_id)
                         except Exception as e:
                             logger.warning("Failed to fetch belga coverage: {}".format(e))
                         else:
@@ -1315,7 +1315,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                             newsml_item.update(
                                 belga_cov_search_provider.format_list_item(data)
                             )
-                            newsml_item['guid'] = belga_item_id.replace(provider_id, '').replace('::', ':')
+                            newsml_item['guid'] = belga_cov_search_provider.GUID_PREFIX + gallery_id
                             newsml_item['_role'] = self.NEWSCOMPONENT2_ROLES.GALLERY
                             newsml_items_chain.append(newsml_item)
             # attachments

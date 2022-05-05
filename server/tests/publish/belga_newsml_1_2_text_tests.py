@@ -488,7 +488,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     }
                 },
                 "extra": {
-                    "bcoverage": "urn:belga.be:coverage:provider:6690595"
+                    "bcoverage": "provider:6690595"
                 },
                 "_links": {
                     "self": {
@@ -585,7 +585,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 }
             ],
             "city": "Prague",
-            "belga-coverage-new": "urn:belga.be:coverage:provider:6666666;urn:belga.be:coverage:provider:12345678"
+            "belga-coverage-new": "urn:belga.be:coverage:6666666;urn:belga.be:coverage:12345678"
         },
         'fields_meta': {
             'extracountry': {'draftjsState': [{'blocks': [

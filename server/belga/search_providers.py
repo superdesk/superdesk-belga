@@ -57,6 +57,7 @@ class BelgaListCursor(ListCursor):
 class BelgaImageSearchProvider(superdesk.SearchProvider):
 
     GUID_PREFIX = 'urn:belga.be:image:'
+    IMAGE_URN = 'urn:www.belga.be:picturestore:{id}:{rendition}:true'
 
     label = 'Belga Image'
     base_url = 'https://api.ssl.belga.be/belgaimage-api/'
@@ -198,6 +199,9 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 
 class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
 
+    GUID_PREFIX = 'urn:belga.be:picturepackimage:'
+    IMAGE_URN = 'urn:www.belga.be:picturepackstore:{id}:{rendition}:true'
+
     label = 'Belga Image v2'
     base_url = 'https://belga-websvc.picturepack.com/belgaimage-api/'
 
@@ -230,6 +234,7 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
 class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
 
     GUID_PREFIX = 'urn:belga.be:coverage:'
+    GALLERY_URN = 'urn:www.belga.be:belgagallery:{id}'
 
     label = 'Belga Coverage'
     search_endpoint = 'searchGalleries'
@@ -239,7 +244,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
     def format_list_item(self, data):
         if app.debug:
             print(json.dumps(data, indent=2))
-        guid = '%s%s:%d' % (self.GUID_PREFIX, self.provider["_id"], data['galleryId'])
+        guid = '%s%s' % (self.GUID_PREFIX, data['galleryId'])
         created = get_datetime(data['createDate'])
         thumbnail = data['iconThumbnailUrl']
         return {
@@ -270,7 +275,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
                 },
             },
             'extra': {
-                'bcoverage': guid,
+                'bcoverage': '{}:{}'.format(self.provider["_id"], data['galleryId']),
             },
             '_fetchable': False,
         }
@@ -278,6 +283,8 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
 
 class BelgaCoverageV2SearchProvider(BelgaCoverageSearchProvider, BelgaImageV2SearchProvider):
     label = 'Belga Coverage V2'
+    GUID_PREFIX = 'urn:belga.be:picturepackgallery:'
+    GALLERY_URN = 'urn:www.belga.be:picturepackgallery:{id}'
 
 
 class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
@@ -421,9 +428,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             'source': get_text(data['source']),
             'language': get_text(data['language']),
             'body_html': self._get_abstract(data) + '<br/><br/>' + self._get_body_html(data),
-            'extra': {
-                'bcoverage': guid,
-            },
             '_fetchable': False,
             'keywords': data.get("keywords"),
             'sign_off': self.get_sign_off(data.get('authors')),
@@ -593,8 +597,10 @@ def belga_image_proxy(url):
     if params.get("i") and ":" in params["i"]:
         provider_id = params["i"].split(":")[-2]
         params["i"] = params["i"].split(":")[-1]
+    service = None
     if provider_id:
         service = get_service_by_id(provider_id)
+    if service:
         data = service.proxy(url, params)
         if app.debug:
             print(json.dumps(data, indent=2))
@@ -606,8 +612,26 @@ def belga_image_proxy(url):
 
 def get_service_by_id(provider_id):
     provider = superdesk.get_resource_service('search_providers').find_one(req=None, _id=provider_id)
-    service = registered_search_providers[provider["search_provider"]]["class"](provider)
-    return service
+    if provider is None:
+        # fallback to configured belga_coverage provider for old coverage ids
+        provider = superdesk.get_resource_service('search_providers').find_one(req=None,
+                                                                               search_provider='belga_coverage')
+    if provider:
+        return registered_search_providers[provider["search_provider"]]["class"](provider)
+
+
+_image_coverage_providers = [
+    BelgaImageSearchProvider,
+    BelgaCoverageSearchProvider,
+    BelgaImageV2SearchProvider,
+    BelgaCoverageV2SearchProvider,
+]
+
+
+def get_provider_by_guid(guid):
+    for provider in _image_coverage_providers:
+        if provider.GUID_PREFIX in guid:
+            return provider
 
 
 def init_app(app):

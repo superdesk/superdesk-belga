@@ -20,7 +20,7 @@ function getImageUrl(image: IBelgaImage, rendition: IProps['rendition']): string
         case 'preview':
             return image.previewUrl;
         case 'thumbnail':
-            return image.thumbnailUrl;
+            return image.smallUrl;
     }
 }
 

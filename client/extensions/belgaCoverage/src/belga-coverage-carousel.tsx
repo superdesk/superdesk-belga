@@ -79,7 +79,7 @@ export default class BelgaCoverageCarousel extends React.PureComponent<IProps, I
         return (
             <Carousel
                 images={images.map((image) => ({
-                    src: image.thumbnailUrl,
+                    src: image.smallUrl,
                     alt: image.name,
                 }))}
                 numVisible={numImages}
