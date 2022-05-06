@@ -248,8 +248,8 @@ class Belga360ArchiveTestCase(TestCase):
                              datetime.fromtimestamp(1638952985, utc))
             self.assertEqual(item['sign_off'], 'TOB/Author, EDS/Editor')
             self.assertEqual(item['authors'], [
-                {'name': 'TOB', 'role': 'AUTHOR'},
-                {'name': 'EDS', 'role': 'EDITOR'}
+                {'name': 'TOB', 'sub_label': 'TOB', 'role': 'AUTHOR'},
+                {'name': 'EDS', 'sub_label': 'EDS', 'role': 'EDITOR'}
             ])
 
     def test_find_item(self):
