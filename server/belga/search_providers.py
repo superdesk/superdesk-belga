@@ -605,7 +605,8 @@ def belga_image_proxy(url):
         if app.debug:
             print(json.dumps(data, indent=2))
         response = jsonify(data)
-        response.headers = headers
+        for k, v in headers.items():
+            response.headers[k] = v
         return response
     return abort(400)
 
