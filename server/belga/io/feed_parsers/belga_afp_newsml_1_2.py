@@ -21,7 +21,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     """Feed Parser for Belga specific AFP NewsML."""
 
     NAME = "belga_afp_newsml12"
-    lpel = "Belga specific AFP News ML 1.2 Parser"
+    label = "Belga specific AFP News ML 1.2 Parser"
     MAPPING_KEYWORDS = {
         "ECONOMY": ["BOURSE", "ECONOMIE", "CONOMIE", "MARCHES", "FINANCE", "BANQUE"],
         "SPORTS": ["HIPPISME", "SPORT", "SPORTS"],
