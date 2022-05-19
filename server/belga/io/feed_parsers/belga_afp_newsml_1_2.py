@@ -21,7 +21,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     """Feed Parser for Belga specific AFP NewsML."""
 
     NAME = "belga_afp_newsml12"
-    label = "Belga specific AFP News ML 1.2 Parser"
+    lpel = "Belga specific AFP News ML 1.2 Parser"
     MAPPING_KEYWORDS = {
         "ECONOMY": ["BOURSE", "ECONOMIE", "CONOMIE", "MARCHES", "FINANCE", "BANQUE"],
         "SPORTS": ["HIPPISME", "SPORT", "SPORTS"],
@@ -73,7 +73,6 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         if item.get("urgency") == 4:
             item["urgency"] = 3
-
         return item
 
     def parse_descriptivemetadata(self, item, descript_el):
@@ -82,25 +81,13 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         Example:
 
-        <DescriptiveMetadata>
-                <Language FormalName="fr" />
-                <SubjectCode>
-                    <SubjectMatter FormalName="02008000" cat="CLJ" />
-                </SubjectCode>
-                <SubjectCode>
-                    <SubjectDetail FormalName="02001004" cat="SPO" />
-                </SubjectCode>
-                <SubjectCode>
-                    <SubjectMatter FormalName="02007000" cat="CLJ" />
-                </SubjectCode>
-                <OfInterestTo FormalName="DAB-TFG-1=DAB" />
-                <OfInterestTo FormalName="AMN-TFG-1=AMW" />
-                <DateLineDate>20190121T104233+0000</DateLineDate>
-                <Location HowPresent="Origin">
+            <DescriptiveMetadata>
+                <Location>
                     <Property FormalName="Country" Value="FRA" />
                     <Property FormalName="City" Value="Paris" />
                 </Location>
                 <Property FormalName="GeneratorSoftware" Value="libg2" />
+                <Property FormalName="Keyword" Value="France" />
                 <Property FormalName="Keyword" Value="procès" />
                 <Property FormalName="Keyword" Value="assises" />
                 <Property FormalName="Keyword" Value="marches_test" />
@@ -110,56 +97,9 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param descript_el:
         :return:
         """
-        if descript_el is None:
-            return
-
-        element = descript_el.find("Language")
-        if element is not None:
-            item["language"] = element.get("FormalName", "")
-
-        for element in descript_el.findall("Genre"):
-            if element is not None and element.get("FormalName"):
-                self._add_genre(item, element.get("FormalName"))
-
-        element = descript_el.find("guid")
-        if element is not None:
-            item["descriptive_guid"] = element.text
-
-        # parser SubjectCode element
-        subjects = descript_el.findall("SubjectCode/SubjectDetail")
-        subjects += descript_el.findall("SubjectCode/SubjectMatter")
-        subjects += descript_el.findall("SubjectCode/Subject")
-        item.setdefault("subject", []).extend(self.format_subjects(subjects))
-        for subject in subjects:
-            if subject.get("cat"):
-                category = {"qcode": subject.get("cat")}
-                if category not in item.get("anpa_category", []):
-                    item.setdefault("anpa_category", []).append(category)
-
-        # parser OfInterestTo is CV
-        for element in descript_el.findall("OfInterestTo"):
-            if element is not None and element.get("FormalName"):
-                item.setdefault("subject", []).append(
-                    {
-                        "name": element.get("FormalName"),
-                        "qcode": element.get("FormalName"),
-                        "scheme": "of_interest_to",
-                    }
-                )
-
-        element = descript_el.find("DateLineDate")
-        if element is not None:
-            item.setdefault("dateline", {}).update(
-                {"date": self.datetime(element.text)}
-            )
-
         location_el = descript_el.find("Location")
         if location_el is not None:
             item["extra"] = {}
-
-            how_present_el = location_el.get("HowPresent", "")
-            if how_present_el is not None:
-                item["extra"]["how_present"] = how_present_el
 
             elements = location_el.findall("Property")
             for element in elements:
@@ -170,25 +110,9 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     item.setdefault("subject", []).extend(self._get_countries(country))
                 if element.attrib.get("FormalName", "") == "City":
                     item["extra"]["city"] = element.attrib.get("Value")
-                if element.attrib.get("FormalName", "") == "CountryArea":
-                    item["extra"]["country_area"] = element.attrib.get("Value")
 
         elements = descript_el.findall("Property")
         for element in elements:
-            if element.attrib.get("FormalName", "") == "GeneratorSoftware":
-                item["generator_software"] = element.attrib.get("Value")
-
-            if element.attrib.get("FormalName", "") == "Tesauro":
-                item["tesauro"] = element.attrib.get("Value")
-
-            if element.attrib.get("FormalName", "") == "EfePais":
-                item["efe_pais"] = element.attrib.get("Value")
-
-            if element.attrib.get("FormalName", "") == "EfeRegional":
-                item["efe_regional"] = element.attrib.get("Value")
-
-            if element.attrib.get("FormalName", "") == "EfeComplemento":
-                item["efe_complemento"] = element.attrib.get("Value")
 
             if element.attrib.get("FormalName", "") == "Keyword":
                 data = element.attrib.get("Value")
