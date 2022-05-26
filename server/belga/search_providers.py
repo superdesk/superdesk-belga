@@ -12,12 +12,15 @@ from pytz import utc
 from datetime import datetime
 from urllib.parse import urljoin
 from typing import Any, Dict, Optional
+from flask import json, current_app as app, request, jsonify, Response, abort
+from superdesk import get_resource_service
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.metadata.item import MEDIA_TYPES
+from superdesk.timer import timer
 from superdesk.text_utils import get_text as _get_text
 from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
-from superdesk import get_resource_service
+from apps.search_providers.registry import registered_search_providers
 
 BELGA_TZ = 'Europe/Brussels'
 TIMEOUT = (5, 30)
@@ -56,6 +59,7 @@ class BelgaListCursor(ListCursor):
 class BelgaImageSearchProvider(superdesk.SearchProvider):
 
     GUID_PREFIX = 'urn:belga.be:image:'
+    IMAGE_URN = 'urn:www.belga.be:picturestore:{id}:{rendition}:true'
 
     label = 'Belga Image'
     base_url = 'https://api.ssl.belga.be/belgaimage-api/'
@@ -67,6 +71,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         super().__init__(provider, **kwargs)
         self._id_token = None
         self._auth_token = None
+        self.provider = provider
         if self.provider.get('config') and self.provider['config'].get('username'):
             self.auth()
 
@@ -141,9 +146,12 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         return BelgaListCursor(docs, data[self.count_field])
 
     def api_get(self, endpoint, params):
+        if app.debug:
+            print("params", params)
         url = requests.Request('GET', 'http://example.com/' + endpoint, params=params).prepare().path_url
         headers = self.auth_headers(url.replace('%2C', ','))  # decode spaces
-        resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
+        with timer(self.label):
+            resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
         resp.raise_for_status()
         return resp.json()
 
@@ -167,7 +175,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
             'firstcreated': created,
             'byline': get_text(data.get('author')) or get_text(data['userId']),
             'creditline': get_text(data['credit']),
-            'source': get_text(data['credit']),
+            'source': get_text(data['credit']) or get_text(data['source']),
             'renditions': {
                 'original': {
                     'width': data['width'],
@@ -187,10 +195,48 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
             '_fetchable': False,
         }
 
+    def proxy(self, url, params):
+        return self.api_get(url, params)
+
+
+class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
+
+    GUID_PREFIX = 'urn:belga.be:picturepackimage:'
+    IMAGE_URN = 'urn:www.belga.be:picturepackstore:{id}:{rendition}:true'
+
+    label = 'Belga Image v2'
+    base_url = 'https://belga-websvc.picturepack.com/belgaimage-api/'
+
+    def auth(self):
+        """No initial auth required."""
+        pass
+
+    def auth_headers(self, url, secret=None, nonce=None):
+        """Use apikey from config."""
+        config = self.provider.get('config') or {}
+        apikey = config.get('username') or config.get('password')
+        return {
+            'X-Authorization': apikey,
+        }
+
+    def api_get(self, endpoint, params):
+        print("params", params)
+        if app.config.get("BELGA_IMAGE_LIMIT") and not any([param in params for param in ['c', 'h', 'e']]):
+            # set limit when not doing any filtering
+            # to avoid some images from the future
+            params.setdefault('p', app.config["BELGA_IMAGE_LIMIT"])
+        return super().api_get(endpoint, params)
+
+    def url(self, resource):
+        config = self.provider.get('config') or {}
+        base_url = config.get('url') or self.base_url
+        return urljoin(base_url, resource.lstrip('/'))
+
 
 class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
 
     GUID_PREFIX = 'urn:belga.be:coverage:'
+    GALLERY_URN = 'urn:www.belga.be:belgagallery:{id}'
 
     label = 'Belga Coverage'
     search_endpoint = 'searchGalleries'
@@ -198,7 +244,9 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
     count_field = 'nrGalleries'
 
     def format_list_item(self, data):
-        guid = '%s%d' % (self.GUID_PREFIX, data['galleryId'])
+        if app.debug:
+            print(json.dumps(data, indent=2))
+        guid = '%s%s' % (self.GUID_PREFIX, data['galleryId'])
         created = get_datetime(data['createDate'])
         thumbnail = data['iconThumbnailUrl']
         return {
@@ -229,10 +277,16 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
                 },
             },
             'extra': {
-                'bcoverage': guid,
+                'bcoverage': '{}:{}'.format(self.provider["_id"], data['galleryId']),
             },
             '_fetchable': False,
         }
+
+
+class BelgaCoverageV2SearchProvider(BelgaCoverageSearchProvider, BelgaImageV2SearchProvider):
+    label = 'Belga Coverage V2'
+    GUID_PREFIX = 'urn:belga.be:picturepackgallery:'
+    GALLERY_URN = 'urn:www.belga.be:picturepackgallery:{id}'
 
 
 class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
@@ -414,7 +468,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             'language': get_text(data['language']),
             'body_html': self._get_abstract(data) + '<br/><br/>' + self._get_body_html(data),
             'extra': {
-                'bcoverage': guid,
                 'previewid': str(data['newsObjectId']),
                 'city': data.get('city')
             },
@@ -591,8 +644,67 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
         }
 
 
+def belga_image_proxy(url):
+    headers = {
+        'Access-Control-Allow-Origin': app.config['CLIENT_URL'],
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Max-Age': '300'
+    }
+
+    if request.method == 'OPTIONS':
+        return Response(headers=headers)
+
+    params = request.args.copy()
+    provider_id = params.pop("provider", None)
+    if params.get("i") and ":" in params["i"]:
+        provider_id = params["i"].split(":")[-2]
+        params["i"] = params["i"].split(":")[-1]
+    service = None
+    if provider_id:
+        service = get_service_by_id(provider_id)
+    if service:
+        data = service.proxy(url, params)
+        if app.debug:
+            print(json.dumps(data, indent=2))
+        response = jsonify(data)
+        for k, v in headers.items():
+            response.headers[k] = v
+        return response
+    return abort(400)
+
+
+def get_service_by_id(provider_id):
+    provider = superdesk.get_resource_service('search_providers').find_one(req=None, _id=provider_id)
+    if provider is None:
+        # fallback to configured belga_coverage provider for old coverage ids
+        provider = superdesk.get_resource_service('search_providers').find_one(req=None,
+                                                                               search_provider='belga_coverage')
+    if provider:
+        return registered_search_providers[provider["search_provider"]]["class"](provider)
+
+
+_image_coverage_providers = [
+    BelgaImageSearchProvider,
+    BelgaCoverageSearchProvider,
+    BelgaImageV2SearchProvider,
+    BelgaCoverageV2SearchProvider,
+]
+
+
+def get_provider_by_guid(guid):
+    for provider in _image_coverage_providers:
+        if provider.GUID_PREFIX in guid:
+            return provider
+
+
 def init_app(app):
     superdesk.register_search_provider('belga_image', provider_class=BelgaImageSearchProvider)
     superdesk.register_search_provider('belga_coverage', provider_class=BelgaCoverageSearchProvider)
     superdesk.register_search_provider('belga_360archive', provider_class=Belga360ArchiveSearchProvider)
     superdesk.register_search_provider('belga_press', provider_class=BelgaPressSearchProvider)
+    superdesk.register_search_provider('belga_image_v2', provider_class=BelgaImageV2SearchProvider)
+    superdesk.register_search_provider('belga_coverage_v2', provider_class=BelgaCoverageV2SearchProvider)
+
+    app.add_url_rule('/api/belga_image_api/<url>', view_func=belga_image_proxy, methods=['GET', 'OPTIONS'])

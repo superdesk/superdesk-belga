@@ -147,7 +147,6 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item['state'], 'published')
         self.assertEqual(item['profile'], 'text')
         self.assertEqual(item['guid'], guid)
-        self.assertEqual(item['extra']['bcoverage'], guid)
         self.assertEqual(item['extra']
                          ['city'], 'Bruxelles'
                          )

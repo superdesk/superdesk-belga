@@ -26,7 +26,7 @@ export default class BelgaCoverageAssocation extends React.Component<IProps, ISt
     }
 
     fetchCoverage() {
-        getCoverageInfo(this.props.coverageId)
+        getCoverageInfo(this.props.superdesk, this.props.coverageId)
             .then((coverage) => this.setState({coverage: coverage, loading: false}))
             .catch(() => {
                 this.setState({loading: false});

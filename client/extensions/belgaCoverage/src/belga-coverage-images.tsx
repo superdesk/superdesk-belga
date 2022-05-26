@@ -20,7 +20,7 @@ function getImageUrl(image: IBelgaImage, rendition: IProps['rendition']): string
         case 'preview':
             return image.previewUrl;
         case 'thumbnail':
-            return image.thumbnailUrl;
+            return image.smallUrl;
     }
 }
 
@@ -38,7 +38,7 @@ export default class BelgaCoverage extends React.PureComponent<IProps, IState> {
     fetchImages() {
         this.setState({loading: true});
 
-        getCoverageImages(this.props.coverageId, this.props.maxImages)
+        getCoverageImages(this.props.superdesk, this.props.coverageId, this.props.maxImages)
             .then((images) => this.setState({loading: false, images: images}))
             .catch(() => {
                 this.setState({loading: false});

@@ -17,6 +17,7 @@ from bson.objectid import ObjectId
 
 from superdesk.publish import init_app
 from belga.publish.belga_newsml_1_2 import BelgaNewsML12Formatter
+from belga.search_providers import BelgaCoverageSearchProvider
 from .. import TestCase
 
 belga_apiget_response = {
@@ -74,7 +75,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'source': 'Belga',
         'priority': 6,
         'urgency': 4,
-        'genre': [{'qcode': 'Article', 'name': 'Article (news)'}],
         'place': [],
         'sign_off': 'ADM',
         'language': 'fr',
@@ -488,7 +488,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     }
                 },
                 "extra": {
-                    "bcoverage": "urn:belga.be:coverage:6690595"
+                    "bcoverage": "provider:6690595"
                 },
                 "_links": {
                     "self": {
@@ -618,9 +618,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'slugline': 'skoda scala',
         'subject': [
             {'name': 'bilingual', 'qcode': 'bilingual', 'scheme': 'distribution'},
-            {'name': 'ANALYSIS', 'qcode': 'ANALYSIS', 'scheme': 'genre'},
-            {'name': 'CURRENT', 'qcode': 'CURRENT', 'scheme': 'genre'},
-            {'name': 'FORECAST', 'qcode': 'FORECAST', 'scheme': 'genre'},
             {'name': 'A1', 'qcode': 'A1', 'scheme': 'label'},
             {'name': 'A2', 'qcode': 'A2', 'scheme': 'label'},
             {'name': 'R1', 'qcode': 'R1', 'scheme': 'label'},
@@ -669,7 +666,10 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             {
                 'attachment': ObjectId('5d692b76c8f549e289b0270b')
             }
-        ]
+        ],
+        'genre': [
+            {'name': 'ANALYSIS'},
+        ],
     }
 
     attachments = (
@@ -942,6 +942,8 @@ class BelgaNewsML12FormatterTextTest(TestCase):
     @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
     @mock.patch('belga.search_providers.BelgaCoverageSearchProvider.api_get', lambda self,
                 endpoint, params: belga_apiget_response)
+    @mock.patch('belga.publish.belga_newsml_1_2.get_service_by_id', lambda _:
+                BelgaCoverageSearchProvider({"_id": "test"}))
     def setUp(self):
         init_app(self.app)
         self.app.data.insert('users', self.users)
@@ -1095,7 +1097,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> DescriptiveMetadata -> Genre
         self.assertDictEqual(
             dict(self.newsml.xpath('NewsItem/NewsComponent/DescriptiveMetadata/Genre')[0].attrib),
-            {'FormalName': 'ANALYSIS'}
+            {'FormalName': ''}
         )
 
     def test_belga_text_newscomponent(self):
