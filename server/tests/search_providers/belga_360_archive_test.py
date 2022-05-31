@@ -234,7 +234,6 @@ class Belga360ArchiveTestCase(TestCase):
             self.assertEqual(item['_id'], guid)
             self.assertEqual(item['state'], 'published')
             self.assertEqual(item['guid'], guid)
-            self.assertEqual(item['extra']['bcoverage'], guid)
             self.assertEqual(item['headline'], 'Related item headline')
             self.assertEqual(item['slugline'], 'Related item slugline')
             self.assertEqual(item['description_text'], '')
