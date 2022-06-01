@@ -11,6 +11,6 @@
     },
     "scripts": {
         "build": "npx --no-install @superdesk/build-tools build-root-repo ./",
-        "server": "grunt server"
+        "start": "grunt server"
     }
 }

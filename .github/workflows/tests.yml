@@ -13,12 +13,12 @@ jobs:
         working-directory: server
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: setup python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
         with:
           python-version: 3.8
+          cache: 'pip'
+          cache-dependency-path: server/requirements.txt
 
       - name: apt-get
         run: |
@@ -33,17 +33,10 @@ jobs:
             python -m pip install --upgrade pip wheel setuptools
             pip install -r dev-requirements.txt
 
-      - name: flake8
-        run: flake8
-
-      - name: nosetests
-        run: nosetests tests
-
-      - name: mypy
-        run: mypy .
-
-      - name: initialize data
-        run: python manage.py app:initialize_data
+      - run: flake8
+      - run: nosetests tests
+      - run: mypy .
+      - run: python manage.py app:initialize_data
 
   client:
     runs-on: ubuntu-latest
@@ -53,15 +46,11 @@ jobs:
         working-directory: client
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: setup node
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 12.x
-
-      - name: npm ci
-        run: npm ci || npm install
-
-      - name: build
-        run: npm run build
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci || npm install
+      - run: npm run build
