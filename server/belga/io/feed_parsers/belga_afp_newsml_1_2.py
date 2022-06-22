@@ -82,6 +82,9 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         Example:
 
             <DescriptiveMetadata>
+                <SubjectCode>
+                    <Subject FormalName="04000000" cat="ECO"/>
+                </SubjectCode>
                 <Location>
                     <Property FormalName="Country" Value="FRA" />
                     <Property FormalName="City" Value="Paris" />
@@ -97,6 +100,17 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param descript_el:
         :return:
         """
+        # parser SubjectCode element
+        subjects = descript_el.findall("SubjectCode/SubjectDetail")
+        subjects += descript_el.findall("SubjectCode/SubjectMatter")
+        subjects += descript_el.findall("SubjectCode/Subject")
+        item.setdefault("subject", []).extend(self.format_subjects(subjects))
+        for subject in subjects:
+            if subject.get("cat"):
+                category = {"qcode": subject.get("cat")}
+                if category not in item.get("anpa_category", []):
+                    item.setdefault("anpa_category", []).append(category)
+
         location_el = descript_el.find("Location")
         if location_el is not None:
             item["extra"] = {}
