@@ -37,22 +37,34 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["ingest_provider_sequence"], "0579")
         item["subject"].sort(key=lambda i: i["name"])
         expected_subjects = [
-            {"name": "AFP", "qcode": "AFP", "scheme": "sources"},
             {
-                "name": "Bangladesh",
-                "qcode": "country_bgd",
-                "translations": {"name": {"nl": "BANGLADESH", "fr": "BANGLADESH"}},
-                "scheme": "country",
+                "qcode": "02000000",
+                "name": "crime, law and justice",
+                "scheme": "iptc_subject_codes",
             },
             {
-                "name": "France",
-                "qcode": "fra",
-                "translations": {"name": {"nl": "Frankrijk", "fr": "France"}},
-                "scheme": "countries",
+                "qcode": "02001004",
+                "name": "drug trafficking",
+                "scheme": "iptc_subject_codes",
+            },
+            {"qcode": "02003000", "name": "police", "scheme": "iptc_subject_codes"},
+            {"qcode": "02008000", "name": "trials", "scheme": "iptc_subject_codes"},
+            {"name": "AFP", "qcode": "AFP", "scheme": "sources"},
+            {
+                "name": "NEWS/ECONOMY",
+                "qcode": "NEWS/ECONOMY",
+                "parent": "NEWS",
+                "scheme": "services-products",
             },
             {
                 "name": "NEWS/GENERAL",
                 "qcode": "NEWS/GENERAL",
+                "parent": "NEWS",
+                "scheme": "services-products",
+            },
+            {
+                "name": "NEWS/SPORTS",
+                "qcode": "NEWS/SPORTS",
                 "parent": "NEWS",
                 "scheme": "services-products",
             },
@@ -63,8 +75,20 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
                 "scheme": "belga-keywords",
             },
             {"name": "assises", "qcode": "assises", "scheme": "original-metadata"},
+            {
+                "name": "Bangladesh",
+                "qcode": "country_bgd",
+                "translations": {"name": {"nl": "BANGLADESH", "fr": "BANGLADESH"}},
+                "scheme": "country",
+            },
             {"name": "default", "qcode": "default", "scheme": "distribution"},
             {"name": "drogues", "qcode": "drogues", "scheme": "original-metadata"},
+            {
+                "name": "France",
+                "qcode": "fra",
+                "translations": {"name": {"nl": "Frankrijk", "fr": "France"}},
+                "scheme": "countries",
+            },
             {
                 "name": "marches_test",
                 "qcode": "marches_test",
