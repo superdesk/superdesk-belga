@@ -44,37 +44,22 @@ class BelgaSTTTestCase(TestCase):
             ),
         )
         self.assertEqual(item["slugline"], "")
-        self.assertEqual(
-            item["abstract"],
-            (
-                "The President of Ukraine has been saying for some time that Ukra"
-                "inians have been taken to Russia.*** TRANSLATED ***"
-            ),
-        )
+        self.assertEqual(item["abstract"], "")
         self.assertEqual(item["uri"], "urn:newsml:stt.fi::104917454")
         self.assertEqual(item["genre"], [{"qcode": "1", "name": "Pääjuttu"}])
         self.assertEqual(item["authors"], [])
         self.assertEqual(item["source"], "STT")
         self.assertEqual(str(item["firstpublished"]), "2022-05-09 21:31:02+00:00")
 
-        self.assertEqual(
-            item["body_html"],
-            (
-                "<pre>According to the US Department of Defense, there hav"
-                "e been indications in Ukraine that Ukrainians have been f"
-                "orcibly deported to Russia. John Kirby, a spokesman for t"
-                "he Pentagon, spoke about the matter.Kirby did not tell re"
-                "porters how many possible Ukrainian camps are being talke"
-                "d about. However, according to Kirby, there is evidence t"
-                "hat the Ukrainians were transported to Russia against the"
-                "ir will.Moscow has had 75 days to treat Ukrainians cruell"
-                "y. Every time you think they can’t sink even lower anymor"
-                "e, they prove you’re wrong, Kirby said.Ukrainian Presiden"
-                "t Volodymyr Zelenskyi said as early as April that thousan"
-                "ds of Ukrainians would have been deported to Russia. Accor"
-                "ding to Ukrainian Ombudsman Lyudmyla Denisova, the number o"
-                "f Ukrainians deported to Russia would have risen to more th"
-                "an 1.19 million since the start of the war. The figure inclu"
-                "des at least 200,000 children.</pre>"
-            ),
+        expected_body = (
+            "<p>The President of Ukraine has been saying for some tim"
+            "e that Ukrainians have been taken to Russia.*** TRANSLATE"
+            "D ***</p><p>According to the US Department of Defense, the"
+            "re have been indications in Ukraine that Ukrainians have be"
+            "en forcibly deported to Russia.</p>\n                    \n<p>"
+            "John Kirby, a spokesman for the Pentagon, spoke about the matte"
+            "r.Kirby did not tell reporters how many possible Ukrainian camp"
+            "s are being talked about. However, according to Kirby, there i"
+            "s evidence that the Ukrainians were transported to Russia against their will</p>"
         )
+        self.assertEqual(item["body_html"], expected_body)

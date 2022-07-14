@@ -29,7 +29,13 @@ class BelgaSTTFeedParser(STTNewsMLFeedParser):
         return xml.tag.endswith("newsItem")
 
     def parse(self, xml, provider=None):
-        return super().parse(xml, provider)
+        items = super().parse(xml, provider)
+        for item in items:
+            if item.get("abstract"):
+                abstract = "<p>" + item["abstract"] + "</p>"
+                item["body_html"] = abstract + item.get("body_html", "")
+                item["abstract"] = ""
+        return items
 
 
 register_feed_parser(BelgaSTTFeedParser.NAME, BelgaSTTFeedParser())
