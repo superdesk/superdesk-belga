@@ -52,7 +52,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
         )
         item = super().parse(uncommented_xml, provider)
         self.meta_parse(uncommented_xml, item)
-
+        print(item)
         return item
 
     def meta_parse(self, xml, item):
@@ -72,7 +72,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
         # keywords
         keywords_elem = xml.find("head/meta[@name='keyword']")
-        item["keywords"] = keywords_elem.attrib.get("content")
+        item["keywords"] = [keywords_elem.attrib.get("content")]
 
         # priority
         priority_elem = xml.find("head/meta[@name='priority']")
@@ -109,11 +109,20 @@ class BelgaANSAFeedParser(NITFFeedParser):
         # dateline
         dateline_elem = xml.find("body/body.head/dateline/location")
         if dateline_elem is not None:
-            self.set_dateline(item, city=(dateline_elem.text).strip(" ,\n"))
+            self.set_dateline(item, city=(dateline_elem.text).strip())
 
         # source
         source_elem = xml.find("body/body.head/distributor/org")
-        item["source"] = (source_elem.text).strip(" ,\n")
+        item["source"] = (source_elem.text).strip()
+
+        # headline
+        item["headline"] = self.get_headline(xml).strip()
+
+        # byline
+        item["byline"] = self.get_byline(xml).strip()
+
+        # body_html
+        item["body_html"] = self.get_content(xml).strip()
 
     def parse_author(self, author_elem, item):
         """
