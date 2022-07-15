@@ -52,7 +52,6 @@ class BelgaANSAFeedParser(NITFFeedParser):
         )
         item = super().parse(uncommented_xml, provider)
         self.meta_parse(uncommented_xml, item)
-        print(item)
         return item
 
     def meta_parse(self, xml, item):
