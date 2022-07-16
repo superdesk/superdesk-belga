@@ -71,7 +71,9 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
         # keywords
         keywords_elem = xml.find("head/meta[@name='keyword']")
-        item["keywords"] = [keywords_elem.attrib.get("content")]
+        keyword_text = keywords_elem.attrib.get("content")
+        if keyword_text.startswith(">>>ANSA/"):
+            item["keywords"] = [keyword_text[len(">>>ANSA/") :]]
 
         # priority
         priority_elem = xml.find("head/meta[@name='priority']")
@@ -115,13 +117,15 @@ class BelgaANSAFeedParser(NITFFeedParser):
         item["source"] = (source_elem.text).strip()
 
         # headline
-        item["headline"] = self.get_headline(xml).strip()
+        headline_text = self.get_headline(xml).strip()
+        if headline_text.startswith(">>>ANSA/"):
+            item["headline"] = headline_text[len(">>>ANSA/") :]
 
         # byline
         item["byline"] = self.get_byline(xml).strip()
 
         # body_html
-        item["body_html"] = self.get_content(xml).strip()
+        item["body_html"] = self.parse_content(xml).strip()
 
     def parse_author(self, author_elem, item):
         """
@@ -197,6 +201,19 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
     def _get_cv(self, _id):
         return get_resource_service("vocabularies").find_one(req=None, _id=_id)
+
+    def parse_content(self, xml):
+        elements = []
+        for elem in xml.findall("body/body.content/block/p"):
+            elements.append(etree.tostring(elem, encoding="unicode"))
+        content = "".join(elements)
+        if self.get_anpa_format(xml) == "t":
+            if not content.startswith("<pre>"):
+                # convert content to text in a pre tag
+                content = "<pre>{}</pre>".format(self.parse_to_preformatted(content))
+            else:
+                content = self.parse_to_preformatted(content)
+        return content
 
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())

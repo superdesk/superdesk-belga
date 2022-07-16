@@ -40,9 +40,7 @@ class BelgaANSATestCase(TestCase):
         self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["guid"], "XAM22192010243_AMZ_X083")
         self.assertEqual(item["priority"], 5)
-        self.assertEqual(
-            item["keywords"], [">>>ANSA/Gazprom cut its flow of gas into Italy"]
-        )
+        self.assertEqual(item["keywords"], ["Gazprom cut its flow of gas into Italy"])
         self.assertEqual(item["type"], "text")
         self.assertEqual(str(item["firstcreated"]), "2022-07-11 18:33:00")
         self.assertEqual(str(item["versioncreated"]), "2022-07-11 18:33:00")
@@ -60,7 +58,7 @@ class BelgaANSATestCase(TestCase):
             },
         )
         self.assertEqual(
-            item["headline"], ">>>ANSA/Gazprom cuts Italy gas supplies by a third"
+            item["headline"], "Gazprom cuts Italy gas supplies by a third"
         ),
         self.assertEqual(
             item["byline"], "Situation serious, ready for all scenarios says EC"
@@ -88,12 +86,9 @@ class BelgaANSATestCase(TestCase):
         self.assertEqual(item["anpa_category"], [{"qcode": "ALR", "name": "ALR"}])
 
         expected_body = (
-            '<lang lang="it"/>\n'
-            "            <block>\n                \n                "
-            '<img source="05be579082cc8e4649d31ccd14aec976.jpg"/>\n                '
             "<p>\n                    \n                    (ANSA) - ROME, JUL 11 - "
             "Russian energy giant Gazprom on\n                    Monday cut its gas sup"
             "plies to Italy by a third, Italian fuels\n                    giant Eni said."
-            "\n                </p>\n            </block>"
+            "\n                </p>"
         )
         self.assertEqual(item["body_html"], expected_body)
