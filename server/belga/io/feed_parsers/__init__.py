@@ -11,3 +11,4 @@ from . import belga_kyodo_newsml_1_2  # noqa
 from . import belga_spreadsheet  # noqa
 from . import belga_tip_newsml_1_2  # noqa
 from . import belga_stt  # noqa
+from . import belga_ansa  # noqa
