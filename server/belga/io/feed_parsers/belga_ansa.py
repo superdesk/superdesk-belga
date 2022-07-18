@@ -72,8 +72,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
         # keywords
         keywords_elem = xml.find("head/meta[@name='keyword']")
         keyword_text = keywords_elem.attrib.get("content")
-        if keyword_text.startswith(">>>ANSA/"):
-            item["keywords"] = [keyword_text[len(">>>ANSA/") :]]
+        item["keywords"] = [self.remove_prefix(keyword_text)]
 
         # priority
         priority_elem = xml.find("head/meta[@name='priority']")
@@ -118,8 +117,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
         # headline
         headline_text = self.get_headline(xml).strip()
-        if headline_text.startswith(">>>ANSA/"):
-            item["headline"] = headline_text[len(">>>ANSA/") :]
+        item["headline"] = self.remove_prefix(headline_text)
 
         # byline
         item["byline"] = self.get_byline(xml).strip()
@@ -214,6 +212,10 @@ class BelgaANSAFeedParser(NITFFeedParser):
             else:
                 content = self.parse_to_preformatted(content)
         return content
+
+    def remove_prefix(self, text):
+        if text.startswith(">>>ANSA/"):
+            return text[len(">>>ANSA/") :]
 
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())
