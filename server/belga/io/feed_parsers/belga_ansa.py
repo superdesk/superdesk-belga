@@ -213,9 +213,10 @@ class BelgaANSAFeedParser(NITFFeedParser):
                 content = self.parse_to_preformatted(content)
         return content
 
-    def remove_prefix(self, text):
+    def remove_prefix(self, text: str) -> str:
         if text.startswith(">>>ANSA/"):
             return text[len(">>>ANSA/"):]
+        return text
 
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())
