@@ -31,6 +31,9 @@ INSTALLED_APPS.extend([
     'belga.macros',
     'belga.signals',
     'belga.schema',
+    'superdesk.text_checkers.spellcheckers.default',
+    'superdesk.text_checkers.spellcheckers.grammalecte',
+    'superdesk.text_checkers.spellcheckers.leuven_dutch',
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
