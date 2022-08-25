@@ -54,6 +54,10 @@ setTimeout(() => {
             id: 'iptc',
             load: () => import('./extensions/iptc'),
         },
+        {
+            id: 'videoEditor',
+            load: () => import('superdesk-core/scripts/extensions/videoEditor'),
+        }
     ], {
         UserAvatar,
     });
