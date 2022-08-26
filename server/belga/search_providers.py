@@ -769,25 +769,6 @@ def get_provider_by_guid(guid):
 
 
 def init_app(app):
-    superdesk.register_search_provider(
-        "belga_image", provider_class=BelgaImageSearchProvider
-    )
-    superdesk.register_search_provider(
-        "belga_coverage", provider_class=BelgaCoverageSearchProvider
-    )
-    superdesk.register_search_provider(
-        "belga_360archive", provider_class=Belga360ArchiveSearchProvider
-    )
-    superdesk.register_search_provider(
-        "belga_press", provider_class=BelgaPressSearchProvider
-    )
-    superdesk.register_search_provider(
-        "belga_image_v2", provider_class=BelgaImageV2SearchProvider
-    )
-    superdesk.register_search_provider(
-        "belga_coverage_v2", provider_class=BelgaCoverageV2SearchProvider
-    )
-
     app.add_url_rule(
         "/api/belga_image_api/<url>",
         view_func=belga_image_proxy,
