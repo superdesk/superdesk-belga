@@ -868,7 +868,17 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, 'DateLine')
         SubElement(newslines, 'HeadLine').text = item.get('headline')
         SubElement(newslines, 'CopyrightLine').text = item.get('copyrightholder')
-        SubElement(newslines, 'CreditLine').text = self.DEFAULT_CREDITLINE
+
+        #SDBELGA-672
+        for subject in item.get('subject', []):
+            if subject.get('scheme') == 'sources':
+                SubElement(newslines, 'CreditLine').text = subject.get("name")
+
+        if len(newslines.xpath('CreditLine')) == 0:
+            if item.get('source'):
+                SubElement(newslines, 'CreditLine').text = item['source'].strip("incoming")
+            else:
+                SubElement(newslines, 'CreditLine').text = self.DEFAULT_CREDITLINE
 
         # KeywordLine from country
         for subject in item.get('subject', []):
