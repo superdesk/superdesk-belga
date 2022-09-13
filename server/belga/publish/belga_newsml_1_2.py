@@ -965,8 +965,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         if len(newslines.xpath("CreditLine")) == 0:
             if item.get("source"):
-                SubElement(newslines, "CreditLine").text = item["source"].strip(
-                    "incoming"
+                SubElement(newslines, "CreditLine").text = (
+                    item["source"]
+                    .replace(
+                        "incoming" if "incoming" in item["source"] else "Incoming", ""
+                    )
+                    .strip()
                 )
             else:
                 SubElement(newslines, "CreditLine").text = self.DEFAULT_CREDITLINE
