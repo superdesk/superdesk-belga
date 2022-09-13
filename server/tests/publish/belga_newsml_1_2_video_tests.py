@@ -19,21 +19,21 @@ from .. import TestCase
 
 
 belga_apiget_response = {
-    'galleryId': 6666666,
-    'active': True,
-    'type': 'C',
-    'name': 'JUDO   JPN   WORLD',
-    'description': "Noel Van T End of Netherlands (L) celebrates after winning the gold medal.",
-    'createDate': '2019-08-30T14:33:10Z',
-    'deadlineDate': None,
-    'author': 'auto',
-    'credit': 'AFP',
-    'category': None,
-    'tagAuthor': None,
-    'iconImageId': 777777777,
-    'iconThumbnailUrl': 'https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa',
-    'nrImages': 364,
-    'themes': ['all', 'news', 'sports']
+    "galleryId": 6666666,
+    "active": True,
+    "type": "C",
+    "name": "JUDO   JPN   WORLD",
+    "description": "Noel Van T End of Netherlands (L) celebrates after winning the gold medal.",
+    "createDate": "2019-08-30T14:33:10Z",
+    "deadlineDate": None,
+    "author": "auto",
+    "credit": "AFP",
+    "category": None,
+    "tagAuthor": None,
+    "iconImageId": 777777777,
+    "iconThumbnailUrl": "https://2.t.cdn.belga.be/belgaimage:154669691:800x800:w?v=6666666&m=aaaaaaaa",
+    "nrImages": 364,
+    "themes": ["all", "news", "sports"],
 }
 
 
@@ -52,18 +52,13 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         "unique_id": 13,
         "unique_name": "#13",
         "family_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06."
-                     "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
+        "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
         "event_id": "tag:localhost:5000:2019:d8846c42-d18a-447d-96e2-c3173c3adfdd",
         "state": "in_progress",
         "source": "Superdesk",
         "priority": 6,
         "urgency": 3,
-        "genre": [
-            {
-                "qcode": "Article",
-                "name": "Article (news)"
-            }
-        ],
+        "genre": [{"qcode": "Article", "name": "Article (news)"}],
         "place": [],
         "sign_off": "ADM",
         "language": "nl",
@@ -73,28 +68,28 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             "original": {
                 "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                 "media": "video_1",
-                "mimetype": "video/mp4"
+                "mimetype": "video/mp4",
             },
             "viewImage": {
                 "href": "http://localhost:5000/api/upload-raw/pic_1.jpg",
                 "media": "pic_1",
                 "mimetype": "image/jpeg",
                 "width": 200,
-                "height": 133
+                "height": 133,
             },
             "thumbnail": {
                 "href": "http://localhost:5000/api/upload-raw/pic_2.jpg",
                 "media": "pic_2",
                 "mimetype": "image/jpeg",
                 "width": 1920,
-                "height": 1280
-            }
+                "height": 1280,
+            },
         },
         "mimetype": "video/mp4",
-        "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                         "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                         "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                         "n\": \"Big endian\", \"length\": 1022462}",
+        "filemeta_json": '{"duration": "0:00:09.482000", "width": "640", "height": "360", "creatio'
+        'n_date": "2019-06-16T17:32:12+00:00", "last_modification": "2019-06-16T17:32:12'
+        '+00:00", "comment": "User volume: 100.0%", "mime_type": "video/mp4", "endia'
+        'n": "Big endian", "length": 1022462}',
         "description_text": "water",
         "expiry": "2046-12-29T14:51:06+0000",
         "headline": "water",
@@ -117,18 +112,13 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             "unique_id": 13,
             "unique_name": "#13",
             "family_id": "urn:newsml:localhost:5000:2019-08-14T16:51:06."
-                         "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
+            "604540:734d4292-db4f-4358-8b2f-c2273a4925d5",
             "event_id": "tag:localhost:5000:2019:d8846c42-d18a-447d-96e2-c3173c3adfdd",
             "state": "in_progress",
             "source": "Superdesk",
             "priority": 6,
             "urgency": 3,
-            "genre": [
-                {
-                    "qcode": "Article",
-                    "name": "Article (news)"
-                }
-            ],
+            "genre": [{"qcode": "Article", "name": "Article (news)"}],
             "place": [],
             "sign_off": "ADM",
             "language": "nl",
@@ -138,14 +128,14 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
                 "original": {
                     "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                     "media": "video_1",
-                    "mimetype": "video/mp4"
+                    "mimetype": "video/mp4",
                 }
             },
             "mimetype": "video/mp4",
-            "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                             "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                             "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                             "n\": \"Big endian\", \"length\": 1022462}",
+            "filemeta_json": '{"duration": "0:00:09.482000", "width": "640", "height": "360", "creatio'
+            'n_date": "2019-06-16T17:32:12+00:00", "last_modification": "2019-06-16T17:32:12'
+            '+00:00", "comment": "User volume: 100.0%", "mime_type": "video/mp4", "endia'
+            'n": "Big endian", "length": 1022462}',
             "description_text": "water",
             "expiry": "2046-12-29T14:51:06+0000",
             "headline": "water",
@@ -177,7 +167,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         {
             "_id": ObjectId("5d542206c04280bc6d6157f9"),
             "author_role": "AUTHOR",
-            "editor_role": "AUTHOR"
+            "editor_role": "AUTHOR",
         },
     )
 
@@ -187,14 +177,8 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             "field_type": "custom",
             "items": [],
             "type": "manageable",
-            "schema": {
-                "name": {},
-                "qcode": {},
-                "parent": {}
-            },
-            "service": {
-                "all": 1
-            },
+            "schema": {"name": {}, "qcode": {}, "parent": {}},
+            "service": {"all": 1},
             "custom_field_type": "belga.coverage",
             "display_name": "belga coverage new",
             "unique_field": "qcode",
@@ -202,263 +186,235 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
     )
 
     subscriber = {
-        '_id': 'some_id',
-        'name': 'Dev Subscriber',
+        "_id": "some_id",
+        "name": "Dev Subscriber",
     }
 
-    @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
-    @mock.patch('belga.search_providers.BelgaCoverageSearchProvider.api_get',
-                lambda self, endpoint, params: belga_apiget_response)
+    @mock.patch(
+        "superdesk.publish.subscribers.SubscribersService.generate_sequence_number",
+        lambda s, sub: 1,
+    )
+    @mock.patch(
+        "belga.search_providers.BelgaCoverageSearchProvider.api_get",
+        lambda self, endpoint, params: belga_apiget_response,
+    )
     def setUp(self):
         init_app(self.app)
-        self.app.data.insert('users', self.users)
-        self.app.data.insert('archive', self.archive)
-        self.app.data.insert('roles', self.roles)
-        self.app.data.insert('vocabularies', self.vocabularies)
+        self.app.data.insert("users", self.users)
+        self.app.data.insert("archive", self.archive)
+        self.app.data.insert("roles", self.roles)
+        self.app.data.insert("vocabularies", self.vocabularies)
         # insert pictures
         media_items = (
             {
-                '_id': 'video_1',
-                'content': BytesIO(b'czech rap xD'),
-                'content_type': 'video/mp4',
-                'metadata': {
-                    'length': 12
-                }
+                "_id": "video_1",
+                "content": BytesIO(b"czech rap xD"),
+                "content_type": "video/mp4",
+                "metadata": {"length": 12},
             },
             {
-                '_id': 'pic_1',
-                'content': BytesIO(b'pic_one_content'),
-                'content_type': 'image/jpeg',
-                'metadata': {
-                    'length': 10
-                }
+                "_id": "pic_1",
+                "content": BytesIO(b"pic_one_content"),
+                "content_type": "image/jpeg",
+                "metadata": {"length": 10},
             },
             {
-                '_id': 'pic_2',
-                'content': BytesIO(b'pic_two_content'),
-                'content_type': 'image/jpeg',
-                'metadata': {
-                    'length': 10
-                }
+                "_id": "pic_2",
+                "content": BytesIO(b"pic_two_content"),
+                "content_type": "image/jpeg",
+                "metadata": {"length": 10},
             },
         )
         for media_item in media_items:
             # base rendition
             self.app.media.put(**media_item)
 
-        self.article['state'] = 'published'
+        self.article["state"] = "published"
         self.formatter = BelgaNewsML12Formatter()
         seq, doc = self.formatter.format(self.article, self.subscriber)[0]
-        self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
+        self.newsml = etree.XML(
+            bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING))
+        )
 
     def test_catalog(self):
         # NewsML -> Catalog
-        catalog = self.newsml.xpath('Catalog')[0]
+        catalog = self.newsml.xpath("Catalog")[0]
         self.assertEqual(
-            catalog.get('Href'),
-            'http://www.belga.be/dtd/BelgaCatalog.xml'
+            catalog.get("Href"), "http://www.belga.be/dtd/BelgaCatalog.xml"
         )
 
     def test_newsenvelope(self):
         # NewsML -> NewsEnvelope
         self.assertEqual(
-            self.newsml.xpath('NewsEnvelope/DateAndTime')[0].text,
-            self.formatter._string_now
+            self.newsml.xpath("NewsEnvelope/DateAndTime")[0].text,
+            self.formatter._string_now,
         )
         self.assertIsNone(
-            self.newsml.xpath('NewsEnvelope/NewsService')[0].text,
+            self.newsml.xpath("NewsEnvelope/NewsService")[0].text,
         )
         self.assertIsNone(
-            self.newsml.xpath('NewsEnvelope/NewsProduct')[0].text,
+            self.newsml.xpath("NewsEnvelope/NewsProduct")[0].text,
         )
 
     def test_identification(self):
         # NewsML -> NewsItem -> Identification
         with self.app.app_context():
             self.assertEqual(
-                self.newsml.xpath('NewsItem/Identification/NewsIdentifier/ProviderId')[0].text,
-                self.app.config['NEWSML_PROVIDER_ID']
+                self.newsml.xpath("NewsItem/Identification/NewsIdentifier/ProviderId")[
+                    0
+                ].text,
+                self.app.config["NEWSML_PROVIDER_ID"],
             )
         self.assertEqual(
-            self.newsml.xpath('NewsItem/Identification/NewsIdentifier/DateId')[0].text,
-            '20190814T165106'
+            self.newsml.xpath("NewsItem/Identification/NewsIdentifier/DateId")[0].text,
+            "20190814T165106",
         )
         self.assertEqual(
-            self.newsml.xpath('NewsItem/Identification/NewsIdentifier/NewsItemId')[0].text,
-            self.formatter._duid
+            self.newsml.xpath("NewsItem/Identification/NewsIdentifier/NewsItemId")[
+                0
+            ].text,
+            self.formatter._duid,
         )
-        revisionid = self.newsml.xpath('NewsItem/Identification/NewsIdentifier/RevisionId')[0]
-        self.assertEqual(revisionid.text, '2')
-        self.assertDictEqual(dict(revisionid.attrib), {'Update': 'N', 'PreviousRevision': '0'})
+        revisionid = self.newsml.xpath(
+            "NewsItem/Identification/NewsIdentifier/RevisionId"
+        )[0]
+        self.assertEqual(revisionid.text, "2")
+        self.assertDictEqual(
+            dict(revisionid.attrib), {"Update": "N", "PreviousRevision": "0"}
+        )
         self.assertEqual(
-            self.newsml.xpath('NewsItem/Identification/NewsIdentifier/PublicIdentifier')[0].text,
-            'urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5:2N'
+            self.newsml.xpath(
+                "NewsItem/Identification/NewsIdentifier/PublicIdentifier"
+            )[0].text,
+            "urn:newsml:localhost:5000:2019-08-14T16:51:06.604540:734d4292-db4f-4358-8b2f-c2273a4925d5:2N",
         )
 
     def test_newsmanagement(self):
         # NewsML -> NewsItem -> NewsManagement
-        newsitemtype = self.newsml.xpath('NewsItem/NewsManagement/NewsItemType')[0]
-        self.assertDictEqual(
-            dict(newsitemtype.attrib),
-            {'FormalName': 'NEWS'}
-        )
+        newsitemtype = self.newsml.xpath("NewsItem/NewsManagement/NewsItemType")[0]
+        self.assertDictEqual(dict(newsitemtype.attrib), {"FormalName": "NEWS"})
         self.assertIsNone(newsitemtype.text)
         self.assertEqual(
-            self.newsml.xpath('NewsItem/NewsManagement/FirstCreated')[0].text,
-            '20190814T165106'
+            self.newsml.xpath("NewsItem/NewsManagement/FirstCreated")[0].text,
+            "20190814T165106",
         )
         self.assertEqual(
-            self.newsml.xpath('NewsItem/NewsManagement/ThisRevisionCreated')[0].text,
-            '20190814T165106'
+            self.newsml.xpath("NewsItem/NewsManagement/ThisRevisionCreated")[0].text,
+            "20190814T165106",
         )
-        status = self.newsml.xpath('NewsItem/NewsManagement/Status')[0]
-        self.assertDictEqual(
-            dict(status.attrib),
-            {'FormalName': 'USABLE'}
-        )
+        status = self.newsml.xpath("NewsItem/NewsManagement/Status")[0]
+        self.assertDictEqual(dict(status.attrib), {"FormalName": "USABLE"})
         self.assertIsNone(status.text)
 
     def test_1_level_newscomponent(self):
         # NewsML -> NewsItem -> NewsComponent
-        newscomponent_1_level = self.newsml.xpath('NewsItem/NewsComponent')[0]
+        newscomponent_1_level = self.newsml.xpath("NewsItem/NewsComponent")[0]
         self.assertDictEqual(
             dict(newscomponent_1_level.attrib),
             {
-                'Duid': 'tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8',
-                '{http://www.w3.org/XML/1998/namespace}lang': 'nl'
-            }
+                "Duid": "tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8",
+                "{http://www.w3.org/XML/1998/namespace}lang": "nl",
+            },
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
-            self.newsml.xpath('NewsItem/NewsComponent/NewsLines/HeadLine')[0].text,
-            'water'
+            self.newsml.xpath("NewsItem/NewsComponent/NewsLines/HeadLine")[0].text,
+            "water",
         )
         # NewsML -> NewsItem -> NewsComponent -> AdministrativeMetadata
         self.assertIsNone(
-            self.newsml.xpath('NewsItem/NewsComponent/AdministrativeMetadata')[0].text
+            self.newsml.xpath("NewsItem/NewsComponent/AdministrativeMetadata")[0].text
         )
         # NewsML -> NewsItem -> NewsComponent -> DescriptiveMetadata -> Genre
         self.assertDictEqual(
-            dict(self.newsml.xpath('NewsItem/NewsComponent/DescriptiveMetadata/Genre')[0].attrib),
-            {'FormalName': ''}
+            dict(
+                self.newsml.xpath("NewsItem/NewsComponent/DescriptiveMetadata/Genre")[
+                    0
+                ].attrib
+            ),
+            {"FormalName": ""},
         )
 
     def test_video(self):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
+            "NewsItem/NewsComponent/NewsComponent"
             '[@Duid="tag:localhost:5000:2019:3fe341ab-45d8-4f72-9308-adde548daef8"]'
         )[0]
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertEqual(
-            newscomponent_2_level.xpath('Role[@FormalName="Video"]')[0].text,
-            None
+            newscomponent_2_level.xpath('Role[@FormalName="Video"]')[0].text, None
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Superdesk"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
-            newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
-            'water'
+            newscomponent_2_level.xpath("NewsLines/HeadLine")[0].text, "water"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(title) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'water'
-        )
+        self.assertEqual(datacontent.text, "water")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )
-        self.assertEqual(
-            sizeinbytes[0].text,
-            '5'
-        )
+        self.assertEqual(sizeinbytes[0].text, "5")
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Body) -> ContentItem
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'water'
-        )
+        self.assertEqual(datacontent.text, "water")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '5'
-        )
+        self.assertEqual(sizeinbytes.text, "5")
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Clip)
         contentitem = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem'
         )[0]
         self.assertEqual(
-            contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:tst:video_1'
+            contentitem.attrib["Href"], "urn:www.belga.be:superdesk:tst:video_1"
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
-        self.assertEqual(
-            _format.attrib['FormalName'],
-            'Mpeg4'
-        )
+        self.assertEqual(_format.attrib["FormalName"], "Mpeg4")
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Clip"]/ancestor::NewsComponent/ContentItem/MimeType'
         )[0]
-        self.assertEqual(
-            mimetype.attrib['FormalName'],
-            'video/mp4'
-        )
+        self.assertEqual(mimetype.attrib["FormalName"], "video/mp4")
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Image)
         contentitem = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem'
         )[0]
         self.assertEqual(
-            contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:tst:pic_1'
+            contentitem.attrib["Href"], "urn:www.belga.be:superdesk:tst:pic_1"
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
-        self.assertEqual(
-            _format.attrib['FormalName'],
-            'Jpeg'
-        )
+        self.assertEqual(_format.attrib["FormalName"], "Jpeg")
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Image"]/ancestor::NewsComponent/ContentItem/MimeType'
         )[0]
-        self.assertEqual(
-            mimetype.attrib['FormalName'],
-            'image/jpg'
-        )
+        self.assertEqual(mimetype.attrib["FormalName"], "image/jpg")
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsComponent(Thumbnail)
         contentitem = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem'
         )[0]
         self.assertEqual(
-            contentitem.attrib['Href'],
-            'urn:www.belga.be:superdesk:tst:pic_2'
+            contentitem.attrib["Href"], "urn:www.belga.be:superdesk:tst:pic_2"
         )
         _format = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
-        self.assertEqual(
-            _format.attrib['FormalName'],
-            'Jpeg'
-        )
+        self.assertEqual(_format.attrib["FormalName"], "Jpeg")
         mimetype = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem/MimeType'
         )[0]
-        self.assertEqual(
-            mimetype.attrib['FormalName'],
-            'image/jpg'
-        )
+        self.assertEqual(mimetype.attrib["FormalName"], "image/jpg")
