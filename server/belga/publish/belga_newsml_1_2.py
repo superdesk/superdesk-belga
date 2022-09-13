@@ -962,8 +962,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         for subject in item.get("subject", []):
             if subject.get("scheme") == "sources":
                 SubElement(newslines, "CreditLine").text = subject.get("name")
-
-        if len(newslines.xpath("CreditLine")) == 0:
+                break
+        else:
             if item.get("source"):
                 SubElement(newslines, "CreditLine").text = (
                     item["source"]
