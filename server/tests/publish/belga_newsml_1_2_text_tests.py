@@ -71,7 +71,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         'original_creator': '5d385f31fe985ec67a0ca583',
         'unique_id': 43,
         'unique_name': '#43',
-        'state': 'in_progress',
+        'state': 'ingested',
         'source': 'Belga',
         'priority': 6,
         'urgency': 4,
@@ -1121,7 +1121,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'DPA'
         )
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/HeadLine')[0].text,
@@ -1562,7 +1562,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'Superdesk'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1729,7 +1729,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'ZUMAPRESS'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1864,7 +1864,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'Superdesk'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2053,7 +2053,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'ITARTASS'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2119,7 +2119,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'AFP'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2184,7 +2184,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'Superdesk'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2256,7 +2256,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'Superdesk'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2400,7 +2400,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
             newscomponent_2_level.xpath('NewsLines/CreditLine')[0].text,
-            'BELGA'
+            'Belga'
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
