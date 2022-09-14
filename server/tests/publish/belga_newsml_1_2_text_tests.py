@@ -71,7 +71,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         "original_creator": "5d385f31fe985ec67a0ca583",
         "unique_id": 43,
         "unique_name": "#43",
-        "state": "ingested",
+        "state": "in_progress",
         "source": "Belga",
         "priority": 6,
         "urgency": 4,
@@ -1579,7 +1579,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Superdesk"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1705,7 +1705,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "ZUMAPRESS"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1808,7 +1808,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Superdesk"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -1972,7 +1972,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "ITARTASS"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2029,7 +2029,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "AFP"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2083,7 +2083,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Superdesk"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2134,7 +2134,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Superdesk"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
@@ -2235,7 +2235,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
 
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Belga"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(
