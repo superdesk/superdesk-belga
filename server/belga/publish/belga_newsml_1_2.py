@@ -120,6 +120,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         CONTENT_TYPE.AUDIO: NEWSCOMPONENT2_ROLES.AUDIO,
     }
 
+    name = "Belga News ML 1.2"
+    type = "belganewsml12"
+
     def format(self, article, subscriber, codes=None):
         """
         Create output in Belga NewsML 1.2 format
