@@ -301,7 +301,7 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> CreditLine
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "Superdesk"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines -> HeadLine
         self.assertEqual(

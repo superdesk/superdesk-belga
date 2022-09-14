@@ -967,7 +967,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 SubElement(newslines, "CreditLine").text = subject.get("name")
                 break
         else:
-            if item.get("source"):
+            if item.get("source") and item.get("ingest_provider"):
                 SubElement(newslines, "CreditLine").text = (
                     item["source"]
                     .replace(
