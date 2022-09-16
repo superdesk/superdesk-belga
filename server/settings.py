@@ -30,7 +30,7 @@ INSTALLED_APPS.extend([
     'belga.publish',
     'belga.macros',
     'belga.signals',
-    'belga.schema',
+    #  'belga.schema',  try without custom search analyzer
     'superdesk.text_checkers.spellcheckers.default',
     'superdesk.text_checkers.spellcheckers.grammalecte',
     'superdesk.text_checkers.spellcheckers.leuven_dutch',
