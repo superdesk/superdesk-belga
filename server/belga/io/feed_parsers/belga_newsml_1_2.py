@@ -45,7 +45,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     label = 'Belga News ML 1.2 Parser'
 
-    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
+    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL', 'QUOTE')
     SUPPORTED_MEDIA_ASSET_TYPES = {
         'VIDEO': {
             'CLIP': 'original',
@@ -417,6 +417,17 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         item['guid']
                     ))
                     raise SkipItemException
+            else:
+                # SDBELGA-676
+                role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format("Sound"))
+                if role is not None:
+                    newscomponent1 = role.getparent()
+                    attachments = self.parse_attachment(newscomponent1)
+                    if attachments:
+                        item.update({
+                            'attachments': attachments,
+                            'ednote': 'The story has {} attachment(s)'.format(len(attachments)),
+                        })
 
         # SDBELGA-328
         if item.get('abstract'):
