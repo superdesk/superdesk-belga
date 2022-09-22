@@ -365,7 +365,7 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
         self.assertEqual(item['renditions']['thumbnail']['mimetype'], 'image/jpeg')
 
 
-class BelgaNewsMLOneAudioIngestTestCase(TestCase):
+class BelgaNewsMLOneAudioIngestTestCase1(TestCase):
     filename = 'belga_newsml_1_2_audio.xml'
 
     def setUp(self):
@@ -392,3 +392,36 @@ class BelgaNewsMLOneAudioIngestTestCase(TestCase):
         self.assertIn('href', item['renditions']['original'])
         self.assertIn('media', item['renditions']['original'])
         self.assertEqual(item['renditions']['original']['mimetype'], 'audio/mpeg')
+
+
+class BelgaNewsMLOneAudioIngestTestCase2(TestCase):
+    filename = 'belga_newsml_1_2_audio2.xml'
+
+    def setUp(self):
+        super().setUp()
+        dirname = os.path.dirname(os.path.realpath(__file__))
+        fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
+        provider = {'name': 'test', 'config': {'path': os.path.join(dirname, '../fixtures')}}
+        parser = BelgaNewsMLOneFeedParser()
+
+        def get_file_side_effect(value):
+            media_path = os.path.normpath(os.path.join(dirname, '../fixtures', value))
+            with open(media_path, 'rb') as f:
+                return BytesIO(f.read())
+
+        parser._get_file = MagicMock(side_effect=get_file_side_effect)
+
+        with open(fixture, 'rb') as f:
+            self.xml_root = etree.parse(f).getroot()
+            self.item = parser.parse(self.xml_root, provider)
+
+    def test_audio_ingest(self):
+
+        self.assertIn(self.item[0]['guid'], '46250507')
+        self.assertIn(self.item[0]['ednote'], 'The story has 1 attachment(s)')
+
+        self.assertIn(self.item[1]['guid'], '46250511')
+        self.assertIn(self.item[0]['ednote'], 'The story has 1 attachment(s)')
+
+        self.assertIn(self.item[2]['guid'], '46250515')
+        self.assertIn(self.item[0]['ednote'], 'The story has 1 attachment(s)')

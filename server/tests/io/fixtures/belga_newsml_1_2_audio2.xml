@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NewsML>
+    <Catalog Href="http://www.belga.be/dtd/BelgaCatalog.xml" />
+    <NewsEnvelope>
+        <DateAndTime>20220816T174755</DateAndTime>
+    </NewsEnvelope>
+    <NewsItem>
+        <Identification>
+            <NewsIdentifier>
+                <ProviderId>belga.be</ProviderId>
+                <DateId>20220816T174755</DateId>
+                <NewsItemId>46250506</NewsItemId>
+                <RevisionId PreviousRevision="0" Update="N">1</RevisionId>
+                <PublicIdentifier>urn:newsml:www.belga.be:46250506:1N</PublicIdentifier>
+            </NewsIdentifier>
+            <NameLabel />
+            <Label />
+        </Identification>
+        <NewsManagement>
+            <NewsItemType FormalName="NEWS" />
+            <FirstCreated>20220816T174755</FirstCreated>
+            <ThisRevisionCreated>20220816T174755</ThisRevisionCreated>
+            <Status FormalName="USABLE" />
+        </NewsManagement>
+        <NewsComponent Duid="46250506">
+            <NewsLines>
+                <HeadLine>No Headline !</HeadLine>
+            </NewsLines>
+            <DescriptiveMetadata>
+                <Genre />
+            </DescriptiveMetadata>
+            <NewsComponent xmlns:wstxns1="xml" Duid="46250507" wstxns1:lang="nl">
+                <Role FormalName="Quote" />
+                <NewsLines>
+                    <HeadLine>17 QUOTE IEPER FUP</HeadLine>
+                    <CreditLine>BELGA</CreditLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName="BELGA" />
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="Belga - DPG Media" Topic="EDITOR" />
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA" />
+                    </Source>
+                    <Contributor />
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="NEWS" />
+                        <Property FormalName="NewsProduct" Value="GENERAL" />
+                    </Property>
+                    <Property FormalName="ValidationDate" Value="20220816T174755" />
+                    <Property FormalName="NewsObjectId" Value="46250507" />
+                    <Property FormalName="Priority" Value="3" />
+                    <Property FormalName="Distribution" Value="Default" />
+                </AdministrativeMetadata>
+                <DescriptiveMetadata>
+                    <Location />
+                </DescriptiveMetadata>
+                <NewsComponent Duid="46250508">
+                    <Role FormalName="Title" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent>17 QUOTE IEPER FUP</DataContent>
+                        <Characteristics>
+                            <SizeInBytes>18</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="46250509">
+                    <Role FormalName="Body" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent />
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent>
+                    <Role FormalName="Sound" />
+                    <ContentItem Href="sample2.mp3">
+                        <Format FormalName="Mpeg3" />
+                        <MimeType FormalName="audio/mpeg3" />
+                        <Characteristics>
+                            <SizeInBytes />
+                            <Property FormalName="Duration" Value="0" />
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+            <NewsComponent xmlns:wstxns2="xml" Duid="46250511" wstxns2:lang="nl">
+                <Role FormalName="Quote" />
+                <NewsLines>
+                    <HeadLine>18 QUOTE KOKSIJDE</HeadLine>
+                    <CreditLine>BELGA</CreditLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName="BELGA" />
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="Belga - DPG Media" Topic="EDITOR" />
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA" />
+                    </Source>
+                    <Contributor />
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="NEWS" />
+                        <Property FormalName="NewsProduct" Value="GENERAL" />
+                    </Property>
+                    <Property FormalName="ValidationDate" Value="20220816T174755" />
+                    <Property FormalName="NewsObjectId" Value="46250511" />
+                    <Property FormalName="Priority" Value="3" />
+                    <Property FormalName="Distribution" Value="Default" />
+                </AdministrativeMetadata>
+                <DescriptiveMetadata>
+                    <Location />
+                </DescriptiveMetadata>
+                <NewsComponent Duid="46250512">
+                    <Role FormalName="Title" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent>18 QUOTE KOKSIJDE</DataContent>
+                        <Characteristics>
+                            <SizeInBytes>17</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="46250513">
+                    <Role FormalName="Body" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent />
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent>
+                    <Role FormalName="Sound" />
+                    <ContentItem Href="sample3.mp3">
+                        <Format FormalName="Mpeg3" />
+                        <MimeType FormalName="audio/mpeg3" />
+                        <Characteristics>
+                            <SizeInBytes />
+                            <Property FormalName="Duration" Value="0" />
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+            <NewsComponent xmlns:wstxns3="xml" Duid="46250515" wstxns3:lang="nl">
+                <Role FormalName="Quote" />
+                <NewsLines>
+                    <HeadLine>17 QUOTE BOLINGO</HeadLine>
+                    <CreditLine>BELGA</CreditLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName="BELGA" />
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="Belga - DPG Media" Topic="EDITOR" />
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA" />
+                    </Source>
+                    <Contributor />
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="NEWS" />
+                        <Property FormalName="NewsProduct" Value="GENERAL" />
+                    </Property>
+                    <Property FormalName="ValidationDate" Value="20220816T174755" />
+                    <Property FormalName="NewsObjectId" Value="46250515" />
+                    <Property FormalName="Priority" Value="3" />
+                    <Property FormalName="Distribution" Value="Default" />
+                </AdministrativeMetadata>
+                <DescriptiveMetadata>
+                    <Location />
+                </DescriptiveMetadata>
+                <NewsComponent Duid="46250516">
+                    <Role FormalName="Title" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent>17 QUOTE BOLINGO</DataContent>
+                        <Characteristics>
+                            <SizeInBytes>16</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="46250517">
+                    <Role FormalName="Body" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent />
+                        <Characteristics>
+                            <SizeInBytes>0</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent>
+                    <Role FormalName="Sound" />
+                    <ContentItem Href="sample1.mp3">
+                        <Format FormalName="Mpeg3" />
+                        <MimeType FormalName="audio/mpeg3" />
+                        <Characteristics>
+                            <SizeInBytes />
+                            <Property FormalName="Duration" Value="0" />
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+            <NewsComponent xmlns:wstxns4="xml" Duid="46250519" wstxns4:lang="nl">
+                <Role FormalName="Audio" />
+                <NewsLines>
+                    <HeadLine>belga 18:00</HeadLine>
+                    <CreditLine>BELGA</CreditLine>
+                </NewsLines>
+                <AdministrativeMetadata>
+                    <Provider>
+                        <Party FormalName="BELGA" />
+                    </Provider>
+                    <Creator>
+                        <Party FormalName="Belga - DPG Media" Topic="EDITOR" />
+                    </Creator>
+                    <Source>
+                        <Party FormalName="BELGA" />
+                    </Source>
+                    <Contributor />
+                    <Property FormalName="NewsPackage">
+                        <Property FormalName="NewsService" Value="NEWS" />
+                        <Property FormalName="NewsProduct" Value="GENERAL" />
+                    </Property>
+                    <Property FormalName="ValidationDate" Value="20220816T174755" />
+                    <Property FormalName="NewsObjectId" Value="46250519" />
+                    <Property FormalName="Priority" Value="3" />
+                    <Property FormalName="Distribution" Value="Default" />
+                </AdministrativeMetadata>
+                <DescriptiveMetadata>
+                    <Location />
+                </DescriptiveMetadata>
+                <NewsComponent Duid="46250520">
+                    <Role FormalName="Title" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent>belga 18:00</DataContent>
+                        <Characteristics>
+                            <SizeInBytes>11</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent Duid="46250521">
+                    <Role FormalName="Body" />
+                    <DescriptiveMetadata>
+                        <Property FormalName="ComponentClass" Value="Text" />
+                    </DescriptiveMetadata>
+                    <ContentItem>
+                        <Format FormalName="Text" />
+                        <DataContent>***Het extreemrechtse festival Frontnacht in Ieper is geannuleerd. Het schepencollege heeft de vergunning ingetrokken. Het festival zou volgende week zaterdag plaatsvinden. Maar er werden neo-nazistische groepen verwacht en dat mocht niet. Bevoegd schepen Diego Desmadryl:&#13;&lt;NewsComponentRef idref="DS04116205"/&gt;&#13;***Op het strand van Koksijde is een vrouw van 55 om het leven gekomen. Dat meldt de kustreddingsdienst, An Beun vertelt wat er gebeurd is: &#13;&lt;NewsComponentRef idref="DS04116206"/&gt;&#13;Wellicht werd de vrouw onwel, maar dat wordt nog onderzocht.&#13;***In Sint-Jans-Molenbeek is afgelopen zaterdag een burenruzie uit de hand gelopen. Een man kreeg daarbij een messteek in de borst. Hij was samen met een andere man het huis van z'n buurman binnengedrongen met een koevoet. De buurman verdedigde zich en stak het slachtoffer neer. Het slachtoffer werd naar het ziekenhuis gebracht, hij was niet in levensgevaar. De buurman wordt verdacht van slagen en verwondingen. Wat de aanleiding was voor de ruzie, is niet duidelijk. &#13;***In de VS is nu ook first lady Jill Biden besmet met corona. Dat meldt het Witte Huis. Ze heeft milde symptomen en ze gaat de komende dagen in isolatie. Jill Biden is 71. Haar echtgenoot, president Joe Biden, testte eind vorige maand ook positief op corona. Hij ging in isolatie, testte daarna negatief, maar 10 dagen later was z'n coronatest opnieuw positief. Begin deze maand werd hij genezen verklaard. &#13;***Op het EK atletiek in München heeft Cynthia Bolingo zich geplaatst voor de finale van de 400 meter. In de halve finale werd ze 2de. Ze is erg trots op haar prestatie:&#13;&lt;NewsComponentRef idref="DS04116207"/&gt;&#13;Bolingo heeft geen gemakkelijk seizoen achter de rug. Ze stond lange tijd aan de zijlijn door een scheur in de hamstring. De finale van de 400 meter vindt morgen plaats. &#13;***Vanavond en vannacht nog altijd kans op enkele buien, lokaal met onweer. 't Koelt af tot zo'n 19 graden. Morgen wisselvallig en op veel plaatsen regen. Hier en daar kan het onweren. Maxima tot 25 graden. De rest van de week blijft het regenachtig bij zo'n 23 graden. Het weekend wordt droger. &#13;       </DataContent>
+                        <Characteristics>
+                            <SizeInBytes>2118</SizeInBytes>
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+                <NewsComponent>
+                    <Role FormalName="Sound" />
+                    <ContentItem Href="sample2.mp3">
+                        <Format FormalName="Mpeg3" />
+                        <MimeType FormalName="audio/mpeg3" />
+                        <Characteristics>
+                            <SizeInBytes />
+                            <Property FormalName="Duration" Value="0" />
+                        </Characteristics>
+                    </ContentItem>
+                </NewsComponent>
+            </NewsComponent>
+        </NewsComponent>
+    </NewsItem>
+</NewsML>
