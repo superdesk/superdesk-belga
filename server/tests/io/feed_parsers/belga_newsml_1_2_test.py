@@ -422,3 +422,4 @@ class BelgaNewsMLOneAudioIngestTestCase2(TestCase):
         self.assertIn('href', item['renditions']['original'])
         self.assertIn('media', item['renditions']['original'])
         self.assertEqual(item['renditions']['original']['mimetype'], 'audio/mpeg')
+        self.assertEqual(item['type'], 'audio')

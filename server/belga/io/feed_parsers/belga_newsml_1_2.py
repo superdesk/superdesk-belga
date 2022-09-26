@@ -517,7 +517,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 ))
                 raise SkipItemException
             role_name = role_name.upper()
-            item[ITEM_TYPE] = "QUOTE" if role_name == "QUOTE" else getattr(CONTENT_TYPE, role_name)
+            item[ITEM_TYPE] = "audio" if role_name == "QUOTE" else getattr(CONTENT_TYPE, role_name)
 
         # read files and save them into the storage
         for newscomponent in newscomponent_el.findall('NewsComponent'):
