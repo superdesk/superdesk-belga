@@ -41,24 +41,24 @@ logger = logging.getLogger(__name__)
 class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     """Feed Parser which can parse specific Belga News ML xml files."""
 
-    NAME = 'belganewsml12'
+    NAME = "belganewsml12"
 
-    label = 'Belga News ML 1.2 Parser'
+    label = "Belga News ML 1.2 Parser"
 
-    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
+    SUPPORTED_TEXT_ASSET_TYPES = ("ALERT", "SHORT", "TEXT", "BRIEF", "ORIGINAL")
     SUPPORTED_MEDIA_ASSET_TYPES = {
-        'VIDEO': {
-            'CLIP': 'original',
-            'IMAGE': 'thumbnail',
+        "VIDEO": {
+            "CLIP": "original",
+            "IMAGE": "thumbnail",
         },
-        'AUDIO': {
-            'SOUND': 'original',
+        "AUDIO": {
+            "SOUND": "original",
         },
-        'QUOTE': {
-            'SOUND': 'original',
+        "QUOTE": {
+            "SOUND": "original",
         },
     }
-    SUPPORTED_BINARY_ASSET_SUBTYPES = ('SOUND', 'CLIP', 'COMPONENT', 'IMAGE')
+    SUPPORTED_BINARY_ASSET_SUBTYPES = ("SOUND", "CLIP", "COMPONENT", "IMAGE")
     MOVE_FILE = False
 
     def __init__(self):
@@ -72,7 +72,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param xml:
         :return:
         """
-        return xml.tag == 'NewsML'
+        return xml.tag == "NewsML"
 
     def parse(self, xml, provider=None):
         """
@@ -115,11 +115,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             self._items = []
             self._item_seed = {}
             # parser the NewsEnvelope element
-            self._item_seed.update(
-                self.parse_newsenvelop(xml.find('NewsEnvelope'))
-            )
+            self._item_seed.update(self.parse_newsenvelop(xml.find("NewsEnvelope")))
             # parser the NewsItem element
-            for newsitem_el in xml.findall('NewsItem'):
+            for newsitem_el in xml.findall("NewsItem"):
                 try:
                     self.parse_newsitem(newsitem_el)
                 except SkipItemException:
@@ -171,33 +169,33 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
         # Identification
         self._item_seed.update(
-            self.parse_identification(newsitem_el.find('Identification'))
+            self.parse_identification(newsitem_el.find("Identification"))
         )
 
         # NewsManagement
         self._item_seed.update(
-            self.parse_newsmanagement(newsitem_el.find('NewsManagement'))
+            self.parse_newsmanagement(newsitem_el.find("NewsManagement"))
         )
 
         # NewsComponent
-        news_component_1 = newsitem_el.find('NewsComponent')
+        news_component_1 = newsitem_el.find("NewsComponent")
         if news_component_1 is None:
             return
 
         # Genre from NewsComponent 1st level
-        for element in news_component_1.findall('DescriptiveMetadata/Genre'):
-            if element.get('FormalName'):
-                self._add_genre(self._item_seed, element.get('FormalName'))
+        for element in news_component_1.findall("DescriptiveMetadata/Genre"):
+            if element.get("FormalName"):
+                self._add_genre(self._item_seed, element.get("FormalName"))
 
         # check if all roles are in `SUPPORTED_MEDIA_ASSET_TYPES`
         is_media_roles = [
-            el.get('FormalName').upper() in self.SUPPORTED_MEDIA_ASSET_TYPES.keys()
-            for el in news_component_1.findall('NewsComponent/Role')
+            el.get("FormalName").upper() in self.SUPPORTED_MEDIA_ASSET_TYPES.keys()
+            for el in news_component_1.findall("NewsComponent/Role")
         ]
         # check if all roles are in `SUPPORTED_TEXT_ASSET_TYPES`
         is_text_roles = [
-            el.get('FormalName').upper() in self.SUPPORTED_TEXT_ASSET_TYPES
-            for el in news_component_1.findall('NewsComponent/Role')
+            el.get("FormalName").upper() in self.SUPPORTED_TEXT_ASSET_TYPES
+            for el in news_component_1.findall("NewsComponent/Role")
         ]
         # not all 2nd level NewsComponents are media items,
         # save media items as attachments for text items
@@ -207,15 +205,15 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         # NewsComponent 2nd level
         # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
-        for news_component_2 in news_component_1.findall('NewsComponent'):
+        for news_component_2 in news_component_1.findall("NewsComponent"):
             # guid
-            guid = news_component_2.attrib.get('Duid')
+            guid = news_component_2.attrib.get("Duid")
             # most probably it's belga remote
-            if guid is None or guid == '0':
+            if guid is None or guid == "0":
                 guid = str(uuid4())
 
             # deepcopy to avoid having a pointer to `subject`
-            item = deepcopy({**self._item_seed, 'guid': guid})
+            item = deepcopy({**self._item_seed, "guid": guid})
 
             try:
                 # all 2nd level NewsComponents are media items,
@@ -256,24 +254,24 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if indent_el is None:
             return identification
 
-        newsident_el = indent_el.find('NewsIdentifier')
+        newsident_el = indent_el.find("NewsIdentifier")
         if newsident_el is not None:
-            element = newsident_el.find('ProviderId')
+            element = newsident_el.find("ProviderId")
             if element is not None:
                 # provider_id
-                identification['provider_id'] = element.text
+                identification["provider_id"] = element.text
 
-            element = newsident_el.find('DateId')
+            element = newsident_el.find("DateId")
             if element is not None:
                 # date_id
-                identification['date_id'] = element.text
+                identification["date_id"] = element.text
 
-            element = newsident_el.find('NewsItemId')
+            element = newsident_el.find("NewsItemId")
             if element is not None:
                 # item_id
-                identification['item_id'] = element.text
+                identification["item_id"] = element.text
 
-            element = newsident_el.find('RevisionId')
+            element = newsident_el.find("RevisionId")
             if element is not None and element.text:
                 # version
                 try:
@@ -282,12 +280,12 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     version = 1
                 if version == 0:
                     version = 1
-                identification['version'] = version
+                identification["version"] = version
 
-            element = newsident_el.find('PublicIdentifier')
+            element = newsident_el.find("PublicIdentifier")
             if element is not None:
                 # public_identifier
-                identification['public_identifier'] = element.text
+                identification["public_identifier"] = element.text
 
         return identification
 
@@ -309,25 +307,29 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :return: dict
         """
         newsmanagement = {}
-        tz = 'Europe/Brussels'
+        tz = "Europe/Brussels"
 
         if manage_el is None:
             return newsmanagement
 
-        element = manage_el.find('FirstCreated')
+        element = manage_el.find("FirstCreated")
         if element is not None:
             # firstcreated
-            newsmanagement['firstcreated'] = local_to_utc(tz, self.datetime(element.text))
+            newsmanagement["firstcreated"] = local_to_utc(
+                tz, self.datetime(element.text)
+            )
 
-        element = manage_el.find('ThisRevisionCreated')
+        element = manage_el.find("ThisRevisionCreated")
         if element is not None:
             # versioncreated
-            newsmanagement['versioncreated'] = local_to_utc(tz, self.datetime(element.text))
+            newsmanagement["versioncreated"] = local_to_utc(
+                tz, self.datetime(element.text)
+            )
 
-        element = manage_el.find('Status')
-        if element is not None and element.get('FormalName'):
+        element = manage_el.find("Status")
+        if element is not None and element.get("FormalName"):
             # pubstatus
-            newsmanagement['pubstatus'] = element.get('FormalName').lower()
+            newsmanagement["pubstatus"] = element.get("FormalName").lower()
 
         return newsmanagement
 
@@ -365,66 +367,79 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :return:
         """
         # Role
-        role = newscomponent_el.find('Role')
+        role = newscomponent_el.find("Role")
         if role is not None:
-            role_name = role.attrib.get('FormalName')
+            role_name = role.attrib.get("FormalName")
             if not (role_name and role_name.upper() in self.SUPPORTED_TEXT_ASSET_TYPES):
-                logger.warning('NewsComponent/Role/FormalName is not supported: "{}". '
-                               'Skiping an "{}" item.'.format(role_name, item['guid']))
+                logger.warning(
+                    'NewsComponent/Role/FormalName is not supported: "{}". '
+                    'Skiping an "{}" item.'.format(role_name, item["guid"])
+                )
                 raise SkipItemException
         else:
-            logger.warning('NewsComponent/Role was not found. Skiping an "{}" item.'.format(
-                item['guid']
-            ))
+            logger.warning(
+                'NewsComponent/Role was not found. Skiping an "{}" item.'.format(
+                    item["guid"]
+                )
+            )
             raise SkipItemException
 
         # language
-        item['language'] = newscomponent_el.attrib.get(XML_LANG)
+        item["language"] = newscomponent_el.attrib.get(XML_LANG)
 
         # NewsLines
-        newslines_el = newscomponent_el.find('NewsLines')
+        newslines_el = newscomponent_el.find("NewsLines")
         self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
-        admin_el = newscomponent_el.find('AdministrativeMetadata')
+        admin_el = newscomponent_el.find("AdministrativeMetadata")
         self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
-        descript_el = newscomponent_el.find('DescriptiveMetadata')
+        descript_el = newscomponent_el.find("DescriptiveMetadata")
         self.parse_descriptivemetadata(item, descript_el)
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
-        for formalname, item_key in (('Body', 'body_html'), ('Title', 'headline'), ('Lead', 'abstract')):
-            role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format(formalname))
+        for formalname, item_key in (
+            ("Body", "body_html"),
+            ("Title", "headline"),
+            ("Lead", "abstract"),
+        ):
+            role = newscomponent_el.find(
+                'NewsComponent/Role[@FormalName="{}"]'.format(formalname)
+            )
             if role is not None:
                 newscomponent = role.getparent()
-                datacontent = newscomponent.find('ContentItem/DataContent')
-                format = newscomponent.find('ContentItem/Format')
+                datacontent = newscomponent.find("ContentItem/DataContent")
+                format = newscomponent.find("ContentItem/Format")
 
                 if datacontent is not None and format is not None:
-                    formalname = format.attrib.get('FormalName')
-                    if not formalname or formalname != 'Text':
+                    formalname = format.attrib.get("FormalName")
+                    if not formalname or formalname != "Text":
                         logger.warning(
-                            'ContentItem/FormalName format "{}" not in Text for "{}" item.'
-                            .format(formalname, item['guid'])
+                            'ContentItem/FormalName format "{}" not in Text for "{}" item.'.format(
+                                formalname, item["guid"]
+                            )
                         )
                     if datacontent.text:
                         item[item_key] = datacontent.text.strip()
 
-                        if item_key == 'body_html':
+                        if item_key == "body_html":
                             item[item_key] = self._plain_to_html(item[item_key])
                 else:
-                    logger.warning('Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
-                        item['guid']
-                    ))
+                    logger.warning(
+                        'Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
+                            item["guid"]
+                        )
+                    )
                     raise SkipItemException
 
         # SDBELGA-328
-        if item.get('abstract'):
-            abstract = '<p>' + item['abstract'] + '</p>'
-            item['body_html'] = abstract + item.get('body_html', '')
-            item['abstract'] = ''
+        if item.get("abstract"):
+            abstract = "<p>" + item["abstract"] + "</p>"
+            item["body_html"] = abstract + item.get("body_html", "")
+            item["abstract"] = ""
 
         # type
         item[ITEM_TYPE] = CONTENT_TYPE.TEXT
@@ -466,107 +481,128 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
 
         # language
-        item['language'] = newscomponent_el.attrib.get(XML_LANG)
+        item["language"] = newscomponent_el.attrib.get(XML_LANG)
 
         # NewsLines
-        newslines_el = newscomponent_el.find('NewsLines')
+        newslines_el = newscomponent_el.find("NewsLines")
         self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
-        admin_el = newscomponent_el.find('AdministrativeMetadata')
+        admin_el = newscomponent_el.find("AdministrativeMetadata")
         self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
-        descript_el = newscomponent_el.find('DescriptiveMetadata')
+        descript_el = newscomponent_el.find("DescriptiveMetadata")
         self.parse_descriptivemetadata(item, descript_el)
 
         # description_text, headline
-        for formalname, item_key in (('Body', 'description_text'), ('Title', 'headline')):
-            role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format(formalname))
+        for formalname, item_key in (
+            ("Body", "description_text"),
+            ("Title", "headline"),
+        ):
+            role = newscomponent_el.find(
+                'NewsComponent/Role[@FormalName="{}"]'.format(formalname)
+            )
             if role is not None:
                 newscomponent = role.getparent()
-                datacontent = newscomponent.find('ContentItem/DataContent')
-                format = newscomponent.find('ContentItem/Format')
+                datacontent = newscomponent.find("ContentItem/DataContent")
+                format = newscomponent.find("ContentItem/Format")
 
                 if datacontent is not None and format is not None:
-                    formalname = format.attrib.get('FormalName')
-                    if not formalname or formalname not in ('Text', 'ascii'):
+                    formalname = format.attrib.get("FormalName")
+                    if not formalname or formalname not in ("Text", "ascii"):
                         logger.warning(
                             'ContentItem/FormalName was not found or not supported: "{}". '
-                            'Skiping an "{}" item.'.format(formalname, item['guid'])
+                            'Skiping an "{}" item.'.format(formalname, item["guid"])
                         )
                         raise SkipItemException
                     if datacontent.text:
                         item[item_key] = datacontent.text.strip()
 
-                        if item_key == 'description_text':
+                        if item_key == "description_text":
                             item[item_key] = self._plain_to_html(item[item_key])
                 else:
-                    logger.warning('Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
-                        item['guid']
-                    ))
+                    logger.warning(
+                        'Mimetype or DataContent was not found. Skiping an "{}" item.'.format(
+                            item["guid"]
+                        )
+                    )
                     raise SkipItemException
 
         # type
-        role = newscomponent_el.find('Role')
+        role = newscomponent_el.find("Role")
         if role is not None:
-            role_name = role.attrib.get('FormalName')
+            role_name = role.attrib.get("FormalName")
             if not role_name:
-                logger.warning('NewsComponent/Role was not found. Skiping an "{}" item.'.format(
-                    item['guid']
-                ))
+                logger.warning(
+                    'NewsComponent/Role was not found. Skiping an "{}" item.'.format(
+                        item["guid"]
+                    )
+                )
                 raise SkipItemException
             role_name = role_name.upper()
-            item[ITEM_TYPE] = "audio" if role_name == "QUOTE" else getattr(CONTENT_TYPE, role_name)
+            item[ITEM_TYPE] = (
+                "audio" if role_name == "QUOTE" else getattr(CONTENT_TYPE, role_name)
+            )
 
         # read files and save them into the storage
-        for newscomponent in newscomponent_el.findall('NewsComponent'):
+        for newscomponent in newscomponent_el.findall("NewsComponent"):
             component_role = self._get_role(newscomponent)
-            if component_role and component_role.upper() in self.SUPPORTED_MEDIA_ASSET_TYPES[role_name].keys():
-                content_item = newscomponent.find('ContentItem')
+            if (
+                component_role
+                and component_role.upper()
+                in self.SUPPORTED_MEDIA_ASSET_TYPES[role_name].keys()
+            ):
+                content_item = newscomponent.find("ContentItem")
                 if content_item is None:
                     continue
 
-                filename = content_item.attrib.get('Href')
+                filename = content_item.attrib.get("Href")
                 if filename is None:
                     continue
 
-                format_name = ''
-                format_el = content_item.find('Format')
+                format_name = ""
+                format_el = content_item.find("Format")
                 if format_el is not None:
-                    format_name = format_el.attrib.get('FormalName')
+                    format_name = format_el.attrib.get("FormalName")
 
                 content = self._get_file(filename)
                 if not content:
                     continue
 
-                _, content_type, metadata = process_file_from_stream(content, 'application/' + format_name)
+                _, content_type, metadata = process_file_from_stream(
+                    content, "application/" + format_name
+                )
                 content.seek(0)
                 media_id = app.media.put(
                     content,
                     filename=filename,
                     content_type=content_type,
-                    metadata=metadata
+                    metadata=metadata,
                 )
 
-                rendition_key = self.SUPPORTED_MEDIA_ASSET_TYPES[role_name][component_role.upper()]
-                item.setdefault('renditions', {})[rendition_key] = {
-                    'media': media_id,
-                    'mimetype': content_type,
-                    'href': app.media.url_for_media(media_id, content_type),
+                rendition_key = self.SUPPORTED_MEDIA_ASSET_TYPES[role_name][
+                    component_role.upper()
+                ]
+                item.setdefault("renditions", {})[rendition_key] = {
+                    "media": media_id,
+                    "mimetype": content_type,
+                    "href": app.media.url_for_media(media_id, content_type),
                 }
 
         # this attibutes are redundand for media item
-        attrs_to_be_removed = ('date_id', 'item_id', 'provider_id', 'public_identifier')
+        attrs_to_be_removed = ("date_id", "item_id", "provider_id", "public_identifier")
         for attr in attrs_to_be_removed:
             if attr in item:
                 del item[attr]
 
         # clean subject
-        subject_to_be_removed = (
-            'genre',
-        )
-        item['subject'] = [i for i in item.get('subject', []) if i['scheme'] not in subject_to_be_removed]
+        subject_to_be_removed = ("genre",)
+        item["subject"] = [
+            i
+            for i in item.get("subject", [])
+            if i["scheme"] not in subject_to_be_removed
+        ]
 
     def parse_newslines(self, item, newslines_el):
         """Parse NewsLines in 2nd level NewsComponent element."""
@@ -574,40 +610,42 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             return
 
         # dateline
-        element = newslines_el.find('DateLine')
+        element = newslines_el.find("DateLine")
         if element is not None and element.text:
             self.set_dateline(item, text=element.text)
 
         # byline
-        element = newslines_el.find('CreditLine')
+        element = newslines_el.find("CreditLine")
         if element is not None and element.text:
-            item['byline'] = element.text
+            item["byline"] = element.text
 
         # headline
-        element = newslines_el.find('HeadLine')
+        element = newslines_el.find("HeadLine")
         if element is not None and element.text:
-            item['headline'] = element.text.strip()
+            item["headline"] = element.text.strip()
 
         # copyrightholder
-        element = newslines_el.find('CopyrightLine')
+        element = newslines_el.find("CopyrightLine")
         if element is not None and element.text:
-            item['copyrightholder'] = element.text
+            item["copyrightholder"] = element.text
 
         # line_type
-        element = newslines_el.find('NewsLine/NewsLineType')
-        if element is not None and element.get('FormalName'):
-            item['line_type'] = element.get('FormalName')
+        element = newslines_el.find("NewsLine/NewsLineType")
+        if element is not None and element.get("FormalName"):
+            item["line_type"] = element.get("FormalName")
 
         # line_text
-        element = newslines_el.find('NewsLine/NewsLineText')
+        element = newslines_el.find("NewsLine/NewsLineText")
         if element is not None and element.text:
-            item['line_text'] = element.text
+            item["line_text"] = element.text
 
         # Set keywords like belga-keywords, original-metadata etc
-        for element in newslines_el.findall('KeywordLine'):
+        for element in newslines_el.findall("KeywordLine"):
             if element is not None and element.text:
                 try:
-                    item.setdefault('subject', []).extend(self._get_keywords(element.text.strip()))
+                    item.setdefault("subject", []).extend(
+                        self._get_keywords(element.text.strip())
+                    )
                 except (StopIteration, IndexError) as e:
                     logger.error(e)
 
@@ -616,108 +654,127 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if admin_el is None:
             return
 
-        item['administrative'] = {}
+        item["administrative"] = {}
 
-        element = admin_el.find('Provider/Party')
-        if element is not None and element.get('FormalName'):
-            item['administrative']['provider'] = element.get('FormalName')
+        element = admin_el.find("Provider/Party")
+        if element is not None and element.get("FormalName"):
+            item["administrative"]["provider"] = element.get("FormalName")
 
         self.parse_sources(item, admin_el)
 
         signoff_list = []
-        for element in admin_el.findall('Creator/Party'):
-            if element is not None and element.get('FormalName'):
-                _sign_off = author_name = element.get('FormalName', '').replace(' ', '').strip('()')
-                _topic = element.get('Topic', '')
+        for element in admin_el.findall("Creator/Party"):
+            if element is not None and element.get("FormalName"):
+                _sign_off = author_name = (
+                    element.get("FormalName", "").replace(" ", "").strip("()")
+                )
+                _topic = element.get("Topic", "")
                 author = {
-                    '_id': [author_name, _topic], 'role': _topic,
-                    'name': _topic, 'sub_label': author_name
+                    "_id": [author_name, _topic],
+                    "role": _topic,
+                    "name": _topic,
+                    "sub_label": author_name,
                 }
                 # try to find an author in DB
-                user = get_resource_service('users').find_one(req=None, username=author_name)
+                user = get_resource_service("users").find_one(
+                    req=None, username=author_name
+                )
                 if user:
-                    author['_id'] = [
-                        str(user['_id']),
-                        author['role'],
+                    author["_id"] = [
+                        str(user["_id"]),
+                        author["role"],
                     ]
-                    author['sub_label'] = user.get('display_name', author['name'])
-                    author['parent'] = str(user['_id'])
-                    author['name'] = author['role']
-                    if user.get('sign_off'):
-                        _sign_off = user['sign_off']
+                    author["sub_label"] = user.get("display_name", author["name"])
+                    author["parent"] = str(user["_id"])
+                    author["name"] = author["role"]
+                    if user.get("sign_off"):
+                        _sign_off = user["sign_off"]
 
                 signoff_list.append(_sign_off)
-                item.setdefault('authors', []).append(author)
+                item.setdefault("authors", []).append(author)
 
         # Check and remove duplicates authors if any
-        if item.get('authors'):
-            item['authors'] = [dict(i) for i, _ in itertools.groupby(sorted(item['authors'], key=lambda k: k['_id']))]
+        if item.get("authors"):
+            item["authors"] = [
+                dict(i)
+                for i, _ in itertools.groupby(
+                    sorted(item["authors"], key=lambda k: k["_id"])
+                )
+            ]
 
         if signoff_list:
-            item['sign_off'] = "/".join(signoff_list)
+            item["sign_off"] = "/".join(signoff_list)
 
-        element = admin_el.find('Contributor/Party')
-        if element is not None and element.get('FormalName'):
-            item['administrative']['contributor'] = element.get('FormalName')
+        element = admin_el.find("Contributor/Party")
+        if element is not None and element.get("FormalName"):
+            item["administrative"]["contributor"] = element.get("FormalName")
 
         element = admin_el.find('Property[@FormalName="Validator"]')
-        if element is not None and element.get('Value'):
-            item['administrative']['validator'] = element.get('Value')
+        if element is not None and element.get("Value"):
+            item["administrative"]["validator"] = element.get("Value")
 
         element = admin_el.find('Property[@FormalName="ValidationDate"]')
-        if element is not None and element.get('Value'):
-            item['administrative']['validation_date'] = element.get('Value')
+        if element is not None and element.get("Value"):
+            item["administrative"]["validation_date"] = element.get("Value")
 
         element = admin_el.find('Property[@FormalName="ForeignId"]')
-        if element is not None and element.get('Value'):
-            item['administrative']['foreign_id'] = element.get('Value')
+        if element is not None and element.get("Value"):
+            item["administrative"]["foreign_id"] = element.get("Value")
 
         # priority
         # urgency
         element = admin_el.find('Property[@FormalName="Priority"]')
-        if element is not None and element.get('Value'):
+        if element is not None and element.get("Value"):
             try:
-                item['priority'] = int(element.get('Value'))
+                item["priority"] = int(element.get("Value"))
             except ValueError:
-                item['priority'] = element.get('Value')
-            item['urgency'] = item['priority']
+                item["priority"] = element.get("Value")
+            item["urgency"] = item["priority"]
 
         # source
-        element = admin_el.find('Source/Party')
-        if element is not None and element.get('FormalName'):
-            item['source'] = element.get('FormalName')
+        element = admin_el.find("Source/Party")
+        if element is not None and element.get("FormalName"):
+            item["source"] = element.get("FormalName")
 
         # services-products CV
-        for news_package_elem in admin_el.findall('Property[@FormalName="NewsPackage"]'):
+        for news_package_elem in admin_el.findall(
+            'Property[@FormalName="NewsPackage"]'
+        ):
             news_service = news_package_elem.find('Property[@FormalName="NewsService"]')
             news_product = news_package_elem.find('Property[@FormalName="NewsProduct"]')
             if news_service is not None and news_product is not None:
-                qcode = '{}/{}'.format(news_service.get('Value'), news_product.get('Value'))
-                item.setdefault('subject', []).append({
-                    'name': qcode,
-                    'qcode': qcode,
-                    'parent': news_service.get('Value'),
-                    'scheme': 'services-products'
-                })
+                qcode = "{}/{}".format(
+                    news_service.get("Value"), news_product.get("Value")
+                )
+                item.setdefault("subject", []).append(
+                    {
+                        "name": qcode,
+                        "qcode": qcode,
+                        "parent": news_service.get("Value"),
+                        "scheme": "services-products",
+                    }
+                )
 
         # label CV
         for element in admin_el.findall('Property[@FormalName="Label"]'):
-            if element is not None and element.get('Value'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('Value'),
-                    "qcode": element.get('Value'),
-                    "scheme": "label"
-                })
+            if element is not None and element.get("Value"):
+                item.setdefault("subject", []).append(
+                    {
+                        "name": element.get("Value"),
+                        "qcode": element.get("Value"),
+                        "scheme": "label",
+                    }
+                )
 
         # slugline
         element = admin_el.find('Property[@FormalName="Topic"]')
-        if element is not None and element.get('Value'):
-            item['slugline'] = element.get('Value')
+        if element is not None and element.get("Value"):
+            item["slugline"] = element.get("Value")
 
         # editorial note
         element = admin_el.find('Property[@FormalName="EditorialInfo"]')
-        if element is not None and element.get('Value'):
-            item['ednote'] = element.get('Value')
+        if element is not None and element.get("Value"):
+            item["ednote"] = element.get("Value")
 
     def parse_descriptivemetadata(self, item, descript_el):
         """
@@ -745,34 +802,49 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if descript_el is None:
             return
 
-        location_el = descript_el.find('Location')
+        location_el = descript_el.find("Location")
         if location_el is not None:
-            elements = location_el.findall('Property')
+            elements = location_el.findall("Property")
             for element in elements:
                 # country
-                if element.attrib.get('FormalName', '') == 'Country' and element.attrib.get('Value'):
-                    country_val = element.attrib.get('Value')
-                    countries = self._get_mapped_keywords(country_val, country_val.capitalize(), 'countries')
+                if element.attrib.get(
+                    "FormalName", ""
+                ) == "Country" and element.attrib.get("Value"):
+                    country_val = element.attrib.get("Value")
+                    countries = self._get_mapped_keywords(
+                        country_val, country_val.capitalize(), "countries"
+                    )
                     if countries:
-                        item.setdefault('subject', []).extend(countries + self._get_country(countries[0]["qcode"]))
+                        item.setdefault("subject", []).extend(
+                            countries + self._get_country(countries[0]["qcode"])
+                        )
 
                 # city
-                if element.attrib.get('FormalName', '') == 'City' and element.attrib.get('Value'):
-                    item.setdefault('extra', {})['city'] = element.attrib.get('Value')
+                if element.attrib.get(
+                    "FormalName", ""
+                ) == "City" and element.attrib.get("Value"):
+                    item.setdefault("extra", {})["city"] = element.attrib.get("Value")
 
         # remove duplicated subject
-        item['subject'] = [
-            dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['qcode']))
+        item["subject"] = [
+            dict(i)
+            for i, _ in itertools.groupby(
+                sorted(item["subject"], key=lambda k: k["qcode"])
+            )
         ]
 
     def parse_attachments(self, news_component_1):
         attachments = []
-        for news_component_2 in news_component_1.findall('NewsComponent'):
+        for news_component_2 in news_component_1.findall("NewsComponent"):
             role_name = self._get_role(news_component_2)
             if role_name and role_name.upper() not in self.SUPPORTED_TEXT_ASSET_TYPES:
-                for newscomponent in news_component_2.findall('NewsComponent'):
+                for newscomponent in news_component_2.findall("NewsComponent"):
                     component_role = self._get_role(newscomponent)
-                    if component_role and component_role.upper() in self.SUPPORTED_BINARY_ASSET_SUBTYPES:
+                    if (
+                        component_role
+                        and component_role.upper()
+                        in self.SUPPORTED_BINARY_ASSET_SUBTYPES
+                    ):
                         attachment = self.parse_attachment(newscomponent)
                         if attachment:
                             attachments.append(attachment)
@@ -780,8 +852,8 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 news_component_1.remove(news_component_2)
         if attachments:
             return {
-                'attachments': attachments,
-                'ednote': 'The story has {} attachment(s)'.format(len(attachments)),
+                "attachments": attachments,
+                "ednote": "The story has {} attachment(s)".format(len(attachments)),
             }
         return {}
 
@@ -804,104 +876,115 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             </ContentItem>
         </NewsComponent>
         """
-        content_item = newscomponent_el.find('ContentItem')
+        content_item = newscomponent_el.find("ContentItem")
         if content_item is None:
             return
 
         # avoid re-adding media after item is ingested
         guid = hashlib.md5(ElementTree.tostring(content_item)).hexdigest()
-        attachment_service = get_resource_service('attachments')
+        attachment_service = get_resource_service("attachments")
         old_attachment = attachment_service.find_one(req=None, guid=guid)
         if old_attachment:
-            return {'attachment': old_attachment['_id']}
+            return {"attachment": old_attachment["_id"]}
 
-        filename = content_item.attrib.get('Href')
+        filename = content_item.attrib.get("Href")
         if filename is None:
             return
 
-        format_name = ''
-        format_el = content_item.find('Format')
+        format_name = ""
+        format_el = content_item.find("Format")
         if format_el is not None:
-            format_name = format_el.attrib.get('FormalName')
+            format_name = format_el.attrib.get("FormalName")
 
         content = self._get_file(filename)
         if not content:
             return
-        _, content_type, metadata = process_file_from_stream(content, 'application/' + format_name)
+        _, content_type, metadata = process_file_from_stream(
+            content, "application/" + format_name
+        )
         content.seek(0)
-        media_id = app.media.put(content,
-                                 filename=filename,
-                                 content_type=content_type,
-                                 metadata=metadata,
-                                 resource='attachments')
+        media_id = app.media.put(
+            content,
+            filename=filename,
+            content_type=content_type,
+            metadata=metadata,
+            resource="attachments",
+        )
         try:
-            ids = attachment_service.post([{
-                'media': media_id,
-                'filename': filename,
-                'title': filename,
-                'description': 'belga remote attachment',
-                'guid': guid,
-            }])
-            return {'attachment': next(iter(ids), None)}
+            ids = attachment_service.post(
+                [
+                    {
+                        "media": media_id,
+                        "filename": filename,
+                        "title": filename,
+                        "description": "belga remote attachment",
+                        "guid": guid,
+                    }
+                ]
+            )
+            return {"attachment": next(iter(ids), None)}
         except Exception as ex:
             app.media.delete(media_id)
 
     def parse_sources(self, item, admin_el):
         names = []
-        source = admin_el.find('Source/Party')
-        if source is not None and source.get('FormalName'):
-            names.extend(source.get('FormalName').split('/'))
+        source = admin_el.find("Source/Party")
+        if source is not None and source.get("FormalName"):
+            names.extend(source.get("FormalName").split("/"))
         if not names:
-            names.append('BELGA')
-        sources = get_resource_service('vocabularies').get_items('sources')
+            names.append("BELGA")
+        sources = get_resource_service("vocabularies").get_items("sources")
         for source in sources:
-            if source['name'] in names:
-                item.setdefault('subject', []).append(source)
+            if source["name"] in names:
+                item.setdefault("subject", []).append(source)
 
     def _get_role(self, newscomponent_el):
-        role = newscomponent_el.find('Role')
+        role = newscomponent_el.find("Role")
         if role is not None:
-            return role.attrib.get('FormalName')
+            return role.attrib.get("FormalName")
 
     def _get_file(self, filename):
-        config = self._provider.get('config', {})
-        path = config.get('path', '')
-        file_dir = os.path.join(path, 'attachments')
+        config = self._provider.get("config", {})
+        path = config.get("path", "")
+        file_dir = os.path.join(path, "attachments")
         file_path = os.path.join(file_dir, filename)
         try:
-            if self._provider.get('feeding_service') == 'ftp':
+            if self._provider.get("feeding_service") == "ftp":
                 file_path = self._download_file(filename, file_path, config)
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 content = f.read()
                 if self.MOVE_FILE:
                     self._move_file(file_dir, filename, config)
                 return BytesIO(content)
         except (FileNotFoundError, error_perm) as e:
-            logger.warning('File %s not found', file_path)
+            logger.warning("File %s not found", file_path)
         except Exception as e:
             logger.error(e)
 
     def _download_file(self, filename, file_path, config):
         tmp_dir = os.path.join(gettempdir(), filename)
-        with ftp_connect(config) as ftp, open(tmp_dir, 'wb') as f:
-            ftp.retrbinary('RETR ' + file_path, f.write)
+        with ftp_connect(config) as ftp, open(tmp_dir, "wb") as f:
+            ftp.retrbinary("RETR " + file_path, f.write)
             return tmp_dir
 
     def _move_file(self, file_dir, filename, config):
-        if self._provider.get('feeding_service') == 'ftp':
+        if self._provider.get("feeding_service") == "ftp":
             with ftp_connect(config) as ftp:
-                if config.get('move', False):
+                if config.get("move", False):
                     ftp_service = FTPFeedingService()
                     move_path, _ = ftp_service._create_move_folders(config, ftp)
                     ftp_service._move(
-                        ftp, os.path.join(file_dir, filename), os.path.join(move_path, filename),
-                        datetime.now(), False
+                        ftp,
+                        os.path.join(file_dir, filename),
+                        os.path.join(move_path, filename),
+                        datetime.now(),
+                        False,
                     )
         else:
             file_service = FileFeedingService()
             # move processed attachments to the same folder with XML
             file_dir = os.path.dirname(file_dir)
-            file_service.move_file(file_dir, 'attachments/' + filename, self._provider)
+            file_service.move_file(file_dir, "attachments/" + filename, self._provider)
 
 
 register_feed_parser(BelgaNewsMLOneFeedParser.NAME, BelgaNewsMLOneFeedParser())
