@@ -416,13 +416,9 @@ class BelgaNewsMLOneAudioIngestTestCase2(TestCase):
             self.item = parser.parse(self.xml_root, provider)
 
     def test_audio_ingest(self):
-        self.assertEqual(len(self.item), 3)
+        item = self.item[0]
 
-        self.assertIn(self.item[0]['guid'], '46250507')
-        self.assertIn(self.item[0]['ednote'], 'The story has 1 attachment(s)')
-
-        self.assertIn(self.item[1]['guid'], '46250511')
-        self.assertIn(self.item[0]['ednote'], 'The story has 1 attachment(s)')
-
-        self.assertIn(self.item[2]['guid'], '46250515')
-        self.assertIn(self.item[0]['ednote'], 'The story has 1 attachment(s)')
+        self.assertEqual(len(self.item), 4)
+        self.assertIn('href', item['renditions']['original'])
+        self.assertIn('media', item['renditions']['original'])
+        self.assertEqual(item['renditions']['original']['mimetype'], 'audio/mpeg')
