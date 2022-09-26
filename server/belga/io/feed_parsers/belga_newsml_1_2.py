@@ -45,7 +45,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
     label = 'Belga News ML 1.2 Parser'
 
-    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL', 'QUOTE')
+    SUPPORTED_TEXT_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF', 'ORIGINAL')
     SUPPORTED_MEDIA_ASSET_TYPES = {
         'VIDEO': {
             'CLIP': 'original',
@@ -53,7 +53,10 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         },
         'AUDIO': {
             'SOUND': 'original',
-        }
+        },
+        'QUOTE': {
+            'SOUND': 'original',
+        },
     }
     SUPPORTED_BINARY_ASSET_SUBTYPES = ('SOUND', 'CLIP', 'COMPONENT', 'IMAGE')
     MOVE_FILE = False
@@ -225,7 +228,6 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     self.parse_newscomponent_text(item, news_component_2)
             except SkipItemException:
                 continue
-
             self._items.append(item)
 
     def parse_identification(self, indent_el):
@@ -417,17 +419,6 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         item['guid']
                     ))
                     raise SkipItemException
-            else:
-                # SDBELGA-676
-                role = newscomponent_el.find('NewsComponent/Role[@FormalName="{}"]'.format("Sound"))
-                if role is not None:
-                    newscomponent1 = role.getparent()
-                    attachments = self.parse_attachment(newscomponent1)
-                    if attachments:
-                        item.update({
-                            'attachments': attachments,
-                            'ednote': 'The story has {} attachment(s)'.format(len(attachments)),
-                        })
 
         # SDBELGA-328
         if item.get('abstract'):
@@ -526,7 +517,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 ))
                 raise SkipItemException
             role_name = role_name.upper()
-            item[ITEM_TYPE] = getattr(CONTENT_TYPE, role_name)
+            item[ITEM_TYPE] = "QUOTE" if role_name == "QUOTE" else getattr(CONTENT_TYPE, role_name)
 
         # read files and save them into the storage
         for newscomponent in newscomponent_el.findall('NewsComponent'):
