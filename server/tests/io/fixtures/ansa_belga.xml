@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nitf>
+
+    <head>
+        <title>
+            <!-- Page title -->
+            &#62;&#62;&#62;ANSA&#47;Gazprom cuts Italy gas supplies by a third
+        </title>
+        <meta name="md5" content="146626b815e872573619eabd6535178d" />
+        <meta name="wordcount" content="9912" />
+        <meta name="fulladdresses" content="INT X083" />
+        <!-- Author -->
+        <meta name="author" content="GEE" />
+        <!-- Writer -->
+        <meta name="writer" />
+        <!-- Keyword -->
+        <meta name="keyword" content="&#62;&#62;&#62;ANSA&#47;Gazprom cut its flow of gas into Italy" />
+        <!-- Network Node -->
+        <meta name="network" content="AMZ" />
+        <!-- Priority -->
+        <meta name="priority" content="R" />
+        <!-- Category -->
+        <meta name="category" content="ALR" />
+        <!-- Category iptc -->
+        <meta name="category_iptc" content="04000000" />
+        <!-- Sub Category -->
+        <meta name="subcategory" content="&#62;&#62;&#62;ANSA&#47;Gazprom cuts Italy gas supplies by a third" />
+        <!-- Addressings -->
+        <meta name="addresses" content="INT" />
+        <!-- Selection -->
+        <meta name="selezione" content="X083" />
+        <!-- Product ID -->
+        <meta name="product-id" content="NS042	1311	X083" />
+        <docdata>
+            <!-- News Identifier -->
+            <doc-id id-string="XAM22192010243_AMZ_X083" />
+            <!-- Date of issue -->
+            <date.issue norm="2022-07-11 18:33" />
+            <!-- Date of release -->
+            <date.release norm="2022-07-11 18:33" />
+        </docdata>
+    </head>
+
+    <body>
+        <body.head>
+            <hedline>
+                <hl1>
+                    <!-- Title -->
+                    &#62;&#62;&#62;ANSA&#47;Gazprom cuts Italy gas supplies by a third
+                </hl1>
+            </hedline>
+            <byline>
+                <!-- Subtitle -->
+                Situation serious, ready for all scenarios says EC
+            </byline>
+            <distributor>
+                <org>
+                    <!-- Agency -->
+                    ANSA
+                </org>
+            </distributor>
+            <dateline>
+                <location>
+                    <!-- Significant location -->
+                    ROME
+                </location>
+            </dateline>
+        </body.head>
+        <body.content>
+            <!-- Language -->
+            <lang lang="it" />
+            <block>
+                <!-- photo link list -->
+                <img source="05be579082cc8e4649d31ccd14aec976.jpg" />
+                <p>
+                    <!-- Text -->
+                    (ANSA) - ROME, JUL 11 - Russian energy giant Gazprom on
+                    Monday cut its gas supplies to Italy by a third, Italian fuels
+                    giant Eni said.
+                </p>
+            </block>
+        </body.content>
+    </body>
+</nitf>
