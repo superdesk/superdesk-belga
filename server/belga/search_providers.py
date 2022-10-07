@@ -509,6 +509,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "sign_off": self.get_sign_off(data.get("authors")),
             "authors": self.get_authors(data.get("authors")),
             "subject": self.get_subjects(data),
+            # SDBELGA-665
+            "ednote" : get_text(data.get("editorialInfo"))
         }
 
     def get_authors(self, authors):
