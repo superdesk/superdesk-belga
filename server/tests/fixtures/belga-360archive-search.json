@@ -27,6 +27,7 @@
             ],
             "createDate": 1581646440000,
             "validateDate": 1581654480000,
+            "editorialInfo" : "Test Ednote of Belga archive api",
             "newsComponents": [
                 {
                     "newsComponentId": 0,

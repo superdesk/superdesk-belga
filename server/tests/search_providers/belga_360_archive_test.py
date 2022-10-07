@@ -218,7 +218,8 @@ class Belga360ArchiveTestCase(TestCase):
                 'scheme': 'country'
             }
         ])
-        self.assertFalse(item['_fetchable'])
+        self.assertFalse(item['_fetchable']),
+        self.assertEqual(item['ednote'], "Test Ednote of Belga archive api")
 
     def test_get_related_article(self):
         self.provider = Belga360ArchiveSearchProvider(dict())
