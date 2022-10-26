@@ -88,13 +88,13 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         self.assertEqual(self.profiles[0], item['profile'])
         self.assertEqual(2, item['urgency'])
         self.assertIn({
-            'name': 'BELGA/AG',
-            'qcode': 'BELGA/AG',
+            'name': 'BELGA',
+            'qcode': 'BELGA',
             'scheme': 'credits',
         }, item['subject'])
         self.assertIn({
-            'name': 'BELGA/AG',
-            'qcode': 'BELGA/AG',
+            'name': 'BELGA',
+            'qcode': 'BELGA',
             'scheme': 'sources',
         }, item['subject'])
 
