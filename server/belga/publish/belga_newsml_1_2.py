@@ -961,22 +961,17 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, "HeadLine").text = item.get("headline")
         SubElement(newslines, "CopyrightLine").text = item.get("copyrightholder")
 
-        # SDBELGA-672
-        for subject in item.get("subject", []):
-            if subject.get("scheme") == "sources":
-                SubElement(newslines, "CreditLine").text = subject.get("name")
-                break
-        else:
-            if item.get("source") and item.get("ingest_provider"):
-                SubElement(newslines, "CreditLine").text = (
-                    item["source"]
-                    .replace(
-                        "incoming" if "incoming" in item["source"] else "Incoming", ""
-                    )
-                    .strip()
+        if item.get("source") and item.get("ingest_provider") and item.get("auto_publish"):
+            SubElement(newslines, "CreditLine").text = (
+                item["source"]
+                .replace(
+                    "incoming" if "incoming" in item["source"] else "Incoming", ""
                 )
-            else:
-                SubElement(newslines, "CreditLine").text = self.DEFAULT_CREDITLINE
+                .strip()
+                .upper()
+            )
+        else:
+            SubElement(newslines, "CreditLine").text = self.DEFAULT_CREDITLINE
 
         # KeywordLine from country
         for subject in item.get("subject", []):
@@ -1514,13 +1509,6 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                         try:
                             data = belga_cov_search_provider.proxy(
                                 "getGalleryById", {"i": gallery_id}
-                            )
-                            print(
-                                "DATA",
-                                data,
-                                belga_cov_search_provider,
-                                provider_id,
-                                gallery_id,
                             )
                         except Exception as e:
                             logger.warning(
