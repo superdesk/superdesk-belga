@@ -68,7 +68,6 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
         "versioncreated": datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
         "firstpublished": datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
-        "original_creator": "5d385f31fe985ec67a0ca583",
         "unique_id": 43,
         "unique_name": "#43",
         "state": "in_progress",
@@ -84,9 +83,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         "schedule_settings": {"utc_embargo": None, "time_zone": None},
         "_etag": "61c350853dc1513064f9e566f6d3c161cd387a0f",
         "lock_action": "edit",
-        "lock_session": ObjectId("5ca1cb4afe985e54931ee112"),
-        "lock_time": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
-        "lock_user": ObjectId("5d385f31fe985ec67a0ca583"),
+        "auto_publish": True,
         "annotations": [],
         "associations": {
             "editor_0": {
@@ -329,7 +326,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "firstcreated": "2019-08-29T13:22:02+0000",
                 "byline": "NBYXIU",
                 "creditline": "DPA",
-                "source": "DPA",
+                "source": "DPA incoming",
                 "_type": "externalsource",
                 "fetch_endpoint": "search_providers_proxy",
             },
@@ -987,8 +984,11 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             self.app.media.put(**media_item)
 
         self.article["state"] = "published"
+        self.parse(self.article)
+
+    def parse(self, article):
         self.formatter = BelgaNewsML12Formatter()
-        seq, doc = self.formatter.format(self.article, self.subscriber)[0]
+        seq, doc = self.formatter.format(article, self.subscriber)[0]
         self.newsml = etree.XML(
             bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING))
         )
@@ -1112,7 +1112,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines
         self.assertIsNone(newscomponent_2_level.xpath("NewsLines/DateLine")[0].text)
         self.assertEqual(
-            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "DPA"
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "BELGA"
         )
         self.assertEqual(
             newscomponent_2_level.xpath("NewsLines/HeadLine")[0].text, "New Skoda Scala"
@@ -2314,3 +2314,16 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             'NewsComponent/Role[@FormalName="Title"]/ancestor::NewsComponent/ContentItem/Format'
         )[0]
         self.assertEqual(_format.attrib["FormalName"], "Text")
+
+    def test_creditline_autopublished_ingested_item(self):
+        article = self.article.copy()
+        article["source"] = "DPA incoming"
+        article["auto_publish"] = True
+        article["ingest_provider"] = '123'
+        self.parse(article)
+        newscomponent_2_level = self.newsml.xpath(
+            "NewsItem/NewsComponent/NewsComponent"
+        )[0]
+        self.assertEqual(
+            newscomponent_2_level.xpath("NewsLines/CreditLine")[0].text, "DPA"
+        )
