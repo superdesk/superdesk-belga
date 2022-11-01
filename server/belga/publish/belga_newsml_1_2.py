@@ -964,10 +964,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # SDBELGA-672
         for subject in item.get("subject", []):
             if subject.get("scheme") == "sources":
-                name = subject.get("name")
-                if "belga" in name.lower():  # avoid BELGA-AG BELGA/EG etc. should be just BELGA
-                    name = self.DEFAULT_CREDITLINE
-                SubElement(newslines, "CreditLine").text = name
+                SubElement(newslines, "CreditLine").text = subject.get("name")
                 break
         else:
             if item.get("source") and item.get("ingest_provider"):
