@@ -481,7 +481,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         return {
             "type": self.get_type(data.get("assetType", "text")),
-            "mimetype": f"application/superdesk.item.{data.get('assetType','text').lower()}",
+            "mimetype": f"application/superdesk.item.{self.get_type(data.get('assetType', 'text'))}",
             "pubstatus": "usable",
             "_id": guid,
             "state": "published",
@@ -511,7 +511,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "subject": self.get_subjects(data),
             "renditions": self.get_renditions(data)
             if data["assetType"] == "Picture"
-            else None,
+            else {},
             # SDBELGA-665
             "ednote": get_text(data.get("editorialInfo")),
         }
@@ -520,10 +520,11 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         rendition = {}
         for item in data["newsComponents"]:
             if item["assetType"] == "Image":
-                rendition["original"] = {"href": data["renderUrls"]["highres"]}
-                rendition["thumbnail"] = {"href": data["renderUrls"]["thumbnail"]}
-                rendition["viewImage"] = {"href": data["renderUrls"]["preview"]}
-                rendition["baseImage"] = {"href": data["renderUrls"]["highres"]}
+                renderurls = data["renderUrls"]
+                rendition["original"] = {"href": renderurls.get("highres", "")}
+                rendition["thumbnail"] = {"href": renderurls.get("thumbnail", "")}
+                rendition["viewImage"] = {"href": renderurls.get("preview", "")}
+                rendition["baseImage"] = {"href": renderurls.get("highres", "")}
         return rendition
 
     def get_authors(self, authors):
