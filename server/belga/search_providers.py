@@ -481,7 +481,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         return {
             "type": self.get_type(data.get("assetType", "text")),
-            "mimetype": "application/superdesk.item.text",
+            "mimetype": f"application/superdesk.item.{data.get('assetType','text').lower()}",
             "pubstatus": "usable",
             "_id": guid,
             "state": "published",
@@ -509,7 +509,20 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "sign_off": self.get_sign_off(data.get("authors")),
             "authors": self.get_authors(data.get("authors")),
             "subject": self.get_subjects(data),
+            "renditions": self.get_renditions(data)
+            if data["assetType"] == "Picture"
+            else None,
         }
+
+    def get_renditions(self, data):
+        rendition = {}
+        for item in data["newsComponents"]:
+            if item["assetType"] == "Image":
+                rendition["original"] = {"href": data["renderUrls"]["highres"]}
+                rendition["thumbnail"] = {"href": data["renderUrls"]["thumbnail"]}
+                rendition["viewImage"] = {"href": data["renderUrls"]["preview"]}
+                rendition["baseImage"] = {"href": data["renderUrls"]["highres"]}
+        return rendition
 
     def get_authors(self, authors):
         author_data = []
