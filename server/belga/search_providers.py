@@ -521,10 +521,13 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         for item in data["newsComponents"]:
             if item["assetType"] == "Image":
                 renderurls = data["renderUrls"]
-                rendition["original"] = {"href": renderurls.get("highres", "")}
-                rendition["thumbnail"] = {"href": renderurls.get("thumbnail", "")}
-                rendition["viewImage"] = {"href": renderurls.get("preview", "")}
-                rendition["baseImage"] = {"href": renderurls.get("highres", "")}
+                if renderurls.get("highres"):
+                    rendition["original"] = {"href": renderurls["highres"]}
+                    rendition["baseImage"] = {"href": renderurls["highres"]}
+                if renderurls.get("thumbnail"):
+                    rendition["thumbnail"] = {"href": renderurls["thumbnail"]}
+                if renderurls.get("preview"):
+                    rendition["viewImage"] = {"href": renderurls["preview"]}
         return rendition
 
     def get_authors(self, authors):
