@@ -512,6 +512,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "renditions": self.get_renditions(data)
             if data["assetType"] == "Picture"
             else None,
+            # SDBELGA-665
+            "ednote": get_text(data.get("editorialInfo")),
         }
 
     def get_renditions(self, data):
