@@ -510,7 +510,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "authors": self.get_authors(data.get("authors")),
             "subject": self.get_subjects(data),
             "renditions": self.get_renditions(data)
-            if data["assetType"] == "Picture"
+            if data.get("assetType") == "Picture"
             else {},
             # SDBELGA-665
             "ednote": get_text(data.get("editorialInfo")),
