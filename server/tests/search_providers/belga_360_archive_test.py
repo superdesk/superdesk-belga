@@ -335,7 +335,14 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item["state"], "published")
         self.assertEqual(item["guid"], guid)
         self.assertEqual(item["headline"], "FILES - FBL - WC - 2022")
-        self.assertEqual(item["description_text"], "")
+        self.assertEqual(
+            item["description_text"],
+            (
+                "(FILES) In this file photo taken on September 25, 2022 Croatia's coach"
+                " Zlatko Dalic poses prior the UEFA Nations League, league A, Group 1"
+                " football match betwen Austria and Croatia in Vienna.  JOE KLAMAR / AFP"
+            ),
+        )
         self.assertEqual(
             item["authors"], [{"name": "MAK", "sub_label": "MAK", "role": "AUTHOR"}]
         )
