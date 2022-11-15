@@ -232,7 +232,127 @@
                     }]
                 }
             ]
-        }
+        },
+        {
+            "newsObjectId":46768825,
+            "newsItemId":46768817,
+            "assetType":"Picture",
+            "name":"no name",
+            "credit":"BELGA",
+            "topic":"None",
+            "headLine":"FILES - FBL - WC - 2022",
+            "language":"fr",
+            "source":"None",
+            "city":"Bruxelles",
+            "country":"None",
+            "createDate":1667997925000,
+            "validateDate":1667997906000,
+            "editorialInfo":"None",
+            "comments":"20220925204031",
+            "authors":[
+               {
+                  "name":"MAK",
+                  "type":"AUTHOR"
+               }
+            ],
+            "keywords":[
+               
+            ],
+            "packages":[
+               
+            ],
+            "newsComponents":[
+               {
+                  "newsComponentId":46768826,
+                  "name":"no name",
+                  "assetType":"Title",
+                  "assetFormat":"Text",
+                  "componentClass":"Text",
+                  "width":"None",
+                  "height":"None",
+                  "alternateComponents":[
+                     
+                  ],
+                  "proxies":[
+                     {
+                        "proxyId":31164976,
+                        "assetFormat":"Text",
+                        "dataFileName":"pxy_46768826_31164976.txt",
+                        "dataDirName":"varchar/1",
+                        "physicalDataDirName":"varchar/1",
+                        "ingestPath":"",
+                        "varcharData":"FILES - FBL - WC - 2022",
+                        "clobData":"None",
+                        "status":"FREE",
+                        "protocol":"VARCHAR",
+                        "size":23,
+                        "urn":"None"
+                     }
+                  ]
+               },
+               {
+                  "newsComponentId":46768827,
+                  "name":"no name",
+                  "assetType":"Caption",
+                  "assetFormat":"Text",
+                  "componentClass":"Text",
+                  "width":"None",
+                  "height":"None",
+                  "alternateComponents":[
+                     
+                  ],
+                  "proxies":[
+                     {
+                        "proxyId":31164977,
+                        "assetFormat":"Text",
+                        "dataFileName":"pxy_46768827_31164977.txt",
+                        "dataDirName":"varchar/1",
+                        "physicalDataDirName":"varchar/1",
+                        "ingestPath":"",
+                        "varcharData":"(FILES) In this file photo taken on September 25, 2022 Croatia's coach Zlatko Dalic poses prior the UEFA Nations League, league A, Group 1 football match betwen Austria and Croatia in Vienna.  JOE KLAMAR / AFP",
+                        "clobData":"None",
+                        "status":"FREE",
+                        "protocol":"VARCHAR",
+                        "size":209,
+                        "urn":"None"
+                     }
+                  ]
+               },
+               {
+                  "newsComponentId":46768828,
+                  "name":"no name",
+                  "assetType":"Image",
+                  "assetFormat":"Jpeg",
+                  "componentClass":"Image",
+                  "width":624,
+                  "height":768,
+                  "alternateComponents":[
+                     
+                  ],
+                  "proxies":[
+                     {
+                        "proxyId":31164978,
+                        "assetFormat":"Jpeg",
+                        "dataFileName":"pxy_46768828_31164978.jpg",
+                        "dataDirName":"/big1/arch360/jpeg/4046",
+                        "physicalDataDirName":"/big1/arch360/jpeg/4046",
+                        "ingestPath":"",
+                        "varcharData":"None",
+                        "clobData":"None",
+                        "status":"FREE",
+                        "protocol":"FILE",
+                        "size":0,
+                        "urn":"None"
+                     }
+                  ]
+               }
+            ],
+            "renderUrls":{
+               "highres":"https://3.ssl.belga.be/360-archief:picture:46768825:full?v=636939e3&m=pdnmpbgp",
+               "thumbnail":"https://0.ssl.belga.be/360-archief:picture:46768825:thumbnail?v=636939e3&m=gpdoidca",
+               "preview":"https://0.ssl.belga.be/360-archief:picture:46768825:preview?v=636939e3&m=njfkedgg"
+            }
+         }
     ],
     "nrNewsObjects": 25000,
     "start": 0

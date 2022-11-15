@@ -481,7 +481,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         return {
             "type": self.get_type(data.get("assetType", "text")),
-            "mimetype": "application/superdesk.item.text",
+            "mimetype": f"application/superdesk.item.{self.get_type(data.get('assetType', 'text'))}",
             "pubstatus": "usable",
             "_id": guid,
             "state": "published",
@@ -490,7 +490,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "headline": get_text(data["headLine"]),
             "slugline": get_text(data["topic"]),
             "name": get_text(data["name"]),
-            "description_text": get_text(data.get("description")),
+            "description_text": self.get_discription(data),
             "versioncreated": self._get_datetime(
                 data["validateDate"]
                 if data.get("validateDate")
@@ -509,9 +509,39 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "sign_off": self.get_sign_off(data.get("authors")),
             "authors": self.get_authors(data.get("authors")),
             "subject": self.get_subjects(data),
+            "renditions": self.get_renditions(data)
+            if data.get("assetType") == "Picture"
+            else {},
             # SDBELGA-665
             "ednote": get_text(data.get("editorialInfo")),
         }
+
+    def get_discription(self, data):
+        if data.get("assetType") == "Picture":
+            for item in data["newsComponents"]:
+                if item.get("assetType") == "Caption":
+                    proxies = item.get("proxies")
+                    return (
+                        get_text(proxies[0].get("varcharData"))
+                        if get_text(proxies[0].get("varcharData")) is not None
+                        else ""
+                    )
+
+        return get_text(data.get("description"))
+
+    def get_renditions(self, data):
+        rendition = {}
+        for item in data["newsComponents"]:
+            if item["assetType"] == "Image":
+                renderurls = data["renderUrls"]
+                if renderurls.get("highres"):
+                    rendition["original"] = {"href": renderurls["highres"]}
+                    rendition["baseImage"] = {"href": renderurls["highres"]}
+                if renderurls.get("thumbnail"):
+                    rendition["thumbnail"] = {"href": renderurls["thumbnail"]}
+                if renderurls.get("preview"):
+                    rendition["viewImage"] = {"href": renderurls["preview"]}
+        return rendition
 
     def get_authors(self, authors):
         author_data = []

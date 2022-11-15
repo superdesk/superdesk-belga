@@ -31,7 +31,7 @@ def archive_mock(url, request):
 def get_belga360_item():
     with open(fixture("belga-360archive-search.json")) as _file:
         items = json.load(_file)
-        return items["newsObjects"][0]
+        return items["newsObjects"]
 
 
 class Belga360ArchiveTestCase(TestCase):
@@ -163,7 +163,7 @@ class Belga360ArchiveTestCase(TestCase):
 
         # reload content profiles
         self.provider = Belga360ArchiveSearchProvider(dict())
-        item = self.provider.format_list_item(get_belga360_item())
+        item = self.provider.format_list_item(get_belga360_item()[0])
         guid = "urn:belga.be:360archive:39670442"
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["mimetype"], "application/superdesk.item.text")
@@ -298,13 +298,13 @@ class Belga360ArchiveTestCase(TestCase):
     def test_find_item(self):
         with HTTMock(archive_mock):
             items = self.provider.find(self.query)
-        self.assertEqual(len(items.docs), 3)
+        self.assertEqual(len(items.docs), 4)
         self.assertEqual(items._count, 25000)
 
     @patch("belga.search_providers.session.get")
     def test_fetch(self, session_get):
         response = DetailResponse()
-        response.json = MagicMock(return_value=get_belga360_item())
+        response.json = MagicMock(return_value=get_belga360_item()[0])
         session_get.return_value = response
 
         item = self.provider.fetch("urn:belga.be:360archive:39670442")
@@ -326,3 +326,40 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(get_period("week"), "20200207")
         self.assertEqual(get_period("month"), "20200114")
         self.assertEqual(get_period("year"), "20190214")
+
+    def test_get_image_renditions(self):
+        item = self.provider.format_list_item(get_belga360_item()[3])
+        guid = "urn:belga.be:360archive:46768825"
+        self.assertEqual(item["_id"], guid)
+        self.assertEqual(item["mimetype"], "application/superdesk.item.picture")
+        self.assertEqual(item["state"], "published")
+        self.assertEqual(item["guid"], guid)
+        self.assertEqual(item["headline"], "FILES - FBL - WC - 2022")
+        self.assertEqual(
+            item["description_text"],
+            (
+                "(FILES) In this file photo taken on September 25, 2022 Croatia's coach"
+                " Zlatko Dalic poses prior the UEFA Nations League, league A, Group 1"
+                " football match betwen Austria and Croatia in Vienna.  JOE KLAMAR / AFP"
+            ),
+        )
+        self.assertEqual(
+            item["authors"], [{"name": "MAK", "sub_label": "MAK", "role": "AUTHOR"}]
+        )
+        self.assertEqual(
+            item["renditions"],
+            {
+                "original": {
+                    "href": "https://3.ssl.belga.be/360-archief:picture:46768825:full?v=636939e3&m=pdnmpbgp"
+                },
+                "thumbnail": {
+                    "href": "https://0.ssl.belga.be/360-archief:picture:46768825:thumbnail?v=636939e3&m=gpdoidca"
+                },
+                "viewImage": {
+                    "href": "https://0.ssl.belga.be/360-archief:picture:46768825:preview?v=636939e3&m=njfkedgg"
+                },
+                "baseImage": {
+                    "href": "https://3.ssl.belga.be/360-archief:picture:46768825:full?v=636939e3&m=pdnmpbgp"
+                },
+            },
+        )
