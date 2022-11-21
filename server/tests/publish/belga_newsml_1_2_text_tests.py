@@ -712,6 +712,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
     )
 
     archive = (
+
         {
             "_id": "urn:newsml:localhost:5000:2019-08-15T13:04:19.702285:d201d16e-1011-4d4c-a262-fed9942a64db",
             "media": "pic_2",
@@ -1107,7 +1108,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath("Role")[0].attrib),
-            {"FormalName": "Belga text"},
+            {"FormalName": "Belga"},
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines
         self.assertIsNone(newscomponent_2_level.xpath("NewsLines/DateLine")[0].text)
