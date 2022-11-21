@@ -185,5 +185,5 @@ def brief_internal_routing(item: dict, **kwargs):
 name = 'Brief internal routing'
 label = 'Brief internal routing'
 callback = brief_internal_routing
-access_type = 'frontend'
+access_type = 'backend'
 action_type = 'direct'

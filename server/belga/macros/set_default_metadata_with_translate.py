@@ -119,5 +119,5 @@ def set_default_metadata_with_translate(item, **kwargs):
 name = 'Set Default Metadata With Translate'
 label = name
 callback = set_default_metadata_with_translate
-access_type = 'frontend'
+access_type = 'backend'
 action_type = 'direct'
