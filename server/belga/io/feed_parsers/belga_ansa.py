@@ -14,6 +14,7 @@ from superdesk.io.feed_parsers.nitf import NITFFeedParser
 from lxml import etree
 from superdesk.io.iptc import subject_codes
 from superdesk import get_resource_service
+import pytz
 
 
 class BelgaANSAFeedParser(NITFFeedParser):
@@ -217,6 +218,10 @@ class BelgaANSAFeedParser(NITFFeedParser):
         if text.startswith(">>>ANSA/"):
             return text[len(">>>ANSA/"):]
         return text
+
+    def get_norm_datetime(self, tree):
+        value = super().get_norm_datetime(tree)
+        return value.astimezone(pytz.timezone("CET"))
 
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())
