@@ -42,8 +42,8 @@ class BelgaANSATestCase(TestCase):
         self.assertEqual(item["priority"], 5)
         self.assertEqual(item["keywords"], ["Gazprom cut its flow of gas into Italy"])
         self.assertEqual(item["type"], "text")
-        self.assertEqual(str(item["firstcreated"]), "2022-07-11 18:33:00")
-        self.assertEqual(str(item["versioncreated"]), "2022-07-11 18:33:00")
+        self.assertEqual(str(item["firstcreated"]), "2022-07-11 15:03:00+02:00")
+        self.assertEqual(str(item["versioncreated"]), "2022-07-11 15:03:00+02:00")
         self.assertEqual(item["uri"], "XAM22192010243_AMZ_X083")
         self.assertEqual(item["urgency"], 5)
         self.assertEqual(
