@@ -37,19 +37,41 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
         item["subject"].sort(key=lambda i: i['scheme'])
         expected_subjects = [
-            {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
-            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
-            {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
-            {'name': 'POST-CAO', 'qcode': 'POST-CAO', 'scheme': 'original-metadata'},
-            {'name': 'Netherlands', 'qcode': 'country_nld', 'translations': {
-                'name': {'nl': 'NEDERLAND', 'fr': 'PAYS-BAS'}}, 'scheme': 'country'},
-            {'name': 'BRIEF', 'qcode': 'BRIEF', 'translations': {
-                'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}}, 'scheme': 'belga-keywords'},
-            {'name': 'Netherlands', 'qcode': 'nld', 'translations': {
-                'name': {'nl': 'Nederland', 'fr': 'Pays-Bas'}}, 'scheme': 'countries'}
+            {
+                "name": "BRIEF",
+                "qcode": "BRIEF",
+                "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}},
+                "scheme": "belga-keywords",
+            },
+            {
+                "name": "Netherlands",
+                "qcode": "nld",
+                "translations": {"name": {"nl": "Nederland", "fr": "Pays-Bas"}},
+                "scheme": "countries",
+            },
+            {
+                "name": "Netherlands",
+                "qcode": "country_nld",
+                "translations": {"name": {"nl": "NEDERLAND", "fr": "PAYS-BAS"}},
+                "scheme": "country",
+            },
+            {"name": "default", "qcode": "default", "scheme": "distribution"},
+            {"name": "no", "qcode": "no", "scheme": "equivalents_list"},
+            {"name": "no", "qcode": "no", "scheme": "essential"},
+            {"name": "ECO", "qcode": "ECO", "scheme": "genre"},
+            {
+                "name": "TENNIS-NIEUWS-MEDVEDEV",
+                "qcode": "TENNIS-NIEUWS-MEDVEDEV",
+                "scheme": "original-metadata",
+            },
+            {"name": "Tennis", "qcode": "Tennis", "scheme": "original-metadata"},
+            {
+                "name": "NEWS/ECONOMY",
+                "qcode": "NEWS/ECONOMY",
+                "parent": "NEWS",
+                "scheme": "services-products",
+            },
+            {"name": "ANP", "qcode": "ANP", "scheme": "sources"},
         ]
         expected_subjects.sort(key=lambda i: i['scheme'])
         self.assertEqual(item["subject"], expected_subjects)
