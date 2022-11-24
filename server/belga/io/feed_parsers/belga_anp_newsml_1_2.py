@@ -57,6 +57,19 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # Source is ANP
         credit = {"name": 'ANP', "qcode": 'ANP', "scheme": "sources"}
         item.setdefault('subject', []).append(credit)
+
+        # SDBELGA-689
+        for subject in item["subject"]:
+            if (
+                subject["scheme"] == "original-metadata"
+                and subject["name"].find(";") != -1
+            ):
+                subject_list = [
+                    {"name": i, "qcode": i, "scheme": "original-metadata"}
+                    for i in set(subject["name"].split(";"))
+                ]
+                item.setdefault("subject", []).extend(subject_list)
+                item["subject"].remove(subject)
         return item
 
 
