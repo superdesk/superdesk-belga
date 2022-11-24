@@ -17,14 +17,14 @@ from tests import TestCase
 
 
 class BelgaANPNewsMLOneTestCase(TestCase):
-    filename = 'anp_belga.xml'
+    filename = "anp_belga.xml"
 
     def setUp(self):
         super().setUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
-        fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
-        provider = {'name': 'test'}
-        with open(fixture, 'rb') as f:
+        fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
+        provider = {"name": "test"}
+        with open(fixture, "rb") as f:
             parser = BelgaANPNewsMLOneFeedParser()
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
@@ -35,26 +35,51 @@ class BelgaANPNewsMLOneTestCase(TestCase):
     def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
-        item["subject"].sort(key=lambda i: i['scheme'])
+        item["subject"].sort(key=lambda i: i["scheme"])
         expected_subjects = [
-            {'name': 'NEWS/ECONOMY', 'qcode': 'NEWS/ECONOMY', 'parent': 'NEWS', 'scheme': 'services-products'},
-            {'name': 'ANP', 'qcode': 'ANP', 'scheme': 'sources'},
-            {'name': 'no', 'qcode': 'no', 'scheme': 'essential'},
-            {'name': 'no', 'qcode': 'no', 'scheme': 'equivalents_list'},
-            {'name': 'default', 'qcode': 'default', 'scheme': 'distribution'},
-            {'name': 'ECO', 'qcode': 'ECO', 'scheme': 'genre'},
-            {'name': 'POST-CAO', 'qcode': 'POST-CAO', 'scheme': 'original-metadata'},
-            {'name': 'Netherlands', 'qcode': 'country_nld', 'translations': {
-                'name': {'nl': 'NEDERLAND', 'fr': 'PAYS-BAS'}}, 'scheme': 'country'},
-            {'name': 'BRIEF', 'qcode': 'BRIEF', 'translations': {
-                'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}}, 'scheme': 'belga-keywords'},
-            {'name': 'Netherlands', 'qcode': 'nld', 'translations': {
-                'name': {'nl': 'Nederland', 'fr': 'Pays-Bas'}}, 'scheme': 'countries'}
+            {
+                "name": "BRIEF",
+                "qcode": "BRIEF",
+                "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}},
+                "scheme": "belga-keywords",
+            },
+            {
+                "name": "Netherlands",
+                "qcode": "nld",
+                "translations": {"name": {"nl": "Nederland", "fr": "Pays-Bas"}},
+                "scheme": "countries",
+            },
+            {
+                "name": "Netherlands",
+                "qcode": "country_nld",
+                "translations": {"name": {"nl": "NEDERLAND", "fr": "PAYS-BAS"}},
+                "scheme": "country",
+            },
+            {"name": "default", "qcode": "default", "scheme": "distribution"},
+            {"name": "no", "qcode": "no", "scheme": "equivalents_list"},
+            {"name": "no", "qcode": "no", "scheme": "essential"},
+            {"name": "ECO", "qcode": "ECO", "scheme": "genre"},
+            {
+                "name": "TENNIS-NIEUWS-MEDVEDEV",
+                "qcode": "TENNIS-NIEUWS-MEDVEDEV",
+                "scheme": "original-metadata",
+            },
+            {"name": "Tennis", "qcode": "Tennis", "scheme": "original-metadata"},
+            {
+                "name": "NEWS/ECONOMY",
+                "qcode": "NEWS/ECONOMY",
+                "parent": "NEWS",
+                "scheme": "services-products",
+            },
+            {"name": "ANP", "qcode": "ANP", "scheme": "sources"},
         ]
-        expected_subjects.sort(key=lambda i: i['scheme'])
+        expected_subjects.sort(key=lambda i: i["scheme"])
         self.assertEqual(item["subject"], expected_subjects)
         self.assertEqual(item["priority"], 3)
-        self.assertEqual(item["sentfrom"], {'comment': 'News Provider', 'party': 'Algemeen Nederlands Persbureau'})
+        self.assertEqual(
+            item["sentfrom"],
+            {"comment": "News Provider", "party": "Algemeen Nederlands Persbureau"},
+        )
         self.assertEqual(item["provider_id"], "ANP")
         self.assertEqual(item["date_id"], "20181210")
         self.assertEqual(item["item_id"], "ANPX-101218-041-v2")
@@ -70,37 +95,47 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["sub_head_line"], None)
         self.assertEqual(item["byline"], None)
         self.assertEqual(item["by_line_title"], None)
-        self.assertEqual(item["copyright_line"],
-                         "© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and "
-                         "database rights reserved.")
+        self.assertEqual(
+            item["copyright_line"],
+            "© 2018 ANP. Alle auteursrechten en databankrechten voorbehouden. All copyrights and "
+            "database rights reserved.",
+        )
         self.assertEqual(item["slugline"], None)
         self.assertEqual(item["keyword_line"], "ECO/ECO10;ECO-POST-CAO")
-        self.assertEqual(item["administrative"], {'provider': 'ANP'})
+        self.assertEqual(item["administrative"], {"provider": "ANP"})
         self.assertEqual(item["language"], "nl-nl")
-        self.assertEqual(item["extra"], {'how_present': 'Origin', 'country': 'NLD', 'city': 'UTRECHT'})
+        self.assertEqual(
+            item["extra"],
+            {"how_present": "Origin", "country": "NLD", "city": "UTRECHT"},
+        )
         self.assertEqual(item["keywords"], [])
         self.assertEqual(item["type"], "text")
         self.assertEqual(item["format"], "NITF")
-        self.assertEqual(item["characteristics"],
-                         {'creator': 'redsys v4.30', 'word_count': '177', 'characters': '1043',
-                          'format_version': '3.3'})
-        self.assertEqual(item["genre"], [{'name': 'ECO', 'qcode': 'ECO'}])
-        expected_body = \
-            (
-                '\n\t\t\t\t\t\t\t\t<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan Post'
-                'NL</p>\n\t\t\t\t\t\t\t\t<p>UTRECHT (ANP) - FNV kondigt werkonderbrekingen aan bij PostNL,'
-                ' nadat de post- en pakketbezorger maandag niet inging op een ultimatum voor toez'
-                'eggingen over een nieuwe cao. De drie andere bonden die met PostNL onderhandelen'
-                ' over een nieuwe cao, zien niets in actievoeren.</p>\n\t\t\t\t\t\t\t\t<p>FNV overlegt nog'
-                ' met leden over de precieze omvang en lengte van de stakingen. Later deze week w'
-                'ordt bekend waar postbezorgers het werk neerleggen.</p>\n\t\t\t\t\t\t\t\t<p>Andere betrok'
-                'ken bonden vinden het nog te vroeg voor stakingen. ,,Het is veel te snel om na v'
-                "ijf uur onderhandelen naar het actiemiddel te grijpen'', zei Anselma Zwaagstra v"
-                'an CNV. Ook BVPP en VHP2 zien meer heil in een hervatting van het overleg met Po'
-                'stNL aanstaande woensdag.</p>\n\t\t\t\t\t\t\t\t<p>De drie bonden vinden het ook een brug '
-                'te ver om juist in de drukke periode rond kerst en oud en nieuw acties te organi'
-                'seren. Die kunnen PostNL dusdanig hard raken dat ook de werkgelegenheid bij het '
-                'bedrijf in gevaar komt, waarschuwen ze in een gezamenlijke brief aan hun leden.<'
-                '/p>\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t'
-            )
+        self.assertEqual(
+            item["characteristics"],
+            {
+                "creator": "redsys v4.30",
+                "word_count": "177",
+                "characters": "1043",
+                "format_version": "3.3",
+            },
+        )
+        self.assertEqual(item["genre"], [{"name": "ECO", "qcode": "ECO"}])
+        expected_body = (
+            "\n\t\t\t\t\t\t\t\t<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan Post"
+            "NL</p>\n\t\t\t\t\t\t\t\t<p>UTRECHT (ANP) - FNV kondigt werkonderbrekingen aan bij PostNL,"
+            " nadat de post- en pakketbezorger maandag niet inging op een ultimatum voor toez"
+            "eggingen over een nieuwe cao. De drie andere bonden die met PostNL onderhandelen"
+            " over een nieuwe cao, zien niets in actievoeren.</p>\n\t\t\t\t\t\t\t\t<p>FNV overlegt nog"
+            " met leden over de precieze omvang en lengte van de stakingen. Later deze week w"
+            "ordt bekend waar postbezorgers het werk neerleggen.</p>\n\t\t\t\t\t\t\t\t<p>Andere betrok"
+            "ken bonden vinden het nog te vroeg voor stakingen. ,,Het is veel te snel om na v"
+            "ijf uur onderhandelen naar het actiemiddel te grijpen'', zei Anselma Zwaagstra v"
+            "an CNV. Ook BVPP en VHP2 zien meer heil in een hervatting van het overleg met Po"
+            "stNL aanstaande woensdag.</p>\n\t\t\t\t\t\t\t\t<p>De drie bonden vinden het ook een brug "
+            "te ver om juist in de drukke periode rond kerst en oud en nieuw acties te organi"
+            "seren. Die kunnen PostNL dusdanig hard raken dat ook de werkgelegenheid bij het "
+            "bedrijf in gevaar komt, waarschuwen ze in een gezamenlijke brief aan hun leden.<"
+            "/p>\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t"
+        )
         self.assertEqual(item["body_html"], expected_body)
