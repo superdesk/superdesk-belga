@@ -22,41 +22,45 @@ logger = logging.getLogger(__name__)
 class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     """Feed Parser for Belga specific ANP NewsML."""
 
-    NAME = 'belga_anp_newsml12'
-    label = 'Belga specific ANP News ML 1.2 Parser'
+    NAME = "belga_anp_newsml12"
+    label = "Belga specific ANP News ML 1.2 Parser"
 
     MAPPING_PRODUCTS = {
-        'SPO': 'NEWS/SPORTS',
-        'ECO': 'NEWS/ECONOMY',
+        "SPO": "NEWS/SPORTS",
+        "ECO": "NEWS/ECONOMY",
     }
 
     # anp related logic goes here
     def parse_newsmanagement(self, item, manage_el):
         super().parse_newsmanagement(item, manage_el)
-        item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
-        item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
+        item["firstcreated"] = item["firstcreated"].astimezone(pytz.utc)
+        item["versioncreated"] = item["versioncreated"].astimezone(pytz.utc)
 
     def parse_newsitem(self, item, newsitem_el):
         super().parse_newsitem(item, newsitem_el)
         for genre in self._get_genre(item):
-            qcode = self.MAPPING_PRODUCTS.get(genre.get('name'), 'NEWS/GENERAL')
-            item.setdefault('subject', []).append({
-                'name': qcode,
-                'qcode': qcode,
-                'parent': 'NEWS',
-                'scheme': 'services-products'
-            })
+            qcode = self.MAPPING_PRODUCTS.get(genre.get("name"), "NEWS/GENERAL")
+            item.setdefault("subject", []).append(
+                {
+                    "name": qcode,
+                    "qcode": qcode,
+                    "parent": "NEWS",
+                    "scheme": "services-products",
+                }
+            )
             break
         else:
-            item.setdefault('subject', []).append({
-                'name': 'NEWS/GENERAL',
-                'qcode': 'NEWS/GENERAL',
-                'parent': 'NEWS',
-                'scheme': 'services-products'
-            })
+            item.setdefault("subject", []).append(
+                {
+                    "name": "NEWS/GENERAL",
+                    "qcode": "NEWS/GENERAL",
+                    "parent": "NEWS",
+                    "scheme": "services-products",
+                }
+            )
         # Source is ANP
-        credit = {"name": 'ANP', "qcode": 'ANP', "scheme": "sources"}
-        item.setdefault('subject', []).append(credit)
+        credit = {"name": "ANP", "qcode": "ANP", "scheme": "sources"}
+        item.setdefault("subject", []).append(credit)
 
         # SDBELGA-689
         for subject in item["subject"]:
