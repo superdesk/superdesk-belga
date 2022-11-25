@@ -103,7 +103,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["slugline"], None)
         self.assertEqual(item["keyword_line"], "ECO/ECO10;ECO-POST-CAO")
         self.assertEqual(item["administrative"], {"provider": "ANP"})
-        self.assertEqual(item["language"], "nl-nl")
+        self.assertEqual(item["language"], "nl")
         self.assertEqual(
             item["extra"],
             {"how_present": "Origin", "country": "NLD", "city": "UTRECHT"},
