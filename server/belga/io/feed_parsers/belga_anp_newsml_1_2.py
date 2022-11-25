@@ -71,7 +71,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             ):
                 subject_list = [
                     {"name": i, "qcode": i, "scheme": "original-metadata"}
-                    for i in set(re.split('[- ;]', subject["name"]))
+                    for i in set(re.split('[-;]', subject["name"]))
                 ]
                 item.setdefault("subject", []).extend(subject_list)
                 item["subject"].remove(subject)
