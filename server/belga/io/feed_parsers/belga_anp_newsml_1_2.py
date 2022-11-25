@@ -9,6 +9,7 @@
 # at https://www.appendsourcefabric.org/superdesk/license
 
 import pytz
+import re
 
 from superdesk.io.registry import register_feed_parser
 
@@ -70,7 +71,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             ):
                 subject_list = [
                     {"name": i, "qcode": i, "scheme": "original-metadata"}
-                    for i in set(subject["name"].split(";"))
+                    for i in set(re.split('[- ;]', subject["name"]))
                 ]
                 item.setdefault("subject", []).extend(subject_list)
                 item["subject"].remove(subject)
