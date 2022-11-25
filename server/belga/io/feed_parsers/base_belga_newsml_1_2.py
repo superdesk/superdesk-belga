@@ -501,6 +501,10 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if element is not None:
             item['language'] = element.get('FormalName', '')
 
+            # SDBELGA-690
+            if item['language'].find('-') != -1:
+                item['language'] = item['language'].split('-')[0]
+
         for element in descript_el.findall('Genre'):
             if element is not None and element.get('FormalName'):
                 self._add_genre(item, element.get('FormalName'))

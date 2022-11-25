@@ -71,7 +71,7 @@ class BelgaEFENewsMLOneTestCase(TestCase):
                          "de los contenidos de los servicios de Efe, sin previo y expreso consentimiento de la "
                          "Agencia EFE S.A.")
         self.assertEqual(item["administrative"], {'provider': 'Agencia EFE', 'creator': 'daa/mt/msr'})
-        self.assertEqual(item["language"], "es-ES")
+        self.assertEqual(item["language"], "es")
         self.assertEqual(item["extra"], {'how_present': 'Event', 'country': 'IND'})
         self.assertEqual(item["tesauro"],
                          "TRI:JUSTICIA-INTERIOR-SUCESOS,SUCESOS;CYT:CIENCIA-TECNOLOGIA,AMBIENTE-NATURALEZA")
