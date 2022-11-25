@@ -59,11 +59,9 @@ class BelgaANPNewsMLOneTestCase(TestCase):
             {"name": "no", "qcode": "no", "scheme": "equivalents_list"},
             {"name": "no", "qcode": "no", "scheme": "essential"},
             {"name": "ECO", "qcode": "ECO", "scheme": "genre"},
-            {
-                "name": "TENNIS-NIEUWS-MEDVEDEV",
-                "qcode": "TENNIS-NIEUWS-MEDVEDEV",
-                "scheme": "original-metadata",
-            },
+            {"name": "MEDVEDEV", "qcode": "MEDVEDEV", "scheme": "original-metadata"},
+            {"name": "NIEUWS", "qcode": "NIEUWS", "scheme": "original-metadata"},
+            {"name": "TENNIS", "qcode": "TENNIS", "scheme": "original-metadata"},
             {"name": "Tennis", "qcode": "Tennis", "scheme": "original-metadata"},
             {
                 "name": "NEWS/ECONOMY",
