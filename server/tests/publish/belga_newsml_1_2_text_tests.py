@@ -53,7 +53,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "marked_archived_only": False,
             "marked_for_sms": False,
         },
-        "profile": "belga_text",
+        "profile": "637b4af18643d4ae7cede212",
         "pubstatus": "usable",
         "format": "HTML",
         "template": ObjectId("5c94ead2fe985e1c5776ddca"),
@@ -917,6 +917,19 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         },
     )
 
+    content_types = (
+        {
+            "_id": ObjectId("637b4af18643d4ae7cede212"),
+            "label": "Content Profile - Hello new one",
+            "description": "Test",
+            "priority": 0,
+            "enabled": True,
+            "is_used": True,
+            "updated_by": ObjectId("6375e413ab465d5fc7d2be02"),
+            "created_by": ObjectId("6375e413ab465d5fc7d2be02"),
+            "_etag": "43a45c6118204c4cefe3bc08f4e9fd0e4f492fd0",
+        },
+    )
     subscriber = {
         "_id": "some_id",
         "name": "Dev Subscriber",
@@ -941,6 +954,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         self.app.data.insert("attachments", self.attachments)
         self.app.data.insert("roles", self.roles)
         self.app.data.insert("vocabularies", self.vocabularies)
+        self.app.data.insert("content_types", self.content_types)
         # insert pictures
         media_items = (
             {
@@ -1107,7 +1121,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> Role
         self.assertDictEqual(
             dict(newscomponent_2_level.xpath("Role")[0].attrib),
-            {"FormalName": "Belga text"},
+            {"FormalName": "Content Profile"},
         )
         # NewsML -> NewsItem -> NewsComponent -> NewsComponent -> NewsLines
         self.assertIsNone(newscomponent_2_level.xpath("NewsLines/DateLine")[0].text)
