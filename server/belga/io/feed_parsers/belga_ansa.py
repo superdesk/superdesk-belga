@@ -225,4 +225,5 @@ class BelgaANSAFeedParser(NITFFeedParser):
             pytz.timezone("UTC")
         )
 
+
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())
