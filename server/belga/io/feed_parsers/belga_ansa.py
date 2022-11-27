@@ -221,7 +221,8 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
     def get_norm_datetime(self, tree):
         value = super().get_norm_datetime(tree)
-        return value.replace(tzinfo=pytz.timezone("CET"))
-
+        return value.replace(tzinfo=pytz.timezone("CET")).astimezone(
+            pytz.timezone("UTC")
+        )
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())
