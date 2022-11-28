@@ -15,6 +15,8 @@ from lxml import etree
 from superdesk.io.iptc import subject_codes
 from superdesk import get_resource_service
 import pytz
+from superdesk.utc import local_to_utc
+import arrow
 
 
 class BelgaANSAFeedParser(NITFFeedParser):
@@ -221,7 +223,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
     def get_norm_datetime(self, tree):
         value = super().get_norm_datetime(tree)
-        return value.replace(tzinfo=pytz.timezone("CET"))
+        return local_to_utc('Europe/Rome', value)
 
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())
