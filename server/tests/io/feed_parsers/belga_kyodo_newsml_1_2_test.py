@@ -23,6 +23,7 @@ class BelgaKyodoNewsMLTestCase(TestCase):
 
         self.assertEqual(item['headline'], 'Ex-Chinese Premier Li Peng dies aged 90: Xinhua')
         self.assertEqual(item["slugline"], None)
+        self.assertEqual(item["extra"]["city"], "BEIJING")
         self.assertEqual(item["keywords"], [])
         self.assertEqual(item['date_id'], '20190723')
         self.assertEqual(item['format'], 'Nitf_v3.0')
