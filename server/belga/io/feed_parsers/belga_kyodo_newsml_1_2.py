@@ -21,5 +21,20 @@ class BelgaKyodoNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     def can_parse(self, xml):
         return xml.tag == 'NewsML'
 
+    # SDBELGA - 693
+    def parse(self, xml, provider=None):
+        items = super().parse(xml, provider)
+        location_el = xml.find(
+            "NewsItem/NewsComponent/ContentItem/DataContent/nitf/body/body.head/dateline/location"
+        )
+        if location_el is not None:
+            for item in items:
+                if item.get("extra"):
+                    item["extra"]["city"] = location_el.text
+                else:
+                    item["extra"] = {"city": location_el.text}
+
+        return items
+
 
 register_feed_parser(BelgaKyodoNewsMLOneFeedParser.NAME, BelgaKyodoNewsMLOneFeedParser())
