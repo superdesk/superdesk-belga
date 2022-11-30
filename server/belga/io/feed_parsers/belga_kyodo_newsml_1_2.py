@@ -29,10 +29,7 @@ class BelgaKyodoNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         )
         if location_el is not None:
             for item in items:
-                if item.get("extra"):
-                    item["extra"]["city"] = location_el.text
-                else:
-                    item["extra"] = {"city": location_el.text}
+               item.setdefault("extra", {})["city"] = location_el.text
 
         return items
 
