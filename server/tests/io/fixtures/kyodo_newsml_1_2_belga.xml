@@ -54,6 +54,7 @@
 				</SubjectCode>
 				<Location HowPresent="Origin">
 					<Property FormalName="Country" Value="FRA"/>
+					<Property FormalName="City" Value="Paris"/>
 				</Location>
 			</DescriptiveMetadata>
 			<Metadata>
