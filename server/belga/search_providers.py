@@ -478,8 +478,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
     def format_list_item(self, data):
         guid = "%s%d" % (self.GUID_PREFIX, data["newsObjectId"])
-
-        return {
+        print("sssssssssssssssssssssssssssss", data)
+        formatted_data = {
             "type": self.get_type(data.get("assetType", "text")),
             "mimetype": f"application/superdesk.item.{self.get_type(data.get('assetType', 'text'))}",
             "pubstatus": "usable",
@@ -515,6 +515,12 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             # SDBELGA-665
             "ednote": get_text(data.get("editorialInfo")),
         }
+        if data.get("assetType") == "RelatedArticle":
+            formatted_data["firstpublished"] = datetime.strptime(
+                data.get("comments"), "%Y%m%d%H%M%S"
+            ).replace(tzinfo=utc)
+
+        return formatted_data
 
     def get_discription(self, data):
         if data.get("assetType") == "Picture":
