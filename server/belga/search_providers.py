@@ -478,7 +478,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
     def format_list_item(self, data):
         guid = "%s%d" % (self.GUID_PREFIX, data["newsObjectId"])
-        print("sssssssssssssssssssssssssssss", data)
         formatted_data = {
             "type": self.get_type(data.get("assetType", "text")),
             "mimetype": f"application/superdesk.item.{self.get_type(data.get('assetType', 'text'))}",
