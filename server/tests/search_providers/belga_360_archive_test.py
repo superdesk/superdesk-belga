@@ -284,10 +284,10 @@ class Belga360ArchiveTestCase(TestCase):
                 item["firstcreated"], datetime.fromtimestamp(1638953020, utc)
             )
             self.assertEqual(
-                item["versioncreated"], datetime.fromtimestamp(1638952985, utc)
+                item["versioncreated"], datetime(2022, 10, 5, 10, 11, 50, tzinfo=utc)
             )
             self.assertEqual(
-                item["firstpublished"], datetime(2022, 10, 5, 15, 41, 50, tzinfo=utc)
+                item["firstpublished"], datetime(2022, 10, 5, 10, 11, 50, tzinfo=utc)
             )
             self.assertEqual(item["sign_off"], "TOB/Author, EDS/Editor")
             self.assertEqual(
