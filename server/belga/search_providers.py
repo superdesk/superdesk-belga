@@ -406,7 +406,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def get_related_article(self, data):
         associations = {}
         related_articles = [
-            item for item in data[1:] if item["assetType"] == "RelatedArticle"
+            item
+            for item in data[1:]
+            if item["assetType"] == "RelatedArticle" or "Picture"
         ]
         for idx, item in enumerate(related_articles):
             associations["belga_related_articles--" + str(idx)] = self.format_list_item(
