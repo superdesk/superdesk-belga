@@ -519,9 +519,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         if data.get("assetType") == "RelatedArticle" and data.get("comments"):
             formatted_data["versioncreated"] = formatted_data[
                 "firstpublished"
-            ] = datetime.strptime(data.get("comments"), "%Y%m%d%H%M%S").astimezone(
-                tz=utc
-            )
+            ] = get_datetime(datetime.strptime(data.get("comments"), "%Y%m%d%H%M%S"))
             if not data.get("createDate"):
                 formatted_data["firstcreated"] = formatted_data["firstpublished"]
 
