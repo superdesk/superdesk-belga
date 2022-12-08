@@ -408,7 +408,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         related_articles = [
             item
             for item in data[1:]
-            if item["assetType"] == "RelatedArticle" or "Picture"
+            if item["assetType"] in ("RelatedArticle", "Picture")
         ]
         for idx, item in enumerate(related_articles):
             associations["belga_related_articles--" + str(idx)] = self.format_list_item(

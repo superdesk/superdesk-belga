@@ -267,7 +267,7 @@ class Belga360ArchiveTestCase(TestCase):
         with open(fixture("belga-360archive-search.json")) as _file:
             items = self.provider.get_related_article(json.load(_file)["newsObjects"])
             self.assertIn("belga_related_articles--0", items)
-            self.assertEqual(len(items), 1)
+            self.assertEqual(len(items), 2)
 
             item = items["belga_related_articles--0"]
             guid = "urn:belga.be:360archive:44690231"
@@ -296,6 +296,18 @@ class Belga360ArchiveTestCase(TestCase):
                     {"name": "TOB", "sub_label": "TOB", "role": "AUTHOR"},
                     {"name": "EDS", "sub_label": "EDS", "role": "EDITOR"},
                 ],
+            )
+
+            related_picture_item = items["belga_related_articles--1"]
+            guid = "urn:belga.be:360archive:46768825"
+            self.assertEqual(related_picture_item["_id"], guid)
+            self.assertEqual(related_picture_item["state"], "published")
+            self.assertEqual(
+                related_picture_item["mimetype"], "application/superdesk.item.picture"
+            )
+            self.assertEqual(related_picture_item["type"], "picture")
+            self.assertEqual(
+                related_picture_item["headline"], "FILES - FBL - WC - 2022"
             )
 
     def test_find_item(self):
