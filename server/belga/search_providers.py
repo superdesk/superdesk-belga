@@ -17,6 +17,7 @@ from superdesk import get_resource_service
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.metadata.item import MEDIA_TYPES
+from apps.archive.highlights_search_mixin import HighlightsSearchMixin
 from superdesk.timer import timer
 from superdesk.text_utils import get_text as _get_text
 from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
@@ -300,7 +301,9 @@ class BelgaCoverageV2SearchProvider(
     GALLERY_URN = "urn:www.belga.be:picturepackgallery:{id}"
 
 
-class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
+class Belga360ArchiveSearchProvider(
+    superdesk.SearchProvider, BelgaNewsMLMixin, HighlightsSearchMixin
+):
 
     GUID_PREFIX = "urn:belga.be:360archive:"
 
@@ -411,9 +414,14 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             if item["assetType"] in ("RelatedArticle", "Picture")
         ]
         for idx, item in enumerate(related_articles):
-            associations["belga_related_articles--" + str(idx)] = self.format_list_item(
-                item
-            )
+            associations[
+                (
+                    "belga_related_images--"
+                    if item["assetType"] == "Picture"
+                    else "belga_related_articles--"
+                )
+                + str(idx)
+            ] = self.format_list_item(item)
         return associations
 
     def fetch(self, guid):
