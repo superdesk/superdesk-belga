@@ -298,7 +298,7 @@ class Belga360ArchiveTestCase(TestCase):
                 ],
             )
 
-            related_picture_item = items["belga_related_articles--1"]
+            related_picture_item = items["belga_related_images--1"]
             guid = "urn:belga.be:360archive:46768825"
             self.assertEqual(related_picture_item["_id"], guid)
             self.assertEqual(related_picture_item["state"], "published")
