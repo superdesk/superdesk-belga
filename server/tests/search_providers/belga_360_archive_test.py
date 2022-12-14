@@ -399,7 +399,10 @@ class Belga360ArchiveTestCase(TestCase):
                 highlighted_item["es_highlight"],
                 {
                     "headline": [
-                        '<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span> dolor sit amet, consectetur adipiscing elit.'
+                        (
+                            '<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span> dolor '
+                            "sit amet, consectetur adipiscing elit."
+                        )
                     ]
                 },
             )
