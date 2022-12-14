@@ -8,6 +8,7 @@ import superdesk
 import logging
 import itertools
 
+import re
 from pytz import utc
 from datetime import datetime
 from urllib.parse import urljoin
@@ -375,6 +376,26 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         data = self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
+
+        # SDBELGA-667
+        if search_text := api_params.get("searchText"):
+            search_text = " ".join([f"({text})" for text in search_text.split()])
+            fields = ("body_html", "headline", "slugline")
+            for doc in docs:
+                for field in fields:
+                    highlighted_value = re.subn(
+                        f"{search_text}",
+                        lambda text: " ".join(
+                            [
+                                f'<span class="es-highlight">{s}</span>'
+                                for s in text.groups()
+                            ]
+                        ),
+                        doc.get(field),
+                    )
+                    if highlighted_value[1]:
+                        doc["es_highlight"] = {field: [highlighted_value[0]]}
+
         return BelgaListCursor(docs, data[self.count_field])
 
     def get_detailed_info(self, newsObjectId):
