@@ -378,3 +378,46 @@ class Belga360ArchiveTestCase(TestCase):
                 },
             },
         )
+
+    def test_get_highlighted_text(self):
+        with HTTMock(archive_mock):
+            query = {
+                "size": 50,
+                "from": 50,
+                "query": {
+                    "filtered": {
+                        "query": {
+                            "query_string": {"query": "Lorem ipsum"},
+                        },
+                    },
+                },
+            }
+            items = self.provider.find(query)
+            self.assertEqual(len(items.docs), 4)
+            highlighted_item = items[0]
+            self.assertEqual(
+                highlighted_item["es_highlight"],
+                {
+                    "headline": [
+                        (
+                            '<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span> dolor '
+                            "sit amet, consectetur adipiscing elit."
+                        )
+                    ]
+                },
+            )
+
+            query["query"]["filtered"]["query"]["query_string"]["query"] = "ipsum Lorem"
+            items = self.provider.find(query)
+            highlighted_item = items[0]
+            self.assertEqual(
+                highlighted_item["es_highlight"],
+                {
+                    "headline": [
+                        (
+                            '<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span> dolor '
+                            "sit amet, consectetur adipiscing elit."
+                        )
+                    ]
+                },
+            )
