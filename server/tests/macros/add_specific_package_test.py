@@ -44,7 +44,7 @@ class AddSpecificPackage(TestCase):
                                 "scheme": "distribution",
                             },
                         ],
-                        "language": "de",
+                        "language": "nl",
                         "keywords": ["some", "keyword"],
                         "body_html": "",
                     },
@@ -84,4 +84,4 @@ class AddSpecificPackage(TestCase):
             },
         )
         self.assertEqual(item.get("keywords"), ["some", "keyword"])
-        self.assertEqual(item.get("language"), "de")
+        self.assertEqual(item.get("language"), "nl")

@@ -13,7 +13,7 @@ def update_package(item, **kwargs):
 
     if item.get("state") == CONTENT_STATE.FETCHED and item.get("language") in (
         "fr",
-        "de",
+        "nl",
     ):
         subject = item.get("subject")
         for i in subject:
