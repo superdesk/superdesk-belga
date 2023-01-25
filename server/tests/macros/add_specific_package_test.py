@@ -56,7 +56,7 @@ class AddSpecificPackage(TestCase):
         item = {
             "headline": "test1",
             "type": "text",
-            "language" : "nl",
+            "language": "nl",
             "state": "fetched",
             "subject": [
                 {
