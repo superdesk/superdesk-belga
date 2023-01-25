@@ -12,38 +12,46 @@ from superdesk import get_resource_service
 
 
 logger = logging.getLogger(__name__)
-SUBJECT_SCHEMES = ('services-products', 'distribution')
+SUBJECT_SCHEMES = ("services-products", "distribution")
 
 
 def get_default_content_template(item, **kwargs):
-    if 'dest_desk_id' in kwargs:
+    if "dest_desk_id" in kwargs:
         desk = None
-        desk_id = kwargs['dest_desk_id']
-    elif 'desk' in kwargs:
-        desk = kwargs['desk']
-        desk_id = kwargs['desk']['_id']
-    elif 'task' in item and 'desk' in item['task']:
+        desk_id = kwargs["dest_desk_id"]
+    elif "desk" in kwargs:
+        desk = kwargs["desk"]
+        desk_id = kwargs["desk"]["_id"]
+    elif "task" in item and "desk" in item["task"]:
         desk = None
-        desk_id = item['task'].get('desk')
+        desk_id = item["task"].get("desk")
     else:
         logger.warning("Can't set default data, no desk identifier found")
         return
 
     if desk is None:
-        desk = get_resource_service('desks').find_one(req=None, _id=desk_id)
+        desk = get_resource_service("desks").find_one(req=None, _id=desk_id)
     if not desk:
         logger.warning('Can\'t find desk with id "{desk_id}"'.format(desk_id=desk_id))
         return
 
     content_template_id = desk.get("default_content_template")
     if not content_template_id:
-        logger.warning("No default content template set for {desk_name}".format(
-            desk_name=desk.get('name', desk_id)))
+        logger.warning(
+            "No default content template set for {desk_name}".format(
+                desk_name=desk.get("name", desk_id)
+            )
+        )
         return
-    content_template = get_resource_service("content_templates").find_one(req=None, _id=content_template_id)
+    content_template = get_resource_service("content_templates").find_one(
+        req=None, _id=content_template_id
+    )
     if not content_template:
-        logger.warning('Can\'t find content_template with id "{content_template_id}"'.format(
-            content_template_id=content_template_id))
+        logger.warning(
+            'Can\'t find content_template with id "{content_template_id}"'.format(
+                content_template_id=content_template_id
+            )
+        )
         return
 
     return content_template
@@ -61,32 +69,34 @@ def set_default_metadata(item, **kwargs):
     if not content_template:
         return
 
-    data = content_template['data']
+    data = content_template["data"]
 
-    item['language'] = data.get('language')
+    item["language"] = data.get("language")
 
-    if kwargs.get('overwrite_keywords', True):
-        item['keywords'] = data.get('keywords', [])
+    if kwargs.get("overwrite_keywords", True):
+        item["keywords"] = data.get("keywords", [])
 
     # subject contains remaining metadata to copy
-    subject = item.setdefault('subject', [])
+    subject = item.setdefault("subject", [])
 
     # we first remove conflicting metadata, if any
     to_delete = []
     for s in subject:
-        if s.get('scheme') in SUBJECT_SCHEMES:
+        if s.get("scheme") in SUBJECT_SCHEMES:
             to_delete.append(s)
     for s in to_delete:
         subject.remove(s)
 
     # and now we add the new one
-    subject.extend([i for i in data.get('subject', []) if i.get('scheme') in SUBJECT_SCHEMES])
+    subject.extend(
+        [i for i in data.get("subject", []) if i.get("scheme") in SUBJECT_SCHEMES]
+    )
 
     return item
 
 
-name = 'Set Default Metadata'
+name = "Set Default Metadata"
 label = name
 callback = set_default_metadata
-access_type = 'backend'
-action_type = 'direct'
+access_type = "backend"
+action_type = "direct"
