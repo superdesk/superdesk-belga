@@ -57,7 +57,7 @@ class AddSpecificPackage(TestCase):
             "headline": "test1",
             "type": "text",
             "language": "nl",
-            "state": "fetched",
+            "state": "ingested",
             "subject": [
                 {
                     "name": "EXT/GEN",

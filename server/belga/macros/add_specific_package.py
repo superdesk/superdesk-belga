@@ -8,11 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 def update_package(item, **kwargs):
-
     item_language = item.get("language", "")
     item = set_default_metadata(item, **kwargs)
 
-    if item.get("state") == CONTENT_STATE.FETCHED and item_language in (
+    if item.get("state") == CONTENT_STATE.INGESTED and item_language in (
         "fr",
         "nl",
     ):
@@ -45,5 +44,5 @@ def update_package(item, **kwargs):
 name = "Add specific package"
 label = "Add specific package"
 callback = update_package
-access_type = "frontend"
+access_type = "backend"
 action_type = "direct"
