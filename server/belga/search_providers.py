@@ -335,7 +335,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         return searchText
 
-    def get_highlight(self, search_text, docs):
+    def set_highlight(self, search_text, docs):
         search_text = "|".join(search_text.split())
         fields = ("body_html", "headline", "slugline")
         for doc in docs:
@@ -397,7 +397,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         # SDBELGA-667
         if search_text := api_params.get("searchText"):
-            self.get_highlight(search_text, docs)
+            self.set_highlight(search_text, docs)
 
         return BelgaListCursor(docs, data[self.count_field])
 
@@ -426,7 +426,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
                 ]
 
         if searchText := self.get_search_text(query):
-            self.get_highlight(searchText, formatted_data)
+            self.set_highlight(searchText, formatted_data)
         return formatted_data
 
     def get_related_article(self, data):
