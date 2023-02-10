@@ -352,8 +352,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
                     flags=re.IGNORECASE,
                 )
                 if highlighted_value[1]:
-                    doc["es_highlight"] = doc.get("es_highlight", {})
-                    doc["es_highlight"][field] = [highlighted_value[0]]
+                    doc.setdefault("es_highlight", {})[field] = [highlighted_value[0]]
 
     def find(self, query, params=None):
         api_params = {
