@@ -57,7 +57,6 @@ class BelgaListCursor(ListCursor):
 
 
 class BelgaImageSearchProvider(superdesk.SearchProvider):
-
     GUID_PREFIX = "urn:belga.be:image:"
     IMAGE_URN = "urn:www.belga.be:picturestore:{id}:{rendition}:true"
 
@@ -208,7 +207,6 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 
 
 class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
-
     GUID_PREFIX = "urn:belga.be:picturepackimage:"
     IMAGE_URN = "urn:www.belga.be:picturepackstore:{id}:{rendition}:true"
 
@@ -244,7 +242,6 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
 
 
 class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
-
     GUID_PREFIX = "urn:belga.be:coverage:"
     GALLERY_URN = "urn:www.belga.be:belgagallery:{id}"
 
@@ -302,7 +299,6 @@ class BelgaCoverageV2SearchProvider(
 
 
 class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
-
     GUID_PREFIX = "urn:belga.be:360archive:"
 
     label = "Belga 360 Archive"
@@ -331,6 +327,33 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip("/"))
 
+    def get_search_text(self, query):
+        try:
+            searchText = query["query"]["filtered"]["query"]["query_string"]["query"]
+        except KeyError:
+            searchText = ""
+
+        return searchText
+
+    def set_highlight(self, search_text, docs):
+        search_text = "|".join(search_text.split())
+        fields = ("body_html", "headline", "slugline")
+        for doc in docs:
+            for field in fields:
+                highlighted_value = re.subn(
+                    f"({search_text})",
+                    lambda text: " ".join(
+                        [
+                            f'<span class="es-highlight">{s}</span>'
+                            for s in text.groups()
+                        ]
+                    ),
+                    doc.get(field),
+                    flags=re.IGNORECASE,
+                )
+                if highlighted_value[1]:
+                    doc.setdefault("es_highlight", {})[field] = [highlighted_value[0]]
+
     def find(self, query, params=None):
         api_params = {
             "start": query.get("from", 0),
@@ -339,7 +362,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         if params:
             if params.get("preview_id"):
-                return self.get_detailed_info(params["preview_id"])
+                return self.get_detailed_info(params["preview_id"], query)
 
             if params.get("languages"):
                 api_params["language"] = params["languages"].lower()
@@ -367,39 +390,18 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
                 [_type for _type in self.default_params]
             )
 
-        try:
-            api_params["searchText"] = query["query"]["filtered"]["query"][
-                "query_string"
-            ]["query"]
-        except KeyError:
-            api_params["searchText"] = ""
+        api_params["searchText"] = self.get_search_text(query)
 
         data = self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
 
         # SDBELGA-667
         if search_text := api_params.get("searchText"):
-            search_text = "|".join(search_text.split())
-            fields = ("body_html", "headline", "slugline")
-            for doc in docs:
-                for field in fields:
-                    highlighted_value = re.subn(
-                        f"({search_text})",
-                        lambda text: " ".join(
-                            [
-                                f'<span class="es-highlight">{s}</span>'
-                                for s in text.groups()
-                            ]
-                        ),
-                        doc.get(field),
-                        flags=re.IGNORECASE,
-                    )
-                    if highlighted_value[1]:
-                        doc["es_highlight"] = {field: [highlighted_value[0]]}
+            self.set_highlight(search_text, docs)
 
         return BelgaListCursor(docs, data[self.count_field])
 
-    def get_detailed_info(self, newsObjectId):
+    def get_detailed_info(self, newsObjectId, query):
         formatted_data = []
         resp = self.api_get(self.search_endpoint + "/" + newsObjectId, {})
         if not resp.get("newsItemId"):
@@ -423,6 +425,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
                     if str(d["newsObjectId"]) == newsObjectId
                 ]
 
+        if searchText := self.get_search_text(query):
+            self.set_highlight(searchText, formatted_data)
         return formatted_data
 
     def get_related_article(self, data):
@@ -630,7 +634,6 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
 
 class BelgaPressSearchProvider(superdesk.SearchProvider):
-
     GUID_PREFIX = "urn:belga.be:belgapress:"
 
     label = "Belga Press"
