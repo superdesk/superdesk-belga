@@ -281,7 +281,7 @@ class Belga360ArchiveTestCase(TestCase):
             self.assertEqual(item["source"], "BELGA")
             self.assertEqual(item["language"], "fr")
             self.assertEqual(
-                item["firstcreated"], datetime.fromtimestamp(1638953020, utc)
+                item["firstcreated"], datetime(2022, 10, 5, 13, 41, 50, tzinfo=utc)
             )
             self.assertEqual(
                 item["versioncreated"], datetime(2022, 10, 5, 13, 41, 50, tzinfo=utc)
