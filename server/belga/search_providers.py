@@ -513,6 +513,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         guid = "%s%d" % (self.GUID_PREFIX, data["newsObjectId"])
         formatted_data = {
             "type": self.get_type(data.get("assetType", "text")),
+            "_type": "externalsource",
             "mimetype": f"application/superdesk.item.{self.get_type(data.get('assetType', 'text'))}",
             "pubstatus": "usable",
             "_id": guid,
