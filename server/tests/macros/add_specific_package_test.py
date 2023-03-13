@@ -74,13 +74,22 @@ class AddSpecificPackage(TestCase):
             ],
         }
 
-        update_package(item, dest_desk_id="desk_1")
+        dest_desk = {
+            "_id": "desk_2",
+            "name": "Politic Desk",
+            "default_content_profile": "belga_text",
+            "default_content_template": "content_template_1",
+            "desk_language": "fr",
+            "source": "politic",
+        }
+
+        update_package(item, desk=dest_desk)
         self.assertEqual(
             item.get("subject")[2],
             {
-                "name": "BTL/ECO",
-                "qcode": "BTL/ECO",
-                "parent": "BTL",
+                "name": "EXT/ECO",
+                "qcode": "EXT/ECO",
+                "parent": "EXT",
                 "scheme": "services-products",
             },
         )
