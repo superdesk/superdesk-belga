@@ -8,10 +8,11 @@ logger = logging.getLogger(__name__)
 
 
 def update_package(item, **kwargs):
-    item_language = item.get("language", "")
     item = set_default_metadata(item, **kwargs)
 
-    if item.get("state") == CONTENT_STATE.INGESTED and item_language in (
+    language = kwargs.get("desk", {}).get("desk_language", item.get("language"))
+
+    if item.get("state") == CONTENT_STATE.INGESTED and language in (
         "fr",
         "nl",
     ):
@@ -27,7 +28,7 @@ def update_package(item, **kwargs):
                 "parent": "EXT",
                 "scheme": "services-products",
             }
-            if item_language == "fr"
+            if language == "fr"
             else {
                 "name": "BTL/ECO",
                 "qcode": "BTL/ECO",
