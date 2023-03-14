@@ -9,6 +9,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 import logging
 from superdesk import get_resource_service
+from apps.archive.common import CONTENT_STATE
 
 
 logger = logging.getLogger(__name__)
@@ -91,6 +92,21 @@ def set_default_metadata(item, **kwargs):
     subject.extend(
         [i for i in data.get("subject", []) if i.get("scheme") in SUBJECT_SCHEMES]
     )
+
+    # SDBELGA-715
+    brief_already_exists = any(
+        subject
+        for subject in subject
+        if subject["qcode"] == "BRIEF" and subject["scheme"] == "belga-keywords"
+    )
+    if not brief_already_exists and item.get("state") == CONTENT_STATE.INGESTED:
+        subject.append(
+            {
+                "name": "BRIEF",
+                "qcode": "BRIEF",
+                "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}},
+            }
+        )
 
     return item
 
