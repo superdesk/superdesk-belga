@@ -84,6 +84,7 @@ class SetDefaultMetadataTestCase(TestCase):
                 "name": "BRIEF",
                 "qcode": "BRIEF",
                 "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}},
+                "scheme": "belga-keywords",
             },
             item["subject"],
         )

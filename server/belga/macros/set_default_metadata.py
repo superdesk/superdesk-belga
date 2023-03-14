@@ -105,6 +105,7 @@ def set_default_metadata(item, **kwargs):
                 "name": "BRIEF",
                 "qcode": "BRIEF",
                 "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}},
+                "scheme": "belga-keywords",
             }
         )
 
