@@ -7,7 +7,9 @@
   },
   "devDependencies": {
     "typescript": "3.9.9",
-    "@types/react": "16.4.9",
-    "superdesk-ui-framework": "2.4.2"
+    "@types/react": "16.4.9"
+  },
+  "peerDependencies": {
+    "superdesk-ui-framework": "3.0.0-rc12"
   }
 }
