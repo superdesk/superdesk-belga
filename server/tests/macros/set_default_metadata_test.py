@@ -56,6 +56,7 @@ class SetDefaultMetadataTestCase(TestCase):
             'headline': 'test headline',
             'slugine': 'test slugline',
             'keywords': ['foo', 'bar'],
+            'state': "ingested"
         }
 
         set_default_metadata(item, dest_desk_id="desk_1")
@@ -69,3 +70,8 @@ class SetDefaultMetadataTestCase(TestCase):
         self.assertIn(
             {"name": "default", "qcode": "default", "scheme": "distribution"},
             item['subject'])
+
+        self.assertIn(
+            {'name': 'BRIEF', 'qcode': 'BRIEF', 'translations': {'name': {'nl': 'BRIEF', 'fr': 'BRIEF'}}},
+            item['subject'])
+        
