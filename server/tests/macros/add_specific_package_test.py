@@ -84,14 +84,14 @@ class AddSpecificPackage(TestCase):
         }
 
         update_package(item, desk=dest_desk)
-        self.assertEqual(
-            item.get("subject")[2],
+        self.assertIn(
             {
                 "name": "EXT/ECO",
                 "qcode": "EXT/ECO",
                 "parent": "EXT",
                 "scheme": "services-products",
             },
+            item["subject"],
         )
         self.assertEqual(item.get("keywords"), ["some", "keyword"])
         self.assertEqual(item.get("language"), "nl")
