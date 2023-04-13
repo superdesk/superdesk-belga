@@ -132,7 +132,7 @@ jwcrypto==1.4.2
     # via
     #   flask-oidc-ex
     #   python-jwt
-kombu==4.6.11
+kombu==4.6.10
     # via
     #   celery
     #   superdesk-core
