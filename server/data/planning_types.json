@@ -146,5 +146,31 @@
         "name"
       ]
     }
+  },
+  {
+    "_id": "advanced_search",
+    "name": "advanced_search",
+    "init_version": 1,
+    "editor": {
+      "event": {},
+      "combined": {
+        "language": {
+          "enabled": true,
+          "index": 4,
+          "group": "common",
+          "search_enabled": true,
+          "filter_enabled": true
+        }
+      },
+      "planning": {
+        "language": {
+          "enabled": true,
+          "index": 4,
+          "group": "common",
+          "search_enabled": true,
+          "filter_enabled": true
+        }
+      }
+    }
   }
 ]
