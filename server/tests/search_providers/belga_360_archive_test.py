@@ -173,7 +173,8 @@ class Belga360ArchiveTestCase(TestCase):
         self.assertEqual(item["guid"], guid)
         self.assertEqual(item["extra"]["city"], "Bruxelles")
         self.assertEqual(
-            item["headline"], "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            item["headline"],
+            "(Lorem ipsum) dolor sit amet, consectetur adipiscing elit.",
         )
         self.assertEqual(item["name"], "")
         self.assertEqual(item["slugline"], "Belga 360 slugline")
