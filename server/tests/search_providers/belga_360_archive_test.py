@@ -421,11 +421,13 @@ class Belga360ArchiveTestCase(TestCase):
                     ]
                 },
             )
-            
-            query["query"]["filtered"]["query"]["query_string"]["query"] = "(Lorem ipsum)"
+
+            query["query"]["filtered"]["query"]["query_string"][
+                "query"
+            ] = "(Lorem ipsum)"
             items = self.provider.find(query)
             highlighted_item = items[0]
-            
+
             self.assertEqual(
                 highlighted_item["es_highlight"],
                 {
