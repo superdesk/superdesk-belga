@@ -400,7 +400,7 @@ class Belga360ArchiveTestCase(TestCase):
                 {
                     "headline": [
                         (
-                            '<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span> dolor '
+                            '(<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span>) dolor '
                             "sit amet, consectetur adipiscing elit."
                         )
                     ]
@@ -415,7 +415,23 @@ class Belga360ArchiveTestCase(TestCase):
                 {
                     "headline": [
                         (
-                            '<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span> dolor '
+                            '(<span class="es-highlight">Lorem</span> <span class="es-highlight">ipsum</span>) dolor '
+                            "sit amet, consectetur adipiscing elit."
+                        )
+                    ]
+                },
+            )
+            
+            query["query"]["filtered"]["query"]["query_string"]["query"] = "(Lorem ipsum)"
+            items = self.provider.find(query)
+            highlighted_item = items[0]
+            
+            self.assertEqual(
+                highlighted_item["es_highlight"],
+                {
+                    "headline": [
+                        (
+                            '<span class="es-highlight">(Lorem</span> <span class="es-highlight">ipsum)</span> dolor '
                             "sit amet, consectetur adipiscing elit."
                         )
                     ]
