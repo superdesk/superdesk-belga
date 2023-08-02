@@ -336,7 +336,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         return searchText
 
     def set_highlight(self, search_text, docs):
-        search_text = "|".join(search_text.split())
+        search_text = "|".join(re.escape(term.strip()) for term in search_text.split())
         fields = ("body_html", "headline", "slugline")
         for doc in docs:
             for field in fields:
