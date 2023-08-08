@@ -65,7 +65,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 12.x
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
       - run: npm ci || npm install
       - run: npm run build

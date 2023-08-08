@@ -3,6 +3,7 @@
 from apps.archive.common import CONTENT_STATE
 from belga.macros.set_default_metadata import set_default_metadata
 import logging
+from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,9 @@ def update_package(item, **kwargs):
 
         item.setdefault("subject", []).append(data)
 
-    return item
+    macro_service = get_resource_service("macros")
+    desk_routing_macro = macro_service.get_macro_by_name("desk_routing")
+    desk_routing_macro["callback"](item, **kwargs)
 
 
 name = "Add specific package"
