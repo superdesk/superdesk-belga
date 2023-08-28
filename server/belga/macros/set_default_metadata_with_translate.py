@@ -79,28 +79,29 @@ def set_default_metadata_with_translate(item, **kwargs):
         return
 
     # SDBELGA-538
-    filtered_subjects = [
-        s for s in item["subject"] if s.get("scheme") == "services-products"
-    ]
-    internal_destination = kwargs.get("internal_destination", {})
-    content_filter_id = internal_destination.get("filter", "")
+    if item.get("subject"):
+        filtered_subjects = [
+            s for s in item["subject"] if s.get("scheme") == "services-products"
+        ]
+        internal_destination = kwargs.get("internal_destination", {})
+        content_filter_id = internal_destination.get("filter", "")
 
-    # Retrieve the content filter using content_filter_id
-    content_filter = get_resource_service("content_filters").find_one(
-        req=None, _id=content_filter_id
-    )
+        # Retrieve the content filter using content_filter_id
+        content_filter = get_resource_service("content_filters").find_one(
+            req=None, _id=content_filter_id
+        )
 
-    if len(filtered_subjects) > 1 and content_filter:
-        filter_conditions_service = get_resource_service("filter_conditions")
+        if len(filtered_subjects) > 1 and content_filter:
+            filter_conditions_service = get_resource_service("filter_conditions")
 
-        for filter in content_filter.get("content_filter", []):
-            for filter_id in filter.get("expression", {}).get("fc", []):
-                filter_condition = filter_conditions_service.find_one(
-                    req=None, _id=filter_id
-                )
+            for filter in content_filter.get("content_filter", []):
+                for filter_id in filter.get("expression", {}).get("fc", []):
+                    filter_condition = filter_conditions_service.find_one(
+                        req=None, _id=filter_id
+                    )
 
-                if filtered_subjects[:1] != filter_condition.get("value"):
-                    raise StopDuplication
+                    if filtered_subjects[:1] != filter_condition.get("value"):
+                        raise StopDuplication
 
     # we first do the translation, we need destination language for that
     content_template = get_default_content_template(item, **kwargs)
