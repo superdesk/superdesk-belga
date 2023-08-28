@@ -80,20 +80,20 @@ def set_default_metadata_with_translate(item, **kwargs):
 
     # SDBELGA-538
     if item.get("subject"):
-        filtered_subjects = [
+        test_item = item.copy()
+        test_item["subject"] = [
             s for s in item["subject"] if s.get("scheme") == "services-products"
-        ]
+        ][
+            :1
+        ]  # only first if there is one
         internal_destination = kwargs.get("internal_destination", {})
         content_filter_id = internal_destination.get("filter", "")
         content_filter_service = get_resource_service("content_filters")
         content_filter = content_filter_service.find_one(
             req=None, _id=content_filter_id
         )
-
-        if (
-            len(filtered_subjects) > 1
-            and content_filter
-            and content_filter_service.does_match(content_filter, item)
+        if content_filter and not content_filter_service.does_match(
+            content_filter, test_item
         ):
             raise StopDuplication
 
