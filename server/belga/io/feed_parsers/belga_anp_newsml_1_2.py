@@ -10,6 +10,7 @@
 
 import pytz
 import re
+import itertools
 
 from superdesk.io.registry import register_feed_parser
 
@@ -69,12 +70,16 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 subject["scheme"] == "original-metadata"
                 and subject["name"].find(";") != -1
             ):
-                subject_list = [
-                    {"name": i, "qcode": i, "scheme": "original-metadata"}
-                    for i in set(re.split('[-;]', subject["name"]))
-                ]
-                item.setdefault("subject", []).extend(subject_list)
+                for keyword in set(re.split("[-;]", subject["name"])):
+                    # SDBELGA-713
+                    item.setdefault("subject", []).extend(self._get_keywords(keyword))
                 item["subject"].remove(subject)
+                item["subject"] = [
+                    dict(i)
+                    for i, _ in itertools.groupby(
+                        sorted(item["subject"], key=lambda k: k["qcode"])
+                    )
+                ]
         return item
 
 
