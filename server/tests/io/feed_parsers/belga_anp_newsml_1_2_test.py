@@ -44,6 +44,12 @@ class BelgaANPNewsMLOneTestCase(TestCase):
                 "scheme": "belga-keywords",
             },
             {
+                "name": "TENNIS",
+                "qcode": "TENNIS",
+                "translations": {"name": {"nl": "TENNIS", "fr": "TENNIS"}},
+                "scheme": "belga-keywords",
+            },
+            {
                 "name": "Netherlands",
                 "qcode": "nld",
                 "translations": {"name": {"nl": "Nederland", "fr": "Pays-Bas"}},
@@ -61,8 +67,6 @@ class BelgaANPNewsMLOneTestCase(TestCase):
             {"name": "ECO", "qcode": "ECO", "scheme": "genre"},
             {"name": "MEDVEDEV", "qcode": "MEDVEDEV", "scheme": "original-metadata"},
             {"name": "NIEUWS", "qcode": "NIEUWS", "scheme": "original-metadata"},
-            {"name": "TENNIS", "qcode": "TENNIS", "scheme": "original-metadata"},
-            {"name": "Tennis", "qcode": "Tennis", "scheme": "original-metadata"},
             {
                 "name": "NEWS/ECONOMY",
                 "qcode": "NEWS/ECONOMY",
