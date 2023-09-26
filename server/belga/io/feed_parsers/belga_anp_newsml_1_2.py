@@ -70,9 +70,9 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 subject["scheme"] == "original-metadata"
                 and subject["name"].find(";") != -1
             ):
-                for i in set(re.split("[-;]", subject["name"])):
+                for keyword in set(re.split("[-;]", subject["name"])):
                     # SDBELGA-713
-                    item.setdefault("subject", []).extend(self._get_keywords(i))
+                    item.setdefault("subject", []).extend(self._get_keywords(keyword))
                 item["subject"].remove(subject)
                 item["subject"] = [
                     dict(i)
