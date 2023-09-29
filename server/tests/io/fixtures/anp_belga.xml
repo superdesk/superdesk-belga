@@ -56,7 +56,7 @@
 				</SubjectCode>
 				<Location HowPresent="Origin">
 					<Property FormalName="Country" Value="NLD"/>
-					<Property FormalName="City" Value="UTRECHT"/>
+					<Property FormalName="City" Value=""/>
 				</Location>
 				<Property FormalName="Keyword" Value="Tennis;TENNIS-NIEUWS-MEDVEDEV"/>
 				<Property FormalName="Keyword" Value="BRIEF"/>
