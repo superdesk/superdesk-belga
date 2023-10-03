@@ -80,7 +80,21 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         sorted(item["subject"], key=lambda k: k["qcode"])
                     )
                 ]
+
+        # SDBELGA-530
+        if not item.get("extra", {}).get("city"):
+            item.get("extra")["city"] = self.extract_city(item)
+
         return item
+
+    def extract_city(self, item):
+        """
+        extract city from body_html
+        """
+        location_match = re.search(r"([A-Z][A-Za-z ]+)\s*\(ANP\)", item["body_html"])
+        if location_match:
+            return location_match.group(1).strip()
+        return ""
 
 
 register_feed_parser(BelgaANPNewsMLOneFeedParser.NAME, BelgaANPNewsMLOneFeedParser())

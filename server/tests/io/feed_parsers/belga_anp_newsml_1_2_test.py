@@ -108,7 +108,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["language"], "nl")
         self.assertEqual(
             item["extra"],
-            {"how_present": "Origin", "country": "NLD", "city": "UTRECHT"},
+            {"how_present": "Origin", "country": "NLD", "city": "San Mateo"},
         )
         self.assertEqual(item["keywords"], [])
         self.assertEqual(item["type"], "text")
@@ -125,7 +125,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         self.assertEqual(item["genre"], [{"name": "ECO", "qcode": "ECO"}])
         expected_body = (
             "\n\t\t\t\t\t\t\t\t<p>N i e u w bericht, vervangt: FNV staat alleen met ultimatum aan Post"
-            "NL</p>\n\t\t\t\t\t\t\t\t<p>UTRECHT (ANP) - FNV kondigt werkonderbrekingen aan bij PostNL,"
+            "NL</p>\n\t\t\t\t\t\t\t\t<p>San Mateo (ANP) - FNV kondigt werkonderbrekingen aan bij PostNL,"
             " nadat de post- en pakketbezorger maandag niet inging op een ultimatum voor toez"
             "eggingen over een nieuwe cao. De drie andere bonden die met PostNL onderhandelen"
             " over een nieuwe cao, zien niets in actievoeren.</p>\n\t\t\t\t\t\t\t\t<p>FNV overlegt nog"
