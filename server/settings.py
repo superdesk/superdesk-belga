@@ -315,3 +315,4 @@ BELGA_IMAGE_APIKEY = env('BELGA_IMAGE_APIKEY')
 BELGA_IMAGE_LIMIT = env('BELGA_IMAGE_LIMIT', '')
 
 DEFAULT_CREATE_PLANNING_SERIES_WITH_EVENT_SERIES = True
+SYNC_EVENT_FIELDS_TO_PLANNING = ["slugline", "name", "ednote", "internal_note", "language", "definition_short"]
