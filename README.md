@@ -1,6 +1,8 @@
 # Superdesk
 [![CI](https://github.com/superdesk/superdesk-belga/actions/workflows/tests.yml/badge.svg)](https://github.com/superdesk/superdesk-belga/actions/workflows/tests.yml)
 
+.
+
 Superdesk is an open source end-to-end news creation, production, curation,
 distribution and publishing platform developed and maintained by Sourcefabric
 with the sole purpose of making the best possible software for journalism. It
