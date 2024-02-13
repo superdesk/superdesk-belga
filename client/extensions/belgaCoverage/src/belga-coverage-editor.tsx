@@ -6,7 +6,7 @@ const ALLOWED = 'application/vnd.belga.coverage';
 const SEPARATOR = ';';
 
 function isAllowedType(event: DragEvent | undefined) {
-    return event != null && !!event.dataTransfer && event.dataTransfer.types.includes(ALLOWED);
+    return event?.dataTransfer?.types.includes(ALLOWED) || false;
 }
 
 function getData(event: DragEvent) {
