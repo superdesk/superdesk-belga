@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {ISuperdesk, IExtension, IExtensionActivationResult, ICustomFieldType, ICommonFieldConfig} from 'superdesk-api';
 
 import {getBelgaCoverageEditor} from './belga-coverage-editor';
 import {getBelgaCoveragePreview} from './belga-coverage-preview';
@@ -6,18 +6,19 @@ import {getBelgaCoveragePreview} from './belga-coverage-preview';
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
+        const field: ICustomFieldType<string, string, ICommonFieldConfig, never> = {
+            id: 'belga.coverage',
+            label: gettext('Belga Coverage'),
+            editorComponent: getBelgaCoverageEditor(superdesk),
+            previewComponent: getBelgaCoveragePreview(superdesk),
+            hasValue: (value) => value != null && value.length > 0,
+            getEmptyValue: () => '',
+        };
+
         const result: IExtensionActivationResult = {
             contributions: {
-                customFieldTypes: [
-                    {
-                        id: 'belga.coverage',
-                        label: gettext('Belga Coverage'),
-                        editorComponent: getBelgaCoverageEditor(superdesk),
-                        previewComponent: getBelgaCoveragePreview(superdesk),
-                    }
-                ]
-            }
-
+                customFieldTypes: [field],
+            },
         };
 
         return Promise.resolve(result);

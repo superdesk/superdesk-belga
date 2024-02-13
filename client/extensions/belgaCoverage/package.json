@@ -10,6 +10,6 @@
     "@types/react": "16.4.9"
   },
   "peerDependencies": {
-    "superdesk-ui-framework": "3.0.0-rc12"
+    "superdesk-ui-framework": "*"
   }
 }

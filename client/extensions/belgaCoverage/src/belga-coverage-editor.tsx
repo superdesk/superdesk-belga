@@ -1,12 +1,12 @@
 import * as React from 'react';
 import BelgaCoverageCarousel from './belga-coverage-carousel';
-import {IEditorComponentProps, ISuperdesk} from 'superdesk-api';
+import {ICommonFieldConfig, IEditorComponentProps, ISuperdesk} from 'superdesk-api';
 
 const ALLOWED = 'application/vnd.belga.coverage';
 const SEPARATOR = ';';
 
-function isAllowedType(event: DragEvent) {
-    return !!event.dataTransfer && event.dataTransfer.types.includes(ALLOWED);
+function isAllowedType(event: DragEvent | undefined) {
+    return event != null && !!event.dataTransfer && event.dataTransfer.types.includes(ALLOWED);
 }
 
 function getData(event: DragEvent) {
@@ -25,38 +25,45 @@ function addId(ids: Array<string>, id: string) : string {
     return ids.filter((_id) => _id !== id).concat([id]).join(SEPARATOR);
 }
 
-export function getBelgaCoverageEditor(superdesk: ISuperdesk): React.StatelessComponent<IEditorComponentProps<string | null, never>> {
-    return function BelgaCoverageEditor(props: IEditorComponentProps<string | null, never>) {
-        const {gettext} = superdesk.localization;
-        const {DropZone} = superdesk.components;
-        const ids = parseIds(props.value);
+type IProps = IEditorComponentProps<string, ICommonFieldConfig, never>;
 
-        return (
-            <React.Fragment>
-                {ids.map((id) => (
-                    <div key={id}>
-                        <BelgaCoverageCarousel
-                            coverageId={id}
-                            removeCoverage={props.readOnly ? undefined : () => props.setValue(removeId(ids, id))}
-                            superdesk={superdesk}
-                        />
-                    </div>
-                ))}
+export function getBelgaCoverageEditor(superdesk: ISuperdesk) {
+    class BelgaCoverageEditor extends React.PureComponent<IProps> {
+        render() {
+            const {gettext} = superdesk.localization;
+            const {DropZone} = superdesk.components;
+            const ids = parseIds(this.props.value);
+            const Container = this.props.container;
 
-                <DropZone
-                    label={gettext('Add coverage here')}
-                    canDrop={isAllowedType}
-                    onDrop={(event) => {
-                        try {
-                            const coverage = JSON.parse(getData(event));
+            return (
+                <Container>
+                    {ids.map((id) => (
+                        <div key={id}>
+                            <BelgaCoverageCarousel
+                                coverageId={id}
+                                removeCoverage={this.props.readOnly ? undefined : () => this.props.onChange(removeId(ids, id))}
+                                superdesk={superdesk}
+                            />
+                        </div>
+                    ))}
 
-                            props.setValue(addId(ids, coverage.extra.bcoverage));
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    }}
-                />
-            </React.Fragment>
-        );
+                    <DropZone
+                        label={gettext('Add coverage here')}
+                        canDrop={isAllowedType}
+                        onDrop={(event) => {
+                            try {
+                                const coverage = JSON.parse(getData(event));
+
+                                this.props.onChange(addId(ids, coverage.extra.bcoverage));
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        }}
+                    />
+                </Container>
+            );
+        }
     }
+
+    return BelgaCoverageEditor;
 }
