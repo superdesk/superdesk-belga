@@ -1,4 +1,4 @@
-import {IExtension, IExtensionActivationResult, ISuperdesk, IArticle, ISubject} from 'superdesk-api';
+import {IExtension, IExtensionActivationResult, ISuperdesk, IArticle, ISubject, IVocabulary} from 'superdesk-api';
 
 type Scheme = 'media-source' | 'belga-keywords' | 'country' | 'services-products' | 'distribution';
 
@@ -21,19 +21,20 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const result: IExtensionActivationResult = {
             contributions: {
-                iptcMapping: (data, item: IArticle, parent?: IArticle) => Promise.all<Array<ISubject>>(
+                iptcMapping: (data, item: IArticle, parent?: IArticle) => Promise.all<Array<IVocabulary>>(
                     CVS.map((id) => superdesk.entities.vocabulary.getVocabulary(id)),
-                ).then((cvItems) => {
+                ).then((cvs) => {
                     const subject: Array<ISubject> = [];
                     const nextItem = Object.assign({}, item);
 
                     CVS.forEach((scheme, index) => {
-                        if (cvItems[index] == null) {
+                        if (cvs[index] == null) {
                             console.warn('missing CV', scheme);
                             return;
                         }
 
-                        cvItems[index]
+                        cvs[index]
+                            .items
                             .filter((subj) => DEFAULT_SUBJECT[scheme].includes(subj.qcode.toUpperCase()))
                             .forEach((subj) => {
                                 subject.push({
