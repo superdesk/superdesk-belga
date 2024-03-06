@@ -26,13 +26,13 @@ blinker==1.4
     #   flask-mail
     #   raven
     #   superdesk-core
-boto3==1.34.46
+boto3==1.34.56
     # via superdesk-core
-botocore==1.34.46
+botocore==1.34.56
     # via
     #   boto3
     #   s3transfer
-cachetools==5.3.2
+cachetools==5.3.3
     # via flask-oidc-ex
 celery[redis]==5.2.7
     # via superdesk-core
@@ -71,7 +71,7 @@ click-repl==0.3.0
     # via celery
 croniter==0.3.37
     # via superdesk-core
-cryptography==42.0.4
+cryptography==42.0.5
     # via
     #   authlib
     #   jwcrypto
@@ -110,7 +110,7 @@ flask-oidc-ex==0.5.5
     # via superdesk-core
 flask-script==2.0.6
     # via superdesk-core
-future==0.18.3
+future==1.0.0
     # via python-twitter
 gspread==3.1.0
     # via -r requirements.in
@@ -142,7 +142,7 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jwcrypto==1.5.4
+jwcrypto==1.5.5
     # via
     #   flask-oidc-ex
     #   python-jwt
@@ -261,9 +261,9 @@ superdesk-analytics @ git+https://github.com/superdesk/superdesk-analytics.git@r
     # via -r requirements.in
 superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@v2.7.0-rc3
     # via -r requirements.in
-superdesk-planning @ git+https://github.com/superdesk/superdesk-planning.git@v2.7.0-rc7
+superdesk-planning @ git+https://github.com/superdesk/superdesk-planning.git@release/2.7
     # via -r requirements.in
-typing-extensions==4.9.0
+typing-extensions==4.10.0
     # via
     #   jwcrypto
     #   superdesk-core
