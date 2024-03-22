@@ -8,6 +8,8 @@ import {AvatarContentText} from 'superdesk-ui-framework';
 import belgaImage from './belga/image';
 import belga360Archive from './belga/360archive';
 import belgaPress from './belga/belgapress';
+import {EditorFieldEventRelatedItems} from './extensions/relatedArticles/src/EventsRelatedArticles/EditorFieldEventRelatedItems';
+import {gettext} from 'superdesk-core/scripts/core/utils';
 
 class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
@@ -26,6 +28,22 @@ class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
 
 setTimeout(() => {
     startApp([
+        {
+            id: 'planning-extension',
+            load: () => import('superdesk-planning/client/planning-extension').then((planning) => {
+                planning.registerEditorField(
+                    'related_items',
+                    EditorFieldEventRelatedItems,
+                    () => ({
+                        label: gettext('Related Articles'),
+                        field: 'related_items',
+                        singleValue: true,
+                    }),
+                    null,
+                    false,
+                );
+            }),
+        },
         {
             id: 'planning-extension',
             load: () => import('superdesk-planning/client/planning-extension'),
