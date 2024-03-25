@@ -170,7 +170,7 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                             </Dropdown>
                         </SearchBar>
                     </div>
-                    <Spacer h gap="8" justifyContent='start' alignItems='start' noWrap>
+                    <Spacer h gap="0" justifyContent='start' alignItems='start' noWrap>
                         <div style={{...{width: this.state.previewItem ? '65%' : '100%'}, ...{padding: 12}}}>
                             <WithPagination
                                 key={this.state.activeLanguage.code + this.state.searchQuery + this.state.repo}
@@ -269,7 +269,7 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                 <Loader overlay />
                             </div>
                         }
-                        <div>
+                        <div style={{height: '100%'}}>
                             <Panel background='light' open={this.state.previewItem != null} side='right' size="medium">
                                 <PanelHeader
                                     title={gettext("Article preview")}
