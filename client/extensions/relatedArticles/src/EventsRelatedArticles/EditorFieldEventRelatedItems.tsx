@@ -12,9 +12,9 @@ import {Row} from 'superdesk-planning/client/components/UI/Form/Row';
 import {showModal} from '@superdesk/common';
 import EventsRelatedArticlesModal from './EventsRelatedArticlesModal';
 import {superdeskApi} from 'superdesk-planning/client/superdeskApi';
-import {RelatedArticleComponent} from './RelatedArticleComponent';
 import {IArticle} from 'superdesk-api';
 import {cleanArticlesFields} from './utils';
+import {RelatedArticlesListComponent} from './RelatedArticlesListComponent';
 
 interface IProps extends IEditorFieldProps {
     item: IEventItem;
@@ -87,12 +87,12 @@ export class EditorFieldEventRelatedItems extends React.PureComponent<IProps, IS
                         </div>
                     </Row>
                 ) : (
-                    <Spacer v gap="0" justifyContent='center' alignItems='center' noWrap>
+                    <Spacer v gap="4" justifyContent='center' alignItems='center' noWrap>
                         {
                             (this.state.selectedRelatedArticles ?? []).map((relItem) => (
-                                <RelatedArticleComponent
+                                <RelatedArticlesListComponent
+                                    key={relItem.guid}
                                     editorPreview
-                                    key={`${relItem.guid} + ${this.state.selectedRelatedArticles.length}`}
                                     removeArticle={(articleId) => {
                                         this.props.onChange(
                                             this.props.field,

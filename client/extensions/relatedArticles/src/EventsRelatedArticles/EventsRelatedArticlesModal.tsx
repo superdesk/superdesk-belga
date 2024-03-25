@@ -1,12 +1,24 @@
 import React from 'react';
-import {SearchBar, Modal, Dropdown, Spacer, Button, WithPagination, Loader, IconButton} from 'superdesk-ui-framework/react';
-import {RelatedArticleComponent} from './RelatedArticleComponent';
+import {
+    SearchBar,
+    Modal,
+    Dropdown,
+    Spacer,
+    Button,
+    WithPagination,
+    Loader,
+    Panel,
+    PanelHeader,
+    PanelContent,
+    PanelContentBlock,
+} from 'superdesk-ui-framework/react';
 import {getProjectedFieldsArticle, gettext} from 'superdesk-core/scripts/core/utils';
 import {httpRequestJsonLocal} from 'superdesk-core/scripts/core/helpers/network';
 import {toElasticQuery} from 'superdesk-core/scripts/core/query-formatting';
 import {IArticle, IRestApiResponse, ISuperdeskQuery} from 'superdesk-api';
 import {PreviewArticle} from './PreviewArticle';
 import {cleanArticlesFields} from './utils';
+import {RelatedArticlesListComponent} from './RelatedArticlesListComponent';
 
 interface IProps {
     closeModal: () => void;
@@ -97,7 +109,7 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
             <Modal
                 headerTemplate={gettext('Search Related Articles')}
                 visible
-                contentPadding="medium"
+                contentPadding="none"
                 contentBg="medium"
                 size="x-large"
                 onHide={closeModal}
@@ -116,43 +128,50 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                 closeModal();
                             }}
                             disabled={JSON.stringify(this.props.selectedArticles) === JSON.stringify(this.state.currentlySelectedArticles)}
-                            text={gettext('Add Selected')}
+                            text={gettext('Apply')}
                             style="filled"
                             type="primary"
                         />
                     </Spacer>
                 )}
             >
-                <Spacer v gap="16">
-                    <SearchBar
-                        value={this.state.searchQuery}
-                        onSubmit={(value: string) => {
-                            this.setState({
-                                searchQuery: value,
-                            });
+                <Spacer v gap="0">
+                    <div
+                        style={{
+                            padding: 12,
+                            backgroundColor: 'white'
                         }}
-                        placeholder={gettext('Search...')}
-                        boxed
                     >
-                        <Dropdown
-                            maxHeight={300}
-                            append
-                            zIndex={2001}
-                            items={[
-                                {
-                                    type: 'group',
-                                    items: allLanguages.map((language) => ({
-                                        label: language.label,
-                                        onSelect: () => onSelectLanguage(language)
-                                    }))
-                                },
-                            ]}
+                        <SearchBar
+                            value={this.state.searchQuery}
+                            onSubmit={(value: string) => {
+                                this.setState({
+                                    searchQuery: value,
+                                });
+                            }}
+                            placeholder={gettext('Search...')}
+                            boxed
                         >
-                            {this.state.activeLanguage.label}
-                        </Dropdown>
-                    </SearchBar>
+                            <Dropdown
+                                maxHeight={300}
+                                append
+                                zIndex={2001}
+                                items={[
+                                    {
+                                        type: 'group',
+                                        items: allLanguages.map((language) => ({
+                                            label: language.label,
+                                            onSelect: () => onSelectLanguage(language)
+                                        }))
+                                    },
+                                ]}
+                            >
+                                {this.state.activeLanguage.label}
+                            </Dropdown>
+                        </SearchBar>
+                    </div>
                     <Spacer h gap="8" justifyContent='start' alignItems='start' noWrap>
-                        <div style={this.state.previewItem ? {width: '65%'} : {width: '100%'}}>
+                        <div style={{...{width: this.state.previewItem ? '65%' : '100%'}, ...{padding: 12}}}>
                             <WithPagination
                                 key={this.state.activeLanguage.code + this.state.searchQuery + this.state.repo}
                                 pageSize={20}
@@ -199,22 +218,15 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                 {
                                     (items: Array<Partial<IArticle>>) => {
                                         return (
-                                            <Spacer v gap="0" justifyContent='center' alignItems='center' noWrap>
+                                            <Spacer v gap="4" justifyContent='center' alignItems='center' noWrap>
                                                 {items.map((articleFromArchive) => (
-                                                    <RelatedArticleComponent
+                                                    <RelatedArticlesListComponent
                                                         key={articleFromArchive.guid}
+                                                        article={articleFromArchive}
                                                         setPreview={(itemToPreview) => {
                                                             this.setState({
                                                                 previewItem: itemToPreview,
                                                             })
-                                                        }}
-                                                        addArticle={(article: Partial<IArticle>) => {
-                                                            this.setState({
-                                                                currentlySelectedArticles: [
-                                                                    ...(this.state.currentlySelectedArticles ?? []),
-                                                                    article,
-                                                                ]
-                                                            });
                                                         }}
                                                         removeArticle={(articleId: string) => {
                                                             const filteredArray = [...(this.state.currentlySelectedArticles ?? [])]
@@ -227,7 +239,15 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                                         prevSelected={(this.props.selectedArticles ?? [])
                                                             .find((x) => x.guid === articleFromArchive.guid) != null
                                                         }
-                                                        article={articleFromArchive}
+                                                        addArticle={(article: Partial<IArticle>) => {
+                                                            this.setState({
+                                                                currentlySelectedArticles: [
+                                                                    ...(this.state.currentlySelectedArticles ?? []),
+                                                                    article,
+                                                                ]
+                                                            });
+                                                        }}
+                                                        openInPreview={this.state.previewItem?.guid === articleFromArchive.guid}
                                                     />
                                                 ))}
                                             </Spacer>
@@ -249,26 +269,27 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                 <Loader overlay />
                             </div>
                         }
-                        {this.state.previewItem && (
-                            <div
-                                style={{
-                                    width: '35%',
-                                    overflowY: 'scroll',
-                                    height: '100%',
-                                }}
-                            >
-                                <div style={{backgroundColor: 'white', padding: 8, borderRadius: 4, width: '100%'}}>
-                                    <PreviewArticle
-                                        onClose={() => {
-                                            this.setState({
-                                                previewItem: null,
-                                            })
-                                        }}
-                                        item={this.state.previewItem}
-                                    />
-                                </div>
-                            </div>
-                        )}
+                        <div>
+                            <Panel background='light' open={this.state.previewItem != null} side='right' size="medium">
+                                <PanelHeader
+                                    title={gettext("Article preview")}
+                                    onClose={() => {
+                                        this.setState({
+                                            previewItem: null,
+                                        })
+                                    }}
+                                />
+                                <PanelContent empty={this.state.previewItem == null} >
+                                    <PanelContentBlock>
+                                        {this.state.previewItem && (
+                                            <PreviewArticle
+                                                item={this.state.previewItem}
+                                            />
+                                        )}
+                                    </PanelContentBlock>
+                                </PanelContent>
+                            </Panel>
+                        </div>
                     </Spacer>
                 </Spacer>
             </Modal>

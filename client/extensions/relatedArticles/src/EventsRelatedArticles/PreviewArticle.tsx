@@ -8,11 +8,10 @@ import {gettext} from 'superdesk-core/scripts/core/utils';
 import {formatDate} from 'superdesk-core/scripts/core/get-superdesk-api-implementation';
 import {getSortedFields} from 'superdesk-core/scripts/apps/authoring/preview/utils';
 import {fakeEditor} from './utils';
-import {IconButton, Spacer} from 'superdesk-ui-framework/react';
+import {ContentDivider, Heading} from 'superdesk-ui-framework/react';
 
 interface IProps {
     item: Partial<IArticle>;
-    onClose: () => void;
 }
 
 interface IState {
@@ -60,55 +59,44 @@ export class PreviewArticle extends React.PureComponent<IProps, IState> {
         return (
             <div style={{width: '100%'}} className="preview-content">
                 <div>
-                    <Spacer style={{width: '100%'}} h gap="16" justifyContent='space-between' alignItems='start' noWrap>
-                        <div style={{flexGrow: 1}} className="css-table">
-                            <div className="tr">
-                                <div className="td" style={paddingBlockEnd}>
-                                    <span className="form-label">{gettext('Last modified')}</span>
-                                </div>
-
-                                <div
-                                    className="td"
-                                    style={{paddingInlineStart: 30, ...paddingBlockEnd}}
-                                >
-                                    {formatDate(new Date(this.props.item.versioncreated))}
-                                </div>
+                    <div style={{flexGrow: 1}} className="css-table">
+                        <div className="tr">
+                            <div className="td" style={paddingBlockEnd}>
+                                <span className="form-label">{gettext('Last modified')}</span>
                             </div>
 
-                            {
-                                getSortedFields('header', fakeEditor, this.props.item, false, this.state.customFieldVocabularies)
-                                    .map((field) => (
-                                        <div key={field.id} className="tr">
-                                            <div className="td" style={paddingBlockEnd}>
-                                                <span className="form-label">{this.getLabel(field.id)}</span>
-                                            </div>
+                            <div
+                                className="td"
+                                style={{paddingInlineStart: 30, ...paddingBlockEnd}}
+                            >
+                                {formatDate(new Date(this.props.item.versioncreated))}
+                            </div>
+                        </div>
 
-                                            <div
-                                                className="td"
-                                                style={{paddingInlineStart: 30, ...paddingBlockEnd}}
-                                            >
-                                                <PreviewFieldType field={field} language={this.props.item.language} />
-                                            </div>
+                        {
+                            getSortedFields('header', fakeEditor, this.props.item, false, this.state.customFieldVocabularies)
+                                .map((field) => (
+                                    <div key={field.id} className="tr">
+                                        <div className="td" style={paddingBlockEnd}>
+                                            <span className="form-label">{this.getLabel(field.id)}</span>
                                         </div>
-                                    ))
-                            }
-                        </div>
-                        <div>
-                            <IconButton
-                                onClick={() => {
-                                    this.props.onClose();
-                                }}
-                                icon='close-small'
-                                ariaValue='Close preview'
-                            />
-                        </div>
-                    </Spacer>
-                    <br />
+
+                                        <div
+                                            className="td"
+                                            style={{paddingInlineStart: 30, ...paddingBlockEnd}}
+                                        >
+                                            <PreviewFieldType field={field} language={this.props.item.language} />
+                                        </div>
+                                    </div>
+                                ))
+                        }
+                    </div>
+                    <ContentDivider />
                     {
                         headlineField?.id && (
-                            <div style={{marginTop: 4}} key={headlineField.id}>
-                                <div><h1>{headlineField.value}</h1></div>
-                            </div>
+                            <Heading type='h1'>
+                                {headlineField.value}
+                            </Heading>
                         )
                     }
                     {
