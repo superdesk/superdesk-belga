@@ -11,6 +11,7 @@ import {
     PanelHeader,
     PanelContent,
     PanelContentBlock,
+    ContentDivider,
 } from 'superdesk-ui-framework/react';
 import {getProjectedFieldsArticle, gettext} from 'superdesk-core/scripts/core/utils';
 import {httpRequestJsonLocal} from 'superdesk-core/scripts/core/helpers/network';
@@ -170,6 +171,7 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                             </Dropdown>
                         </SearchBar>
                     </div>
+                    <ContentDivider margin='none' />
                     <Spacer h gap="0" justifyContent='start' alignItems='start' noWrap>
                         <div style={{...{width: this.state.previewItem ? '65%' : '100%'}, ...{padding: 12}}}>
                             <WithPagination
@@ -218,7 +220,14 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                 {
                                     (items: Array<Partial<IArticle>>) => {
                                         return (
-                                            <Spacer v gap="4" justifyContent='center' alignItems='center' noWrap>
+                                            <Spacer
+                                                style={{paddingTop: 8, paddingBottom: 8}}
+                                                v
+                                                gap="4"
+                                                justifyContent='center'
+                                                alignItems='center'
+                                                noWrap
+                                            >
                                                 {items.map((articleFromArchive) => (
                                                     <RelatedArticlesListComponent
                                                         key={articleFromArchive.guid}

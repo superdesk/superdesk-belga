@@ -94,7 +94,7 @@ export class PreviewArticle extends React.PureComponent<IProps, IState> {
                     <ContentDivider />
                     {
                         headlineField?.id && (
-                            <Heading type='h1'>
+                            <Heading className='pb-2' type='h1'>
                                 {headlineField.value}
                             </Heading>
                         )
@@ -102,7 +102,7 @@ export class PreviewArticle extends React.PureComponent<IProps, IState> {
                     {
                         bodyField?.id && (
                             <div style={{marginTop: 4}} key={bodyField.id}>
-                                <div style={{fontSize: 15}} dangerouslySetInnerHTML={{__html: bodyField.value as string}} />
+                                <div className="sd-text sd-font-size--medium" dangerouslySetInnerHTML={{__html: bodyField.value as string}} />
                             </div>
                         )
                     }
