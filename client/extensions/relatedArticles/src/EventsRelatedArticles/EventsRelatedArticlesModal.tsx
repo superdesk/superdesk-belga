@@ -199,7 +199,7 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                 {
                                     (items: Array<Partial<IArticle>>) => {
                                         return (
-                                            <ul style={{gap: 4}} className="compact-view list-view">
+                                            <Spacer v gap="0" justifyContent='center' alignItems='center' noWrap>
                                                 {items.map((articleFromArchive) => (
                                                     <RelatedArticleComponent
                                                         key={articleFromArchive.guid}
@@ -230,7 +230,7 @@ export default class EventsRelatedArticlesModal extends React.Component<IProps, 
                                                         article={articleFromArchive}
                                                     />
                                                 ))}
-                                            </ul>
+                                            </Spacer>
                                         )
                                     }
                                 }

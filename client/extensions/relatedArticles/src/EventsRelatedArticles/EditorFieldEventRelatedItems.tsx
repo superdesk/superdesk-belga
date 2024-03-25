@@ -5,7 +5,7 @@ import {
     IProfileSchemaTypeList,
 } from 'superdesk-planning/client/interfaces';
 
-import {ButtonGroup, Button} from 'superdesk-ui-framework/react';
+import {ButtonGroup, Button, Spacer} from 'superdesk-ui-framework/react';
 import 'superdesk-planning/client/components/fields/editor/EventRelatedPlannings/style.scss';
 import {Row} from 'superdesk-planning/client/components/UI/Form/Row';
 
@@ -87,7 +87,7 @@ export class EditorFieldEventRelatedItems extends React.PureComponent<IProps, IS
                         </div>
                     </Row>
                 ) : (
-                    <ul style={{gap: 4}} className="compact-view list-view">
+                    <Spacer v gap="0" justifyContent='center' alignItems='center' noWrap>
                         {
                             (this.state.selectedRelatedArticles ?? []).map((relItem) => (
                                 <RelatedArticleComponent
@@ -106,7 +106,7 @@ export class EditorFieldEventRelatedItems extends React.PureComponent<IProps, IS
                                 />
                             ))
                         }
-                    </ul>
+                    </Spacer>
                 )}
             </div>
         );

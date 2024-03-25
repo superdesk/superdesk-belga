@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'superdesk-planning/client/utils';
-import {IconButton, Label} from 'superdesk-ui-framework/react';
+import {IconButton, Label, Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
     article: Partial<IArticle>;
@@ -12,26 +12,35 @@ interface IProps {
     editorPreview?: boolean;
 }
 
+const EDITOR_VIEW_FIELD_WIDTH = '500px';
+
 export const RelatedArticleComponent = ({article, prevSelected, addArticle, removeArticle, setPreview, editorPreview}: IProps) => {
     const [hovered, setHovered] = useState(false);
     const [selected, useSelected] = useState(prevSelected ?? false);
 
-    let styles = {};
+    let listStyles: any = {padding: 6, backgroundColor: 'hsla(214, 13% , 100% , 1)', width: '100%', listStyleType: 'none'};
     if (selected) {
-        styles = {
-            ...styles,
+        listStyles = {
+            ...listStyles,
+            marginTop: 2,
+            marginBottom: 2,
             borderColor: '#D9EAF3',
             borderStyle: 'solid',
             borderWidth: '2px',
+        }
+    } else {
+        listStyles = {
+            ...listStyles,
+            marginTop: 4,
+            marginBottom: 4,
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.16), 0 0 1px rgba(0, 0, 0, 0.1)',
+            borderRadius: 3,
         }
     }
 
     return (
         <li
-            style={selected ? {marginTop: 2, marginBottom: 2} : {marginTop: 4, marginBottom: 4}}
-            className="list-item-view actions-visible"
-            draggable
-            tabIndex={0}
+            style={listStyles}
             data-test-id="article-item"
             onClick={(e) => {
                 e.preventDefault();
@@ -52,90 +61,101 @@ export const RelatedArticleComponent = ({article, prevSelected, addArticle, remo
                 e.preventDefault();
             }}
         >
-            <div className="media-box media-text" style={styles}>
-                <div>
-                    <span className="state-border" />
-                    <div
-                        className="list-field type-icon sd-monitoring-item-multi-select-checkbox"
-                        data-test-id="item-type-and-multi-select"
-                        style={{lineHeight: 0}}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
+            <Spacer
+                h
+                gap='16'
+                noWrap
+                justifyContent='start'
+            >
+                <div
+                    data-test-id="item-type-and-multi-select"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
 
-                            if (editorPreview) {
-                                removeArticle(article.guid as string)
-                            } else {
-                                useSelected(!selected);
-                                selected ? removeArticle(article.guid as string) : addArticle?.(article);
-                            }
-                        }}
-                    >
-                        <span className="a11y-only">{gettext('Article Type: {{articleType}}', {articleType: article.type})}</span>
-                        {
-                            editorPreview && (
-                                hovered ? (
-                                    <div className='strict-isolation'>
-                                        <IconButton
-                                            ariaValue={gettext('Remove')}
-                                            icon='trash'
-                                            onClick={() => {
-                                                removeArticle(article.guid as string);
-                                            }}
-                                        />
-                                    </div>
-                                ) : (
-                                    <i
-                                        className="filetype-icon-text"
-                                        title={gettext("Article Type: text")}
-                                        aria-label={gettext('Article Type text')}
-                                        aria-hidden="true"
-                                    />
-                                )
-                            )
+                        if (editorPreview) {
+                            removeArticle(article.guid as string)
+                        } else {
+                            useSelected(!selected);
+                            selected ? removeArticle(article.guid as string) : addArticle?.(article);
                         }
-                        {
-                            !editorPreview && ((hovered && !selected) || selected ? (
-                                <button
-                                    role="checkbox"
-                                    aria-checked="true"
-                                    aria-label="bulk actions"
-                                    data-test-id="multi-select-checkbox"
-                                >
-                                    <span className={`sd-checkbox ${selected ? 'checked' : 'unchecked'}`} />
-                                </button>
-                            ) : (
-                                <i
-                                    className="filetype-icon-text"
-                                    title={gettext("Article Type: text")}
-                                    aria-label={gettext('Article Type text')}
-                                    aria-hidden="true"
+                    }}
+                >
+                    <span className="a11y-only">{gettext('Article Type: {{articleType}}', {articleType: article.type})}</span>
+                    {
+                        editorPreview && (
+                            hovered ? (
+                                <IconButton
+                                    ariaValue={gettext('Remove')}
+                                    icon='trash'
+                                    onClick={() => {
+                                        removeArticle(article.guid as string);
+                                    }}
                                 />
-                            ))
-                        }
-                    </div>
-                    <div
-                        className="item-info"
-                        style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
-                    >
-                        <div
-                            style={{flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}}
-                        >
-                            <div className="line">
-                                <span className="item-heading">{article.headline}</span>
-                                <div className="highlights-box" />
-                                <div className="highlights-box" />
-                                <time title={`${article.versioncreated}`}>{new Date(article.versioncreated).toDateString()}</time>
+                            ) : (
+                                <IconButton
+                                    ariaValue={gettext('Article Type: text')}
+                                    icon='text'
+                                    onClick={() => {
+                                        //
+                                    }}
+                                />
+                            )
+                        )
+                    }
+                    {
+                        !editorPreview && ((hovered && !selected) || selected ? (
+                            <div className='icn-btn'>
+                                <span className={`sd-checkbox ${selected ? 'checked' : 'unchecked'}`} />
                             </div>
-                            <div className="line">
-                                <Label text={article.language} style='filled' size='small' type='primary' />
-                                <Label text={article.type as string} style='translucent' size='small' type='default' />
-                                <Label text={article.state as string} style='filled' size='small' type='sd-green' />
-                            </div>
-                        </div>
-                    </div>
+                        ) : (
+                            <IconButton
+                                ariaValue={gettext('Article Type: text')}
+                                icon='text'
+                                onClick={() => {
+                                    //
+                                }}
+                            />
+                        ))
+                    }
                 </div>
-            </div>
+                <Spacer
+                    v
+                    gap='8'
+                    justifyContent='start'
+                    noWrap
+                >
+                    {/* FIXME: Find a proper fix for the date going outside of the box,
+                        instead of having to fix the width to EDITOR_VIEW_FIELD_WIDTH */}
+                    <Spacer style={editorPreview ? {width: EDITOR_VIEW_FIELD_WIDTH} : {}} h gap="4" noWrap alignItems='center'>
+                        <div
+                            style={{
+                                fontSize: 14,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            <span>
+                                {article.headline}
+                            </span>
+                        </div>
+                        <div style={{whiteSpace: 'nowrap'}}>
+                            <span>{new Date(article.versioncreated).toDateString()}</span>
+                        </div>
+                    </Spacer>
+                    <Spacer
+                        h
+                        gap='4'
+                        justifyContent='start'
+                        noWrap
+                    >
+                        <Label text={article.language} style='filled' size='small' type='primary' />
+                        <Label text={article.type as string} style='translucent' size='small' type='default' />
+                        <Label text={article.state as string} style='filled' size='small' type='sd-green' />
+                    </Spacer>
+                </Spacer>
+            </Spacer>
         </li>
     );
 };
