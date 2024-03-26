@@ -6,6 +6,8 @@ pep8
 httmock
 wooper
 mypy
+pytest
+pytest-env
 types-click==7.1.2
 types-docutils==0.1.7
 types-Flask==1.1.1

@@ -34,6 +34,8 @@ INSTALLED_APPS.extend([
     'superdesk.text_checkers.spellcheckers.default',
     'superdesk.text_checkers.spellcheckers.grammalecte',
     'superdesk.text_checkers.spellcheckers.leuven_dutch',
+
+    "superdesk.tests.mocks.search_provider",
 ])
 
 SECRET_KEY = env('SECRET_KEY', '')
@@ -316,3 +318,5 @@ BELGA_IMAGE_LIMIT = env('BELGA_IMAGE_LIMIT', '')
 
 DEFAULT_CREATE_PLANNING_SERIES_WITH_EVENT_SERIES = True
 SYNC_EVENT_FIELDS_TO_PLANNING = ["slugline", "name", "ednote", "internal_note", "language", "definition_short"]
+
+EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME = "TestSearchProvider"

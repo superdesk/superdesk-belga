@@ -89,5 +89,5 @@ class BelgaSpreadsheetsTestCase(TestCase):
         error = [c.value for c in self.error[6:]]  # ignore first 6 non-error cells
         self.assertListEqual(error, [
             'ERROR', 'Invalid timezone',
-            'ERROR', 'String does not contain a date:',
+            'ERROR', 'String does not contain a date: %s',
         ])
