@@ -13,18 +13,19 @@ def _get_associated_event_from_planning(planning: Planning) -> Optional[Event]:
     event_id = planning.get("event_item")
     if not event_id:
         # No Event associated with the Planning item, no need to continue
-        return
+        return None
 
     try:
         event = get_resource_service("events").find_one(req=None, _id=event_id)
     except Exception:
         # Failed to retrieve the Event
         logger.exception("Exception raised while finding event")
-        return
+        return None
 
     if not event:
         # Event not found for some reason
         logger.error("Associated event not found")
+        return None
 
     return event
 
@@ -38,7 +39,7 @@ def _get_related_content_field_to_use(content_profile: Dict[str, Any]) -> Option
 
     if len(related_content_fields) == 0:
         # No ``related_content`` fields found, no need to continue
-        return
+        return None
     elif "belga_related_articles" in related_content_fields:
         related_content_field = "belga_related_articles"
     else:
