@@ -49,7 +49,7 @@ jobs:
             pip install -r dev-requirements.txt
 
       - run: flake8
-      - run: nosetests tests
+      - run: pytest --log-level=ERROR --disable-warnings
       - run: mypy .
       - run: python manage.py app:initialize_data
 
