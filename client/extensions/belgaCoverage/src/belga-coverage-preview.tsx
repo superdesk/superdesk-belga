@@ -14,10 +14,7 @@ export function getBelgaCoveragePreview(superdesk: ISuperdesk) {
                 <React.Fragment>
                     {ids.map((id) => (
                         <div key={id}>
-                            {
-                                // not working with latest api changes, disabling for now
-                                // props.item.type !== 'graphic' ? ( // belga coverage in an article
-                                false ? (
+                            {this.props.item.type !== 'graphic' ? ( // belga coverage in an article
                                 <BelgaCoverageCarousel coverageId={id} superdesk={superdesk} preview={true} />
                             ) : ( // single belga coverage in the search, there is description already
                                 <BelgaCoverageImages
