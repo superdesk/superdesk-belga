@@ -12,10 +12,7 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
     Event Url: {{ client_url }}/#/planning?preview={"id": "{{ event['id'] }}","type":"event" }
 
     {% if event.get('calendars') %}
-        Calendars: 
-        {% for calendar in event.get('calendars', []) %}
-            {{ calendar.get('name', '') }}, 
-        {% endfor %}
+    Calendars: {{ event.calendars|map(attribute="name")|join(", ") }}
     {% endif %}
 
     {{ event_date_time }}, {{ location }}
@@ -28,7 +25,7 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
         Description: {{ event['definition_short'] }}
     {% endif %}
 
-    {% if contacts | length is gt 0 %}
+    {% if contacts %}
         Contacts: 
         {% for contact in contacts %}
             {{ contact.organisation }}

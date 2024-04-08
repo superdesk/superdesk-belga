@@ -1,4 +1,4 @@
-git<h2>Planning Item: {{ slugline }}</h2>
+<h2>Planning Item: {{ slugline }}</h2>
 
 <p><strong>Assignment ID:</strong> {{ assignment_id }}</p>
 
@@ -12,11 +12,7 @@ git<h2>Planning Item: {{ slugline }}</h2>
     <p><strong>Event Url:</strong> <a href="{{ client_url }}/#/planning?preview={'id': '{{ event['id'] }}','type':'event' }}">View Event Details</a></p>
 
     {% if event.get('calendars') %}
-        <p><strong>Calendars:</strong> 
-        {% for calendar in event.get('calendars', []) %}
-            {{ calendar.get('name', '') }}, 
-        {% endfor %}
-        </p>
+    <p><strong>Calendars:</strong> {{ event.calendars|map(attribute="name")|join(", ") }}</p>
     {% endif %}
 
     <p>{{ event_date_time }}, {{ location }}</p>
@@ -29,7 +25,7 @@ git<h2>Planning Item: {{ slugline }}</h2>
         <p><strong>Description:</strong> {{ event['definition_short'] }}</p>
     {% endif %}
 
-    {% if contacts | length is gt 0 %}
+    {% if contacts %}
         <h3>Contacts:</h3>
         <ul>
         {% for contact in contacts %}
