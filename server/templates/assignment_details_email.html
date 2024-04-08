@@ -9,7 +9,7 @@
         <h3>Event: {{ event['slugline'] }}</h3>
     {% endif %}
 
-    <p><strong>Event Url:</strong> <a href="{{ client_url }}/#/planning?preview={'id': '{{ event['id'] }}','type':'event' }}">View Event Details</a></p>
+    <p><strong>Event Url:</strong> <a href="{{ client_url }}/#/planning?preview={'id': {{ event['_id'] }},'type':'event' }}">View Event Details</a></p>
 
     {% if event.get('calendars') %}
     <p><strong>Calendars:</strong> {{ event.calendars|map(attribute="name")|join(", ") }}</p>
@@ -32,8 +32,8 @@
             <li>
                 <strong>{{ contact.organisation }}</strong><br>
                 {{ contact.name }}<br>
-                {{ contact.email }}<br>
-                {{ contact.phone }}{{ contact.mobile }}<br>
+                {{ contact.email|join(", ") }}<br>
+                {{ contact.phone|join(", ") }} {{ contact.mobile|join(", ") }}<br>
                 {{ contact.website }}
             </li>
         {% endfor %}
