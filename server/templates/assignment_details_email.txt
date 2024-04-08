@@ -1,0 +1,51 @@
+Planning Item: {{ slugline }}
+
+Assignment ID: {{ assignment_id }}
+
+Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
+
+{% if event %}
+    {% if event.get('slugline') %}
+        Event: {{ event['slugline'] }}
+    {% endif %}
+
+    Event Url: {{ client_url }}/#/planning?preview={"id": "{{ event['id'] }}","type":"event" }
+
+    {% if event.get('calendars') %}
+        Calendars: 
+        {% for calendar in event.get('calendars', []) %}
+            {{ calendar.get('name', '') }}, 
+        {% endfor %}
+    {% endif %}
+
+    {{ event_date_time }}, {{ location }}
+
+    {% if event.get('name') %}
+        Event Name: {{ event['name'] }}
+    {% endif %}
+
+    {% if event.get('definition_short') %}
+        Description: {{ event['definition_short'] }}
+    {% endif %}
+
+    {% if contacts | length is gt 0 %}
+        Contacts: 
+        {% for contact in contacts %}
+            {{ contact.organisation }}
+            {{ contact.name }} 
+            {{ contact.email }}
+            {{ contact.phone }}{{ contact.mobile }}
+            {{ contact.website }} 
+        {% endfor %}
+    {% endif %}
+
+    {% if event.get('related_items') %}
+        Related Articles:
+        {% for item in event.get('related_items', []) %}
+            {{ item.headline or item.slugline }}
+            Item url: {{ client_url }}/#/search?repo={{ item.search_provider }}&_id={{ item.guid }}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
+Coverage Type: {{ coverage_type }}
