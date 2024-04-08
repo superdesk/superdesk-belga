@@ -318,3 +318,6 @@ DEFAULT_CREATE_PLANNING_SERIES_WITH_EVENT_SERIES = True
 SYNC_EVENT_FIELDS_TO_PLANNING = ["slugline", "name", "ednote", "internal_note", "language", "definition_short"]
 
 EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME = env("EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME", "belga_360archive")
+
+TIME_FORMAT_SHORT = "HH:mm"
+DATE_FORMAT_SHORT = "dd/MM/yyyy"
