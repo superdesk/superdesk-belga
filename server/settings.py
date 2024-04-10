@@ -12,83 +12,89 @@
 import copy
 from flask import json
 from pathlib import Path
-from superdesk.default_settings import DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES, INSTALLED_APPS, env
+from superdesk.default_settings import (
+    DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES,
+    INSTALLED_APPS,
+    env,
+)
 
 ABS_PATH = str(Path(__file__).resolve().parent)
 
-init_data = Path(ABS_PATH) / 'data'
+init_data = Path(ABS_PATH) / "data"
 if init_data.exists():
     INIT_DATA_PATH = init_data
 
-INSTALLED_APPS.extend([
-    'analytics',
-    'apps.languages',
-    'planning',
-    'belga.search_providers',
-    'belga.io',
-    'belga.command',
-    'belga.publish',
-    'belga.macros',
-    'belga.signals',
-    #  'belga.schema',  try without custom search analyzer
-    'superdesk.text_checkers.spellcheckers.default',
-    'superdesk.text_checkers.spellcheckers.grammalecte',
-    'superdesk.text_checkers.spellcheckers.leuven_dutch',
-])
+INSTALLED_APPS.extend(
+    [
+        "analytics",
+        "apps.languages",
+        "planning",
+        "belga.search_providers",
+        "belga.io",
+        "belga.command",
+        "belga.publish",
+        "belga.macros",
+        "belga.signals",
+        #  'belga.schema',  try without custom search analyzer
+        "superdesk.text_checkers.spellcheckers.default",
+        "superdesk.text_checkers.spellcheckers.grammalecte",
+        "superdesk.text_checkers.spellcheckers.leuven_dutch",
+    ]
+)
 
-SECRET_KEY = env('SECRET_KEY', '')
+SECRET_KEY = env("SECRET_KEY", "")
 
 DEFAULT_TIMEZONE = "Europe/Brussels"
 
-DEFAULT_LANGUAGE = 'en'
+DEFAULT_LANGUAGE = "en"
 LANGUAGES = [
-    {'language': 'nl', 'label': 'Dutch', 'source': True, 'destination': True},
-    {'language': 'fr', 'label': 'French', 'source': True, 'destination': True},
-    {'language': 'en', 'label': 'English', 'source': False, 'destination': False},
-    {'language': 'de', 'label': 'German', 'source': False, 'destination': False},
-    {'language': 'ja', 'label': 'Japanese', 'source': False, 'destination': False},
-    {'language': 'es', 'label': 'Spanish', 'source': False, 'destination': False},
-    {'language': 'ru', 'label': 'Russian', 'source': False, 'destination': False}
+    {"language": "nl", "label": "Dutch", "source": True, "destination": True},
+    {"language": "fr", "label": "French", "source": True, "destination": True},
+    {"language": "en", "label": "English", "source": False, "destination": False},
+    {"language": "de", "label": "German", "source": False, "destination": False},
+    {"language": "ja", "label": "Japanese", "source": False, "destination": False},
+    {"language": "es", "label": "Spanish", "source": False, "destination": False},
+    {"language": "ru", "label": "Russian", "source": False, "destination": False},
 ]
 
 TIMEZONE_CODE = {
-    'aus': 'America/Chicago',
-    'bat': 'Asia/Manila',
-    'bgl': 'Asia/Kolkata',
-    'cav': 'Asia/Manila',
-    'cat': 'Europe/Rome',
-    'chb': 'Asia/Bangkok',
-    'chd': 'America/Phoenix',
-    'chm': 'America/New_York',
-    'cos': 'America/Denver',
-    'cpn': 'America/Chicago',
-    'cri': 'America/New_York',
-    'dal': 'America/Chicago',
-    'dlf': 'Europe/Amsterdam',
-    'drs': 'Europe/Berlin',
-    'ftc': 'America/Denver',
-    'gdh': 'Asia/Kolkata',
-    'grn': 'Europe/Paris',
-    'hlb': 'America/Los_Angeles',
-    'hrt': 'America/Chicago',
-    'irv': 'America/Los_Angeles',
-    'ist': 'Asia/Istanbul',
-    'kws': 'Asia/Tokyo',
-    'lac': 'Europe/Paris',
-    'lee': 'America/New_York',
-    'mbf': 'America/New_York',
-    'mfn': 'America/Los_Angeles',
-    'nwb': 'Europe/London',
-    'pav': 'Europe/Rome',
-    'rlh': 'America/New_York',
-    'roz': 'Europe/Rome',
-    'shg': 'Asia/Shanghai',
-    'sjc': 'America/Los_Angeles',
-    'ssk': 'Asia/Seoul',
-    'svl': 'America/Los_Angeles',
-    'tai': 'Asia/Taipei',
-    'ups': 'Europe/Vienna',
-    'wst': 'America/Indiana/Indianapolis'
+    "aus": "America/Chicago",
+    "bat": "Asia/Manila",
+    "bgl": "Asia/Kolkata",
+    "cav": "Asia/Manila",
+    "cat": "Europe/Rome",
+    "chb": "Asia/Bangkok",
+    "chd": "America/Phoenix",
+    "chm": "America/New_York",
+    "cos": "America/Denver",
+    "cpn": "America/Chicago",
+    "cri": "America/New_York",
+    "dal": "America/Chicago",
+    "dlf": "Europe/Amsterdam",
+    "drs": "Europe/Berlin",
+    "ftc": "America/Denver",
+    "gdh": "Asia/Kolkata",
+    "grn": "Europe/Paris",
+    "hlb": "America/Los_Angeles",
+    "hrt": "America/Chicago",
+    "irv": "America/Los_Angeles",
+    "ist": "Asia/Istanbul",
+    "kws": "Asia/Tokyo",
+    "lac": "Europe/Paris",
+    "lee": "America/New_York",
+    "mbf": "America/New_York",
+    "mfn": "America/Los_Angeles",
+    "nwb": "Europe/London",
+    "pav": "Europe/Rome",
+    "rlh": "America/New_York",
+    "roz": "Europe/Rome",
+    "shg": "Asia/Shanghai",
+    "sjc": "America/Los_Angeles",
+    "ssk": "Asia/Seoul",
+    "svl": "America/Los_Angeles",
+    "tai": "Asia/Taipei",
+    "ups": "Europe/Vienna",
+    "wst": "America/Indiana/Indianapolis",
 }
 
 # Default value for Source to be set for manually created items
@@ -98,9 +104,9 @@ DEFAULT_SOURCE_VALUE_FOR_MANUAL_ARTICLES = "Belga"
 GENERATE_SHORT_GUID = True
 
 # This value gets injected into NewsML 1.2 and G2 output documents.
-NEWSML_PROVIDER_ID = 'belga.be'
-ORGANIZATION_NAME = env('ORGANIZATION_NAME', 'Belga')
-ORGANIZATION_NAME_ABBREVIATION = env('ORGANIZATION_NAME_ABBREVIATION', 'Belga')
+NEWSML_PROVIDER_ID = "belga.be"
+ORGANIZATION_NAME = env("ORGANIZATION_NAME", "Belga")
+ORGANIZATION_NAME_ABBREVIATION = env("ORGANIZATION_NAME_ABBREVIATION", "Belga")
 
 # publishing of associated and related items
 PUBLISH_ASSOCIATED_ITEMS = True
@@ -108,7 +114,7 @@ PUBLISH_ASSOCIATED_ITEMS = True
 PUBLISH_QUEUE_EXPIRY_MINUTES = 60 * 24 * 10  # 10d
 
 # noqa
-PLANNING_EXPORT_BODY_TEMPLATE = '''
+PLANNING_EXPORT_BODY_TEMPLATE = """
 {% for item in items %}
 {% set pieces = [
     item.get('planning_date') | format_datetime(date_format='%H:%M'),
@@ -127,7 +133,7 @@ PLANNING_EXPORT_BODY_TEMPLATE = '''
 <p>{{ item.event.location|join(', ', attribute='name') }}</p>
 {% endif %}
 {% endfor %}
-'''
+"""
 
 PLANNING_EVENT_TEMPLATES_ENABLED = True
 
@@ -139,78 +145,73 @@ ARCHIVE_AUTOCOMPLETE_LIMIT = 1000
 
 WORKFLOW_ALLOW_MULTIPLE_UPDATES = True
 
-CELERY_WORKER_LOG_FORMAT = '%(asctime)s %(message)s level=%(levelname)s process=%(processName)s'
-CELERY_WORKER_TASK_LOG_FORMAT = '{} task=%(task_name)s task_id=%(task_id)s'.format(CELERY_WORKER_LOG_FORMAT)
+CELERY_WORKER_LOG_FORMAT = (
+    "%(asctime)s %(message)s level=%(levelname)s process=%(processName)s"
+)
+CELERY_WORKER_TASK_LOG_FORMAT = "{} task=%(task_name)s task_id=%(task_id)s".format(
+    CELERY_WORKER_LOG_FORMAT
+)
 
-with Path(__file__).parent.joinpath('picture-profile.json').open() as f:
+with Path(__file__).parent.joinpath("picture-profile.json").open() as f:
     picture_profile = json.load(f)
 
 video_profile = copy.deepcopy(picture_profile)
-video_profile['schema']['headline']['required'] = True
-video_profile['editor']['headline']['required'] = True
+video_profile["schema"]["headline"]["required"] = True
+video_profile["editor"]["headline"]["required"] = True
 
 audio_profile = copy.deepcopy(video_profile)
 
 graphic_profile = copy.deepcopy(picture_profile)
-graphic_profile['editor'].update({
-    'bcoverage': {
-        'order': 5,
-        'section': 'content',
-    },
-})
-graphic_profile['schema'].update({
-    'bcoverage': {
-        'type': 'string',
-    },
-})
+graphic_profile["editor"].update(
+    {
+        "bcoverage": {
+            "order": 5,
+            "section": "content",
+        },
+    }
+)
+graphic_profile["schema"].update(
+    {
+        "bcoverage": {
+            "type": "string",
+        },
+    }
+)
 
 EDITOR = {
-    'picture': picture_profile['editor'],
-    'video': video_profile['editor'],
-    'audio': audio_profile['editor'],
-    'graphic': graphic_profile['editor'],
+    "picture": picture_profile["editor"],
+    "video": video_profile["editor"],
+    "audio": audio_profile["editor"],
+    "graphic": graphic_profile["editor"],
 }
 SCHEMA = {
-    'picture': picture_profile['schema'],
-    'video': video_profile['schema'],
-    'audio': audio_profile['schema'],
-    'graphic': graphic_profile['schema'],
+    "picture": picture_profile["schema"],
+    "video": video_profile["schema"],
+    "audio": audio_profile["schema"],
+    "graphic": graphic_profile["schema"],
 }
 
 SCHEMA_UPDATE = {
-    'archive': {
-        'extra': {
-            'type': 'dict',
-            'schema': {},
-            'mapping': {
-                'type': 'object',
-                'properties': {
-                    'DueBy': {
-                        'type': 'date',
-                        'format': 'strict_date_optional_time'
-                    },
-                    'belga-url': {
-                        'properties': {
-                            'description': {
-                                'type': 'string'
-                            },
-                            'guid': {
-                                'type': 'string'
-                            },
-                            'id': {
-                                'type': 'string'
-                            },
-                            'url': {
-                                'type': 'string'
-                            }
+    "archive": {
+        "extra": {
+            "type": "dict",
+            "schema": {},
+            "mapping": {
+                "type": "object",
+                "properties": {
+                    "DueBy": {"type": "date", "format": "strict_date_optional_time"},
+                    "belga-url": {
+                        "properties": {
+                            "description": {"type": "string"},
+                            "guid": {"type": "string"},
+                            "id": {"type": "string"},
+                            "url": {"type": "string"},
                         }
                     },
-                    'city': {
-                        'type': 'string'
-                    }
-                }
+                    "city": {"type": "string"},
+                },
             },
-            'allow_unknown': True,
+            "allow_unknown": True,
         }
     }
 }
@@ -230,7 +231,7 @@ GRAMMALECTE_CONFIG = {
 
 # Suffix used in belga URN schema generation for Belga NewsMl output
 # SDBELGA-355
-OUTPUT_BELGA_URN_SUFFIX = env('OUTPUT_BELGA_URN_SUFFIX', 'dev')
+OUTPUT_BELGA_URN_SUFFIX = env("OUTPUT_BELGA_URN_SUFFIX", "dev")
 
 GOOGLE_LOGIN = False
 UPDATE_TRANSLATION_METADATA_MACRO = "Update Translation Metadata Macro"
@@ -242,37 +243,56 @@ belga_elastic_filter = {
         "type": "elision",
         "article_case": True,
         "articles": [
-            "l", "m", "t", "qu", "n", "s",
-            "j", "d", "c", "jusqu", "quoiqu",
-            "lorsqu", "puisqu"
-        ]
+            "l",
+            "m",
+            "t",
+            "qu",
+            "n",
+            "s",
+            "j",
+            "d",
+            "c",
+            "jusqu",
+            "quoiqu",
+            "lorsqu",
+            "puisqu",
+        ],
     },
-    "french_lowercase": {
-        "type": "lowercase"
-    },
-    "stopwords": {
-        "type": "stop",
-        "stopwords": ["_french_", "_dutch_"]
-    }
+    "french_lowercase": {"type": "lowercase"},
+    "stopwords": {"type": "stop", "stopwords": ["_french_", "_dutch_"]},
 }
 
 ELASTICSEARCH_SETTINGS = {
     "settings": {
         "analysis": {
             "filter": {
-                "remove_hyphen": {"pattern": "[-]", "type": "pattern_replace", "replacement": " "},
+                "remove_hyphen": {
+                    "pattern": "[-]",
+                    "type": "pattern_replace",
+                    "replacement": " ",
+                },
                 "french_elision": {
                     "type": "elision",
                     "article_case": True,
                     "articles": [
-                        "l", "m", "t", "qu", "n", "s",
-                        "j", "d", "c", "jusqu", "quoiqu",
-                        "lorsqu", "puisqu"
-                    ]
+                        "l",
+                        "m",
+                        "t",
+                        "qu",
+                        "n",
+                        "s",
+                        "j",
+                        "d",
+                        "c",
+                        "jusqu",
+                        "quoiqu",
+                        "lorsqu",
+                        "puisqu",
+                    ],
                 },
                 "belga_stopwords": {
                     "type": "stop",
-                    "stopwords": ["_french_", "_dutch_", "_english_"]
+                    "stopwords": ["_french_", "_dutch_", "_english_"],
                 },
             },
             "char_filter": {
@@ -292,7 +312,7 @@ ELASTICSEARCH_SETTINGS = {
                 "default": {
                     "char_filter": ["html_strip"],
                     "filter": ["french_elision", "lowercase"],
-                    "tokenizer": "standard"
+                    "tokenizer": "standard",
                 },
             },
         },
@@ -311,10 +331,22 @@ DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES = []
 
 WORKFLOW_ALLOW_DUPLICATE_NON_MEMBERS = True
 
-BELGA_IMAGE_APIKEY = env('BELGA_IMAGE_APIKEY')
-BELGA_IMAGE_LIMIT = env('BELGA_IMAGE_LIMIT', '')
+BELGA_IMAGE_APIKEY = env("BELGA_IMAGE_APIKEY")
+BELGA_IMAGE_LIMIT = env("BELGA_IMAGE_LIMIT", "")
 
 DEFAULT_CREATE_PLANNING_SERIES_WITH_EVENT_SERIES = True
-SYNC_EVENT_FIELDS_TO_PLANNING = ["slugline", "name", "ednote", "internal_note", "language", "definition_short"]
+SYNC_EVENT_FIELDS_TO_PLANNING = [
+    "slugline",
+    "name",
+    "ednote",
+    "internal_note",
+    "language",
+    "definition_short",
+]
 
-EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME = env("EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME", "belga_360archive")
+EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME = env(
+    "EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME", "belga_360archive"
+)
+
+TIME_FORMAT_SHORT = "HH:mm"
+DATE_FORMAT_SHORT = "dd/MM/yyyy"

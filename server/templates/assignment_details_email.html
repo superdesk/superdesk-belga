@@ -1,0 +1,63 @@
+<h2>Planning Item: {{ slugline }}</h2>
+
+<p><strong>Assignment ID:</strong> {{ assignment_id }}</p>
+
+<p><strong>Url:</strong> <a href="{{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}">View Assignment</a></p>
+
+{% if event %}
+    {% if event.get('slugline') %}
+        <h3>Event: {{ event['slugline'] }}</h3>
+    {% endif %}
+
+    <p><strong>Event Url:</strong> <a href="{{ client_url }}/#/planning?preview={'id': '{{ event['_id'] }}','type':'event' }}">View Event Details</a></p>
+
+    {% if event.get('calendars') %}
+    <p><strong>Calendars:</strong> {{ event.calendars|map(attribute="name")|join(", ") }}</p>
+    {% endif %}
+
+    {% if event_date_time %}
+        <p>{{ event_date_time }}</p>
+    {% endif %}
+    
+    {% if location %}
+        <p>{{ location }}</p>
+    {% endif %}
+
+    {% if event.get('name') %}
+        <p><strong>Event Name:</strong> {{ event['name'] }}</p>
+    {% endif %}
+
+    {% if event.get('definition_short') %}
+        <p><strong>Description:</strong> {{ event['definition_short'] }}</p>
+    {% endif %}
+
+    {% if contacts %}
+        <h3>Contacts:</h3>
+        <ul>
+        {% for contact in contacts %}
+            <li>
+                <strong>{{ contact.organisation }}</strong><br>
+                {{ contact.name }}<br>
+                {{ contact.email|join(", ") }}<br>
+                {{ contact.phone|join(", ") }} {{ contact.mobile|join(", ") }}<br>
+                {{ contact.website }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if event.get('related_items') %}
+        <h3>Related Articles:</h3>
+        <ul>
+        {% for item in event.get('related_items', []) %}
+            <li>
+                {{ item.headline or item.slugline }}<br>
+                <p><strong>Url:</strong> <a href="{{ client_url }}/#/search?repo={{ item.search_provider }}&_id={{ item.guid }}">View Assignment</a></p>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p><strong>Coverage Type:</strong> {{ coverage_type }}</p>
+
+{% endif %}
