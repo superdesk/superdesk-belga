@@ -9,7 +9,7 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
         Event: {{ event['slugline'] }}
     {% endif %}
 
-    Event Url: {{ client_url }}/#/planning?preview={"id": '{{ event['_id'] }}',"type":"event" }
+    Event Url: {{ client_url }}/#/planning?preview={"id": "{{ event['_id'] }}","type":"event" }
 
     {% if event.get('calendars') %}
     Calendars: {{ event.calendars|map(attribute="name")|join(", ") }}
