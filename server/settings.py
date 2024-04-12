@@ -10,11 +10,11 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import copy
+
 from flask import json
 from pathlib import Path
 from superdesk.default_settings import (
     DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES,
-    INSTALLED_APPS,
     env,
 )
 
@@ -24,23 +24,21 @@ init_data = Path(ABS_PATH) / "data"
 if init_data.exists():
     INIT_DATA_PATH = init_data
 
-INSTALLED_APPS.extend(
-    [
-        "analytics",
-        "apps.languages",
-        "planning",
-        "belga.search_providers",
-        "belga.io",
-        "belga.command",
-        "belga.publish",
-        "belga.macros",
-        "belga.signals",
-        #  'belga.schema',  try without custom search analyzer
-        "superdesk.text_checkers.spellcheckers.default",
-        "superdesk.text_checkers.spellcheckers.grammalecte",
-        "superdesk.text_checkers.spellcheckers.leuven_dutch",
-    ]
-)
+INSTALLED_APPS = [
+    "analytics",
+    "apps.languages",
+    "planning",
+    "belga.search_providers",
+    "belga.io",
+    "belga.command",
+    "belga.publish",
+    "belga.macros",
+    "belga.signals",
+    #  'belga.schema',  try without custom search analyzer
+    "superdesk.text_checkers.spellcheckers.default",
+    "superdesk.text_checkers.spellcheckers.grammalecte",
+    "superdesk.text_checkers.spellcheckers.leuven_dutch",
+]
 
 SECRET_KEY = env("SECRET_KEY", "")
 
@@ -347,6 +345,9 @@ SYNC_EVENT_FIELDS_TO_PLANNING = [
 EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME = env(
     "EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME", "belga_360archive"
 )
+
+if EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME == "TestSearchProvider":
+    INSTALLED_APPS.append("superdesk.tests.mocks.search_provider")
 
 TIME_FORMAT_SHORT = "HH:mm"
 DATE_FORMAT_SHORT = "dd/MM/yyyy"
