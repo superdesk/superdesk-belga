@@ -7,7 +7,7 @@
         "superdesk-planning": "github:superdesk/superdesk-planning#develop"
     },
     "devDependencies": {
-        "@superdesk/build-tools": "^1.0.18"
+        "@superdesk/build-tools": "^1.0.19"
     },
     "scripts": {
         "build": "npx --no-install @superdesk/build-tools build-root-repo ./",
