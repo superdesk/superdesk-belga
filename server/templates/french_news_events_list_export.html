@@ -1,0 +1,23 @@
+{% set formatted_data = format_event_french(items) %}
+<div>
+    <h2><b>{{ formatted_data.intro.title }}</b></h2>
+    <p>{{ formatted_data.intro.subtitle }}</p>
+</div>
+{% for day_events in formatted_data.events %}
+    <h3>{{ day_events.date }}</h3>
+<div>
+    {% for event in day_events.events %}
+    <div>
+        <p>{{ event.subject }}<br></p>
+        <p>{{ event.address.name }}, {{event.address.country}} <br></p>
+        <p>{{ event.local_time }}<br></p>
+        <p>{{ event.title }} <br></p>
+        <p>{{ event.description }}<br></p>
+        {% for link in event.links %}
+        <div><a href="{{ link }}">Link</a><br></div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
