@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "belga.publish",
     "belga.macros",
     "belga.signals",
+    "belga.ai_proxy",
     #  'belga.schema',  try without custom search analyzer
     "superdesk.text_checkers.spellcheckers.default",
     "superdesk.text_checkers.spellcheckers.grammalecte",
@@ -351,3 +352,5 @@ if EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME == "TestSearchProvider":
 
 TIME_FORMAT_SHORT = "HH:mm"
 DATE_FORMAT_SHORT = "dd/MM/yyyy"
+
+BELGA_AI_URL = env("BELGA_AI_URL")
