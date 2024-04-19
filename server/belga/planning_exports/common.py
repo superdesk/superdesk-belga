@@ -4,11 +4,6 @@ from typing import List, Dict, Any
 from babel.dates import format_date
 
 
-def get_sort_date(item: Dict[str, Any]):
-    """Get date used for sorting of the output"""
-    return item["dates"]["start"]
-
-
 def set_item_title(item: Dict[str, Any], event: Dict[str, Any]):
     """Set the item's title
 
