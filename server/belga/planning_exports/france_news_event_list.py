@@ -26,7 +26,17 @@ def format_event_french(event_data: List[Dict[str, Any]]):
     last_event = sorted_events[-1]
 
     intro_text = {
-        "title": f"Calendrier sportif international du {first_event['dates']['start'].strftime('%A %d.%m.%Y')} au {last_event['dates']['end'].strftime('%A %d.%m.%Y')} {first_event['dates']['start'].strftime('%B')}",
-        "subtitle": f"Principaux événements inscrits au calendrier sportif international du {first_event['dates']['start'].strftime('%A %d.%m.%Y')} au {last_event['dates']['end'].strftime('%A %d.%m.%Y')} {first_event['dates']['start'].strftime('%B')}:",
+        "title": (
+            f"Calendrier sportif international du "
+            f"{first_event['dates']['start'].strftime('%A %d.%m.%Y')} au "
+            f"{last_event['dates']['end'].strftime('%A %d.%m.%Y')} "
+            f"{first_event['dates']['start'].strftime('%B')}"
+        ),
+        "subtitle": (
+            f"Principaux événements inscrits au calendrier sportif international du "
+            f"{first_event['dates']['start'].strftime('%A %d.%m.%Y')} au "
+            f"{last_event['dates']['end'].strftime('%A %d.%m.%Y')} "
+            f"{first_event['dates']['start'].strftime('%B')}:"
+        ),
     }
     return {"intro": intro_text, "events": events_list}

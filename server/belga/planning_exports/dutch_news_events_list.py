@@ -27,8 +27,19 @@ def format_event_dutch(event_data: List[Dict[str, Any]]):
     last_event = sorted_events[-1]
 
     intro_text = {
-        "title": f"Internationale sportkalender van {first_event['dates']['end'].strftime('%A')} tot {last_event['dates']['end'].strftime('%A')} {first_event['dates']['start'].strftime('%B')}",
-        "subtitle": f"De belangrijkste sportevenementen op de Belgische en internationale sportkalender van {first_event['dates']['end'].strftime('%A')} tot {last_event['dates']['end'].strftime('%A')} {first_event['dates']['start'].strftime('%B')}:",
+        "title": (
+            f"Internationale sportkalender van "
+            f"{first_event['dates']['end'].strftime('%A')} tot "
+            f"{last_event['dates']['end'].strftime('%A')} "
+            f"{first_event['dates']['start'].strftime('%B')}"
+        ),
+        "subtitle": (
+            f"De belangrijkste sportevenementen op de Belgische en "
+            f"internationale sportkalender van "
+            f"{first_event['dates']['end'].strftime('%A')} tot "
+            f"{last_event['dates']['end'].strftime('%A')} "
+            f"{first_event['dates']['start'].strftime('%B')}:"
+        ),
     }
 
     return {"intro": intro_text, "events": events_list}
