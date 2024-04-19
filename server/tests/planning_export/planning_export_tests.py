@@ -113,22 +113,22 @@ class PlanningExportTests(TestCase):
                 dutch_template_data,
             )
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
-            self.assertIn("<p>REDWOLVES<br></p>", dutch_template_data)
-            self.assertIn("<p>New York, United States <br></p>", dutch_template_data)
-            self.assertIn("<p>16u00<br></p>", dutch_template_data)
-            self.assertIn("<p>NExxxxt Sunday 21.04.2024 <br></p>", dutch_template_data)
-            self.assertIn("<p>Description of event<br></p>", dutch_template_data)
+            self.assertIn("<p>REDWOLVES</p>", dutch_template_data)
+            self.assertIn("<p>New York, United States</p>", dutch_template_data)
+            self.assertIn("<p>16u00</p>", dutch_template_data)
+            self.assertIn("<p>NExxxxt Sunday 21.04.2024</p>", dutch_template_data)
+            self.assertIn("<p>Description of event</p>", dutch_template_data)
             self.assertIn(
-                '<div><a href="www.google.xom/new">www.google.xom/new</a><br></div>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 dutch_template_data,
             )
             self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
-            self.assertIn("<p>SPORTS<br></p>", dutch_template_data)
-            self.assertIn("<p>16u00<br></p>", dutch_template_data)
-            self.assertIn("<p>NExxxxt Monday 22.04.2024 <br></p>", dutch_template_data)
-            self.assertIn("<p>Description of event<br></p>", dutch_template_data)
+            self.assertIn("<p>SPORTS</p>", dutch_template_data)
+            self.assertIn("<p>16u00</p>", dutch_template_data)
+            self.assertIn("<p>NExxxxt Monday 22.04.2024</p>", dutch_template_data)
+            self.assertIn("<p>Description of event</p>", dutch_template_data)
             self.assertIn(
-                '<div><a href="www.google.xom/new">www.google.xom/new</a><br></div>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 dutch_template_data,
             )
 
@@ -147,21 +147,21 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
-            self.assertIn("<p>REDWOLVES<br></p>", french_template_data)
-            self.assertIn("<p>New York, United States <br></p>", french_template_data)
-            self.assertIn("<p>16u00<br></p>", french_template_data)
-            self.assertIn("<p>NExxxxt Sunday 21.04.2024 <br></p>", french_template_data)
-            self.assertIn("<p>Description of event<br></p>", french_template_data)
+            self.assertIn("<p>REDWOLVES</p>", french_template_data)
+            self.assertIn("<p>New York, United States</p>", french_template_data)
+            self.assertIn("<p>16u00</p>", french_template_data)
+            self.assertIn("<p>NExxxxt Sunday 21.04.2024</p>", french_template_data)
+            self.assertIn("<p>Description of event</p>", french_template_data)
             self.assertIn(
-                '<div><a href="www.google.xom/new">www.google.xom/new</a><br></div>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
-            self.assertIn("<p>SPORTS<br></p>", french_template_data)
-            self.assertIn("<p>16u00<br></p>", french_template_data)
-            self.assertIn("<p>NExxxxt Monday 22.04.2024 <br></p>", french_template_data)
-            self.assertIn("<p>Description of event<br></p>", french_template_data)
+            self.assertIn("<p>SPORTS</p>", french_template_data)
+            self.assertIn("<p>16u00</p>", french_template_data)
+            self.assertIn("<p>NExxxxt Monday 22.04.2024</p>", french_template_data)
+            self.assertIn("<p>Description of event</p>", french_template_data)
             self.assertIn(
-                '<div><a href="www.google.xom/new">www.google.xom/new</a><br></div>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )

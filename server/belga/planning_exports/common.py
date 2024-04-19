@@ -79,7 +79,7 @@ def get_subject(event: Dict[str, Any], language: str):
 
 def format_datetime(event: Dict[str, Any], locale: str, format: str):
     return format_date(
-        event.get("dates").get("start"), format, locale=locale
+        event.get("dates", {}).get("start"), format, locale=locale
     ).capitalize()
 
 
