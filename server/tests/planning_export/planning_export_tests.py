@@ -106,7 +106,10 @@ class PlanningExportTests(TestCase):
                 dutch_template_data,
             )
             self.assertIn(
-                "<p>De belangrijkste sportevenementen op de Belgische en internationale sportkalender van Zondag 21 tot Maandag 22 April:</p>",
+                (
+                    "<p>De belangrijkste sportevenementen op de Belgische en "
+                    "internationale sportkalender van Zondag 21 tot Maandag 22 April:</p>"
+                ),
                 dutch_template_data,
             )
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
@@ -137,7 +140,10 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
             self.assertIn(
-                "<p>Principaux événements inscrits au calendrier sportif international du Dimanche 21 au Lundi 22 Avril:</p>",
+                (
+                    "<p>Principaux événements inscrits au calendrier sportif "
+                    "international du Dimanche 21 au Lundi 22 Avril:</p>"
+                ),
                 french_template_data,
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
