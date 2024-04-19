@@ -1,6 +1,7 @@
 from superdesk.utc import utc_to_local
 from flask import current_app as app
 from typing import List, Dict, Any
+from babel.dates import format_date
 
 
 def get_sort_date(item: Dict[str, Any]):
@@ -79,6 +80,12 @@ def get_subject(event: Dict[str, Any], language: str):
                 filter_subj.append(get_language_name(subj, language))
         return filter_subj
     return []
+
+
+def format_datetime(event: Dict[str, Any], locale: str, format: str):
+    return format_date(
+        event.get("dates").get("start"), format, locale=locale
+    ).capitalize()
 
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any]):

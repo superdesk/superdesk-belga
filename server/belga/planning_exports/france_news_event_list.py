@@ -1,4 +1,4 @@
-from .common import set_metadata, get_sort_date, get_subject
+from .common import set_metadata, get_sort_date, get_subject, format_datetime
 from babel.dates import format_date
 from typing import List, Dict, Any
 
@@ -22,28 +22,9 @@ def format_event_french(event_data: List[Dict[str, Any]]):
             events_list.append({"date": formatted_current_date, "events": []})
         events_list[-1]["events"].append(formatted_event)
 
-    start_date = format_date(
-        sorted_events[0].get("dates").get("start"), "EEEE d", locale="fr"
-    ).capitalize()
-    end_date = format_date(
-        sorted_events[-1].get("dates").get("start"), "EEEE d", locale="fr"
-    ).capitalize()
-    month = format_date(
-        sorted_events[0].get("dates").get("start"), "MMMM", locale="fr"
-    ).capitalize()
-
-    intro_text = {
-        "title": (
-            f"Calendrier sportif international du "
-            f"{start_date} au "
-            f"{end_date} "
-            f"{month}"
-        ),
-        "subtitle": (
-            f"Principaux événements inscrits au calendrier sportif international du "
-            f"{start_date} au "
-            f"{end_date} "
-            f"{month}:"
-        ),
+    return {
+        "events_list": events_list,
+        "start_date": format_datetime(sorted_events[0], "fr", "EEEE d"),
+        "end_date": format_datetime(sorted_events[-1], "fr", "EEEE d"),
+        "month": format_datetime(sorted_events[0], "fr", "MMMM"),
     }
-    return {"intro": intro_text, "events": events_list}
