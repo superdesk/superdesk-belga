@@ -23,22 +23,29 @@ def format_event_dutch(event_data: List[Dict[str, Any]]):
             events_list.append({"date": formatted_current_date, "events": []})
         events_list[-1]["events"].append(formatted_event)
 
-    first_event = sorted_events[0]
-    last_event = sorted_events[-1]
+    start_date = format_date(
+        sorted_events[0].get("dates").get("start"), "EEEE d", locale="nl"
+    ).capitalize()
+    end_date = format_date(
+        sorted_events[-1].get("dates").get("start"), "EEEE d", locale="nl"
+    ).capitalize()
+    month = format_date(
+        sorted_events[0].get("dates").get("start"), "MMMM", locale="nl"
+    ).capitalize()
 
     intro_text = {
         "title": (
             f"Internationale sportkalender van "
-            f"{first_event['dates']['end'].strftime('%A')} tot "
-            f"{last_event['dates']['end'].strftime('%A')} "
-            f"{first_event['dates']['start'].strftime('%B')}"
+            f"{start_date} tot "
+            f"{end_date} "
+            f"{month}"
         ),
         "subtitle": (
             f"De belangrijkste sportevenementen op de Belgische en "
             f"internationale sportkalender van "
-            f"{first_event['dates']['end'].strftime('%A')} tot "
-            f"{last_event['dates']['end'].strftime('%A')} "
-            f"{first_event['dates']['start'].strftime('%B')}:"
+            f"{start_date} tot "
+            f"{end_date} "
+            f"{month}:"
         ),
     }
 
