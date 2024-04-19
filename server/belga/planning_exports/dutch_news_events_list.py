@@ -17,9 +17,9 @@ def format_event_dutch(event_data: List[Dict[str, Any]]):
 
         if formatted_event["local_date_str"] != current_date:
             current_date = formatted_event["local_date_str"]
-            formatted_current_date = format_date(
-                get_sort_date(event), "EEEE d MMMM", locale="nl"
-            ).capitalize()
+            formatted_current_date = format_datetime(
+                get_sort_date(event), "nl", "EEEE d MMMM"
+            )
             events_list.append({"date": formatted_current_date, "events": []})
         events_list[-1]["events"].append(formatted_event)
 
