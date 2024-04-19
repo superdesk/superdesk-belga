@@ -18,5 +18,22 @@
       "body_html_template": "planning_multiple_agendas_internal_template.html"
     },
     "label": "Internal"
-  }
+  },
+  {
+    "_id": "dutch_news_events_list",
+    "name": "dutch_news_events_list",
+    "type": "event",
+    "data": {
+        "body_html_template": "dutch_news_events_list_export.html"
+    },
+    "label": "Lijst met evenementen"
+},{
+  "_id": "french_news_events_list",
+  "name": "french_news_events_list",
+  "type": "event",
+  "data": {
+      "body_html_template": "french_news_events_list_export.html"
+  },
+  "label": "Liste des Événements"
+}
 ]
