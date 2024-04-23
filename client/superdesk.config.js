@@ -62,11 +62,11 @@ module.exports = function(grunt) {
             planning: true,
             assignments: true
         },
-        
+
         ui: {
             publishEmbargo: false,
         },
-        
+
         langOverride: {
             'en': {
                 'slugline': 'topic',
@@ -84,6 +84,11 @@ module.exports = function(grunt) {
             {id: 'sources', name:'Sources', field: 'subject', list: 'sources'},
             {id: 'language', name:'Language', field: 'language', list: 'languages'}
         ],
+
+        server: {
+            "url": "http://127.0.0.1:5000/api",
+            "ws": "ws://127.0.0.1:5100/ws"
+        },
 
         search: {
             'slugline': 1,
