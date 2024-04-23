@@ -54,6 +54,10 @@ setTimeout(() => {
             id: 'iptc',
             load: () => import('./extensions/iptc'),
         },
+        {
+            id: 'ai-assistant',
+            load: () => import('./extensions/aiAssistant/src/extension')
+        },
     ], {
         UserAvatar,
     });
