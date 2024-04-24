@@ -62,11 +62,11 @@ module.exports = function(grunt) {
             planning: true,
             assignments: true
         },
-        
+
         ui: {
             publishEmbargo: false,
         },
-        
+
         langOverride: {
             'en': {
                 'slugline': 'topic',
@@ -99,6 +99,11 @@ module.exports = function(grunt) {
             'ingest_provider': 1,
             'marked_desks': 1,
             'scheduled': 1
+        },
+
+        server: {
+            "url": "http://127.0.0.1:5000/api",
+            "ws": "ws://127.0.0.1:5100/ws"
         },
 
         list: {
