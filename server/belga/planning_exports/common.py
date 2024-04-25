@@ -40,7 +40,7 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     start_local_str = start_local.strftime("%Hu%M")
 
     item["local_time"] = start_local_str
-    item["local_date_str"] = start_local.strftime("%Y-%m-%d")
+    item["local_date_time"] = start_local
 
 
 def set_item_location(item: Dict[str, Any], event: Dict[str, Any]):
@@ -78,9 +78,9 @@ def get_subject(event: Dict[str, Any], language: str):
 
 
 def format_datetime(event: Dict[str, Any], locale: str, format: str):
-    return format_date(
-        event.get("dates", {}).get("start"), format, locale=locale
-    ).capitalize()
+    tz = event.get("dates", {}).get("tz") or app.config.get("DEFAULT_TIMEZONE")
+    start_time = event.get("dates", {}).get("start")
+    return format_date(utc_to_local(tz, start_time), format, locale=locale).capitalize()
 
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any]):
