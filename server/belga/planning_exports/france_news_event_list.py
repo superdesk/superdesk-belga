@@ -13,8 +13,8 @@ def format_event_french(event_data: List[Dict[str, Any]]):
             "subject": ",".join(get_subject(event, "fr")),
         }
         set_metadata(formatted_event, event)
-        if formatted_event["local_date_str"] != current_date:
-            current_date = formatted_event["local_date_str"]
+        if formatted_event["local_date_time"] != current_date:
+            current_date = formatted_event["local_date_time"]
             formatted_current_date = format_datetime(event, "fr", "EEEE d MMMM")
             events_list.append({"date": formatted_current_date, "events": []})
         events_list[-1]["events"].append(formatted_event)

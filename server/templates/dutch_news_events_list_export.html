@@ -8,13 +8,12 @@
 <div>
     {% for event in day_events.events %}
     <div>
-        <p>{{ event.subject }}</p>
-        <p>{{ event.address.name }}, {{event.address.country}}</p>
-        <p>{{ event.local_time }}</p>
-        <p>{{ event.title }}</p>
-        <p>{{ event.description }}</p>
+        <p>{{ event.subject }}<br></p>
+        <p>{{ event.address.name }}, {{event.address.country}}<br></p>
+        <p>{{ event.local_time }}, {{ event.title }}<br></p>
+        <p>{{ event.description }}<br></p>
         {% for link in event.links %}
-        <p><a href="{{ link }}">{{ link }}</a></p>
+        <p><a href="{{ link }}">{{ link }}</a><br></p>
         {% endfor %}
     </div>
     {% endfor %}
