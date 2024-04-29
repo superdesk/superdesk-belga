@@ -57,7 +57,7 @@ setTimeout(() => {
         {
             id: 'ai-assistant-widget',
             load: () => import('superdesk-core/scripts/extensions/ai-widget/src/extension').then((widget) => {
-                widget.setRequests({
+                widget.configure({
                     generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
                             return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
@@ -84,6 +84,8 @@ setTimeout(() => {
                         });
                     },
                 })
+
+                return widget;
             })
         },
     ], {
