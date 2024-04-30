@@ -2,6 +2,7 @@ from unittest import TestCase
 import datetime
 from flask import render_template
 from app import get_app
+from belga.planning_exports.france_news_event_list import format_event_french
 
 
 class PlanningExportTests(TestCase):
@@ -180,14 +181,32 @@ class PlanningExportTests(TestCase):
                             2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
                         ),
                         "tz": "Europe/Prague",
-                    }
-                }
+                    },
+                    "name": "one event",
+                },
+                {
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 24, 22, 59, 00, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Prague",
+                    },
+                    "name": "Two event",
+                },
             ]
             template_data = render_template(
                 "dutch_news_events_list_export.html", items=new_events, app=app
             )
             self.assertIn("<h3>Donderdag 25 april</h3>", template_data)
+            self.assertIn("<p>00u00, one event<br></p>", template_data)
+            self.assertIn("<p>00u59, Two event<br></p>", template_data)
+
             template_data = render_template(
                 "french_news_events_list_export.html", items=new_events, app=app
             )
             self.assertIn("<h3>Jeudi 25 avril</h3>", template_data)
+            self.assertIn("<p>00u00, one event<br></p>", template_data)
+            self.assertIn("<p>00u59, Two event<br></p>", template_data)
