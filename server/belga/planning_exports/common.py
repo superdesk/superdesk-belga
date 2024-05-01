@@ -37,10 +37,8 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
 
     tz = item["dates"].get("tz") or app.config.get("DEFAULT_TIMEZONE")
     start_local = utc_to_local(tz, item["dates"]["start"])
-    start_local_str = start_local.strftime("%Hu%M")
-
-    item["local_time"] = start_local_str
-    item["local_date_time"] = start_local
+    item["local_time"] = start_local.strftime("%Hu%M")
+    item["local_date_time"] = start_local.strftime("%Y%m%d")
 
 
 def set_item_location(item: Dict[str, Any], event: Dict[str, Any]):
