@@ -1,7 +1,7 @@
 import * as React from 'react';
 import angular from 'angular';
 
-import {IUser} from 'superdesk-api';
+import {IUser, IArticle, ISuperdesk} from 'superdesk-api';
 import {startApp} from 'superdesk-core/scripts/index';
 import {AvatarContentText} from 'superdesk-ui-framework';
 
@@ -53,6 +53,40 @@ setTimeout(() => {
         {
             id: 'iptc',
             load: () => import('./extensions/iptc'),
+        },
+        {
+            id: 'ai-assistant-widget',
+            load: () => import('superdesk-core/scripts/extensions/ai-widget').then((widget) => {
+                widget.configure({
+                    generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
+                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                                method: 'POST',
+                                path: '/belga/ai/toolkit/headlines',
+                                payload: {
+                                    text: article.body_html,
+                                    nrTitles: 3,
+                                    maxCharacters: profile.schema['headline']?.maxlength ?? 0,
+                                }
+                            }).then((result) => result.response)
+                        });
+                    },
+                    generateSummary: (article: IArticle, superdesk: ISuperdesk) => {
+                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                            return superdesk.httpRequestJsonLocal<{response: string}>({
+                                method: 'POST',
+                                path: '/belga/ai/toolkit/summarize',
+                                payload: {
+                                    text: article.body_html,
+                                    maxCharacters: profile.schema['body_html']?.maxlength ?? 0,
+                                }
+                            }).then((result) => result.response)
+                        });
+                    },
+                })
+
+                return widget;
+            })
         },
     ], {
         UserAvatar,
