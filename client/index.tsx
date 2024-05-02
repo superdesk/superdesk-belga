@@ -56,7 +56,7 @@ setTimeout(() => {
         },
         {
             id: 'ai-assistant-widget',
-            load: () => import('superdesk-core/scripts/extensions/ai-widget/src/extension').then((widget) => {
+            load: () => import('superdesk-core/scripts/extensions/ai-widget').then((widget) => {
                 widget.configure({
                     generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
