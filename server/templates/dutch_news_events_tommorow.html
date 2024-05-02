@@ -1,0 +1,30 @@
+{% set formatted_data = format_event_for_tommorow(items) %}
+<div>
+    <h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen, met de vermelding of wij dit in TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO en LIVE BLOG coveren. De vermelding ON MERIT betekent dat Belga dit onderwerp opvolgt, maar dat voorlopig niet gegarandeerd kan worden dat er ook een specifieke coverage zal volgen. De redactie van Belga wenst u een prettige werkdag.</h2>
+</div>
+{% for data in formatted_data %}
+    <h3>{{ data.calendar }}</h3>
+<div>
+    {% for event in data.events %}
+    <div>
+        <p>{{ event.time }}<br></p>
+        {% if event.address %}
+        <p>{{ event.address.name }}, {{event.address.country}}<br></p>
+        {% endif %}
+        <p>{{ event.title }}<br></p>
+        <p>{{ event.description }}<br></p>
+        {% for link in event.links %}
+        <p><a href="{{ link }}">{{ link }}</a><br></p>
+        {% endfor %}
+        {% for contact in event.contacts %}
+        <p>
+        {{ contact.organisation }} - {{ contact.name }} - {{contact.job_title}} - {{ contact.email|join(", ") }} - {{ contact.phone|join(", ") }} - {{ contact.mobile|join(", ") }} - {{ contact.website }} 
+        </p>
+        {% endfor %}
+        {% for coverage in event.coverages %}
+        <p>{{coverage}}<br></p>
+        {% endfor %}
+    <br></div>
+    {% endfor %}
+</div>
+{% endfor %}
