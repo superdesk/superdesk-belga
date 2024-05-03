@@ -12,6 +12,7 @@ class FormattedContact(TypedDict):
     phone: List[str]
     mobile: List[str]
     website: str
+    job_title: str
 
 
 def set_item_title(item: Dict[str, Any], event: Dict[str, Any]):
@@ -43,10 +44,10 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     item["dates"] = {
         "start": event["dates"]["start"],
         "end": event["dates"]["end"],
-        "tz": event["dates"]["tz"] or app.config.get("DEFAULT_TIMEZONE")
+        "tz": event.get("dates", {}).get("tz") or app.config.get("DEFAULT_TIMEZONE"),
     }
 
-    tz = item["dates"].get("tz") 
+    tz = item["dates"]["tz"]
     start_local = utc_to_local(tz, item["dates"]["start"])
     item["local_time"] = start_local.strftime("%Hu%M")
     item["local_date_time"] = start_local.strftime("%Y%m%d")
@@ -105,7 +106,9 @@ def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
     formatted_contacts: List[FormattedContact] = []
 
     for contact_id in contacts:
-        contact_details = get_resource_service("contacts").find_one(req=None, _id=contact_id)
+        contact_details = get_resource_service("contacts").find_one(
+            req=None, _id=contact_id
+        )
         if contact_details and contact_details.get("public", False):
             formatted_contact: FormattedContact = {
                 "name": " ".join(
@@ -120,10 +123,18 @@ def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
                 ),
                 "organisation": contact_details.get("organisation", ""),
                 "email": contact_details.get("contact_email", []),
-                "phone": [c.get("number", "") for c in contact_details.get("contact_phone", []) if c.get("public")],
-                "mobile": [c.get("number", "") for c in contact_details.get("mobile", []) if c.get("public")],
+                "phone": [
+                    c.get("number", "")
+                    for c in contact_details.get("contact_phone", [])
+                    if c.get("public")
+                ],
+                "mobile": [
+                    c.get("number", "")
+                    for c in contact_details.get("mobile", [])
+                    if c.get("public")
+                ],
                 "website": contact_details.get("website", ""),
-                "job_title":contact_details.get("job_title", "")
+                "job_title": contact_details.get("job_title", ""),
             }
             formatted_contacts.append(formatted_contact)
 
@@ -137,7 +148,9 @@ def get_coverages(event: Dict[str, Any]):
     for id in planning_ids:
         planning_item = planning_service.find_one(req=None, _id=id)
         for coverage in planning_item.get("coverages", []):
-            cov_type = coverage.get('planning', {}).get('g2_content_type', "").capitalize()
+            cov_type = (
+                coverage.get("planning", {}).get("g2_content_type", "").capitalize()
+            )
             cov_status = coverage.get("news_coverage_status", {}).get("label", "")
             formatted_coverages.append(f"{cov_type}, {cov_status}")
     return formatted_coverages
