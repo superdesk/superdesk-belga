@@ -1,7 +1,7 @@
 {% set formatted_data = format_event_for_tommorow(items) %}
 
 <div>
-    <h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen, met de vermelding of wij dit in TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO en LIVE BLOG coveren. De vermelding ON MERIT betekent dat Belga dit onderwerp opvolgt, maar dat voorlopig niet gegarandeerd kan worden dat er ook een specifieke coverage zal volgen. De redactie van Belga wenst u een prettige werkdag.</h2>
+    <h2>Voici l’agenda Belga des événements belges et internationaux qui bénéficieront d’une couverture de notre part. Les mentions TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO et LIVE BLOG vous précisent si nous couvrons le sujet. La mention ON MERIT vous signale que Belga suit le sujet mais ne peut pas encore assurer qu’il donnera lieu à une couverture spécifique. La rédaction vous souhaite une bonne journée de travail</h2>
 </div>
 
 {% for data in formatted_data %}
@@ -29,6 +29,7 @@
                 {% for coverage in event.coverages %}
                     <p>{{ coverage }}<br></p>
                 {% endfor %}
+                <br>
             </div>
         {% endfor %}
     </div>
