@@ -35,5 +35,23 @@
       "body_html_template": "french_news_events_list_export.html"
   },
   "label": "Liste des Événements"
+},
+{
+  "_id": "french_news_events_list_tommorrow",
+  "name": "french_news_events_list_tommorrow",
+  "type": "event",
+  "data": {
+      "body_html_template": "french_news_events_tommorrow.html"
+  },
+  "label": "Liste des événements demain"
+},
+{
+  "_id": "dutch_news_events_list_tommorrow",
+  "name": "dutch_news_events_list_tommorrow",
+  "type": "event",
+  "data": {
+      "body_html_template": "dutch_news_events_tommorrow.html"
+  },
+  "label": "Lijst met evenementen morgen"
 }
 ]
