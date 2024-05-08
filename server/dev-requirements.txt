@@ -11,7 +11,7 @@ pytest-env
 types-click==7.1.2
 types-docutils==0.1.7
 types-Flask==1.1.1
-types-Jinja2==2.11.2
+types-Jinja2==2.11.9
 types-MarkupSafe==1.1.10
 types-python-dateutil==0.1.4
 types-pytz==0.1.2
