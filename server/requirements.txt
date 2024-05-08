@@ -35,7 +35,9 @@ botocore==1.34.86
     #   boto3
     #   s3transfer
 cachetools==5.3.3
-    # via flask-oidc-ex
+    # via
+    #   flask-oidc-ex
+    #   google-auth
 celery[redis]==5.2.7
     # via superdesk-core
 cerberus==1.3.5
@@ -114,7 +116,13 @@ flask-script==2.0.6
     # via superdesk-core
 future==1.0.0
     # via python-twitter
-gspread==3.1.0
+google-auth==2.29.0
+    # via
+    #   google-auth-oauthlib
+    #   gspread
+google-auth-oauthlib==1.2.0
+    # via gspread
+gspread==6.1.0
     # via -r requirements.in
 gunicorn==22.0.0
     # via -r requirements.in
@@ -158,6 +166,7 @@ lxml==4.6.5
     # via
     #   draftjs-exporter
     #   superdesk-core
+    #   xmlsec
 markupsafe==2.0.1
     # via
     #   jinja2
@@ -187,7 +196,9 @@ pyasn1==0.6.0
     #   pyasn1-modules
     #   rsa
 pyasn1-modules==0.4.0
-    # via oauth2client
+    # via
+    #   google-auth
+    #   oauth2client
 pycparser==2.22
     # via cffi
 pyjwt==2.4.0
@@ -238,14 +249,17 @@ reportlab==3.6.13
     # via superdesk-core
 requests==2.31.0
     # via
-    #   gspread
     #   python-twitter
     #   requests-oauthlib
     #   superdesk-core
 requests-oauthlib==2.0.0
-    # via python-twitter
+    # via
+    #   google-auth-oauthlib
+    #   python-twitter
 rsa==4.9
-    # via oauth2client
+    # via
+    #   google-auth
+    #   oauth2client
 s3transfer==0.10.1
     # via boto3
 sgmllib3k==1.0.0
@@ -257,6 +271,8 @@ six==1.16.0
     #   flask-oidc-ex
     #   oauth2client
     #   python-dateutil
+strenum==0.4.15
+    # via gspread
 superdesk-analytics @ git+https://github.com/superdesk/superdesk-analytics.git@develop
     # via -r requirements.in
 superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@develop
@@ -293,3 +309,5 @@ werkzeug==1.0.1
     #   superdesk-core
 wrapt==1.14.1
     # via elastic-apm
+xmlsec==1.3.13
+    # via superdesk-core
