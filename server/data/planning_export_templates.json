@@ -26,7 +26,7 @@
     "data": {
         "body_html_template": "dutch_news_events_list_export.html"
     },
-    "label": "Lijst met evenementen"
+    "label": "Internationale sportkalender"
 },{
   "_id": "french_news_events_list",
   "name": "french_news_events_list",
@@ -34,7 +34,7 @@
   "data": {
       "body_html_template": "french_news_events_list_export.html"
   },
-  "label": "Liste des Événements"
+  "label": "Calendrier sportif international"
 },
 {
   "_id": "french_news_events_list_tommorrow",
@@ -43,7 +43,7 @@
   "data": {
       "body_html_template": "french_news_events_tommorrow.html"
   },
-  "label": "Liste des événements demain"
+  "label": "Program of the day - NPF"
 },
 {
   "_id": "dutch_news_events_list_tommorrow",
@@ -52,6 +52,6 @@
   "data": {
       "body_html_template": "dutch_news_events_tommorrow.html"
   },
-  "label": "Lijst met evenementen morgen"
+  "label": "Program of the day - NPN"
 }
 ]
