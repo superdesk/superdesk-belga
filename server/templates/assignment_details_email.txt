@@ -27,6 +27,14 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
         Description: {{ event['definition_short'] }}
     {% endif %}
 
+    {% if event.get('ednote') %}
+        Ed Note: {{ event['ednote'] }}
+    {% endif %}
+
+    {% if event.get('internal_note') %}
+        Internal Note: {{ event['internal_note'] }}
+    {% endif %}
+
     {% if contacts %}
         Contacts: 
         {% for contact in contacts %}
