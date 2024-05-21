@@ -1,1 +1,1 @@
-{{coverage_type}} coverage "{{slugline}}" has been reassigned to {{assignee}} ({{desk}}) from {{old_assignee}} ({{old_desk}}) by {{assignor}}
+{{coverage_type}} coverage "{{assignment.get('name')}}" has been reassigned to {{assignee}} ({{desk}}) from {{old_assignee}} ({{old_desk}}) by {{assignor}}

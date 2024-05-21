@@ -1,4 +1,4 @@
-Planning Item: {{ slugline }}
+Planning Item: {{ assignment.get('name') or slugine }}
 
 Assignment ID: {{ assignment_id }}
 
