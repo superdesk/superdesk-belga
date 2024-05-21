@@ -5,8 +5,8 @@ Assignment ID: {{ assignment_id }}
 Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
 
 {% if event %}
-    {% if event.get('slugline') %}
-        Event: {{ event['slugline'] }}
+    {% if event.get('name') %}
+        Event: {{ event['name'] }}
     {% endif %}
 
     Event Url: {{ client_url }}/#/planning?preview={"id": "{{ event['_id'] }}","type":"event" }
@@ -19,8 +19,8 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
     
     {% if location %} {{ location }} {% endif %}
 
-    {% if event.get('name') %}
-        Event Name: {{ event['name'] }}
+    {% if event.get('slugline') %}
+        Event Topic: {{ event['slugline'] }}
     {% endif %}
 
     {% if event.get('definition_short') %}
