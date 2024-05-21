@@ -1,1 +1,1 @@
-You have been assigned "{{coverage_type}}" coverage "{{slugline}}" {{assignor}}
+You have been assigned "{{coverage_type}}" coverage "{{assignment.get('name')}}" {{assignor}}

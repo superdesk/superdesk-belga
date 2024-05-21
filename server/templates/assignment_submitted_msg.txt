@@ -1,1 +1,1 @@
-{{coverage_type}} coverage "{{slugline}}" has been submitted to desk {{desk}} from {{from_desk}}
+{{coverage_type}} coverage "{{assignment.get('name')}}" has been submitted to desk {{desk}} from {{from_desk}}
