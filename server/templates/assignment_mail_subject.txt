@@ -1,1 +1,1 @@
-Superdesk assignment : {{ assignment.get('name') }}
+Superdesk assignment: {{ assignment.get('name') }}
