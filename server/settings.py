@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "superdesk.text_checkers.spellcheckers.default",
     "superdesk.text_checkers.spellcheckers.grammalecte",
     "superdesk.text_checkers.spellcheckers.leuven_dutch",
-    "belga.planning_exports"
+    "belga.planning_exports",
 ]
 
 SECRET_KEY = env("SECRET_KEY", "")
@@ -351,7 +351,9 @@ EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME = env(
 if EVENT_RELATED_ITEM_SEARCH_PROVIDER_NAME == "TestSearchProvider":
     INSTALLED_APPS.append("superdesk.tests.mocks.search_provider")
 
-TIME_FORMAT_SHORT = "HH:mm"
-DATE_FORMAT_SHORT = "dd/MM/yyyy"
+TIME_FORMAT_SHORT = "%H:%M"
+DATE_FORMAT_SHORT = "%d/%m/%Y"
 
 BELGA_AI_URL = env("BELGA_AI_URL")
+
+START_OF_WEEK = 1

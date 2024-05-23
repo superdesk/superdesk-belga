@@ -62,11 +62,11 @@ module.exports = function(grunt) {
             planning: true,
             assignments: true
         },
-        
+
         ui: {
             publishEmbargo: false,
         },
-        
+
         langOverride: {
             'en': {
                 'slugline': 'topic',

@@ -1,12 +1,12 @@
-<h2>Planning Item: {{ slugline }}</h2>
+<h2>Planning Item: {{ assignment.get('name') or slugline }}</h2>
 
 <p><strong>Assignment ID:</strong> {{ assignment_id }}</p>
 
 <p><strong>Url:</strong> <a href="{{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}">View Assignment</a></p>
 
 {% if event %}
-    {% if event.get('slugline') %}
-        <h3>Event: {{ event['slugline'] }}</h3>
+    {% if event.get('name') %}
+        <h3>Event: {{ event['name'] }}</h3>
     {% endif %}
 
     <p><strong>Event Url:</strong> <a href='{{ client_url }}/#/planning?preview={"id": "{{ event["_id"] }}","type":"event"}'>View Event Details</a></p>
@@ -23,12 +23,20 @@
         <p>{{ location }}</p>
     {% endif %}
 
-    {% if event.get('name') %}
-        <p><strong>Event Name:</strong> {{ event['name'] }}</p>
+    {% if event.get('slugline') %}
+        <p><strong>Event Topic:</strong> {{ event['slugline'] }}</p>
     {% endif %}
 
     {% if event.get('definition_short') %}
         <p><strong>Description:</strong> {{ event['definition_short'] }}</p>
+    {% endif %}
+
+    {% if event.get('ednote') %}
+    <p><strong>Ed Note:</strong> {{ event['ednote'] }}</p>
+    {% endif %}
+
+    {% if event.get('internal_note') %}
+    <p><strong>Internal Note:</strong> {{ event['internal_note'] }}</p>
     {% endif %}
 
     {% if contacts %}
