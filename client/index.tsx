@@ -28,6 +28,9 @@ class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     }
 }
 
+/**
+ * Offset is needed because belga ai sometimes doesn't respect the maxCharacter length and outputs 4/5 more characters.
+ */
 const MAX_CHARACTER_OFFSET = 10;
 
 function getCoverageDueDate(
@@ -93,25 +96,33 @@ setTimeout(() => {
                 widget.configure({
                     generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                            const maxCharacterLength = profile.schema['headline']?.maxlength;
+
                             return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
                                 method: 'POST',
                                 path: '/belga/ai/toolkit/headlines',
                                 payload: {
                                     text: article.body_html,
                                     nrTitles: 3,
-                                    maxCharacters: (profile.schema['headline']?.maxlength ?? 0) - MAX_CHARACTER_OFFSET,
+                                    maxCharacters: maxCharacterLength != null
+                                        ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                        : 0,
                                 }
                             }).then((result) => result.response)
                         });
                     },
                     generateSummary: (article: IArticle, superdesk: ISuperdesk) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                            const maxCharacterLength = profile.schema['body_html']?.maxlength;
+
                             return superdesk.httpRequestJsonLocal<{response: string}>({
                                 method: 'POST',
                                 path: '/belga/ai/toolkit/summarize',
                                 payload: {
                                     text: article.body_html,
-                                    maxCharacters: (profile.schema['body_html']?.maxlength ?? 0) - MAX_CHARACTER_OFFSET,
+                                    maxCharacters: maxCharacterLength != null
+                                        ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                        : 0,
                                 }
                             }).then((result) => result.response)
                         });
