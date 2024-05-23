@@ -3,7 +3,7 @@ from flask import render_template
 from app import get_app
 
 
-class PlanningExportTests(TestCase):
+class AssignmentMailsTests(TestCase):
     app = get_app()
     event = {
         "name": "Tech Expo 2024",
