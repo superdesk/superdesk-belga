@@ -912,6 +912,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             "image/wmv": "Wmv",
             "application/zip": "Zip",
             "audio/mp3": "Mp3",
+            "image/bmp": "Bmp",
         }
 
         filename = (
@@ -969,12 +970,14 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, "HeadLine").text = item.get("headline")
         SubElement(newslines, "CopyrightLine").text = item.get("copyrightholder")
 
-        if item.get("source") and item.get("ingest_provider") and item.get("auto_publish"):
+        if (
+            item.get("source")
+            and item.get("ingest_provider")
+            and item.get("auto_publish")
+        ):
             SubElement(newslines, "CreditLine").text = (
                 item["source"]
-                .replace(
-                    "incoming" if "incoming" in item["source"] else "Incoming", ""
-                )
+                .replace("incoming" if "incoming" in item["source"] else "Incoming", "")
                 .strip()
                 .upper()
             )
