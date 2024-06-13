@@ -107,7 +107,7 @@ setTimeout(() => {
                             }).then((result) => result.response)
                         },
                     },
-                    generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
+                    generateHeadlines: (article: IArticle) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
                             const maxCharacterLength = profile.schema['headline']?.maxlength;
 
@@ -124,7 +124,7 @@ setTimeout(() => {
                             }).then((result) => result.response)
                         });
                     },
-                    generateSummary: (article: IArticle, superdesk: ISuperdesk) => {
+                    generateSummary: (article: IArticle) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
                             const maxCharacterLength = profile.schema['body_html']?.maxlength;
 
