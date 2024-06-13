@@ -28,6 +28,11 @@ class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     }
 }
 
+/**
+ * Offset is needed because belga ai sometimes doesn't respect the maxCharacter length and outputs 4/5 more characters.
+ */
+const MAX_CHARACTER_OFFSET = 10;
+
 function getCoverageDueDate(
     planningItem: IPlanningItem,
     eventItem?: IEventItem,
@@ -88,51 +93,57 @@ setTimeout(() => {
         {
             id: 'ai-widget',
             load: () => import('superdesk-core/scripts/extensions/ai-widget').then((widget) => {
-                widget.configure((superdesk: ISuperdesk) => {
-                    return {
-                        translations: {
-                            translateActionIntegration: true,
-                            generateTranslations: (article: IArticle, language: string) => {
-                                return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
-                                    method: 'POST',
-                                    path: '/belga/ai/toolkit/translate',
-                                    payload: {
-                                        language: language,
-                                        text: article.body_html,
-                                    }
-                                }).then((result) => result.response)
-                            },
+                widget.configure((superdesk: ISuperdesk) => ({
+                    translations: {
+                        translateActionIntegration: true,
+                        generateTranslations: (article: IArticle, language: string) => {
+                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                                method: 'POST',
+                                path: '/belga/ai/toolkit/translate',
+                                payload: {
+                                    language: language,
+                                    text: article.body_html,
+                                }
+                            }).then((result) => result.response)
                         },
-                        generateHeadlines: (article: IArticle) => {
-                            return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                                return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
-                                    method: 'POST',
-                                    path: '/belga/ai/toolkit/headlines',
-                                    payload: {
-                                        text: article.body_html,
-                                        nrTitles: 3,
-                                        maxCharacters: profile.schema['headline']?.maxlength ?? 0,
-                                    }
-                                }).then((result) => result.response)
-                            });
-                        },
-                        generateSummary: (article: IArticle) => {
-                            return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                                return superdesk.httpRequestJsonLocal<{response: string}>({
-                                    method: 'POST',
-                                    path: '/belga/ai/toolkit/summarize',
-                                    payload: {
-                                        text: article.body_html,
-                                        maxCharacters: profile.schema['body_html']?.maxlength ?? 0,
-                                    }
-                                }).then((result) => result.response)
-                            });
-                        },
-                    };
-                });
+                    },
+                    generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
+                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                            const maxCharacterLength = profile.schema['headline']?.maxlength;
+
+                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                                method: 'POST',
+                                path: '/belga/ai/toolkit/headlines',
+                                payload: {
+                                    text: article.body_html,
+                                    nrTitles: 3,
+                                    maxCharacters: maxCharacterLength != null
+                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                    : 0,
+                                }
+                            }).then((result) => result.response)
+                        });
+                    },
+                    generateSummary: (article: IArticle, superdesk: ISuperdesk) => {
+                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                            const maxCharacterLength = profile.schema['body_html']?.maxlength;
+
+                            return superdesk.httpRequestJsonLocal<{response: string}>({
+                                method: 'POST',
+                                path: '/belga/ai/toolkit/summarize',
+                                payload: {
+                                    text: article.body_html,
+                                    maxCharacters: maxCharacterLength != null
+                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                    : 0,
+                                }
+                            }).then((result) => result.response)
+                        });
+                    },
+                }));
 
                 return widget;
-            })
+            }),
         },
     ], {
         UserAvatar,
