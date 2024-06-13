@@ -86,35 +86,50 @@ setTimeout(() => {
             load: () => import('./extensions/iptc'),
         },
         {
-            id: 'ai-assistant-widget',
+            id: 'ai-widget',
             load: () => import('superdesk-core/scripts/extensions/ai-widget').then((widget) => {
-                widget.configure({
-                    generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
-                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/headlines',
-                                payload: {
-                                    text: article.body_html,
-                                    nrTitles: 3,
-                                    maxCharacters: profile.schema['headline']?.maxlength ?? 0,
-                                }
-                            }).then((result) => result.response)
-                        });
-                    },
-                    generateSummary: (article: IArticle, superdesk: ISuperdesk) => {
-                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                            return superdesk.httpRequestJsonLocal<{response: string}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/summarize',
-                                payload: {
-                                    text: article.body_html,
-                                    maxCharacters: profile.schema['body_html']?.maxlength ?? 0,
-                                }
-                            }).then((result) => result.response)
-                        });
-                    },
-                })
+                widget.configure((superdesk: ISuperdesk) => {
+                    return {
+                        translations: {
+                            translateActionIntegration: true,
+                            generateTranslations: (article: IArticle, language: string) => {
+                                return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                                    method: 'POST',
+                                    path: '/belga/ai/toolkit/translate',
+                                    payload: {
+                                        language: language,
+                                        text: article.body_html,
+                                    }
+                                }).then((result) => result.response)
+                            },
+                        },
+                        generateHeadlines: (article: IArticle) => {
+                            return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                                return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                                    method: 'POST',
+                                    path: '/belga/ai/toolkit/headlines',
+                                    payload: {
+                                        text: article.body_html,
+                                        nrTitles: 3,
+                                        maxCharacters: profile.schema['headline']?.maxlength ?? 0,
+                                    }
+                                }).then((result) => result.response)
+                            });
+                        },
+                        generateSummary: (article: IArticle) => {
+                            return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
+                                return superdesk.httpRequestJsonLocal<{response: string}>({
+                                    method: 'POST',
+                                    path: '/belga/ai/toolkit/summarize',
+                                    payload: {
+                                        text: article.body_html,
+                                        maxCharacters: profile.schema['body_html']?.maxlength ?? 0,
+                                    }
+                                }).then((result) => result.response)
+                            });
+                        },
+                    };
+                });
 
                 return widget;
             })
