@@ -91,10 +91,23 @@ setTimeout(() => {
             load: () => import('./extensions/iptc'),
         },
         {
-            id: 'ai-assistant-widget',
+            id: 'ai-widget',
             load: () => import('superdesk-core/scripts/extensions/ai-widget').then((widget) => {
-                widget.configure({
-                    generateHeadlines: (article: IArticle, superdesk: ISuperdesk) => {
+                widget.configure((superdesk: ISuperdesk) => ({
+                    translations: {
+                        translateActionIntegration: true,
+                        generateTranslations: (article: IArticle, language: string) => {
+                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                                method: 'POST',
+                                path: '/belga/ai/toolkit/translate',
+                                payload: {
+                                    language: language,
+                                    text: article.body_html,
+                                }
+                            }).then((result) => result.response)
+                        },
+                    },
+                    generateHeadlines: (article: IArticle) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
                             const maxCharacterLength = profile.schema['headline']?.maxlength;
 
@@ -105,13 +118,13 @@ setTimeout(() => {
                                     text: article.body_html,
                                     nrTitles: 3,
                                     maxCharacters: maxCharacterLength != null
-                                        ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                        : 0,
+                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                    : 0,
                                 }
                             }).then((result) => result.response)
                         });
                     },
-                    generateSummary: (article: IArticle, superdesk: ISuperdesk) => {
+                    generateSummary: (article: IArticle) => {
                         return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
                             const maxCharacterLength = profile.schema['body_html']?.maxlength;
 
@@ -121,16 +134,16 @@ setTimeout(() => {
                                 payload: {
                                     text: article.body_html,
                                     maxCharacters: maxCharacterLength != null
-                                        ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                        : 0,
+                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                    : 0,
                                 }
                             }).then((result) => result.response)
                         });
                     },
-                })
+                }));
 
                 return widget;
-            })
+            }),
         },
     ], {
         UserAvatar,
