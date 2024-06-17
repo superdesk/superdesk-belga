@@ -2,6 +2,7 @@
   {
     "_id": "planning_multiple_agendas",
     "name": "multiple-agendas",
+    "init_version": 1,
     "type": "planning",
     "data": {
       "slugline": "multiple-agendas",
@@ -12,6 +13,7 @@
   {
     "_id": "planning_multiple_agendas_internal",
     "name": "internal",
+    "init_version": 1,
     "type": "planning",
     "data": {
       "slugline": "internal",
@@ -21,6 +23,7 @@
   },
   {
     "_id": "dutch_news_events_list",
+    "init_version": 1,
     "name": "dutch_news_events_list",
     "type": "event",
     "data": {
@@ -29,6 +32,7 @@
     "label": "Internationale sportkalender"
 },{
   "_id": "french_news_events_list",
+  "init_version": 1,
   "name": "french_news_events_list",
   "type": "event",
   "data": {
@@ -38,6 +42,7 @@
 },
 {
   "_id": "french_news_events_list_tommorrow",
+  "init_version": 1,
   "name": "french_news_events_list_tommorrow",
   "type": "event",
   "data": {
@@ -47,6 +52,7 @@
 },
 {
   "_id": "dutch_news_events_list_tommorrow",
+  "init_version": 1,
   "name": "dutch_news_events_list_tommorrow",
   "type": "event",
   "data": {
