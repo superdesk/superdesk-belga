@@ -10,6 +10,54 @@ class PlanningExportTests(TestCase):
     events_for_week = [
         {
             "type": "event",
+            "calendars": [{"is_active": True, "name": "Sport", "qcode": "sport"}],
+            "language": "en",
+            "name": "First",
+            "dates": {
+                "start": datetime.datetime(
+                    2024, 4, 22, 10, 30, tzinfo=datetime.timezone.utc
+                ),
+                "end": datetime.datetime(
+                    2024, 4, 23, 15, 30, 59, tzinfo=datetime.timezone.utc
+                ),
+                "tz": "Asia/Calcutta",
+            },
+            "subject": [
+                {
+                    "name": "WC2028",
+                    "scheme": "belga-keywords",
+                    "qcode": "WC2028",
+                    "translations": {"name": {"nl": "WC2028", "fr": "WC2028"}},
+                }
+            ],
+            "links": ["www.google.xom/new"],
+        },
+        {
+            "type": "event",
+            "calendars": [{"is_active": True, "name": "Sport", "qcode": "sport"}],
+            "name": "second",
+            "language": "en",
+            "dates": {
+                "start": datetime.datetime(
+                    2024, 4, 22, 10, 30, tzinfo=datetime.timezone.utc
+                ),
+                "end": datetime.datetime(
+                    2024, 4, 23, 15, 30, 59, tzinfo=datetime.timezone.utc
+                ),
+                "tz": "Asia/Calcutta",
+            },
+            "subject": [
+                {
+                    "name": "WC2028",
+                    "scheme": "belga-keywords",
+                    "qcode": "WC2028",
+                    "translations": {"name": {"nl": "WC2028", "fr": "WC2028"}},
+                }
+            ],
+            "links": ["www.google.xom/new"],
+        },
+        {
+            "type": "event",
             "occur_status": {
                 "qcode": "eocstat:eos5",
                 "name": "Planned, occurs certainly",
@@ -42,12 +90,6 @@ class PlanningExportTests(TestCase):
                 {
                     "address": {
                         "country": "United States",
-                        "boundingbox": [
-                            "40.4765780",
-                            "40.9176300",
-                            "-74.2588430",
-                            "-73.7002330",
-                        ],
                         "city": "New York",
                         "line": [""],
                         "locality": "New York",
@@ -301,7 +343,7 @@ class PlanningExportTests(TestCase):
                 dutch_template_data,
             )
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
-            self.assertIn("<p>REDWOLVES<br></p>", dutch_template_data)
+            self.assertIn("<h4>REDWOLVES<br></h4>", dutch_template_data)
             self.assertIn("<p>New York, United States<br></p>", dutch_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Sunday 21.04.2024<br></p>", dutch_template_data
@@ -312,7 +354,7 @@ class PlanningExportTests(TestCase):
                 dutch_template_data,
             )
             self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
-            self.assertIn("<p>SPORTS<br></p>", dutch_template_data)
+            self.assertIn("<h4>SPORTS<br></h4>", dutch_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", dutch_template_data
             )
@@ -337,7 +379,7 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
-            self.assertIn("<p>REDWOLVES<br></p>", french_template_data)
+            self.assertIn("<h4>REDWOLVES<br></h4>", french_template_data)
             self.assertIn("<p>New York, United States<br></p>", french_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Sunday 21.04.2024<br></p>", french_template_data
@@ -348,11 +390,26 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
-            self.assertIn("<p>SPORTS<br></p>", french_template_data)
+
+            self.assertIn("<h4>SPORTS<br></h4>", french_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", french_template_data
             )
             self.assertIn("<p>Description of event<br></p>", french_template_data)
+            self.assertIn(
+                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                french_template_data,
+            )
+
+            self.assertIn("<h4>WC2028<br></h4>", french_template_data)
+
+            self.assertIn("<p>16u00, First<br></p>", french_template_data)
+            self.assertIn(
+                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                french_template_data,
+            )
+
+            self.assertIn("<p>16u00, second<br></p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
                 french_template_data,
