@@ -12,7 +12,7 @@ def format_event_for_week(event_data: List[Dict[str, Any]], locale: str):
         formatted_event = {
             "subject": ",".join(get_subject(event, locale)),
         }
-        set_metadata(formatted_event, event)
+        set_metadata(formatted_event, event, locale)
 
         if formatted_event["local_date_time"] != current_date:
             current_date = formatted_event["local_date_time"]

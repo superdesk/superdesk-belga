@@ -8,7 +8,9 @@ from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
 
 
-def format_event_for_tommorow(event_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def format_event_for_tommorow(
+    event_data: List[Dict[str, Any]], locale: str
+) -> List[Dict[str, Any]]:
     events_list: List[Dict[str, Any]] = []
 
     # Sort events by calendar if calendars exist
@@ -26,9 +28,9 @@ def format_event_for_tommorow(event_data: List[Dict[str, Any]]) -> List[Dict[str
             if event.get("calendars")
             else "",
             "contacts": get_formatted_contacts(event),
-            "coverages": get_coverages(event),
+            "coverages": get_coverages(event, locale),
         }
-        set_metadata(formatted_event, event)
+        set_metadata(formatted_event, event, locale)
 
         # Format time in local timezone
         dates = formatted_event["dates"]
