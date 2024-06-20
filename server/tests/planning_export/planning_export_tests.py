@@ -186,7 +186,7 @@ class PlanningExportTests(TestCase):
     events_for_tommorow = [
         {
             "calendars": [
-                {"is_active": True, "name": "Sport", "qcode": "sport"},
+                {"is_active": True, "name": "(7) Sports", "qcode": "Sports"},
             ],
             "description_text": "Description of event",
             "name": "NExxxxt Sunday 21.04.2024",
@@ -229,17 +229,17 @@ class PlanningExportTests(TestCase):
             "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
         },
         {
-            "calendars": [{"is_active": True, "name": "Business", "qcode": "business"}],
+            "calendars": [{"is_active": True, "name": "(7) Sports", "qcode": "sports"}],
             "description_text": "Description of event",
             "name": "NExxxxt Monday 22.04.2024",
             "dates": {
                 "start": datetime.datetime(
-                    2024, 4, 21, 10, 30, tzinfo=datetime.timezone.utc
+                    2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
                 ),
                 "end": datetime.datetime(
-                    2024, 4, 22, 15, 30, 59, tzinfo=datetime.timezone.utc
+                    2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
                 ),
-                "tz": "Asia/Calcutta",
+                "tz": "Europe/Prague",
             },
             "links": ["www.google.xom/new"],
             "event_contact_info": [
@@ -249,9 +249,33 @@ class PlanningExportTests(TestCase):
             "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
         },
         {
-            "calendars": [{"is_active": True, "name": "Sport", "qcode": "sport"}],
+            "calendars": [
+                {"is_active": True, "name": "(1) General", "qcode": "general"}
+            ],
             "description_text": "Description of event",
-            "name": "NExxxxt Monday 22.04.2024",
+            "name": "another one",
+            "dates": {
+                "start": datetime.datetime(
+                    2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
+                ),
+                "end": datetime.datetime(
+                    2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
+                ),
+                "tz": "Europe/Prague",
+            },
+            "links": ["www.google.xom/new"],
+            "event_contact_info": [
+                "5ab491271d41c88e98ad9336",
+                "6618415a1704a42950a4eb62",
+            ],
+            "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
+        },
+        {
+            "calendars": [
+                {"is_active": True, "name": "(3) Economy", "qcode": "Economy"}
+            ],
+            "description_text": "Description of event",
+            "name": "another two",
             "dates": {
                 "start": datetime.datetime(
                     2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
@@ -543,9 +567,10 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<h3>Business</h3>", dutch_data)
-            self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
-            self.assertIn("<p>NExxxxt Monday 22.04.2024<br></p>", dutch_data)
+            print(dutch_data)
+            self.assertIn("<h3>General</h3>", dutch_data)
+            self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
+            self.assertIn("<p>another one<br></p>", dutch_data)
             self.assertIn("<p>Description of event<br></p>", dutch_data)
             self.assertIn(
                 "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
@@ -564,13 +589,13 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
 
-            self.assertIn("<h3>Sport</h3>", dutch_data)
+            self.assertIn("<h3>Economy</h3>", dutch_data)
             self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
             self.assertIn(
                 "<p>City of New York, New York, New York, United States<br></p>",
                 dutch_data,
             )
-            self.assertIn("<p>NExxxxt Sunday 21.04.2024<br></p>", dutch_data)
+            self.assertIn("another two<br></p>", dutch_data)
             self.assertIn("<p>Description of event<br></p>", dutch_data)
             self.assertIn(
                 "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
@@ -589,8 +614,8 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
 
+            self.assertIn("<h3>Sports</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
-            self.assertIn("<p>NExxxxt Monday 22.04.2024<br></p>", dutch_data)
             self.assertIn("<p>NExxxxt Sunday 21.04.2024<br></p>", dutch_data)
             self.assertIn("<p>Description of event<br></p>", dutch_data)
             self.assertIn(
@@ -609,3 +634,5 @@ class PlanningExportTests(TestCase):
                 dutch_data,
             )
             self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+
+            self.assertNotIn("<h3>Business</h3>", dutch_data)
