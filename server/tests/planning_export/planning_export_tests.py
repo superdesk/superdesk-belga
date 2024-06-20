@@ -103,6 +103,28 @@ class PlanningExportTests(TestCase):
                 }
             ],
             "links": ["www.google.xom/new"],
+            "translations": [
+                {
+                    "field": "name",
+                    "language": "nl",
+                    "value": "NExxxxt Sunday 21.04.2024 NL",
+                },
+                {
+                    "field": "name",
+                    "language": "fr",
+                    "value": "NExxxxt Sunday 21.04.2024 FR",
+                },
+                {
+                    "field": "description_text",
+                    "language": "nl",
+                    "value": "Description of event NL",
+                },
+                {
+                    "field": "description_text",
+                    "language": "fr",
+                    "value": "Description of event FR",
+                },
+            ],
         },
         {
             "type": "event",
@@ -134,13 +156,37 @@ class PlanningExportTests(TestCase):
                     "translations": {"name": {"nl": "SPORTS", "fr": "SPORTS"}},
                 }
             ],
+            "location": [
+                {
+                    "name": "street",
+                    "qcode": "9baf5379-908e-44b0-804b-3cce32e76d44",
+                    "address": {
+                        "line": [""],
+                        "city": "Kubang Putiah",
+                        "state": "West-Sumatra",
+                        "locality": "West-Sumatra",
+                        "area": "Kubang Putiah",
+                        "postal_code": "26132",
+                        "country": "Indonesien",
+                        "boundingbox": [
+                            "-0.3262313",
+                            "-0.3228646",
+                            "100.3965010",
+                            "100.3977960",
+                        ],
+                        "type": "stream",
+                    },
+                    "location": {"lat": -0.3246836, "lon": 100.3975641},
+                    "formatted_address": "Kubang Putiah West-Sumatra 26132 Indonesien",
+                }
+            ],
             "links": ["www.google.xom/new"],
         },
     ]
     events_for_tommorow = [
         {
             "calendars": [
-                {"is_active": True, "name": "Sport", "qcode": "sport"},
+                {"is_active": True, "name": "(7) Sports", "qcode": "Sports"},
             ],
             "description_text": "Description of event",
             "name": "NExxxxt Sunday 21.04.2024",
@@ -183,17 +229,17 @@ class PlanningExportTests(TestCase):
             "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
         },
         {
-            "calendars": [{"is_active": True, "name": "Business", "qcode": "business"}],
+            "calendars": [{"is_active": True, "name": "(7) Sports", "qcode": "sports"}],
             "description_text": "Description of event",
             "name": "NExxxxt Monday 22.04.2024",
             "dates": {
                 "start": datetime.datetime(
-                    2024, 4, 21, 10, 30, tzinfo=datetime.timezone.utc
+                    2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
                 ),
                 "end": datetime.datetime(
-                    2024, 4, 22, 15, 30, 59, tzinfo=datetime.timezone.utc
+                    2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
                 ),
-                "tz": "Asia/Calcutta",
+                "tz": "Europe/Prague",
             },
             "links": ["www.google.xom/new"],
             "event_contact_info": [
@@ -203,9 +249,33 @@ class PlanningExportTests(TestCase):
             "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
         },
         {
-            "calendars": [{"is_active": True, "name": "Sport", "qcode": "sport"}],
+            "calendars": [
+                {"is_active": True, "name": "(1) General", "qcode": "general"}
+            ],
             "description_text": "Description of event",
-            "name": "NExxxxt Monday 22.04.2024",
+            "name": "another one",
+            "dates": {
+                "start": datetime.datetime(
+                    2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
+                ),
+                "end": datetime.datetime(
+                    2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
+                ),
+                "tz": "Europe/Prague",
+            },
+            "links": ["www.google.xom/new"],
+            "event_contact_info": [
+                "5ab491271d41c88e98ad9336",
+                "6618415a1704a42950a4eb62",
+            ],
+            "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
+        },
+        {
+            "calendars": [
+                {"is_active": True, "name": "(3) Economy", "qcode": "Economy"}
+            ],
+            "description_text": "Description of event",
+            "name": "another two",
             "dates": {
                 "start": datetime.datetime(
                     2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
@@ -280,9 +350,10 @@ class PlanningExportTests(TestCase):
                             "coverage_id": "cov1",
                             "planning": {
                                 "g2_content_type": "text",
-                                "slugline": "coverage slugline",
+                                "slugline": "coverage slugline FR",
                                 "ednote": "test coverage, I want 250 words",
                                 "scheduled": "2029-10-12T14:00:00+0000",
+                                "language": "fr",
                             },
                             "news_coverage_status": {
                                 "qcode": "ncostat:notdec",
@@ -296,12 +367,13 @@ class PlanningExportTests(TestCase):
                             },
                         },
                         {
-                            "coverage_id": "cov1",
+                            "coverage_id": "cov2",
                             "planning": {
                                 "g2_content_type": "picture",
-                                "slugline": "coverage slugline",
+                                "slugline": "coverage slugline NL",
                                 "ednote": "test coverage, I want 250 words",
                                 "scheduled": "2029-10-12T14:00:00+0000",
+                                "language": "nl",
                             },
                             "news_coverage_status": {
                                 "qcode": "ncostat:int",
@@ -342,13 +414,17 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_template_data,
             )
+            print(dutch_template_data)
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
             self.assertIn("<h4>REDWOLVES<br></h4>", dutch_template_data)
-            self.assertIn("<p>New York, United States<br></p>", dutch_template_data)
             self.assertIn(
-                "<p>16u00, NExxxxt Sunday 21.04.2024<br></p>", dutch_template_data
+                "<p>City of New York, New York, New York, United States<br></p>",
+                dutch_template_data,
             )
-            self.assertIn("<p>Description of event<br></p>", dutch_template_data)
+            self.assertIn(
+                "<p>16u00, NExxxxt Sunday 21.04.2024 NL<br></p>", dutch_template_data
+            )
+            self.assertIn("<p>Description of event NL<br></p>", dutch_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
                 dutch_template_data,
@@ -380,11 +456,14 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
             self.assertIn("<h4>REDWOLVES<br></h4>", french_template_data)
-            self.assertIn("<p>New York, United States<br></p>", french_template_data)
             self.assertIn(
-                "<p>16u00, NExxxxt Sunday 21.04.2024<br></p>", french_template_data
+                "<p>City of New York, New York, New York, United States<br></p>",
+                french_template_data,
             )
-            self.assertIn("<p>Description of event<br></p>", french_template_data)
+            self.assertIn(
+                "<p>16u00, NExxxxt Sunday 21.04.2024 FR<br></p>", french_template_data
+            )
+            self.assertIn("<p>Description of event FR<br></p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
                 french_template_data,
@@ -392,6 +471,10 @@ class PlanningExportTests(TestCase):
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
 
             self.assertIn("<h4>SPORTS<br></h4>", french_template_data)
+            self.assertIn(
+                "<p>street, Kubang Putiah, West-Sumatra, 26132, Indonesien<br></p>",
+                french_template_data,
+            )
             self.assertIn(
                 "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", french_template_data
             )
@@ -484,9 +567,10 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<h3>Business</h3>", dutch_data)
-            self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
-            self.assertIn("<p>NExxxxt Monday 22.04.2024<br></p>", dutch_data)
+            print(dutch_data)
+            self.assertIn("<h3>General</h3>", dutch_data)
+            self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
+            self.assertIn("<p>another one<br></p>", dutch_data)
             self.assertIn("<p>Description of event<br></p>", dutch_data)
             self.assertIn(
                 "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
@@ -503,13 +587,15 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Text, On merit<br></p>", dutch_data)
             self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
 
-            self.assertIn("<h3>Sport</h3>", dutch_data)
+            self.assertIn("<h3>Economy</h3>", dutch_data)
             self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
-            self.assertIn("<p>New York, United States<br></p>", dutch_data)
-            self.assertIn("<p>NExxxxt Sunday 21.04.2024<br></p>", dutch_data)
+            self.assertIn(
+                "<p>City of New York, New York, New York, United States<br></p>",
+                dutch_data,
+            )
+            self.assertIn("another two<br></p>", dutch_data)
             self.assertIn("<p>Description of event<br></p>", dutch_data)
             self.assertIn(
                 "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
@@ -526,11 +612,10 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Text, On merit<br></p>", dutch_data)
             self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
 
+            self.assertIn("<h3>Sports</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
-            self.assertIn("<p>NExxxxt Monday 22.04.2024<br></p>", dutch_data)
             self.assertIn("<p>NExxxxt Sunday 21.04.2024<br></p>", dutch_data)
             self.assertIn("<p>Description of event<br></p>", dutch_data)
             self.assertIn(
@@ -548,5 +633,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Text, On merit<br></p>", dutch_data)
             self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+
+            self.assertNotIn("<h3>Business</h3>", dutch_data)

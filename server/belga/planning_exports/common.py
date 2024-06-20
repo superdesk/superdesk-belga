@@ -53,21 +53,29 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     item["local_date_time"] = start_local.strftime("%Y%m%d")
 
 
-def set_item_location(item: Dict[str, Any], event: Dict[str, Any]):
+def get_item_location(event: Dict[str, Any]) -> str:
     """Set the location to be used for sorting / displaying"""
+    location = event.get("location")
+    if not location:
+        return ""
 
-    item.setdefault("address", {})
-    if len(event.get("location") or []):
-        try:
-            location = event.get("location", {})[0]
-            address = location.get("address") or {}
-            item["address"] = {
-                "country": address["country"] if address.get("country") else "",
-                "city": address["city"] if address.get("city") else "",
-                "name": address.get("city") or location.get("name") or "",
-            }
-        except (IndexError, KeyError):
-            pass
+    location_items = [
+        location[0].get("name"),
+        location[0].get("address", {}).get("line", [""])[0],
+        location[0].get("address", {}).get("city")
+        or location[0].get("address", {}).get("area"),
+        location[0].get("address", {}).get("state")
+        or location[0].get("address", {}).get("locality"),
+        location[0].get("address", {}).get("postal_code"),
+        location[0].get("address", {}).get("country"),
+    ]
+    return ", ".join(
+        [
+            location_part.strip()
+            for location_part in location_items
+            if location_part and not location_part.isspace()
+        ]
+    )
 
 
 def get_language_name(item: Dict[str, Any], language: str):
@@ -93,12 +101,13 @@ def format_datetime(event: Dict[str, Any], locale: str, format: str):
     return format_date(utc_to_local(tz, start_time), format, locale=locale).capitalize()
 
 
-def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any]):
+def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale: str):
     formatted_event["links"] = event.get("links", "")
+    formatted_event["location"] = get_item_location(event)
     set_item_dates(formatted_event, event)
+    set_event_translations_value(event, locale)
     set_item_title(formatted_event, event)
     set_item_description(formatted_event, event)
-    set_item_location(formatted_event, event)
 
 
 def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
@@ -141,16 +150,48 @@ def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
     return formatted_contacts
 
 
-def get_coverages(event: Dict[str, Any]):
+def get_coverages(event: Dict[str, Any], locale: str):
     formatted_coverages = []
     planning_ids = event.get("planning_ids", [])
     planning_service = get_resource_service("planning")
     for id in planning_ids:
         planning_item = planning_service.find_one(req=None, _id=id)
         for coverage in planning_item.get("coverages", []):
-            cov_type = (
-                coverage.get("planning", {}).get("g2_content_type", "").capitalize()
-            )
+            cov_planning = coverage.get("planning", {})
+            cov_type = cov_planning.get("g2_content_type", "").capitalize()
             cov_status = coverage.get("news_coverage_status", {}).get("label", "")
-            formatted_coverages.append(f"{cov_type}, {cov_status}")
+
+            formatted_coverages.append(f"{cov_type}, {cov_status}") if cov_planning.get(
+                "language", locale
+            ) == locale else []
     return formatted_coverages
+
+
+def set_event_translations_value(event: Dict[str, Any], locale: str):
+    """
+    set event translations value based on locale
+    """
+    translations = event.get("translations")
+    translated_value = {}
+    if translations is not None:
+        translated_value.update(
+            {
+                entry["field"]: entry["value"]
+                for entry in translations or []
+                if entry["language"] == locale
+            }
+        )
+        event.update(
+            {
+                key: val
+                for key, val in translated_value.items()
+                if key
+                in (
+                    "description_text",
+                    "name",
+                    "slugline",
+                    "definition_long",
+                    "definition_short",
+                )
+            }
+        )
