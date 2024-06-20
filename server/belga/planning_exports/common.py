@@ -53,7 +53,7 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     item["local_date_time"] = start_local.strftime("%Y%m%d")
 
 
-def set_item_location(event: Dict[str, Any]):
+def get_item_location(event: Dict[str, Any]) -> str:
     """Set the location to be used for sorting / displaying"""
     location = event.get("location")
     if not location:
@@ -103,7 +103,7 @@ def format_datetime(event: Dict[str, Any], locale: str, format: str):
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale: str):
     formatted_event["links"] = event.get("links", "")
-    formatted_event["location"] = set_item_location(event)
+    formatted_event["location"] = get_item_location(event)
     set_item_dates(formatted_event, event)
     set_event_translations_value(event, locale)
     set_item_title(formatted_event, event)
