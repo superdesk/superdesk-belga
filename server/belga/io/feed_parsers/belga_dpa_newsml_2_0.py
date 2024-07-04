@@ -205,7 +205,8 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     item.setdefault('extra', {})['country'] = name_elt.text
                 # looking for ISO 3166-1 alpha-3 code
                 for i in subject_elt.findall(self.qname('sameAs')):
-                    code = i.find(self.qname('name')).text
+                    name_as_elt = i.find(self.qname('name'))
+                    code = name_as_elt.text if name_as_elt is not None else i.get("qcode").split(':')[1]
                     if len(code) == 3:
                         country_keyword = self._get_country(code)
                         item.setdefault('subject', []).extend(country_keyword)
