@@ -226,9 +226,9 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                 for i in subject_elt.findall(self.qname("sameAs")):
                     name_as_elt = i.find(self.qname("name"))
                     code = (
-                        name_as_elt.text
-                        if name_as_elt is not None
-                        else i.get("qcode").split(":")[1]
+                        i.get("qcode").split(":")[1]
+                        if i.get("qcode").startswith("iso3166-1a3")
+                        else name_as_elt.text
                     )
                     if len(code) == 3:
                         country_keyword = self._get_country(code)
