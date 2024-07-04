@@ -228,7 +228,7 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     code = (
                         i.get("qcode").split(":")[1]
                         if i.get("qcode").startswith("iso3166-1a3")
-                        else name_as_elt.text
+                        else ""
                     )
                     if len(code) == 3:
                         country_keyword = self._get_country(code)
