@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/">
+  <header>
+    <sent>2024-06-26T16:02:13+02:00</sent>
+    <priority>3</priority>
+    <origin>ines</origin>
+  </header>
+  <itemSet>
+    <newsItem xmlns:dpa="http://www.dpa.com/iptc/nar/2008-12-01/" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" conformance="power" guid="urn:newsml:dpa.com:20090101:240626-99-540037" standard="NewsML-G2" standardversion="2.28" version="6" xml:lang="en">
+      <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_32.xml"/>
+   <catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+   <rightsInfo>
+      <copyrightHolder qcode="nprov:dpa">
+         <name xml:lang="en">Deutsche Presse-Agentur GmbH</name>
+         <definition xml:lang="en">dpa - Deutsche Presse Agentur GmbH / Hamburg Trade Register, HRB 68431</definition>
+      </copyrightHolder>
+      <copyrightNotice xml:lang="en">(c) 2024 dpa Deutsche Presse Agentur GmbH</copyrightNotice>
+      <usageTerms xml:lang="en">Use only with the written agreement with dpa</usageTerms>
+   </rightsInfo>
+   <itemMeta>
+        <itemClass qcode="ninat:text">
+         <name xml:lang="en">Text Item(s)</name>
+      </itemClass>
+        <provider qcode="nprov:dpa">
+         <name xml:lang="en">Deutsche Presse-Agentur GmbH</name>
+      </provider>
+      <versionCreated>2024-06-26T16:02:03+02:00</versionCreated>
+        <pubStatus qcode="stat:usable">
+         <name xml:lang="en">Usable</name>
+      </pubStatus>
+      <generator versioninfo="2.1.73">service-ines</generator>
+      <profile versioninfo="2.0.0">dpa-G2</profile>
+        <service qcode="dpasrv:eca">
+         <name role="nrol:full">Englischer Dienst</name>
+      </service>
+      <edNote role="dpaednoterole:closingline">dpa hoe tam mfi mi xxde pba rdp bst wjh</edNote>
+        <edNote role="dpaednoterole:notepad">
+         <section xmlns="http://www.w3.org/1999/xhtml" class="notepad">
+            <p class="closingline">dpa hoe tam mfi mi xxde pba rdp bst wjh</p>
+         </section>
+      </edNote>
+   </itemMeta>
+      <contentMeta>
+        <urgency>3</urgency>
+        <located>
+         <name>Berlin</name>
+      </located>
+      <creator qcode="dpa-ad:powell.robin">
+          <name>powell.robin</name>
+        </creator>
+        <contributor qcode="dpa-ad:powell.robin">
+          <name>powell.robin</name>
+        </contributor>
+        <contributor qcode="dpa-ad:bartos.patricia">
+          <name>bartos.patricia</name>
+        </contributor>
+        <contributor qcode="dpa-ad:stole.bryn">
+          <name>stole.bryn</name>
+        </contributor>
+        <contributor qcode="dpa-ad:heaney.william">
+          <name>heaney.william</name>
+        </contributor>
+        <altId environment="dpasrv:eca" type="dpa7901rendition:iptc7901Id">eca:0093:3:i:175:dpa:1153::20240626160213MESZ</altId>
+      <genre qcode="dpatextgenre:48">
+         <name role="nrol:display" xml:lang="en">EXTRA</name>
+      </genre>
+        <subject qcode="dpacountry:1" rank="1" type="cpnat:geoArea">
+          <name role="nrol:display" xml:lang="en">Germany</name>
+         <name role="nrol:short" xml:lang="en">GER</name>
+         <sameAs qcode="iso3166-1a3:DEU"/>
+         <sameAs qcode="wikidata:Q183"/>
+         <sameAs qcode="iso3166-1a2:DE"/>
+         <broader qcode="wldreg:r150">
+            <name xml:lang="en">Europe</name>
+         </broader>
+         <broader qcode="dpageosbj:44">
+            <name role="nrol:display" xml:lang="en">Europe</name>
+         </broader>
+      </subject>
+        <subject qcode="medtop:11000000" rank="1" type="dpatype:dpasubject">
+          <name xml:lang="en">politics</name>
+         <sameAs qcode="wikidata:Q7163"/>
+         <sameAs qcode="dpasubject:102">
+            <name xml:lang="en">politics</name>
+         </sameAs>
+      </subject>
+        <subject qcode="dpacat:pl" type="dpatype:category">
+         <name role="nrol:mnemonic" xml:lang="en">i</name>
+      </subject>
+        
+      <headline rank="1">Opposition leader slams Scholz for not to solve country's problems</headline>
+        <dateline>Berlin (dpa) - </dateline>
+      <creditline>dpa</creditline>
+        <language tag="en"/>
+      </contentMeta>
+      <contentSet>
+        
+      
+      <inlineXML contenttype="application/xhtml+xml" wordcount="175">
+          <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+               <meta charset="utf-8"/>
+               <title>Opposition leader slams Scholz for not to solve country's problems</title>
+            </head>
+            <body>
+               <header>
+                  <time class="publicationDate" data-datetime="2024-06-26T16:02:03+02:00">26.06.2024 14:02 GMT</time>
+                  <ul class="slugline">
+                     <li class="subject" data-qcode="medtop:11000000">politics</li>
+                     <li class="geo" data-qcode="dpacountry:1">Germany</li>
+                  </ul>
+                  <p class="genre dpatextgenre-48" data-qcode="dpatextgenre:48">EXTRA</p>
+                  <h1>Opposition leader slams Scholz for not to solve country's problems</h1>
+               </header>
+               <section class="main dpatextgenre-48">
+                  <p>
+                     <span class="dateline">Berlin <span class="credit">(dpa)</span> - </span>Germany's conservative opposition leader Friedrich Merz has heavily criticized Chancellor Olaf Scholz's reaction to the results of the European Parliament election, which were seen as a major blow for Scholz's three-party coalition. </p>
+                  <p>Speaking in the German parliament on Wednesday, Merz said that the chancellor is "still unable and unwilling to self-criticize or correct" his own policies. </p>
+                  <p>"You are responsible for the fact that the problems in our country are not being solved," said Merz, who leads the centre-right Christian Democrats (CDU) and appears likely to be Scholz's main challenger in the next general elections in the autumn of 2025.</p>
+                  <p>The far-right Alternative for Germany (AfD) placed second in the European Parliament election among German voters, while the parties in Scholz's coalition all suffered losses.</p>
+                  <p>Merz criticized the chancellor for trying to blame current crises for the rise of left-wing and right-wing radicalism, instead of his own political decisions.</p>
+                  <p>According to Merz, no other country in Europe was causing as much uncertainty as Germany, which should actually be a European anchor of stability.</p>
+               </section>
+            </body>
+          </html>
+        </inlineXML>
+      </contentSet>
+    </newsItem>
+  </itemSet>
+</newsMessage>
