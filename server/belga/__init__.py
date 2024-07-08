@@ -6,6 +6,7 @@ from .search_providers import Belga360ArchiveSearchProvider
 from .search_providers import BelgaPressSearchProvider
 from .search_providers import BelgaImageV2SearchProvider
 from .search_providers import BelgaCoverageV2SearchProvider
+from flask_babel import _, lazy_gettext
 
 
 # set logging level for belga logger
@@ -30,4 +31,26 @@ superdesk.register_search_provider(
 )
 superdesk.register_search_provider(
     "belga_coverage_v2", provider_class=BelgaCoverageV2SearchProvider
+)
+
+superdesk.register_default_user_preference(
+    "assignment:notification",
+    {
+        "type": "bool",
+        "enabled": True,
+        "default": True,
+    },
+    label=lazy_gettext("Send Assignment notifications via email"),
+    category=lazy_gettext("notifications"),
+)
+
+superdesk.register_default_user_preference(
+    "mark_for_user:notification",
+    {
+        "type": "bool",
+        "enabled": True,
+        "default": True,
+    },
+    label=lazy_gettext("Send Mark for User notifications via email"),
+    category=lazy_gettext("notifications"),
 )
