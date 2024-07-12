@@ -50,7 +50,7 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
         Related Articles:
         {% for item in event.get('related_items', []) %}
             {{ item.headline or item.slugline }}
-            Item url: {{ client_url }}/#/search?repo={{ item.search_provider }}&_id={{ item.guid }}
+            Url: https://www.belgabox.be/belgabox/fo/detail?contentType=news&targetSide=Right&id={{ item.guid.split(':')[-1] }}&parentId={{ item.guid.split(':')[-1] }}&isArchive=true"
         {% endfor %}
     {% endif %}
 {% endif %}
