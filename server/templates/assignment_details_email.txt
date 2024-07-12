@@ -46,10 +46,10 @@ Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
         {% endfor %}
     {% endif %}
 
-    {% if event.get('related_items') %}
+    {% if event.get('related_items', []) %}
         Related Articles:
         {% for item in event.get('related_items', []) %}
-            {{ item.headline or item.slugline }}
+            {{ item.get('headline') or item.get('slugline', "") }}
             Url: https://www.belgabox.be/belgabox/fo/detail?contentType=news&targetSide=Right&id={{ item.guid.split(':')[-1] }}&parentId={{ item.guid.split(':')[-1] }}&isArchive=true"
         {% endfor %}
     {% endif %}
