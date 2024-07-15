@@ -59,8 +59,8 @@
         <ul>
         {% for item in event.get('related_items', []) %}
             <li>
-                {{ item.headline or item.slugline }}<br>
-                <p><strong>Url:</strong> <a href="https://www.belgabox.be/belgabox/fo/detail?contentType=news&targetSide=Right&id={{ item._id.split(':')[-1] }}&parentId={{ item._id.split(':')[-1] }}&isArchive=true">View Article</a></p>
+                {{ item.get('headline') or item.get('slugline', "") }}<br>
+                <p><strong>Url:</strong> <a href="https://www.belgabox.be/belgabox/fo/detail?contentType=news&targetSide=Right&id={{ item.guid.split(':')[-1] }}&parentId={{ item.guid.split(':')[-1] }}&isArchive=true">View Article</a></p>
             </li>
         {% endfor %}
         </ul>
