@@ -30,6 +30,28 @@ class PlanningExportTests(TestCase):
                     "translations": {"name": {"nl": "WC2028", "fr": "WC2028"}},
                 }
             ],
+            "location": [
+                {
+                    "name": "Rabat ⵔⴱⴰⵟ الرباط",
+                    "qcode": "560fa29d-abc7-45f6-888f-b123ba044567",
+                    "address": {
+                        "line": [""],
+                        "city": "Rabat",
+                        "state": "Rabat-Salé-Kénitra",
+                        "locality": "Rabat",
+                        "area": "Rabat Prefecture",
+                        "country": "Morocco",
+                        "boundingbox": [
+                            "33.8956294",
+                            "34.0378472",
+                            "-6.9174353",
+                            "-6.7614635",
+                        ],
+                        "type": "administrative",
+                    },
+                    "location": {"lat": 34.02236, "lon": -6.8340222},
+                }
+            ],
             "links": ["www.google.xom/new"],
         },
         {
@@ -390,12 +412,41 @@ class PlanningExportTests(TestCase):
                 }
             ]
             self.app.data.insert("planning", planning_item)
+            location = [
+                {
+                    "_id": ObjectId("6694ed90bc490974d1ad3454"),
+                    "unique_name": "Rabat, Hassan حسان, باشوية الرباط, Rabat Prefecture, Rabat-Salé-Kénitra, Morocco",
+                    "is_active": True,
+                    "name": "Rabat ⵔⴱⴰⵟ الرباط",
+                    "address": {
+                        "line": [""],
+                        "city": "Rabat",
+                        "state": "Rabat-Salé-Kénitra",
+                        "locality": "Rabat",
+                        "area": "Rabat Prefecture",
+                        "country": "Morocco",
+                    },
+                    "translations": {
+                        "name": {
+                            "name": "Rabat ⵔⴱⴰⵟ الرباط",
+                            "name:ar": "الرباط",
+                            "name:be": "Рабат",
+                            "name:bn": "রাবাত",
+                            "name:en": "Rabat-en",
+                            "name:fr": "Rabat",
+                        }
+                    },
+                    "guid": "560fa29d-abc7-45f6-888f-b123ba044567",
+                }
+            ]
+            self.app.data.insert("locations", location)
 
     def tearDown(self):
         # Clean up all documents in the contacts collection after each test
         with self.app.app_context():
             self.app.data.remove("contacts", {})
             self.app.data.remove("planning", {})
+            self.app.data.remove("locations", {})
 
     def test_export_week(self):
         with self.app.app_context():
@@ -489,6 +540,10 @@ class PlanningExportTests(TestCase):
             self.assertIn("<p>16u00, First<br></p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                french_template_data,
+            )
+            self.assertIn(
+                "<p>Rabat-en, Rabat, Rabat-Salé-Kénitra, Morocco<br></p>",
                 french_template_data,
             )
 
