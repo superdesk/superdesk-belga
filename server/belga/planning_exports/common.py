@@ -118,7 +118,7 @@ def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
         contact_details = get_resource_service("contacts").find_one(
             req=None, _id=contact_id
         )
-        if contact_details and contact_details.get("public", False):
+        if contact_details :
             formatted_contact: FormattedContact = {
                 "name": " ".join(
                     [
@@ -159,9 +159,9 @@ def get_coverages(event: Dict[str, Any], locale: str):
         for coverage in planning_item.get("coverages", []):
             cov_planning = coverage.get("planning", {})
             cov_type = cov_planning.get("g2_content_type", "").capitalize()
-            cov_status = coverage.get("news_coverage_status", {}).get("label", "")
+            cov_status = coverage.get("news_coverage_status", {}).get("name", "")
 
-            formatted_coverages.append(f"{cov_type}, {cov_status}") if cov_planning.get(
+            formatted_coverages.append(f"{cov_type} ({cov_status})") if cov_planning.get(
                 "language", locale
             ) == locale else []
     return formatted_coverages

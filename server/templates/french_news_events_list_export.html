@@ -7,7 +7,7 @@
     <h3>{{ day_events.date }}</h3>
     <div>
         {% for subject, events in day_events.subjects.items() | sort %}
-            <h4>{{ subject }}<br></h4>
+            <br><h4>{{ subject }}</h4>
             {% for event in events %}
                 <div>
                     <p>{{ event.local_time }}, {{ event.title }}<br></p>

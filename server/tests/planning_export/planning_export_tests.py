@@ -303,7 +303,7 @@ class PlanningExportTests(TestCase):
                     "contact_email": ["jdoe@fubar.com"],
                     "is_active": True,
                     "website": "fubar.com",
-                    "public": True,
+                    "public": False,
                     "last_name": "Doe",
                     "mobile": [
                         {"public": False, "number": "999", "usage": "Private Mobile"},
@@ -416,7 +416,7 @@ class PlanningExportTests(TestCase):
             )
             print(dutch_template_data)
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
-            self.assertIn("<h4>REDWOLVES<br></h4>", dutch_template_data)
+            self.assertIn("<h4>REDWOLVES</h4>", dutch_template_data)
             self.assertIn(
                 "<p>City of New York, New York, New York, United States<br></p>",
                 dutch_template_data,
@@ -430,7 +430,7 @@ class PlanningExportTests(TestCase):
                 dutch_template_data,
             )
             self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
-            self.assertIn("<h4>SPORTS<br></h4>", dutch_template_data)
+            self.assertIn("<h4>SPORTS</h4>", dutch_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", dutch_template_data
             )
@@ -455,7 +455,7 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
-            self.assertIn("<h4>REDWOLVES<br></h4>", french_template_data)
+            self.assertIn("<br><h4>REDWOLVES</h4>", french_template_data)
             self.assertIn(
                 "<p>City of New York, New York, New York, United States<br></p>",
                 french_template_data,
@@ -470,7 +470,7 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
 
-            self.assertIn("<h4>SPORTS<br></h4>", french_template_data)
+            self.assertIn("<br><h4>SPORTS</h4>", french_template_data)
             self.assertIn(
                 "<p>street, Kubang Putiah, West-Sumatra, 26132, Indonesien<br></p>",
                 french_template_data,
@@ -484,7 +484,7 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
 
-            self.assertIn("<h4>WC2028<br></h4>", french_template_data)
+            self.assertIn("<br><h4>WC2028</h4>", french_template_data)
 
             self.assertIn("<p>16u00, First<br></p>", french_template_data)
             self.assertIn(
@@ -567,7 +567,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            print(dutch_data)
             self.assertIn("<h3>General</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
             self.assertIn("<p>another one<br></p>", dutch_data)
@@ -587,7 +586,7 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+            self.assertIn("<p>Picture (coverage intended)<br></p>", dutch_data)
 
             self.assertIn("<h3>Economy</h3>", dutch_data)
             self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
@@ -612,7 +611,7 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+            self.assertIn("<p>Picture (coverage intended)<br></p>", dutch_data)
 
             self.assertIn("<h3>Sports</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
@@ -633,6 +632,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+            self.assertIn("<p>Picture (coverage intended)<br></p>", dutch_data)
 
             self.assertNotIn("<h3>Business</h3>", dutch_data)
