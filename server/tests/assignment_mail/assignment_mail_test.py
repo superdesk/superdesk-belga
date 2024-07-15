@@ -15,11 +15,11 @@ class AssignmentMailsTests(TestCase):
         "internal_note": "Coordinate with the marketing team for live coverage.",
         "related_items": [
             {
-                "_id": "urn:belga.be:360archive:50457251",
+                "guid": "urn:belga.be:360archive:50457251",
                 "headline": "AI Breakthroughs in 2024",
             },
             {
-                "_id": "urn:belga.be:360archive:98765",
+                "guid": "urn:belga.be:360archive:98765",
                 "slugline": "Future of Tech Expos",
             },
         ],
