@@ -30,6 +30,28 @@ class PlanningExportTests(TestCase):
                     "translations": {"name": {"nl": "WC2028", "fr": "WC2028"}},
                 }
             ],
+            "location": [
+                {
+                    "name": "Rabat ⵔⴱⴰⵟ الرباط",
+                    "qcode": "560fa29d-abc7-45f6-888f-b123ba044567",
+                    "address": {
+                        "line": [""],
+                        "city": "Rabat",
+                        "state": "Rabat-Salé-Kénitra",
+                        "locality": "Rabat",
+                        "area": "Rabat Prefecture",
+                        "country": "Morocco",
+                        "boundingbox": [
+                            "33.8956294",
+                            "34.0378472",
+                            "-6.9174353",
+                            "-6.7614635",
+                        ],
+                        "type": "administrative",
+                    },
+                    "location": {"lat": 34.02236, "lon": -6.8340222},
+                }
+            ],
             "links": ["www.google.xom/new"],
         },
         {
@@ -303,7 +325,7 @@ class PlanningExportTests(TestCase):
                     "contact_email": ["jdoe@fubar.com"],
                     "is_active": True,
                     "website": "fubar.com",
-                    "public": True,
+                    "public": False,
                     "last_name": "Doe",
                     "mobile": [
                         {"public": False, "number": "999", "usage": "Private Mobile"},
@@ -390,12 +412,41 @@ class PlanningExportTests(TestCase):
                 }
             ]
             self.app.data.insert("planning", planning_item)
+            location = [
+                {
+                    "_id": ObjectId("6694ed90bc490974d1ad3454"),
+                    "unique_name": "Rabat, Hassan حسان, باشوية الرباط, Rabat Prefecture, Rabat-Salé-Kénitra, Morocco",
+                    "is_active": True,
+                    "name": "Rabat ⵔⴱⴰⵟ الرباط",
+                    "address": {
+                        "line": [""],
+                        "city": "Rabat",
+                        "state": "Rabat-Salé-Kénitra",
+                        "locality": "Rabat",
+                        "area": "Rabat Prefecture",
+                        "country": "Morocco",
+                    },
+                    "translations": {
+                        "name": {
+                            "name": "Rabat ⵔⴱⴰⵟ الرباط",
+                            "name:ar": "الرباط",
+                            "name:be": "Рабат",
+                            "name:bn": "রাবাত",
+                            "name:en": "Rabat-en",
+                            "name:fr": "Rabat",
+                        }
+                    },
+                    "guid": "560fa29d-abc7-45f6-888f-b123ba044567",
+                }
+            ]
+            self.app.data.insert("locations", location)
 
     def tearDown(self):
         # Clean up all documents in the contacts collection after each test
         with self.app.app_context():
             self.app.data.remove("contacts", {})
             self.app.data.remove("planning", {})
+            self.app.data.remove("locations", {})
 
     def test_export_week(self):
         with self.app.app_context():
@@ -416,7 +467,7 @@ class PlanningExportTests(TestCase):
             )
             print(dutch_template_data)
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
-            self.assertIn("<h4>REDWOLVES<br></h4>", dutch_template_data)
+            self.assertIn("<h4>REDWOLVES</h4>", dutch_template_data)
             self.assertIn(
                 "<p>City of New York, New York, New York, United States<br></p>",
                 dutch_template_data,
@@ -430,7 +481,7 @@ class PlanningExportTests(TestCase):
                 dutch_template_data,
             )
             self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
-            self.assertIn("<h4>SPORTS<br></h4>", dutch_template_data)
+            self.assertIn("<h4>SPORTS</h4>", dutch_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", dutch_template_data
             )
@@ -455,7 +506,7 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
-            self.assertIn("<h4>REDWOLVES<br></h4>", french_template_data)
+            self.assertIn("<br><h4>REDWOLVES</h4>", french_template_data)
             self.assertIn(
                 "<p>City of New York, New York, New York, United States<br></p>",
                 french_template_data,
@@ -470,7 +521,7 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
 
-            self.assertIn("<h4>SPORTS<br></h4>", french_template_data)
+            self.assertIn("<br><h4>SPORTS</h4>", french_template_data)
             self.assertIn(
                 "<p>street, Kubang Putiah, West-Sumatra, 26132, Indonesien<br></p>",
                 french_template_data,
@@ -484,11 +535,15 @@ class PlanningExportTests(TestCase):
                 french_template_data,
             )
 
-            self.assertIn("<h4>WC2028<br></h4>", french_template_data)
+            self.assertIn("<br><h4>WC2028</h4>", french_template_data)
 
             self.assertIn("<p>16u00, First<br></p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                french_template_data,
+            )
+            self.assertIn(
+                "<p>Rabat-en, Rabat, Rabat-Salé-Kénitra, Morocco<br></p>",
                 french_template_data,
             )
 
@@ -567,7 +622,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            print(dutch_data)
             self.assertIn("<h3>General</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
             self.assertIn("<p>another one<br></p>", dutch_data)
@@ -587,7 +641,7 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+            self.assertIn("<p>Picture (coverage intended)<br></p>", dutch_data)
 
             self.assertIn("<h3>Economy</h3>", dutch_data)
             self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
@@ -612,7 +666,7 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+            self.assertIn("<p>Picture (coverage intended)<br></p>", dutch_data)
 
             self.assertIn("<h3>Sports</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
@@ -633,6 +687,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>Picture, Planned<br></p>", dutch_data)
+            self.assertIn("<p>Picture (coverage intended)<br></p>", dutch_data)
 
             self.assertNotIn("<h3>Business</h3>", dutch_data)

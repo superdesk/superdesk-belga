@@ -53,14 +53,27 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     item["local_date_time"] = start_local.strftime("%Y%m%d")
 
 
-def get_item_location(event: Dict[str, Any]) -> str:
+def get_item_location(event: Dict[str, Any], locale: str) -> str:
     """Set the location to be used for sorting / displaying"""
     location = event.get("location")
+    event_lang = event.get("language") or locale
     if not location:
         return ""
 
+    location_name = location[0].get("name")
+
+    # find location on DB and then extract translation Name
+    if location[0].get("qcode") and event_lang:
+        location_data = get_resource_service("locations").find_one(
+            req=None, guid=location[0].get("qcode")
+        )
+        if location_data:
+            translations = location_data.get("translations")
+            translated_name = translations.get("name", {}).get(f"name:{event_lang}")
+            location_name = translated_name if translated_name else location_name
+
     location_items = [
-        location[0].get("name"),
+        location_name,
         location[0].get("address", {}).get("line", [""])[0],
         location[0].get("address", {}).get("city")
         or location[0].get("address", {}).get("area"),
@@ -103,7 +116,7 @@ def format_datetime(event: Dict[str, Any], locale: str, format: str):
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale: str):
     formatted_event["links"] = event.get("links", "")
-    formatted_event["location"] = get_item_location(event)
+    formatted_event["location"] = get_item_location(event, locale)
     set_item_dates(formatted_event, event)
     set_event_translations_value(event, locale)
     set_item_title(formatted_event, event)
@@ -118,7 +131,7 @@ def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
         contact_details = get_resource_service("contacts").find_one(
             req=None, _id=contact_id
         )
-        if contact_details and contact_details.get("public", False):
+        if contact_details:
             formatted_contact: FormattedContact = {
                 "name": " ".join(
                     [
@@ -159,11 +172,11 @@ def get_coverages(event: Dict[str, Any], locale: str):
         for coverage in planning_item.get("coverages", []):
             cov_planning = coverage.get("planning", {})
             cov_type = cov_planning.get("g2_content_type", "").capitalize()
-            cov_status = coverage.get("news_coverage_status", {}).get("label", "")
+            cov_status = coverage.get("news_coverage_status", {}).get("name", "")
 
-            formatted_coverages.append(f"{cov_type}, {cov_status}") if cov_planning.get(
-                "language", locale
-            ) == locale else []
+            formatted_coverages.append(
+                f"{cov_type} ({cov_status})"
+            ) if cov_planning.get("language", locale) == locale else []
     return formatted_coverages
 
 
