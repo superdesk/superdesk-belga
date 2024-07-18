@@ -465,7 +465,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_template_data,
             )
-            print(dutch_template_data)
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", dutch_template_data)
             self.assertIn(
@@ -494,7 +493,6 @@ class PlanningExportTests(TestCase):
             french_template_data = render_template(
                 "french_news_events_list_export.html", items=events, app=self.app
             )
-            print(french_template_data)
             self.assertIn(
                 "<h2>Calendrier sportif international du Dimanche 21 au Lundi 22 Avril</h2>",
                 french_template_data,
