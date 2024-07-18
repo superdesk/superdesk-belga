@@ -53,14 +53,16 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     item["local_date_time"] = start_local.strftime("%Y%m%d")
 
 
-def get_item_location(event: Dict[str, Any], locale: str) -> str:
+def get_item_location(
+    event: Dict[str, Any], locale: str, is_only_city_and_country: bool = False
+) -> str:
     """Set the location to be used for sorting / displaying"""
     location = event.get("location")
-    event_lang = event.get("language") or locale
     if not location:
         return ""
 
-    location_name = location[0].get("name")
+    event_lang = event.get("language") or locale
+    location_name = location[0].get("name", "")
 
     # find location on DB and then extract translation Name
     if location[0].get("qcode") and event_lang:
@@ -68,27 +70,42 @@ def get_item_location(event: Dict[str, Any], locale: str) -> str:
             req=None, guid=location[0].get("qcode")
         )
         if location_data:
-            translations = location_data.get("translations")
-            translated_name = translations.get("name", {}).get(f"name:{event_lang}")
-            location_name = translated_name if translated_name else location_name
+            translated_name = (
+                location_data.get("translations", {})
+                .get("name", {})
+                .get(f"name:{event_lang}")
+            )
+            location_name = translated_name or location_name
 
-    location_items = [
-        location_name,
-        location[0].get("address", {}).get("line", [""])[0],
-        location[0].get("address", {}).get("city")
-        or location[0].get("address", {}).get("area"),
-        location[0].get("address", {}).get("state")
-        or location[0].get("address", {}).get("locality"),
-        location[0].get("address", {}).get("postal_code"),
-        location[0].get("address", {}).get("country"),
+    # Build location_items based on is_only_city_and_country flag
+    location_items = []
+    if not is_only_city_and_country:
+        location_items.extend(
+            [
+                location_name,
+                location[0].get("address", {}).get("line", [""])[0],
+                location[0].get("address", {}).get("city")
+                or location[0].get("address", {}).get("area"),
+                location[0].get("address", {}).get("state")
+                or location[0].get("address", {}).get("locality"),
+                location[0].get("address", {}).get("postal_code"),
+                location[0].get("address", {}).get("country"),
+            ]
+        )
+    else:
+        location_items.extend(
+            [
+                location[0].get("address", {}).get("city")
+                or location[0].get("address", {}).get("area"),
+                location[0].get("address", {}).get("country"),
+            ]
+        )
+
+    # Filter and join non-empty location items
+    filtered_items = [
+        item.strip() for item in location_items if item and not item.isspace()
     ]
-    return ", ".join(
-        [
-            location_part.strip()
-            for location_part in location_items
-            if location_part and not location_part.isspace()
-        ]
-    )
+    return ", ".join(filtered_items)
 
 
 def get_language_name(item: Dict[str, Any], language: str):
@@ -116,7 +133,6 @@ def format_datetime(event: Dict[str, Any], locale: str, format: str):
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale: str):
     formatted_event["links"] = event.get("links", "")
-    formatted_event["location"] = get_item_location(event, locale)
     set_item_dates(formatted_event, event)
     set_event_translations_value(event, locale)
     set_item_title(formatted_event, event)
@@ -171,8 +187,10 @@ def get_coverages(event: Dict[str, Any], locale: str):
         planning_item = planning_service.find_one(req=None, _id=id)
         for coverage in planning_item.get("coverages", []):
             cov_planning = coverage.get("planning", {})
-            cov_type = cov_planning.get("g2_content_type", "").capitalize()
-            cov_status = coverage.get("news_coverage_status", {}).get("name", "")
+            cov_type = cov_planning.get("g2_content_type", "").upper()
+            cov_status = (
+                coverage.get("news_coverage_status", {}).get("name", "").upper()
+            )
 
             formatted_coverages.append(
                 f"{cov_type} ({cov_status})"

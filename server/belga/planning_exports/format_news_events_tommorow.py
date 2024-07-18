@@ -3,6 +3,7 @@ from .common import (
     get_subject,
     get_formatted_contacts,
     get_coverages,
+    get_item_location,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -41,6 +42,7 @@ def format_event_for_tommorow(
             else "",
             "contacts": get_formatted_contacts(event),
             "coverages": get_coverages(event, locale),
+            "location": get_item_location(event, locale),
         }
         set_metadata(formatted_event, event, locale)
 

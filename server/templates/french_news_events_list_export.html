@@ -1,23 +1,26 @@
 {% set formatted_data = format_event_for_week(items, "fr") %}
 <div>
-    <h2>Calendrier sportif international du {{formatted_data.start_date}} au {{formatted_data.end_date}} {{formatted_data.month}}</h2>
-    <p>Principaux événements inscrits au calendrier sportif international du {{formatted_data.start_date}} au {{formatted_data.end_date}} {{formatted_data.month}}:</p>
+    <h2>Calendrier sportif international du {{ formatted_data.start_date }} au {{ formatted_data.end_date }} {{ formatted_data.month }}</h2>
+    <p>Principaux événements inscrits au calendrier sportif international du {{ formatted_data.start_date }} au {{ formatted_data.end_date }} {{ formatted_data.month }} :</p>
 </div>
 {% for day_events in formatted_data.events_list %}
     <h3>{{ day_events.date }}</h3>
     <div>
+        {% set first_item = true %}
         {% for subject, events in day_events.subjects.items() | sort %}
-            <br><h4>{{ subject }}</h4>
+            {% if not first_item %}<br>{% endif %}
+            {% set first_item = false %}
+            <h4>{{ subject }}</h4>
             {% for event in events %}
                 <div>
-                    <p>{{ event.local_time }}, {{ event.title }}<br></p>
-                    {% if event.location %}<p>{{ event.location }}<br></p>{% endif %}
-                    {% if event.description %}<p>{{ event.description }}<br></p>{% endif %}
+                    <p>{{ event.local_time }}, {{ event.title }}</p>
+                    {% if event.location %}<p>{{ event.location }}</p>{% endif %}
+                    {% if event.description %}<p>{{ event.description }}</p>{% endif %}
                     {% for link in event.links %}
-                        <p><a href="{{ link }}">{{ link }}</a><br></p>
+                        <p><a href="{{ link }}">{{ link }}</a></p>
                     {% endfor %}
-                    <br>
                 </div>
+                {% if not loop.last %}<br>{% endif %}
             {% endfor %}
         {% endfor %}
     </div>
