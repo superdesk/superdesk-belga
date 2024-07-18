@@ -640,7 +640,7 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>PICTURE (COVERAGE INTENDED)<br></p>", dutch_data)
+            self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
 
             self.assertIn("<h3>Economy</h3>", dutch_data)
             self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
@@ -665,7 +665,7 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>PICTURE (COVERAGE INTENDED)<br></p>", dutch_data)
+            self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
 
             self.assertIn("<h3>Sports</h3>", dutch_data)
             self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
@@ -686,6 +686,6 @@ class PlanningExportTests(TestCase):
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>PICTURE (COVERAGE INTENDED)<br></p>", dutch_data)
+            self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
 
             self.assertNotIn("<h3>Business</h3>", dutch_data)

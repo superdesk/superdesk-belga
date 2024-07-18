@@ -189,7 +189,7 @@ def get_coverages(event: Dict[str, Any], locale: str):
             cov_planning = coverage.get("planning", {})
             cov_type = cov_planning.get("g2_content_type", "").upper()
             cov_status = (
-                coverage.get("news_coverage_status", {}).get("name", "").upper()
+                coverage.get("news_coverage_status", {}).get("label", "").upper()
             )
 
             formatted_coverages.append(
