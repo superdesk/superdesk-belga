@@ -12,6 +12,7 @@ import moment from 'moment';
 import {IEventItem, IPlanningItem} from 'superdesk-planning/client/interfaces';
 import {setCoverageDueDateStrategy} from 'superdesk-planning/client/configure';
 import {eventUtils} from 'superdesk-planning/client/utils';
+import {UserAvatar} from 'superdesk-planning/client/components/UserAvatar';
 
 class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
@@ -97,48 +98,18 @@ setTimeout(() => {
                     translations: {
                         translateActionIntegration: true,
                         generateTranslations: (article: IArticle, language: string) => {
-                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/translate',
-                                payload: {
-                                    language: language,
-                                    text: article.body_html,
-                                }
-                            }).then((result) => result.response)
+                            return Promise.resolve("this is the translation")
                         },
                     },
                     generateHeadlines: (article: IArticle) => {
-                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                            const maxCharacterLength = profile.schema['headline']?.maxlength;
-
-                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/headlines',
-                                payload: {
-                                    text: article.body_html,
-                                    nrTitles: 3,
-                                    maxCharacters: maxCharacterLength != null
-                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                    : 0,
-                                }
-                            }).then((result) => result.response)
-                        });
+                        return Promise.resolve([
+                            'headline 1',
+                            'headline 2',
+                            'headline 3',
+                        ]);
                     },
                     generateSummary: (article: IArticle) => {
-                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                            const maxCharacterLength = profile.schema['body_html']?.maxlength;
-
-                            return superdesk.httpRequestJsonLocal<{response: string}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/summarize',
-                                payload: {
-                                    text: article.body_html,
-                                    maxCharacters: maxCharacterLength != null
-                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                    : 0,
-                                }
-                            }).then((result) => result.response)
-                        });
+                        return Promise.resolve('This is a summary');
                     },
                 }));
 
