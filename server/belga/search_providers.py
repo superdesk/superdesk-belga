@@ -127,11 +127,11 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 
             dates = params.get("dates", {})
             if dates.get("start"):
-                api_params["f"] = (
-                    arrow.get(dates["start"], "DD/MM/YYYY").timestamp * 1000
+                api_params["f"] = int(
+                    arrow.get(dates["start"], "DD/MM/YYYY").timestamp() * 1000
                 )
             if dates.get("end"):
-                api_params["e"] = arrow.get(dates["end"], "DD/MM/YYYY").timestamp * 1000
+                api_params["e"] = int(arrow.get(dates["end"], "DD/MM/YYYY").timestamp() * 1000)
 
             if params.get("period"):
                 api_params["p"] = params["period"].upper()
@@ -149,8 +149,6 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         return BelgaListCursor(docs, data[self.count_field])
 
     def api_get(self, endpoint, params):
-        if app.debug:
-            print("params", params)
         url = (
             requests.Request("GET", "http://example.com/" + endpoint, params=params)
             .prepare()
