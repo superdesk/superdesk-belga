@@ -1,4 +1,4 @@
-from .common import set_metadata, get_subject, format_datetime, get_item_location
+from .common import set_metadata, get_subjects, format_datetime, get_item_location
 from typing import List, Dict, Any
 
 
@@ -9,8 +9,9 @@ def format_event_for_week(event_data: List[Dict[str, Any]], locale: str):
 
     current_date = None
     for event in sorted_events:
+        subjects = get_subjects(event, locale)
         formatted_event = {
-            "subject": ",".join(get_subject(event, locale)),
+            "subject": subjects[0] if len(subjects) != 0 else "",
             "location": get_item_location(event, locale, True),
         }
         set_metadata(formatted_event, event, locale)

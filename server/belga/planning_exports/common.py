@@ -114,7 +114,7 @@ def get_language_name(item: Dict[str, Any], language: str):
     ) or item.get("name")
 
 
-def get_subject(event: Dict[str, Any], language: str):
+def get_subjects(event: Dict[str, Any], language: str):
     subjects = event.get("subject")
     filter_subj = []
     if subjects:

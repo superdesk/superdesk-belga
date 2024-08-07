@@ -28,7 +28,13 @@ class PlanningExportTests(TestCase):
                     "scheme": "belga-keywords",
                     "qcode": "WC2028",
                     "translations": {"name": {"nl": "WC2028", "fr": "WC2028"}},
-                }
+                },
+                {
+                    "name": "REDWOLVES",
+                    "scheme": "belga-keywords",
+                    "qcode": "REDWOLVES",
+                    "translations": {"name": {"nl": "REDWOLVES", "fr": "REDWOLVES"}},
+                },
             ],
             "location": [
                 {

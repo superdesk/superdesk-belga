@@ -1,6 +1,6 @@
 from .common import (
     set_metadata,
-    get_subject,
+    get_subjects,
     get_formatted_contacts,
     get_coverages,
     get_item_location,
@@ -36,7 +36,7 @@ def format_event_for_tommorow(
     for event in sorted_events:
         # Format event details
         formatted_event = {
-            "subject": ",".join(get_subject(event, "fr")),
+            "subject": ",".join(get_subjects(event, "fr")),
             "calendars": event["calendars"][0]["qcode"].capitalize()
             if event.get("calendars")
             else "",
