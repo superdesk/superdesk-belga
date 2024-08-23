@@ -2,7 +2,7 @@ Planning Item: {{ assignment.get('name') or slugine }}
 
 Assignment ID: {{ assignment_id }}
 
-Url: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
+Start Working: {{ client_url }}/#/workspace/assignments?assignment={{ assignment_id }}
 
 {% if event %}
     {% if event.get('name') %}
