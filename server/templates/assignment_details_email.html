@@ -31,12 +31,28 @@
         <p><strong>Description:</strong> {{ event['definition_short'] }}</p>
     {% endif %}
 
+    {% if event.get('accreditation_deadline') or event.get('accreditation_info') %}
+    <h3>Accreditation:</h3>
+
+    {% if event.get('accreditation_deadline') %}
+    <p><strong>Accreditation deadline:</strong> {{ event['accreditation_deadline'].strftime('%d/%m/%Y %H:%M') }}</p>
+    {% endif %}
+
+    {% if event.get('accreditation_info') %}
+    <p><strong>Accreditation info:</strong> {{ event['accreditation_info'] }}</p>
+    {% endif %}
+    {% endif %}
+
+    {% if event.get('ednote') or event.get('internal_note') %}
+    <h3>Notes:</h3>
+
     {% if event.get('ednote') %}
     <p><strong>Ed Note:</strong> {{ event['ednote'] }}</p>
     {% endif %}
 
     {% if event.get('internal_note') %}
     <p><strong>Internal Note:</strong> {{ event['internal_note'] }}</p>
+    {% endif %}
     {% endif %}
 
     {% if contacts %}
@@ -66,6 +82,6 @@
         </ul>
     {% endif %}
 
-    <p><strong>Coverage Type:</strong> {{ coverage_type }}</p>
+    <p><h3>Coverage Type:</h3>{{ coverage_type }}</p>
 
 {% endif %}
