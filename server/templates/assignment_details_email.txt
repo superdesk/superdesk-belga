@@ -66,4 +66,5 @@ Start Working: {{ client_url }}/#/workspace/assignments?assignment={{ assignment
     {% endif %}
 {% endif %}
 
-Coverage Type: {{ coverage_type }}
+Coverage Type: 
+{{ coverage_type }}
