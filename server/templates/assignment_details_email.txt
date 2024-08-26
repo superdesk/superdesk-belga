@@ -27,7 +27,18 @@ Start Working: {{ client_url }}/#/workspace/assignments?assignment={{ assignment
         Description: {{ event['definition_short'] }}
     {% endif %}
 
+    {% if event.get('accreditation_deadline') or event.get('accreditation_info') %}
+    Accreditation:
+    {% if event.get('accreditation_deadline') %}
+    Accreditation deadline: {{ event['accreditation_deadline'].strftime('%d/%m/%Y %H:%M') }}
+    {% endif %}
+    {% if event.get('accreditation_info') %}
+    Accreditation info: {{ event['accreditation_info'] }}
+    {% endif %}
+    {% endif %}
+
     {% if event.get('ednote') %}
+    Notes:
         Ed Note: {{ event['ednote'] }}
     {% endif %}
 
@@ -55,4 +66,5 @@ Start Working: {{ client_url }}/#/workspace/assignments?assignment={{ assignment
     {% endif %}
 {% endif %}
 
-Coverage Type: {{ coverage_type }}
+Coverage Type: 
+{{ coverage_type }}
