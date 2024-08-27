@@ -108,37 +108,35 @@ setTimeout(() => {
                         },
                     },
                     generateHeadlines: (article: IArticle) => {
-                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                            const maxCharacterLength = profile.schema['headline']?.maxlength;
+                        const profile = superdesk.entities.contentProfile.get(article.profile);
+                        const maxCharacterLength = profile.schema['headline']?.maxlength;
 
-                            return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/headlines',
-                                payload: {
-                                    text: article.body_html,
-                                    nrTitles: 3,
-                                    maxCharacters: maxCharacterLength != null
-                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                    : 0,
-                                }
-                            }).then((result) => result.response)
-                        });
+                        return superdesk.httpRequestJsonLocal<{response: Array<string>}>({
+                            method: 'POST',
+                            path: '/belga/ai/toolkit/headlines',
+                            payload: {
+                                text: article.body_html,
+                                nrTitles: 3,
+                                maxCharacters: maxCharacterLength != null
+                                ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                : 0,
+                            }
+                        }).then((result) => result.response)
                     },
                     generateSummary: (article: IArticle) => {
-                        return superdesk.entities.contentProfile.get(article.profile).then((profile) => {
-                            const maxCharacterLength = profile.schema['body_html']?.maxlength;
+                        const profile = superdesk.entities.contentProfile.get(article.profile);
+                        const maxCharacterLength = profile.schema['body_html']?.maxlength;
 
-                            return superdesk.httpRequestJsonLocal<{response: string}>({
-                                method: 'POST',
-                                path: '/belga/ai/toolkit/summarize',
-                                payload: {
-                                    text: article.body_html,
-                                    maxCharacters: maxCharacterLength != null
-                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                    : 0,
-                                }
-                            }).then((result) => result.response)
-                        });
+                        return superdesk.httpRequestJsonLocal<{response: string}>({
+                            method: 'POST',
+                            path: '/belga/ai/toolkit/summarize',
+                            payload: {
+                                text: article.body_html,
+                                maxCharacters: maxCharacterLength != null
+                                ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                : 0,
+                            }
+                        }).then((result) => result.response);
                     },
                 }));
 
