@@ -47,12 +47,6 @@ class PlanningExportTests(TestCase):
                         "locality": "Rabat",
                         "area": "Rabat Prefecture",
                         "country": "Morocco",
-                        "boundingbox": [
-                            "33.8956294",
-                            "34.0378472",
-                            "-6.9174353",
-                            "-6.7614635",
-                        ],
                         "type": "administrative",
                     },
                     "location": {"lat": 34.02236, "lon": -6.8340222},
@@ -231,12 +225,6 @@ class PlanningExportTests(TestCase):
                 {
                     "address": {
                         "country": "United States",
-                        "boundingbox": [
-                            "40.4765780",
-                            "40.9176300",
-                            "-74.2588430",
-                            "-73.7002330",
-                        ],
                         "city": "New York",
                         "line": [""],
                         "locality": "New York",
@@ -274,6 +262,22 @@ class PlanningExportTests(TestCase):
                 "5ab491271d41c88e98ad9336",
                 "6618415a1704a42950a4eb62",
             ],
+            "location": [
+                {
+                    "name": "Oud Gerechtshof",
+                    "address": {
+                        "line": ["10 Havermarkt"],
+                        "city": "Hasselt",
+                        "state": "Limburg",
+                        "locality": "Limburg",
+                        "area": "Hasselt",
+                        "postal_code": "3500",
+                        "country": "Belgium",
+                    },
+                    "qcode": "460fa29d-abc7-45f6-888f-b123ba044567",
+                    "location": {"lon": -74.0060152, "lat": 40.7127281},
+                }
+            ],
             "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
         },
         {
@@ -295,6 +299,20 @@ class PlanningExportTests(TestCase):
             "event_contact_info": [
                 "5ab491271d41c88e98ad9336",
                 "6618415a1704a42950a4eb62",
+            ],
+            "location": [
+                {
+                    "name": "Москва",
+                    "address": {
+                        "line": [""],
+                        "city": "Moscow",
+                        "state": "Moscow",
+                        "locality": "Moscow",
+                        "country": "Russia",
+                    },
+                    "qcode": "d0b15bb0-0254-4f89-9855-e74afb531d69",
+                    "location": {"lon": -74.0060152, "lat": 40.7127281},
+                }
             ],
             "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
         },
@@ -443,7 +461,47 @@ class PlanningExportTests(TestCase):
                         }
                     },
                     "guid": "560fa29d-abc7-45f6-888f-b123ba044567",
-                }
+                },
+                {
+                    "_id": ObjectId("6794ed90bc490974d1ad3454"),
+                    "unique_name": "Oud Gerechtshof, 10, Havermarkt, Hasselt-Centrum, Hasselt, Limburg, Vlaanderen, 3500, België",
+                    "is_active": True,
+                    "address": {
+                        "line": ["10 Havermarkt"],
+                        "city": "Hasselt",
+                        "state": "Limburg",
+                        "locality": "Limburg",
+                        "area": "Hasselt",
+                        "postal_code": "3500",
+                        "country": "Belgium",
+                    },
+                    "name": "Oud Gerechtshof",
+                    "translations": {"name": {"name": "Oud Gerechtshof"}},
+                    "guid": "460fa29d-abc7-45f6-888f-b123ba044567",
+                },
+                {
+                    "_id": ObjectId("7794ed90bc490974d1ad3454"),
+                    "unique_name": "Moscow, Central Federal District, Russia",
+                    "is_active": True,
+                    "address": {
+                        "line": [""],
+                        "city": "Moscow",
+                        "state": "Moscow",
+                        "locality": "Moscow",
+                        "country": "Russia",
+                    },
+                    "name": "Москва",
+                    "translations": {
+                        "name": {
+                            "name": "Москва",
+                            "name:ab": "Москва",
+                            "name:af": "Moskou",
+                            "name:en": "Moscow",
+                        }
+                    },
+                    "guid": "d0b15bb0-0254-4f89-9855-e74afb531d69",
+                    "formatted_address": "Moscow Moscow Russia",
+                },
             ]
             self.app.data.insert("locations", location)
 
@@ -651,7 +709,7 @@ class PlanningExportTests(TestCase):
             self.assertIn("<h3>Economy</h3>", dutch_data)
             self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
             self.assertIn(
-                "<p>City of New York, New York, New York, United States<br></p>",
+                "<p>City of New York, New York, United States<br></p>",
                 dutch_data,
             )
             self.assertIn("another two<br></p>", dutch_data)
@@ -695,3 +753,12 @@ class PlanningExportTests(TestCase):
             self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
 
             self.assertNotIn("<h3>Business</h3>", dutch_data)
+
+            self.assertIn(
+                "<p>Москва, Moscow, Russia<br></p>",
+                dutch_data,
+            )
+            self.assertIn(
+                "<p>Oud Gerechtshof, 10 Havermarkt, 3500, Hasselt, Belgium<br></p>",
+                dutch_data,
+            )
