@@ -464,7 +464,7 @@ class PlanningExportTests(TestCase):
                 },
                 {
                     "_id": ObjectId("6794ed90bc490974d1ad3454"),
-                    "unique_name": "Oud Gerechtshof, 10, Havermarkt, Hasselt-Centrum, Hasselt, Limburg, Vlaanderen, 3500, België",
+                    "unique_name": "Oud Gerechtshof, 10, Havermarkt, Limburg, Vlaanderen, 3500, België",
                     "is_active": True,
                     "address": {
                         "line": ["10 Havermarkt"],
