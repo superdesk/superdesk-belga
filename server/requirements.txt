@@ -26,9 +26,9 @@ blinker==1.8.2
     #   flask-mail
     #   raven
     #   superdesk-core
-boto3==1.35.8
+boto3==1.35.11
     # via superdesk-core
-botocore==1.35.8
+botocore==1.35.11
     # via
     #   boto3
     #   s3transfer
@@ -42,7 +42,7 @@ cerberus==1.3.5
     # via
     #   eve
     #   superdesk-core
-certifi==2024.7.4
+certifi==2024.8.30
     # via
     #   elastic-apm
     #   elasticsearch
@@ -50,7 +50,9 @@ certifi==2024.7.4
 cffi==1.17.0
     # via cryptography
 chardet==5.2.0
-    # via superdesk-core
+    # via
+    #   reportlab
+    #   superdesk-core
 charset-normalizer==3.3.2
     # via requests
 ciso8601==2.3.1
@@ -71,7 +73,7 @@ click-repl==0.3.0
     # via celery
 croniter==2.0.7
     # via superdesk-core
-cryptography==43.0.0
+cryptography==43.0.1
     # via
     #   authlib
     #   jwcrypto
@@ -166,7 +168,7 @@ lxml==5.2.2
     #   lxml-html-clean
     #   superdesk-core
     #   xmlsec
-lxml-html-clean==0.1.1
+lxml-html-clean==0.2.2
     # via superdesk-core
 markupsafe==2.0.1
     # via
@@ -184,7 +186,7 @@ orderly-set==5.2.2
     # via deepdiff
 packaging==24.1
     # via gunicorn
-pillow==10.3.0
+pillow==10.4.0
     # via
     #   reportlab
     #   superdesk-core
@@ -243,9 +245,9 @@ redis==5.0.8
     # via
     #   celery
     #   superdesk-core
-regex==2024.5.15
+regex==2024.7.24
     # via superdesk-core
-reportlab==3.6.13
+reportlab==4.2.2
     # via superdesk-core
 requests==2.32.3
     # via
@@ -271,7 +273,7 @@ six==1.16.0
     #   flask-oidc-ex
     #   oauth2client
     #   python-dateutil
-superdesk-analytics @ git+https://github.com/superdesk/superdesk-analytics.git@v2.6.0
+superdesk-analytics @ git+https://github.com/superdesk/superdesk-analytics.git@release/2.8
     # via -r requirements.in
 superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@release/2.8
     # via -r requirements.in
@@ -289,7 +291,7 @@ tzlocal==2.1
     # via superdesk-core
 unidecode==1.3.8
     # via superdesk-core
-urllib3==1.26.19
+urllib3==1.26.20
     # via
     #   botocore
     #   elastic-apm
