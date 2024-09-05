@@ -80,16 +80,14 @@ def get_item_location(
     # Build location_items based on is_only_city_and_country flag
     location_items = []
     if not is_only_city_and_country:
+        address = location[0].get("address", {})
         location_items.extend(
             [
                 location_name,
-                location[0].get("address", {}).get("line", [""])[0],
-                location[0].get("address", {}).get("city")
-                or location[0].get("address", {}).get("area"),
-                location[0].get("address", {}).get("state")
-                or location[0].get("address", {}).get("locality"),
-                location[0].get("address", {}).get("postal_code"),
-                location[0].get("address", {}).get("country"),
+                address.get("line", [""])[0],
+                address.get("postal_code", ""),
+                address.get("city") or address.get("area", ""),
+                address.get("country", ""),
             ]
         )
     else:
