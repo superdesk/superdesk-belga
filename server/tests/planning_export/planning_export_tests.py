@@ -304,7 +304,7 @@ class PlanningExportTests(TestCase):
                 {
                     "name": "Москва",
                     "address": {
-                        "line": [""],
+                        "line": ["Москва"],
                         "city": "Moscow",
                         "state": "Moscow",
                         "locality": "Moscow",
