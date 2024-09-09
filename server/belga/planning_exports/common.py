@@ -81,10 +81,17 @@ def get_item_location(
     location_items = []
     if not is_only_city_and_country:
         address = location[0].get("address", {})
+        address_line = address.get("line", [""])[0]
+
+        # Check if name and address line are identical, and skip address if they are
+        if location_name.lower() != address_line.lower():
+            location_items.append(location_name)
+            location_items.append(address_line)
+        else:
+            location_items.append(location_name)
+
         location_items.extend(
             [
-                location_name,
-                address.get("line", [""])[0],
                 address.get("postal_code", ""),
                 address.get("city") or address.get("area", ""),
                 address.get("country", ""),
