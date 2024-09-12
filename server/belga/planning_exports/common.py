@@ -92,8 +92,7 @@ def get_item_location(
 
         location_items.extend(
             [
-                address.get("postal_code", ""),
-                address.get("city") or address.get("area", ""),
+                f'{address.get("postal_code", "")} {address.get("city") or address.get("area", "")}',
                 address.get("country", ""),
             ]
         )
@@ -197,9 +196,11 @@ def get_coverages(event: Dict[str, Any], locale: str):
                 coverage.get("news_coverage_status", {}).get("label", "").upper()
             )
 
-            formatted_coverages.append(
-                f"{cov_type} ({cov_status})"
-            ) if cov_planning.get("language", locale) == locale else []
+            (
+                formatted_coverages.append(f"{cov_type} ({cov_status})")
+                if cov_planning.get("language", locale) == locale
+                else []
+            )
     return formatted_coverages
 
 
