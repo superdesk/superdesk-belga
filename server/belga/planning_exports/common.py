@@ -196,11 +196,9 @@ def get_coverages(event: Dict[str, Any], locale: str):
                 coverage.get("news_coverage_status", {}).get("label", "").upper()
             )
 
-            (
-                formatted_coverages.append(f"{cov_type} ({cov_status})")
-                if cov_planning.get("language", locale) == locale
-                else []
-            )
+    if cov_planning.get("language", locale) == locale:
+        formatted_coverages.append(f"{cov_type} ({cov_status})")
+
     return formatted_coverages
 
 
