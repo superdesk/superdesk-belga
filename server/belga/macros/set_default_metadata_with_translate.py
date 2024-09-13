@@ -93,9 +93,9 @@ def set_default_metadata_with_translate(item, **kwargs):
             req=None, _id=content_filter_id
         )
         if content_filter and not content_filter_service.does_match(
-            content_filter, test_item
+            content_filter, test_item, cache=False
         ):
-            raise StopDuplication
+            raise StopDuplication()
 
     # we first do the translation, we need destination language for that
     content_template = get_default_content_template(item, **kwargs)
@@ -141,7 +141,7 @@ def set_default_metadata_with_translate(item, **kwargs):
     archive_service.put(new_id, new_item)
 
     # no need for further treatment, we stop here internal_destinations workflow
-    raise StopDuplication
+    raise StopDuplication()
 
 
 name = "Set Default Metadata With Translate"
