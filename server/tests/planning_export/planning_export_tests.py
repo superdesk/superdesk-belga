@@ -759,6 +759,6 @@ class PlanningExportTests(TestCase):
                 dutch_data,
             )
             self.assertIn(
-                "<p>Oud Gerechtshof, 10 Havermarkt, 3500 Hasselt, Belgium<br></p>",
+                "<p>Oud Gerechtshof, Havermarkt 10, 3500 Hasselt, Belgium<br></p>",
                 dutch_data,
             )

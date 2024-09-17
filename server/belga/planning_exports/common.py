@@ -85,10 +85,10 @@ def get_item_location(
 
         # Check if name and address line are identical, and skip address if they are
         if location_name.lower() != address_line.lower():
-            location_items.append(location_name)
-            location_items.append(address_line)
+            location_items.append(reorder_address(location_name))
+            location_items.append(reorder_address(address_line))
         else:
-            location_items.append(location_name)
+            location_items.append(reorder_address(location_name))
 
         location_items.extend(
             [
@@ -230,3 +230,14 @@ def set_event_translations_value(event: Dict[str, Any], locale: str):
                 )
             }
         )
+
+
+def reorder_address(address: str) -> str:
+    """
+    Reorder an address string by moving the leading number (if present)
+    to the end of the string.
+    """
+    parts = address.split(" ", 1)
+    if parts[0].isdigit() and len(parts) == 2:
+        return f"{parts[1]} {parts[0]}"
+    return address
