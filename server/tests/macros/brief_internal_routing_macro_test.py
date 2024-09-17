@@ -79,6 +79,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
                 '<p>Disclaimer:</p>',
                 '<p>bar</p>',
             ]),
+            'subject': [{'name': 'superdesk', 'qcode': 'SUPERDESK', 'scheme': 'sources'}],
         }
 
         with self.assertRaises(StopDuplication):
@@ -95,6 +96,11 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         self.assertIn({
             'name': 'BELGA',
             'qcode': 'BELGA',
+            'scheme': 'sources',
+        }, item['subject'])
+        self.assertIn({
+            'name': 'superdesk',
+            'qcode': 'SUPERDESK',
             'scheme': 'sources',
         }, item['subject'])
 

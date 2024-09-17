@@ -58,7 +58,11 @@ def _get_brief_subject(subject: List) -> List:
         })
     source = _find_subj(subject, SOURCES)
     if source and 'BELGA' not in source.get('qcode'):
-        source['name'] = source['qcode'] = BRIEF_SOURCE
+        subject.append({
+            'name': BRIEF_SOURCE,
+            'qcode': BRIEF_SOURCE,
+            'scheme': SOURCES,
+        })
     elif not source:
         subject.append({
             'name': BRIEF_SOURCE,
