@@ -75,6 +75,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         self.now = utcnow()
 
     def test_callback(self):
+        # Test when BELGA source is already present in the item
         item = {
             "_id": "foo",
             "guid": "foo",
@@ -92,7 +93,8 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
                 ]
             ),
             "subject": [
-                {"name": "superdesk", "qcode": "SUPERDESK", "scheme": "sources"}
+                {"name": "superdesk", "qcode": "SUPERDESK", "scheme": "sources"},
+                {"name": "BELGA", "qcode": "BELGA", "scheme": "sources"},
             ],
         }
 
@@ -110,6 +112,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
             },
             item["subject"],
         )
+        # Ensure BELGA is present in 'sources'
         self.assertIn(
             {
                 "name": "BELGA",
@@ -118,6 +121,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
             },
             item["subject"],
         )
+        # Ensure SUPERDESK is present in 'sources'
         self.assertIn(
             {
                 "name": "superdesk",
@@ -126,6 +130,68 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
             },
             item["subject"],
         )
+
+        # Ensure BELGA is present in 'sources' only once
+        sources = [subj for subj in item["subject"] if subj["scheme"] == "sources"]
+        self.assertEqual(len([src for src in sources if src["qcode"] == "BELGA"]), 1)
+
+        # Test when BELGA source is not present in the item (item2)
+        item2 = {
+            "_id": "bar",
+            "guid": "bar",
+            "type": "text",
+            "state": CONTENT_STATE.PUBLISHED,
+            "task": {},
+            "profile": self.profiles[1],
+            "versioncreated": self.now - timedelta(minutes=5),
+            "headline": "bar BELGANIGHT bar (test)",
+            "body_html": "".join(
+                [
+                    "<p>bar</p>",
+                    "<p>Disclaimer:</p>",
+                    "<p>bar</p>",
+                ]
+            ),
+            "subject": [
+                {"name": "ANP", "qcode": "ANP", "scheme": "sources"},
+            ],
+        }
+
+        with self.assertRaises(StopDuplication):
+            macro.callback(item2)
+
+        self.assertIn(
+            {
+                "name": "BELGA",
+                "qcode": "BELGA",
+                "scheme": "credits",
+            },
+            item2["subject"],
+        )
+
+        # Ensure BELGA is correctly added to 'sources' in item2
+        self.assertIn(
+            {
+                "name": "BELGA",
+                "qcode": "BELGA",
+                "scheme": "sources",
+            },
+            item2["subject"],
+        )
+
+        # Ensure ANP is still present in 'sources' in item2
+        self.assertIn(
+            {
+                "name": "ANP",
+                "qcode": "ANP",
+                "scheme": "sources",
+            },
+            item2["subject"],
+        )
+
+        # Ensure BELGA is present in 'sources' only once in item2
+        sources2 = [subj for subj in item2["subject"] if subj["scheme"] == "sources"]
+        self.assertEqual(len([src for src in sources2 if src["qcode"] == "BELGA"]), 1)
 
         # test published
         published = self.app.data.find_one(
