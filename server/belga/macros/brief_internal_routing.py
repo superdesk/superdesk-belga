@@ -62,22 +62,20 @@ def _get_brief_subject(subject: List) -> List:
             }
         )
     source = _find_subj(subject, SOURCES)
-    if source and "BELGA" not in source.get("qcode"):
-        subject.append(
-            {
-                "name": BRIEF_SOURCE,
-                "qcode": BRIEF_SOURCE,
-                "scheme": SOURCES,
-            }
-        )
-    elif not source:
-        subject.append(
-            {
-                "name": BRIEF_SOURCE,
-                "qcode": BRIEF_SOURCE,
-                "scheme": SOURCES,
-            }
-        )
+    if not source:
+        # if no source found, append BRIEF_SOURCE
+        subject.append({
+            "name": BRIEF_SOURCE,
+            "qcode": BRIEF_SOURCE,
+            "scheme": SOURCES,
+        })
+    elif "BELGA" not in [subj.get("qcode") for subj in subject if subj.get("scheme") == SOURCES]:
+        # append BRIEF_SOURCE only if BELGA is not already in sources
+        subject.append({
+            "name": BRIEF_SOURCE,
+            "qcode": BRIEF_SOURCE,
+            "scheme": SOURCES,
+        })
     return subject
 
 
