@@ -132,7 +132,7 @@ def get_subjects(event: Dict[str, Any], language: str):
 def format_datetime(event: Dict[str, Any], locale: str, format: str):
     tz = event.get("dates", {}).get("tz") or app.config.get("DEFAULT_TIMEZONE")
     start_time = event.get("dates", {}).get("start")
-    return format_date(utc_to_local(tz, start_time), format, locale=locale).capitalize()
+    return format_date(utc_to_local(tz, start_time), format, locale=locale)
 
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale: str):

@@ -516,20 +516,17 @@ class PlanningExportTests(TestCase):
         with self.app.app_context():
             events = self.events_for_week
             dutch_template_data = render_template(
-                "dutch_news_events_list_export.html", items=events, app=self.app
+                "dutch_news_events_list_export_body.html", items=events, app=self.app
             )
-            self.assertIn(
-                "<h2>Internationale sportkalender van Zondag 21 tot Maandag 22 April</h2>",
-                dutch_template_data,
-            )
+
             self.assertIn(
                 (
                     "<p>De belangrijkste sportevenementen op de Belgische en "
-                    "internationale sportkalender van Zondag 21 tot Maandag 22 April:</p>"
+                    "internationale sportkalender van zondag 21 tot maandag 22 april:</p>"
                 ),
                 dutch_template_data,
             )
-            self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
+            self.assertIn("<h3>zondag 21 april</h3>", dutch_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", dutch_template_data)
             self.assertIn(
                 "<p>New York, United States<br></p>",
@@ -543,7 +540,7 @@ class PlanningExportTests(TestCase):
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
                 dutch_template_data,
             )
-            self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
+            self.assertIn("<h3>maandag 22 april</h3>", dutch_template_data)
             self.assertIn("<h4>SPORTS</h4>", dutch_template_data)
             self.assertIn(
                 "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", dutch_template_data
@@ -555,20 +552,16 @@ class PlanningExportTests(TestCase):
             )
 
             french_template_data = render_template(
-                "french_news_events_list_export.html", items=events, app=self.app
-            )
-            self.assertIn(
-                "<h2>Calendrier sportif international du Dimanche 21 au Lundi 22 Avril</h2>",
-                french_template_data,
+                "french_news_events_list_export_body.html", items=events, app=self.app
             )
             self.assertIn(
                 (
                     "<p>Principaux événements inscrits au calendrier sportif "
-                    "international du Dimanche 21 au Lundi 22 Avril :</p>"
+                    "international du dimanche 21 au lundi 22 avril :</p>"
                 ),
                 french_template_data,
             )
-            self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
+            self.assertIn("<h3>dimanche 21 avril</h3>", french_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", french_template_data)
             self.assertIn(
                 "<p>New York, United States<br></p>",
@@ -582,7 +575,7 @@ class PlanningExportTests(TestCase):
                 '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
                 french_template_data,
             )
-            self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
+            self.assertIn("<h3>lundi 22 avril</h3>", french_template_data)
 
             self.assertIn("<h4>SPORTS</h4>", french_template_data)
             self.assertIn(
@@ -643,18 +636,42 @@ class PlanningExportTests(TestCase):
                 },
             ]
             template_data = render_template(
-                "dutch_news_events_list_export.html", items=new_events, app=self.app
+                "dutch_news_events_list_export_body.html",
+                items=new_events,
+                app=self.app,
             )
-            self.assertIn("<h3>Donderdag 25 april</h3>", template_data)
+            self.assertIn("<h3>donderdag 25 april</h3>", template_data)
             self.assertIn("<p>00u00, one event<br></p>", template_data)
             self.assertIn("<p>00u59, Two event<br></p>", template_data)
 
             template_data = render_template(
-                "french_news_events_list_export.html", items=new_events, app=self.app
+                "french_news_events_list_export_body.html",
+                items=new_events,
+                app=self.app,
             )
-            self.assertIn("<h3>Jeudi 25 avril</h3>", template_data)
+            self.assertIn("<h3>jeudi 25 avril</h3>", template_data)
             self.assertIn("<p>00u00, one event<br></p>", template_data)
             self.assertIn("<p>00u59, Two event<br></p>", template_data)
+
+            french_template_headline_data = render_template(
+                "french_news_events_list_export_headline.html",
+                items=events,
+                app=self.app,
+            )
+            self.assertIn(
+                "<h4>Calendrier sportif international du dimanche 21 au lundi 22 avril</h4>",
+                french_template_headline_data,
+            )
+
+            dutch_template_headline_data = render_template(
+                "dutch_news_events_list_export_headline.html",
+                items=events,
+                app=self.app,
+            )
+            self.assertIn(
+                "<h4>Internationale sportkalender van zondag 21 tot maandag 22 april</h4>",
+                dutch_template_headline_data,
+            )
 
     def test_export_tommorow(self):
         with self.app.app_context():
