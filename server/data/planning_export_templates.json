@@ -23,20 +23,22 @@
   },
   {
     "_id": "dutch_news_events_list",
-    "init_version": 1,
+    "init_version": 2,
     "name": "dutch_news_events_list",
     "type": "event",
     "data": {
-        "body_html_template": "dutch_news_events_list_export.html"
+        "body_html_template": "dutch_news_events_list_export_body.html",
+        "headline_template": "dutch_news_events_list_export_headline.html"
     },
     "label": "Internationale sportkalender"
 },{
   "_id": "french_news_events_list",
-  "init_version": 1,
+  "init_version": 2,
   "name": "french_news_events_list",
   "type": "event",
   "data": {
-      "body_html_template": "french_news_events_list_export.html"
+      "body_html_template": "french_news_events_list_export_body.html",
+      "headline_template": "french_news_events_list_export_headline.html"
   },
   "label": "Calendrier sportif international"
 },
