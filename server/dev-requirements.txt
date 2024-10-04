@@ -9,7 +9,7 @@ mypy
 pytest
 pytest-env
 types-click==7.1.8
-types-docutils==0.21.0.20240907
+types-docutils==0.21.0.20241004
 types-Flask==1.1.6
 types-Jinja2==2.11.9
 types-MarkupSafe==1.1.10
