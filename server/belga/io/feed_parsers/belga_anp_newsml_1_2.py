@@ -91,7 +91,9 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
         extract city from body_html
         """
-        location_match = re.search(r"([A-Z][A-Za-z ]+)\s*\(ANP\)", item["body_html"])
+        location_match = re.search(
+            r"([A-Z][A-Za-z ]+)\s*\(\s*[A-Z/]+\s*\)", item["body_html"]
+        )
         if location_match:
             return location_match.group(1).strip()
         return ""
