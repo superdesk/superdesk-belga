@@ -117,9 +117,10 @@ setTimeout(() => {
                             payload: {
                                 text: article.body_html,
                                 nrTitles: 3,
+                                language: article.language,
                                 maxCharacters: maxCharacterLength != null
-                                ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                : 0,
+                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                    : 0,
                             }
                         }).then((result) => result.response)
                     },
@@ -132,9 +133,10 @@ setTimeout(() => {
                             path: '/belga/ai/toolkit/summarize',
                             payload: {
                                 text: article.body_html,
+                                language: article.language,
                                 maxCharacters: maxCharacterLength != null
-                                ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
-                                : 0,
+                                    ? (maxCharacterLength - MAX_CHARACTER_OFFSET)
+                                    : 0,
                             }
                         }).then((result) => result.response);
                     },
