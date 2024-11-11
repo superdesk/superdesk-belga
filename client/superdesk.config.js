@@ -65,6 +65,7 @@ module.exports = function(grunt) {
 
         ui: {
             publishEmbargo: false,
+            sendEmbargo: false,
         },
 
         langOverride: {
