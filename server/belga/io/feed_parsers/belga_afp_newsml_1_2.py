@@ -127,7 +127,6 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         elements = descript_el.findall("Property")
         for element in elements:
-
             if element.attrib.get("FormalName", "") == "Keyword":
                 data = element.attrib.get("Value")
                 if "keywords" in item:

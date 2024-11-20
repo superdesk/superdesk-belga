@@ -17,12 +17,12 @@ from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     """Feed Parser for Belga specific EFE NewsML."""
 
-    NAME = 'belga_efe_newsml12'
-    label = 'Belga specific EFE News ML 1.2 Parser'
+    NAME = "belga_efe_newsml12"
+    label = "Belga specific EFE News ML 1.2 Parser"
 
     MAPPING_PRODUCTS = {
-        'SPO': 'NEWS/SPORTS',
-        'POL': 'NEWS/POLITICS',
+        "SPO": "NEWS/SPORTS",
+        "POL": "NEWS/POLITICS",
     }
 
     # efe related logic goes here
@@ -30,31 +30,37 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         super().parse_contentitem(item, content_el)
         categoria = content_el.find('DataContent/nitf/head/meta[@name="categoria"]')
         if categoria is not None:
-            content = categoria.attrib.get('content')
+            content = categoria.attrib.get("content")
             qcode = content.upper() if content is not None else None
             if qcode:
-                item.setdefault('anpa_category', []).append({'qcode': qcode})
-                qcode = self.MAPPING_PRODUCTS.get(qcode, 'NEWS/GENERAL')
-                item.setdefault('subject', []).append({
-                    'name': qcode,
-                    'qcode': qcode,
-                    'parent': 'NEWS',
-                    'scheme': 'services-products'
-                })
+                item.setdefault("anpa_category", []).append({"qcode": qcode})
+                qcode = self.MAPPING_PRODUCTS.get(qcode, "NEWS/GENERAL")
+                item.setdefault("subject", []).append(
+                    {
+                        "name": qcode,
+                        "qcode": qcode,
+                        "parent": "NEWS",
+                        "scheme": "services-products",
+                    }
+                )
             else:
-                item.setdefault('subject', []).append({
-                    'name': 'NEWS/GENERAL',
-                    'qcode': 'NEWS/GENERAL',
-                    'parent': 'NEWS',
-                    'scheme': 'services-products'
-                })
+                item.setdefault("subject", []).append(
+                    {
+                        "name": "NEWS/GENERAL",
+                        "qcode": "NEWS/GENERAL",
+                        "parent": "NEWS",
+                        "scheme": "services-products",
+                    }
+                )
         # source is EFE
-        credit = {"name": 'EFE', "qcode": 'EFE', "scheme": "sources"}
-        item.setdefault('subject', []).append(credit)
+        credit = {"name": "EFE", "qcode": "EFE", "scheme": "sources"}
+        item.setdefault("subject", []).append(credit)
 
         # store data in original_metadata and belga-keyword CV
-        for ele in content_el.findall('DataContent/nitf/head/docdata/key-list/keyword'):
-            item.setdefault('subject', []).extend(self._get_keywords(ele.attrib.get('key')))
+        for ele in content_el.findall("DataContent/nitf/head/docdata/key-list/keyword"):
+            item.setdefault("subject", []).extend(
+                self._get_keywords(ele.attrib.get("key"))
+            )
 
         return item
 

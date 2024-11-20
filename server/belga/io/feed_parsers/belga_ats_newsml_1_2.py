@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     """Feed Parser which can parse specific Belga News ML xml files."""
 
-    NAME = 'belga_ats_newsml12'
+    NAME = "belga_ats_newsml12"
 
-    label = 'Belga specific ATS News ML 1.2 Parser'
+    label = "Belga specific ATS News ML 1.2 Parser"
 
-    SUPPORTED_ASSET_TYPES = ('ALERT', 'SHORT', 'TEXT', 'BRIEF')
+    SUPPORTED_ASSET_TYPES = ("ALERT", "SHORT", "TEXT", "BRIEF")
 
     def can_parse(self, xml):
         """
@@ -33,28 +33,28 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param xml:
         :return:
         """
-        return xml.tag == 'NewsML'
+        return xml.tag == "NewsML"
 
     def parse_newsmanagement(self, item, manage_el):
         super().parse_newsmanagement(item, manage_el)
-        item['firstcreated'] = item['firstcreated'].astimezone(pytz.utc)
-        item['versioncreated'] = item['versioncreated'].astimezone(pytz.utc)
+        item["firstcreated"] = item["firstcreated"].astimezone(pytz.utc)
+        item["versioncreated"] = item["versioncreated"].astimezone(pytz.utc)
 
-        if item.get('pubstatus') == 'embargoed':
-            item['pubstatus'] = 'usable'
+        if item.get("pubstatus") == "embargoed":
+            item["pubstatus"] = "usable"
 
         # Source is ATS
-        credit = {"name": 'ATS', "qcode": 'ATS', "scheme": "sources"}
-        item.setdefault('subject', []).append(credit)
+        credit = {"name": "ATS", "qcode": "ATS", "scheme": "sources"}
+        item.setdefault("subject", []).append(credit)
 
     def parse_contentitem(self, item, content_el):
         if content_el is None:
             return
 
         super().parse_contentitem(item, content_el)
-        element = content_el.find('Comment')
-        if element is not None and element.get('FormalName') == 'Editorial Note':
-            item['ednote'] = element.text
+        element = content_el.find("Comment")
+        if element is not None and element.get("FormalName") == "Editorial Note":
+            item["ednote"] = element.text
 
     def parse_newscomponent(self, item, newscomponent_el):
         """
@@ -91,9 +91,9 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :return:
         """
         super().parse_newscomponent(item, newscomponent_el)
-        second_newscomponent_el = newscomponent_el.find('NewsComponent')
+        second_newscomponent_el = newscomponent_el.find("NewsComponent")
         if second_newscomponent_el is not None:
-            content_el = second_newscomponent_el.find('ContentItem')
+            content_el = second_newscomponent_el.find("ContentItem")
             if content_el is not None:
                 self.parse_contentitem(item, content_el)
         return item

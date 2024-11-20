@@ -47,7 +47,6 @@ class BelgaANSAFeedParser(NITFFeedParser):
         return xml.tag.endswith("nitf")
 
     def parse(self, xml, provider=None):
-
         # removes unwanted comments
         uncommented_xml = etree.fromstring(
             etree.tostring(xml, encoding="unicode"),
@@ -218,12 +217,12 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
     def remove_prefix(self, text: str) -> str:
         if text.startswith(">>>ANSA/"):
-            return text[len(">>>ANSA/"):]
+            return text[len(">>>ANSA/") :]
         return text
 
     def get_norm_datetime(self, tree):
         value = super().get_norm_datetime(tree)
-        return local_to_utc('Europe/Rome', value)
+        return local_to_utc("Europe/Rome", value)
 
 
 register_feed_parser(BelgaANSAFeedParser.NAME, BelgaANSAFeedParser())

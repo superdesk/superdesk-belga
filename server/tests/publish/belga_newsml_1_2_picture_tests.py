@@ -38,7 +38,6 @@ belga_apiget_response = {
 
 
 class BelgaNewsML12FormatterVideoTest(TestCase):
-
     archive = (
         {
             "_id": "urn:newsml:localhost:5000:2019-08-15T13:04:19.702285:d201d16e-1011-4d4c-a262-fed9942a64db",

@@ -67,32 +67,47 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             self.root = xml
 
             # parser the NewsEnvelope element
-            item_envelop = self.parse_newsenvelop(xml.find('NewsEnvelope'))
+            item_envelop = self.parse_newsenvelop(xml.find("NewsEnvelope"))
 
             # parser the NewsItem element
-            l_newsitem_el = xml.findall('NewsItem')
+            l_newsitem_el = xml.findall("NewsItem")
             for newsitem_el in l_newsitem_el:
                 try:
                     item = item_envelop.copy()
                     self.parse_newsitem(item, newsitem_el)
                     # add product is NEWS/GENERAL, if product is empty
-                    if not [it for it in item.get('subject', []) if it.get('scheme') == 'services-products']:
-                        item.setdefault('subject', []).append({
-                            'name': 'NEWS/GENERAL',
-                            'qcode': 'NEWS/GENERAL',
-                            'parent': 'NEWS',
-                            'scheme': 'services-products'
-                        })
+                    if not [
+                        it
+                        for it in item.get("subject", [])
+                        if it.get("scheme") == "services-products"
+                    ]:
+                        item.setdefault("subject", []).append(
+                            {
+                                "name": "NEWS/GENERAL",
+                                "qcode": "NEWS/GENERAL",
+                                "parent": "NEWS",
+                                "scheme": "services-products",
+                            }
+                        )
                     # Distribution is default
-                    item.setdefault('subject', []).extend([
-                        {"name": 'default', "qcode": 'default', "scheme": "distribution"},
-                    ])
+                    item.setdefault("subject", []).extend(
+                        [
+                            {
+                                "name": "default",
+                                "qcode": "default",
+                                "scheme": "distribution",
+                            },
+                        ]
+                    )
                     # Slugline and keywords is epmty
-                    item['slugline'] = None
-                    item['keywords'] = []
+                    item["slugline"] = None
+                    item["keywords"] = []
                     # remove duplicated subject
-                    item['subject'] = [
-                        dict(i) for i, _ in itertools.groupby(sorted(item['subject'], key=lambda k: k['qcode']))
+                    item["subject"] = [
+                        dict(i)
+                        for i, _ in itertools.groupby(
+                            sorted(item["subject"], key=lambda k: k["qcode"])
+                        )
                     ]
                     item = self.populate_fields(item)
                 except SkipItemException:
@@ -124,31 +139,31 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if envelop_el is None:
             return {}
         item = {}
-        element = envelop_el.find('TransmissionId')
+        element = envelop_el.find("TransmissionId")
         if element is not None:
-            item['ingest_provider_sequence'] = element.text
+            item["ingest_provider_sequence"] = element.text
 
-        element = envelop_el.find('Priority')
+        element = envelop_el.find("Priority")
         if element is not None:
-            item['priority'] = int(element.get('FormalName', 0))
+            item["priority"] = int(element.get("FormalName", 0))
 
         # EFE
-        sentfrom_el = envelop_el.find('SentFrom')
+        sentfrom_el = envelop_el.find("SentFrom")
         if sentfrom_el is not None:
-            comment_el = sentfrom_el.find('Comment')
-            item['sentfrom'] = {}
+            comment_el = sentfrom_el.find("Comment")
+            item["sentfrom"] = {}
 
             if comment_el is not None:
-                item['sentfrom']['comment'] = comment_el.text
+                item["sentfrom"]["comment"] = comment_el.text
 
-            party_el = sentfrom_el.find('Party')
+            party_el = sentfrom_el.find("Party")
             if party_el is not None:
-                item['sentfrom']['party'] = party_el.get('FormalName', '')
+                item["sentfrom"]["party"] = party_el.get("FormalName", "")
 
-                element = party_el.find('Property')
+                element = party_el.find("Property")
                 if element is not None:
-                    if element.attrib.get('FormalName', '') == 'Organization':
-                        item['sentfrom']['organization'] = element.attrib.get('Value')
+                    if element.attrib.get("FormalName", "") == "Organization":
+                        item["sentfrom"]["organization"] = element.attrib.get("Value")
 
         return item
 
@@ -174,34 +189,32 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         :param newsitem_el:
         :return:
         """
-        if newsitem_el.attrib.get('Duid', '') != '':
-            item['duid'] = newsitem_el.attrib.get('Duid', '')
+        if newsitem_el.attrib.get("Duid", "") != "":
+            item["duid"] = newsitem_el.attrib.get("Duid", "")
 
         # LinkType is CV
-        link_type = newsitem_el.attrib.get('LinkType', '')
-        if link_type != '':
-            item.setdefault('subject', []).append({
-                "name": link_type,
-                "qcode": link_type,
-                "scheme": "link_type"
-            })
+        link_type = newsitem_el.attrib.get("LinkType", "")
+        if link_type != "":
+            item.setdefault("subject", []).append(
+                {"name": link_type, "qcode": link_type, "scheme": "link_type"}
+            )
 
-        element = newsitem_el.find('Comment')
+        element = newsitem_el.find("Comment")
         if element is not None:
-            item['comment'] = {}
+            item["comment"] = {}
 
-            item['comment']['version'] = element.text
-            if element.get('FormalName', '') is not None:
-                item['comment']['name'] = element.get('FormalName', '')
+            item["comment"]["version"] = element.text
+            if element.get("FormalName", "") is not None:
+                item["comment"]["name"] = element.get("FormalName", "")
 
         # Parser Identification element
-        self.parse_identification(item, newsitem_el.find('Identification'))
+        self.parse_identification(item, newsitem_el.find("Identification"))
 
         # Parser NewsManagement element
-        self.parse_newsmanagement(item, newsitem_el.find('NewsManagement'))
+        self.parse_newsmanagement(item, newsitem_el.find("NewsManagement"))
 
         # Parser NewsComponent element
-        component_parent = newsitem_el.find('NewsComponent')
+        component_parent = newsitem_el.find("NewsComponent")
         if component_parent is not None:
             self.parse_newscomponent(item, component_parent)
 
@@ -229,40 +242,38 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if indent_el is None:
             return
 
-        newsident_el = indent_el.find('NewsIdentifier')
+        newsident_el = indent_el.find("NewsIdentifier")
         if newsident_el is not None:
-            element = newsident_el.find('ProviderId')
+            element = newsident_el.find("ProviderId")
             if element is not None:
-                item['provider_id'] = element.text
+                item["provider_id"] = element.text
 
-            element = newsident_el.find('DateId')
+            element = newsident_el.find("DateId")
             if element is not None:
-                item['date_id'] = element.text
+                item["date_id"] = element.text
 
-            element = newsident_el.find('NewsItemId')
+            element = newsident_el.find("NewsItemId")
             if element is not None:
                 item["guid"] = item["item_id"] = element.text
 
-            element = newsident_el.find('RevisionId')
+            element = newsident_el.find("RevisionId")
             if element is not None:
-                item['version'] = element.text
+                item["version"] = element.text
 
-            element = newsident_el.find('PublicIdentifier')
+            element = newsident_el.find("PublicIdentifier")
             if element is not None:
-                item['guid'] = element.text
+                item["guid"] = element.text
 
-        element = indent_el.find('NameLabel')
+        element = indent_el.find("NameLabel")
         if element is not None and element.text:
-            item.setdefault('subject', []).append({
-                "name": element.text,
-                "qcode": element.text,
-                "scheme": "label"
-            })
+            item.setdefault("subject", []).append(
+                {"name": element.text, "qcode": element.text, "scheme": "label"}
+            )
 
         # ANP
-        element = indent_el.find('DateLabel')
+        element = indent_el.find("DateLabel")
         if element is not None:
-            item['date_label'] = element.text
+            item["date_label"] = element.text
 
     def parse_newsmanagement(self, item, manage_el):
         """
@@ -289,38 +300,38 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if manage_el is None:
             return
 
-        element = manage_el.find('FirstCreated')
+        element = manage_el.find("FirstCreated")
         if element is not None:
-            item['firstcreated'] = self.datetime(element.text)
+            item["firstcreated"] = self.datetime(element.text)
 
-        element = manage_el.find('ThisRevisionCreated')
+        element = manage_el.find("ThisRevisionCreated")
         if element is not None:
-            item['versioncreated'] = self.datetime(element.text)
+            item["versioncreated"] = self.datetime(element.text)
 
-        element = manage_el.find('Status')
+        element = manage_el.find("Status")
         if element is not None:
-            item['pubstatus'] = str.lower(element.get('FormalName', ''))
+            item["pubstatus"] = str.lower(element.get("FormalName", ""))
 
-        element = manage_el.find('Urgency')
+        element = manage_el.find("Urgency")
         if element is not None:
-            item['urgency'] = element.get('FormalName', '')
-            if item['urgency'] == '':
-                item['urgency'] = element.text
-            item['urgency'] = int(item['urgency'])
+            item["urgency"] = element.get("FormalName", "")
+            if item["urgency"] == "":
+                item["urgency"] = element.text
+            item["urgency"] = int(item["urgency"])
 
         # parser AssociatedWith element
-        elements = manage_el.findall('AssociatedWith')
+        elements = manage_el.findall("AssociatedWith")
         if elements:
-            item['associated_with'] = {}
+            item["associated_with"] = {}
             for element in elements:
-                data = element.get('NewsItem', '')
-                item['associated_with']['item'] = data if data else None
-                data = element.get('FormalName')
+                data = element.get("NewsItem", "")
+                item["associated_with"]["item"] = data if data else None
+                data = element.get("FormalName")
                 if data:
-                    if 'type' in item['associated_with']:
-                        item['associated_with']['type'].append(data)
+                    if "type" in item["associated_with"]:
+                        item["associated_with"]["type"].append(data)
                     else:
-                        item['associated_with']['type'] = [data]
+                        item["associated_with"]["type"] = [data]
 
     def parse_newscomponent(self, item, component_el):
         """
@@ -357,109 +368,111 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if component_el is None:
             return
 
-        if component_el.attrib.get('Duid') is not None and "guid" not in item:
-            item['guid'] = component_el.attrib.get('Duid', '')
+        if component_el.attrib.get("Duid") is not None and "guid" not in item:
+            item["guid"] = component_el.attrib.get("Duid", "")
 
         # Essential is CV
-        essential = component_el.attrib.get('Essential')
+        essential = component_el.attrib.get("Essential")
         if essential:
-            item.setdefault('subject', []).append({
-                "name": essential,
-                "qcode": essential,
-                "scheme": "essential"
-            })
+            item.setdefault("subject", []).append(
+                {"name": essential, "qcode": essential, "scheme": "essential"}
+            )
 
         # EquivalentsList is CV
-        equivalents_list = component_el.attrib.get('EquivalentsList')
+        equivalents_list = component_el.attrib.get("EquivalentsList")
         if equivalents_list:
-            item.setdefault('subject', []).append({
-                "name": equivalents_list,
-                "qcode": equivalents_list,
-                "scheme": "equivalents_list"
-            })
+            item.setdefault("subject", []).append(
+                {
+                    "name": equivalents_list,
+                    "qcode": equivalents_list,
+                    "scheme": "equivalents_list",
+                }
+            )
 
-        role = component_el.find('Role')
+        role = component_el.find("Role")
         if role is not None:
-            if role.attrib.get('FormalName', ''):
-                item['role'] = role.attrib.get('FormalName', '')
+            if role.attrib.get("FormalName", ""):
+                item["role"] = role.attrib.get("FormalName", "")
 
-        newslines_el = component_el.find('NewsLines')
+        newslines_el = component_el.find("NewsLines")
         if newslines_el is not None:
-            element = newslines_el.find('DateLine')
+            element = newslines_el.find("DateLine")
             if element is not None:
                 self.set_dateline(item, text=element.text)
 
-            element = newslines_el.find('HeadLine')
+            element = newslines_el.find("HeadLine")
             if element is not None:
-                item['headline'] = element.text
+                item["headline"] = element.text
 
-            element = newslines_el.find('NewsLine/NewsLineType')
+            element = newslines_el.find("NewsLine/NewsLineType")
             if element is not None:
-                item['line_type'] = element.get('FormalName', '')
+                item["line_type"] = element.get("FormalName", "")
 
-            element = newslines_el.find('NewsLine/NewsLineText')
+            element = newslines_el.find("NewsLine/NewsLineText")
             if element is not None:
-                item['line_text'] = element.text
+                item["line_text"] = element.text
 
             # ANP
-            element = newslines_el.find('SubHeadLine')
+            element = newslines_el.find("SubHeadLine")
             if element is not None:
-                item['sub_head_line'] = element.text
+                item["sub_head_line"] = element.text
 
-            element = newslines_el.find('ByLine')
+            element = newslines_el.find("ByLine")
             if element is not None:
-                item['byline'] = element.text
+                item["byline"] = element.text
 
-            element = newslines_el.find('ByLineTitle')
+            element = newslines_el.find("ByLineTitle")
             if element is not None:
-                item['by_line_title'] = element.text
+                item["by_line_title"] = element.text
 
-            element = newslines_el.find('CopyrightLine')
+            element = newslines_el.find("CopyrightLine")
             if element is not None:
-                item['copyright_line'] = element.text
+                item["copyright_line"] = element.text
 
-            element = newslines_el.find('SlugLine')
+            element = newslines_el.find("SlugLine")
             if element is not None:
-                item['slugline'] = element.text
+                item["slugline"] = element.text
 
-            element = newslines_el.find('KeywordLine')
+            element = newslines_el.find("KeywordLine")
             if element is not None:
-                item['keyword_line'] = element.text
+                item["keyword_line"] = element.text
 
-        admin_el = component_el.find('AdministrativeMetadata')
+        admin_el = component_el.find("AdministrativeMetadata")
         if admin_el is not None:
-            item['administrative'] = {}
+            item["administrative"] = {}
 
-            element = admin_el.find('Provider/Party')
+            element = admin_el.find("Provider/Party")
             if element is not None:
-                item['administrative']['provider'] = element.get('FormalName', '')
+                item["administrative"]["provider"] = element.get("FormalName", "")
 
-            element = admin_el.find('Creator/Party')
+            element = admin_el.find("Creator/Party")
             if element is not None:
-                item['administrative']['creator'] = element.get('FormalName', '')
+                item["administrative"]["creator"] = element.get("FormalName", "")
 
-            element = admin_el.find('Source/Party')
+            element = admin_el.find("Source/Party")
             if element is not None:
-                item['administrative']['source'] = element.get('FormalName', '')
+                item["administrative"]["source"] = element.get("FormalName", "")
 
         # parser DescriptiveMetadata element
-        if component_el.find('DescriptiveMetadata') is not None:
-            self.parse_descriptivemetadata(item, component_el.find('DescriptiveMetadata'))
+        if component_el.find("DescriptiveMetadata") is not None:
+            self.parse_descriptivemetadata(
+                item, component_el.find("DescriptiveMetadata")
+            )
         else:
-            self.parse_descriptivemetadata(item, component_el.find('DescriptiveMetada'))
+            self.parse_descriptivemetadata(item, component_el.find("DescriptiveMetada"))
 
         # parser ContentItem element
-        self.parse_contentitem(item, component_el.find('ContentItem'))
+        self.parse_contentitem(item, component_el.find("ContentItem"))
 
         # parser item_keywords element
-        keywords = component_el.find('item_keywords')
+        keywords = component_el.find("item_keywords")
         if keywords is not None:
-            elements = keywords.findall('item_keyword')
+            elements = keywords.findall("item_keyword")
 
             if elements is not None:
-                item['keywords'] = []
+                item["keywords"] = []
                 for element in [e for e in elements if e.text]:
-                    item['keywords'].append(element.text)
+                    item["keywords"].append(element.text)
 
     def parse_descriptivemetadata(self, item, descript_el):
         """
@@ -497,94 +510,98 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if descript_el is None:
             return
 
-        element = descript_el.find('Language')
+        element = descript_el.find("Language")
         if element is not None:
-            item['language'] = element.get('FormalName', '')
+            item["language"] = element.get("FormalName", "")
 
             # SDBELGA-690
-            if item['language'].find('-') != -1:
-                item['language'] = item['language'].split('-')[0]
+            if item["language"].find("-") != -1:
+                item["language"] = item["language"].split("-")[0]
 
-        for element in descript_el.findall('Genre'):
-            if element is not None and element.get('FormalName'):
-                self._add_genre(item, element.get('FormalName'))
+        for element in descript_el.findall("Genre"):
+            if element is not None and element.get("FormalName"):
+                self._add_genre(item, element.get("FormalName"))
 
-        element = descript_el.find('guid')
+        element = descript_el.find("guid")
         if element is not None:
-            item['descriptive_guid'] = element.text
+            item["descriptive_guid"] = element.text
 
         # parser SubjectCode element
-        subjects = descript_el.findall('SubjectCode/SubjectDetail')
-        subjects += descript_el.findall('SubjectCode/SubjectMatter')
-        subjects += descript_el.findall('SubjectCode/Subject')
-        item.setdefault('subject', []).extend(self.format_subjects(subjects))
+        subjects = descript_el.findall("SubjectCode/SubjectDetail")
+        subjects += descript_el.findall("SubjectCode/SubjectMatter")
+        subjects += descript_el.findall("SubjectCode/Subject")
+        item.setdefault("subject", []).extend(self.format_subjects(subjects))
         for subject in subjects:
-            if subject.get('cat'):
-                category = {'qcode': subject.get('cat')}
-                if category not in item.get('anpa_category', []):
-                    item.setdefault('anpa_category', []).append(category)
+            if subject.get("cat"):
+                category = {"qcode": subject.get("cat")}
+                if category not in item.get("anpa_category", []):
+                    item.setdefault("anpa_category", []).append(category)
 
         # parser OfInterestTo is CV
-        for element in descript_el.findall('OfInterestTo'):
-            if element is not None and element.get('FormalName'):
-                item.setdefault('subject', []).append({
-                    "name": element.get('FormalName'),
-                    "qcode": element.get('FormalName'),
-                    "scheme": "of_interest_to"
-                })
+        for element in descript_el.findall("OfInterestTo"):
+            if element is not None and element.get("FormalName"):
+                item.setdefault("subject", []).append(
+                    {
+                        "name": element.get("FormalName"),
+                        "qcode": element.get("FormalName"),
+                        "scheme": "of_interest_to",
+                    }
+                )
 
-        element = descript_el.find('DateLineDate')
+        element = descript_el.find("DateLineDate")
         if element is not None:
-            item.setdefault('dateline', {}).update({"date": self.datetime(element.text)})
+            item.setdefault("dateline", {}).update(
+                {"date": self.datetime(element.text)}
+            )
 
-        location_el = descript_el.find('Location')
+        location_el = descript_el.find("Location")
         if location_el is not None:
-            item['extra'] = {}
+            item["extra"] = {}
 
-            how_present_el = location_el.get('HowPresent', '')
+            how_present_el = location_el.get("HowPresent", "")
             if how_present_el is not None:
-                item['extra']['how_present'] = how_present_el
+                item["extra"]["how_present"] = how_present_el
 
-            elements = location_el.findall('Property')
+            elements = location_el.findall("Property")
             for element in elements:
-                if element.attrib.get('FormalName', '') == 'Country':
-                    country = element.attrib.get('Value')
-                    item['extra']['country'] = country
+                if element.attrib.get("FormalName", "") == "Country":
+                    country = element.attrib.get("Value")
+                    item["extra"]["country"] = country
                     # country keywords is CV
-                    item.setdefault('subject', []).extend(self._get_country(country))
+                    item.setdefault("subject", []).extend(self._get_country(country))
                     # country is cv
-                    item.setdefault('subject', []).extend(self._get_countries(country))
-                if element.attrib.get('FormalName', '') == 'City':
-                    item['extra']['city'] = element.attrib.get('Value')
-                if element.attrib.get('FormalName', '') == 'CountryArea':
-                    item['extra']['country_area'] = element.attrib.get('Value')
+                    item.setdefault("subject", []).extend(self._get_countries(country))
+                if element.attrib.get("FormalName", "") == "City":
+                    item["extra"]["city"] = element.attrib.get("Value")
+                if element.attrib.get("FormalName", "") == "CountryArea":
+                    item["extra"]["country_area"] = element.attrib.get("Value")
 
-        elements = descript_el.findall('Property')
+        elements = descript_el.findall("Property")
         for element in elements:
-            if element.attrib.get('FormalName', '') == 'GeneratorSoftware':
-                item['generator_software'] = element.attrib.get('Value')
+            if element.attrib.get("FormalName", "") == "GeneratorSoftware":
+                item["generator_software"] = element.attrib.get("Value")
 
-            if element.attrib.get('FormalName', '') == 'Tesauro':
-                item['tesauro'] = element.attrib.get('Value')
+            if element.attrib.get("FormalName", "") == "Tesauro":
+                item["tesauro"] = element.attrib.get("Value")
 
-            if element.attrib.get('FormalName', '') == 'EfePais':
-                item['efe_pais'] = element.attrib.get('Value')
+            if element.attrib.get("FormalName", "") == "EfePais":
+                item["efe_pais"] = element.attrib.get("Value")
 
-            if element.attrib.get('FormalName', '') == 'EfeRegional':
-                item['efe_regional'] = element.attrib.get('Value')
+            if element.attrib.get("FormalName", "") == "EfeRegional":
+                item["efe_regional"] = element.attrib.get("Value")
 
-            if element.attrib.get('FormalName', '') == 'EfeComplemento':
-                item['efe_complemento'] = element.attrib.get('Value')
+            if element.attrib.get("FormalName", "") == "EfeComplemento":
+                item["efe_complemento"] = element.attrib.get("Value")
 
-            if element.attrib.get('FormalName', '') == 'Keyword':
-                data = element.attrib.get('Value')
-                if 'keywords' in item:
-                    item['keywords'].append(data)
+            if element.attrib.get("FormalName", "") == "Keyword":
+                data = element.attrib.get("Value")
+                if "keywords" in item:
+                    item["keywords"].append(data)
                 else:
-                    item['keywords'] = [data]
+                    item["keywords"] = [data]
 
                 # store data in original_metadata and belga-keyword CV
-                item.setdefault('subject', []).extend(self._get_keywords(data))
+                item.setdefault("subject", []).extend(self._get_keywords(data))
 
     def parse_contentitem(self, item, content_el):
         """
@@ -620,50 +637,61 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         if content_el is None:
             return
 
-        element = content_el.find('MediaType')
+        element = content_el.find("MediaType")
         if element is not None:
-            item['type'] = element.get('FormalName', '')
+            item["type"] = element.get("FormalName", "")
 
-        element = content_el.find('MimeType')
+        element = content_el.find("MimeType")
         if element is not None:
-            item['mimetype'] = element.get('FormalName', '')
+            item["mimetype"] = element.get("FormalName", "")
 
-        element = content_el.find('Format')
+        element = content_el.find("Format")
         if element is not None:
-            item['format'] = element.get('FormalName', '')
+            item["format"] = element.get("FormalName", "")
 
-        character_el = content_el.find('Characteristics')
+        character_el = content_el.find("Characteristics")
         if character_el is not None:
-            item['characteristics'] = {}
-            element = character_el.find('SizeInBytes')
+            item["characteristics"] = {}
+            element = character_el.find("SizeInBytes")
             if element is not None:
-                item['characteristics']['size_bytes'] = element.text
-            elements = character_el.findall('Property')
+                item["characteristics"]["size_bytes"] = element.text
+            elements = character_el.findall("Property")
             for element in elements:
-                if element.attrib.get('FormalName') == 'Words':
-                    item['characteristics']['word_count'] = element.attrib.get('Value')
-                if element.attrib.get('FormalName') == 'SizeInBytes':
-                    item['characteristics']['size_bytes'] = element.attrib.get('Value')
-                if element.attrib.get('FormalName') == 'Creator':
-                    item['characteristics']['creator'] = element.attrib.get('Value')
-                if element.attrib.get('FormalName') == 'Characters':
-                    item['characteristics']['characters'] = element.attrib.get('Value')
-                if element.attrib.get('FormalName') == 'FormatVersion':
-                    item['characteristics']['format_version'] = element.attrib.get('Value')
+                if element.attrib.get("FormalName") == "Words":
+                    item["characteristics"]["word_count"] = element.attrib.get("Value")
+                if element.attrib.get("FormalName") == "SizeInBytes":
+                    item["characteristics"]["size_bytes"] = element.attrib.get("Value")
+                if element.attrib.get("FormalName") == "Creator":
+                    item["characteristics"]["creator"] = element.attrib.get("Value")
+                if element.attrib.get("FormalName") == "Characters":
+                    item["characteristics"]["characters"] = element.attrib.get("Value")
+                if element.attrib.get("FormalName") == "FormatVersion":
+                    item["characteristics"]["format_version"] = element.attrib.get(
+                        "Value"
+                    )
 
-        if content_el.find('DataContent/nitf/body/body.content') is not None:
-            item['body_html'] = etree.tostring(content_el.find('DataContent/nitf/body/body.content'),
-                                               encoding='unicode').replace('<body.content>', '').replace(
-                '</body.content>', '')
+        if content_el.find("DataContent/nitf/body/body.content") is not None:
+            item["body_html"] = (
+                etree.tostring(
+                    content_el.find("DataContent/nitf/body/body.content"),
+                    encoding="unicode",
+                )
+                .replace("<body.content>", "")
+                .replace("</body.content>", "")
+            )
 
-        if content_el.find('DataContent/nitf/head') is not None:
-            item['header_content'] = etree.tostring(content_el.find('DataContent/nitf/head'), encoding='unicode')
+        if content_el.find("DataContent/nitf/head") is not None:
+            item["header_content"] = etree.tostring(
+                content_el.find("DataContent/nitf/head"), encoding="unicode"
+            )
 
-        if content_el.find('DataContent/nitf/body/body.head') is not None:
-            item['body_head'] = etree.tostring(content_el.find('DataContent/nitf/body/body.head'), encoding='unicode')
+        if content_el.find("DataContent/nitf/body/body.head") is not None:
+            item["body_head"] = etree.tostring(
+                content_el.find("DataContent/nitf/body/body.head"), encoding="unicode"
+            )
 
     def datetime(self, string):
-        l_format_dt = ['%Y%m%dT%H%M%S%z', '%Y%m%dT%H%M%S', '%Y%m%dT%H%M%SZ']
+        l_format_dt = ["%Y%m%dT%H%M%S%z", "%Y%m%dT%H%M%S", "%Y%m%dT%H%M%SZ"]
         for format_dt in l_format_dt:
             converted_dt = self.valid_datetime(string, format_dt)
             if converted_dt:
@@ -688,20 +716,28 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
         def is_not_formatted(qcode):
             for formatted_subject in formatted_subjects:
-                if formatted_subject['qcode'] == qcode:
+                if formatted_subject["qcode"] == qcode:
                     return False
             return True
 
-        iptcsc_cv = self._get_cv('iptc_subject_codes')
+        iptcsc_cv = self._get_cv("iptc_subject_codes")
         for subject in subjects:
-            formal_name = subject.get('FormalName')
-            for item in iptcsc_cv.get('items', []):
-                if item.get('is_active'):
+            formal_name = subject.get("FormalName")
+            for item in iptcsc_cv.get("items", []):
+                if item.get("is_active"):
                     #: check formal_name, format formal_name and filter missing subjects
-                    if formal_name and is_not_formatted(formal_name) and item.get('qcode') == formal_name:
+                    if (
+                        formal_name
+                        and is_not_formatted(formal_name)
+                        and item.get("qcode") == formal_name
+                    ):
                         formatted_subjects.append(
-                            {'qcode': formal_name, 'name': subject_codes.get(formal_name, ''),
-                             'scheme': 'iptc_subject_codes'})
+                            {
+                                "qcode": formal_name,
+                                "name": subject_codes.get(formal_name, ""),
+                                "scheme": "iptc_subject_codes",
+                            }
+                        )
 
         return formatted_subjects
 
@@ -709,14 +745,16 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         # escape characters
         text = html.escape(text)
         # handle newline
-        for newline in ('\r\n', '\n', '\r'):
-            text = text.replace(newline, '</p><p>')
+        for newline in ("\r\n", "\n", "\r"):
+            text = text.replace(newline, "</p><p>")
         # remove redundant whitespaces
-        text = ' '.join(text.split())
-        return '<p>' + text + '</p>'
+        text = " ".join(text.split())
+        return "<p>" + text + "</p>"
 
     def _get_cv(self, _id):
-        return superdesk.get_resource_service('vocabularies').find_one(req=None, _id=_id)
+        return superdesk.get_resource_service("vocabularies").find_one(
+            req=None, _id=_id
+        )
 
     def _add_genre(self, item, name, qcode=None):
         genre = dict(
@@ -724,15 +762,21 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             qcode=qcode if qcode is not None else name,
         )
 
-        item.setdefault("genre", []).append(genre.copy())  # use copy so scheme is not added later
+        item.setdefault("genre", []).append(
+            genre.copy()
+        )  # use copy so scheme is not added later
 
         # keep genre in subject for BC
         genre["scheme"] = "genre"
-        item.setdefault('subject', []).append(genre)
+        item.setdefault("subject", []).append(genre)
 
     def _get_genre(self, item):
-        return item["genre"] if item.get("genre") else [
-            subj
-            for subj in item.get("subject", [])
-            if subj.get("scheme") == "genre"
-        ]
+        return (
+            item["genre"]
+            if item.get("genre")
+            else [
+                subj
+                for subj in item.get("subject", [])
+                if subj.get("scheme") == "genre"
+            ]
+        )

@@ -11,7 +11,6 @@ from belga.macros.brief_internal_routing import _get_product_subject, PRODUCTS
 
 
 class MacroMetadataTestCase(unittest.TestCase):
-
     def test_macro(self):
         assert hasattr(macro, "name")
         assert hasattr(macro, "label")
@@ -63,7 +62,6 @@ class MacroMetadataTestCase(unittest.TestCase):
 
 
 class BriefInternalRoutingMacroTestCase(tests.TestCase):
-
     def setUp(self):
         self.profiles = self.app.data.insert(
             "content_types",

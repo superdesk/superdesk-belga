@@ -17,13 +17,13 @@ from tests import TestCase
 
 
 class BelgaTipNewsMLOneTestCase(TestCase):
-    filename = 'belga_tip_newsml_1_2.xml'
+    filename = "belga_tip_newsml_1_2.xml"
 
     def setUp(self):
         dirname = os.path.dirname(os.path.realpath(__file__))
-        fixture = os.path.normpath(os.path.join(dirname, '../fixtures', self.filename))
-        provider = {'name': 'test'}
-        with open(fixture, 'rb') as f:
+        fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
+        provider = {"name": "test"}
+        with open(fixture, "rb") as f:
             parser = BelgaTipNewsMLOneFeedParser()
             self.xml_root = etree.parse(f).getroot()
             self.item = parser.parse(self.xml_root, provider)
@@ -39,9 +39,15 @@ class BelgaTipNewsMLOneTestCase(TestCase):
         self.assertEqual(item["version"], 1)
         self.assertEqual(item["public_identifier"], "urn:newsml:www.belga.be")
         self.assertEqual(
-            item["subject"], [
-                {'name': 'BIN/ALG', 'qcode': 'BIN/ALG', 'scheme': 'services-products', 'parent': 'BIN'}
-            ]
+            item["subject"],
+            [
+                {
+                    "name": "BIN/ALG",
+                    "qcode": "BIN/ALG",
+                    "scheme": "services-products",
+                    "parent": "BIN",
+                }
+            ],
         )
         self.assertEqual(str(item["firstcreated"]), "2019-09-28 05:41:32+00:00")
         self.assertEqual(str(item["versioncreated"]), "2019-09-28 05:41:32+00:00")
@@ -53,8 +59,8 @@ class BelgaTipNewsMLOneTestCase(TestCase):
         self.assertEqual(item["body_html"], "cor 446 - BRAND GEBOUW, hemiksem")
         self.assertEqual(item["copyrightholder"], "Belga")
         self.assertEqual(item["line_type"], "1")
-        self.assertEqual(item["keywords"], ['SMS'])
-        self.assertEqual(item["administrative"], {'provider': 'belga.be'})
+        self.assertEqual(item["keywords"], ["SMS"])
+        self.assertEqual(item["administrative"], {"provider": "belga.be"})
         self.assertEqual(item["priority"], 3)
         self.assertEqual(item["urgency"], 3)
         self.assertEqual(item["source"], "BELGA")

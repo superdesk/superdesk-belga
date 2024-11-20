@@ -44,13 +44,17 @@ def _get_related_content_field_to_use(content_profile: Dict[str, Any]) -> Option
         related_content_field = "belga_related_articles"
     else:
         # ``belga_related_articles`` field not found, but only 1 ``related_content`` field is registered, use that
-        logger.warning("'belga_related_articles' field not found, defaulting to first related content field")
+        logger.warning(
+            "'belga_related_articles' field not found, defaulting to first related content field"
+        )
         related_content_field = related_content_fields[0]
 
     return related_content_field
 
 
-def _get_related_items_from_planning(planning: Planning, language: Optional[str] = None) -> List[EventRelatedItem]:
+def _get_related_items_from_planning(
+    planning: Planning, language: Optional[str] = None
+) -> List[EventRelatedItem]:
     event = _get_associated_event_from_planning(planning)
     if not event:
         return []
@@ -62,7 +66,9 @@ def _get_related_items_from_planning(planning: Planning, language: Optional[str]
     ]
 
 
-def _get_event_related_item_from_search_proxy(related_item: EventRelatedItem) -> Optional[Dict[str, Any]]:
+def _get_event_related_item_from_search_proxy(
+    related_item: EventRelatedItem,
+) -> Optional[Dict[str, Any]]:
     provider_id = related_item.get("search_provider")
     if not provider_id:
         logger.error("Related item doesnt have 'search_provider' attribute")
@@ -74,7 +80,9 @@ def _get_event_related_item_from_search_proxy(related_item: EventRelatedItem) ->
         return None
 
     try:
-        external_item = get_resource_service(PROXY_ENDPOINT).fetch(related_item_id, provider_id)
+        external_item = get_resource_service(PROXY_ENDPOINT).fetch(
+            related_item_id, provider_id
+        )
     except Exception:
         logger.exception("Exception raised while fetching item from search proxy")
         return None
@@ -116,5 +124,7 @@ def on_assignment_start_working(
 
         # Add ``"order": content_index`` to related_item
         external_item["order"] = content_index
-        item.setdefault("associations", {})[f"{related_content_field}--{content_index}"] = external_item
+        item.setdefault("associations", {})[
+            f"{related_content_field}--{content_index}"
+        ] = external_item
         content_index += 1

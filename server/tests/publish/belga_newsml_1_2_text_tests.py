@@ -2333,7 +2333,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
         article = self.article.copy()
         article["source"] = "DPA incoming"
         article["auto_publish"] = True
-        article["ingest_provider"] = '123'
+        article["ingest_provider"] = "123"
         self.parse(article)
         newscomponent_2_level = self.newsml.xpath(
             "NewsItem/NewsComponent/NewsComponent"

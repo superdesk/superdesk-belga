@@ -12,11 +12,11 @@
 from app import get_app
 from superdesk.ws import create_server
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = get_app()
     config = {
-        'WS_HOST': app.config['WS_HOST'],
-        'WS_PORT': app.config['WS_PORT'],
-        'BROKER_URL': app.config['BROKER_URL'],
+        "WS_HOST": app.config["WS_HOST"],
+        "WS_PORT": app.config["WS_PORT"],
+        "BROKER_URL": app.config["BROKER_URL"],
     }
     create_server(config)

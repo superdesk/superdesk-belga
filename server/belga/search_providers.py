@@ -131,7 +131,9 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
                     arrow.get(dates["start"], "DD/MM/YYYY").timestamp() * 1000
                 )
             if dates.get("end"):
-                api_params["e"] = int(arrow.get(dates["end"], "DD/MM/YYYY").timestamp() * 1000)
+                api_params["e"] = int(
+                    arrow.get(dates["end"], "DD/MM/YYYY").timestamp() * 1000
+                )
 
             if params.get("period"):
                 api_params["p"] = params["period"].upper()

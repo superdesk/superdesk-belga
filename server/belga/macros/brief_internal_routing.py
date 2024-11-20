@@ -64,18 +64,24 @@ def _get_brief_subject(subject: List) -> List:
     source = _find_subj(subject, SOURCES)
     if not source:
         # if no source found, append BRIEF_SOURCE
-        subject.append({
-            "name": BRIEF_SOURCE,
-            "qcode": BRIEF_SOURCE,
-            "scheme": SOURCES,
-        })
-    elif "BELGA" not in [subj.get("qcode") for subj in subject if subj.get("scheme") == SOURCES]:
+        subject.append(
+            {
+                "name": BRIEF_SOURCE,
+                "qcode": BRIEF_SOURCE,
+                "scheme": SOURCES,
+            }
+        )
+    elif "BELGA" not in [
+        subj.get("qcode") for subj in subject if subj.get("scheme") == SOURCES
+    ]:
         # append BRIEF_SOURCE only if BELGA is not already in sources
-        subject.append({
-            "name": BRIEF_SOURCE,
-            "qcode": BRIEF_SOURCE,
-            "scheme": SOURCES,
-        })
+        subject.append(
+            {
+                "name": BRIEF_SOURCE,
+                "qcode": BRIEF_SOURCE,
+                "scheme": SOURCES,
+            }
+        )
     return subject
 
 
@@ -109,7 +115,6 @@ def _fix_headline(item):
 
 
 class BlockFilter:
-
     filtered = False
 
     def __call__(self, block):

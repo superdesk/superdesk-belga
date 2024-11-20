@@ -1,4 +1,10 @@
-from superdesk.signals import item_create, item_update, item_move, item_rewrite, item_duplicate
+from superdesk.signals import (
+    item_create,
+    item_update,
+    item_move,
+    item_rewrite,
+    item_duplicate,
+)
 from planning.signals import assignment_content_create
 
 from . import generate_id_for_url
@@ -21,4 +27,6 @@ def init_app(_app):
     # remove all belga archive 360 associations from a translation item
     item_duplicate.connect(handle_translate.handle_duplicate)
 
-    assignment_content_create.connect(copy_related_article_from_assignment.on_assignment_start_working)
+    assignment_content_create.connect(
+        copy_related_article_from_assignment.on_assignment_start_working
+    )

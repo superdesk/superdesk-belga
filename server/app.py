@@ -24,7 +24,7 @@ def get_app(config=None):
     if config is None:
         config = {}
 
-    config['APP_ABSPATH'] = os.path.abspath(os.path.dirname(__file__))
+    config["APP_ABSPATH"] = os.path.abspath(os.path.dirname(__file__))
 
     for key in dir(settings):
         if key.isupper():
@@ -34,9 +34,9 @@ def get_app(config=None):
     return app
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     debug = True
-    host = '0.0.0.0'
-    port = int(os.environ.get('PORT', '5000'))
+    host = "0.0.0.0"
+    port = int(os.environ.get("PORT", "5000"))
     app = get_app()
     app.run(host=host, port=port, debug=debug, use_reloader=debug)

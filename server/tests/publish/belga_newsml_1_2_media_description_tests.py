@@ -22,86 +22,62 @@ from .. import TestCase
 
 class BelgaNewsML12FormatterTextTest(TestCase):
     article = {
-        '_id': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-        'guid': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-        'family_id': 'urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5',
-        'event_id': 'tag:localhost:5000:2019:f564b064-d0f9-45b2-b4a8-20a10dcfc761',
-        'type': 'text',
-        'version': 1,
-        'profile': 'belga_text',
-        'pubstatus': 'usable',
-        'format': 'HTML',
-        '_updated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
-        '_created': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
-        '_current_version': 2,
-        'firstcreated': datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
-        'versioncreated': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
-        'firstpublished': datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
-        'original_creator': '5d385f31fe985ec67a0ca583',
-        'state': 'in_progress',
-        'source': 'Belga',
-        'priority': 6,
-        'urgency': 4,
-        'genre': [{'qcode': 'Article', 'name': 'Article (news)'}],
-        'place': [],
-        'sign_off': 'ADM',
-        'language': 'nl',
-        'operation': 'update',
-        'version_creator': '5d385f31fe985ec67a0ca583',
-        '_etag': '61c350853dc1513064f9e566f6d3c161cd387a0f',
+        "_id": "urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5",
+        "guid": "urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5",
+        "family_id": "urn:newsml:localhost:5000:2019-04-03T15:41:53.479892:1628c9b4-6261-42c8-ad43-77c132bc0ba5",
+        "event_id": "tag:localhost:5000:2019:f564b064-d0f9-45b2-b4a8-20a10dcfc761",
+        "type": "text",
+        "version": 1,
+        "profile": "belga_text",
+        "pubstatus": "usable",
+        "format": "HTML",
+        "_updated": datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        "_created": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        "_current_version": 2,
+        "firstcreated": datetime.datetime(2019, 4, 3, 12, 41, 53, tzinfo=pytz.UTC),
+        "versioncreated": datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        "firstpublished": datetime.datetime(2019, 4, 3, 12, 45, 14, tzinfo=pytz.UTC),
+        "original_creator": "5d385f31fe985ec67a0ca583",
+        "state": "in_progress",
+        "source": "Belga",
+        "priority": 6,
+        "urgency": 4,
+        "genre": [{"qcode": "Article", "name": "Article (news)"}],
+        "place": [],
+        "sign_off": "ADM",
+        "language": "nl",
+        "operation": "update",
+        "version_creator": "5d385f31fe985ec67a0ca583",
+        "_etag": "61c350853dc1513064f9e566f6d3c161cd387a0f",
         "associations": {
-            "belga_related_images--1": {
-                "_id": "pic-1",
-                "type": "picture"
-            },
-            "belga_related_images--2": {
-                "_id": "pic-2",
-                "type": "picture"
-            },
-            "belga_related_images--3": {
-                "_id": "pic-3",
-                "type": "picture"
-            },
-            "belga_related_images--4": {
-                "_id": "pic-4",
-                "type": "picture"
-            },
-            "belga_related_articles--1": {
-                "_id": "video-1",
-                "type": "video"
-            },
-            "belga_related_articles--2": {
-                "_id": "video-2",
-                "type": "video"
-            },
-            "belga_related_articles--3": {
-                "_id": "video-3",
-                "type": "video"
-            },
-            "belga_related_articles--4": {
-                "_id": "video-4",
-                "type": "video"
-            }
+            "belga_related_images--1": {"_id": "pic-1", "type": "picture"},
+            "belga_related_images--2": {"_id": "pic-2", "type": "picture"},
+            "belga_related_images--3": {"_id": "pic-3", "type": "picture"},
+            "belga_related_images--4": {"_id": "pic-4", "type": "picture"},
+            "belga_related_articles--1": {"_id": "video-1", "type": "video"},
+            "belga_related_articles--2": {"_id": "video-2", "type": "video"},
+            "belga_related_articles--3": {"_id": "video-3", "type": "video"},
+            "belga_related_articles--4": {"_id": "video-4", "type": "video"},
         },
-        'authors': [
+        "authors": [
             {
-                '_id': ['5d385f31fe985ec67a0ca583', 'AUTHOR'],
-                'role': 'AUTHOR',
-                'name': 'AUTHOR',
-                'parent': '5d385f31fe985ec67a0ca583',
-                'sub_label': 'John Smith',
-                'scheme': None
+                "_id": ["5d385f31fe985ec67a0ca583", "AUTHOR"],
+                "role": "AUTHOR",
+                "name": "AUTHOR",
+                "parent": "5d385f31fe985ec67a0ca583",
+                "sub_label": "John Smith",
+                "scheme": None,
             },
             {
-                'role': 'EDITOR',
-                'name': 'OLEG',
-            }
+                "role": "EDITOR",
+                "name": "OLEG",
+            },
         ],
-        'body_html': '',
-        'headline': 'New Skoda Scala',
-        'slugline': 'skoda scala',
-        'word_count': 28,
-        'byline': 'BELGA',
+        "body_html": "",
+        "headline": "New Skoda Scala",
+        "slugline": "skoda scala",
+        "word_count": 28,
+        "byline": "BELGA",
     }
 
     archive = (
@@ -130,7 +106,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     "media": "pic_1",
                     "mimetype": "image/jpeg",
                     "width": 3000,
-                    "height": 2000
+                    "height": 2000,
                 },
             },
             "mimetype": "image/jpeg",
@@ -164,7 +140,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     "media": "pic_1",
                     "mimetype": "image/jpeg",
                     "width": 3000,
-                    "height": 2000
+                    "height": 2000,
                 },
             },
             "mimetype": "image/jpeg",
@@ -172,9 +148,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
             "headline": "water",
             "version": 2,
             "_current_version": 2,
-            "extra": {
-                "people": "John Smith"
-            },
+            "extra": {"people": "John Smith"},
         },
         {
             "_id": "pic-3",
@@ -201,7 +175,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     "media": "pic_1",
                     "mimetype": "image/jpeg",
                     "width": 3000,
-                    "height": 2000
+                    "height": 2000,
                 },
             },
             "mimetype": "image/jpeg",
@@ -238,7 +212,7 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                     "media": "pic_1",
                     "mimetype": "image/jpeg",
                     "width": 3000,
-                    "height": 2000
+                    "height": 2000,
                 },
             },
             "mimetype": "image/jpeg",
@@ -274,14 +248,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "original": {
                     "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                     "media": "video_1",
-                    "mimetype": "video/mp4"
+                    "mimetype": "video/mp4",
                 }
             },
             "mimetype": "video/mp4",
-            "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                             "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                             "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                             "n\": \"Big endian\", \"length\": 1022462}",
+            "filemeta_json": '{"duration": "0:00:09.482000", "width": "640", "height": "360", "creatio'
+            'n_date": "2019-06-16T17:32:12+00:00", "last_modification": "2019-06-16T17:32:12'
+            '+00:00", "comment": "User volume: 100.0%", "mime_type": "video/mp4", "endia'
+            'n": "Big endian", "length": 1022462}',
             "description_text": "water",
             "headline": "water",
             "version": 2,
@@ -310,21 +284,19 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "original": {
                     "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                     "media": "video_1",
-                    "mimetype": "video/mp4"
+                    "mimetype": "video/mp4",
                 }
             },
             "mimetype": "video/mp4",
-            "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                             "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                             "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                             "n\": \"Big endian\", \"length\": 1022462}",
+            "filemeta_json": '{"duration": "0:00:09.482000", "width": "640", "height": "360", "creatio'
+            'n_date": "2019-06-16T17:32:12+00:00", "last_modification": "2019-06-16T17:32:12'
+            '+00:00", "comment": "User volume: 100.0%", "mime_type": "video/mp4", "endia'
+            'n": "Big endian", "length": 1022462}',
             "description_text": "water",
             "headline": "water",
             "version": 2,
             "_current_version": 2,
-            "extra": {
-                "people": "John Smith"
-            },
+            "extra": {"people": "John Smith"},
         },
         {
             "_id": "video-3",
@@ -349,14 +321,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "original": {
                     "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                     "media": "video_1",
-                    "mimetype": "video/mp4"
+                    "mimetype": "video/mp4",
                 }
             },
             "mimetype": "video/mp4",
-            "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                             "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                             "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                             "n\": \"Big endian\", \"length\": 1022462}",
+            "filemeta_json": '{"duration": "0:00:09.482000", "width": "640", "height": "360", "creatio'
+            'n_date": "2019-06-16T17:32:12+00:00", "last_modification": "2019-06-16T17:32:12'
+            '+00:00", "comment": "User volume: 100.0%", "mime_type": "video/mp4", "endia'
+            'n": "Big endian", "length": 1022462}',
             "description_text": "water",
             "headline": "water",
             "version": 2,
@@ -388,14 +360,14 @@ class BelgaNewsML12FormatterTextTest(TestCase):
                 "original": {
                     "href": "http://localhost:5000/api/upload-raw/video_1.mp4",
                     "media": "video_1",
-                    "mimetype": "video/mp4"
+                    "mimetype": "video/mp4",
                 }
             },
             "mimetype": "video/mp4",
-            "filemeta_json": "{\"duration\": \"0:00:09.482000\", \"width\": \"640\", \"height\": \"360\", \"creatio"
-                             "n_date\": \"2019-06-16T17:32:12+00:00\", \"last_modification\": \"2019-06-16T17:32:12"
-                             "+00:00\", \"comment\": \"User volume: 100.0%\", \"mime_type\": \"video/mp4\", \"endia"
-                             "n\": \"Big endian\", \"length\": 1022462}",
+            "filemeta_json": '{"duration": "0:00:09.482000", "width": "640", "height": "360", "creatio'
+            'n_date": "2019-06-16T17:32:12+00:00", "last_modification": "2019-06-16T17:32:12'
+            '+00:00", "comment": "User volume: 100.0%", "mime_type": "video/mp4", "endia'
+            'n": "Big endian", "length": 1022462}',
             "description_text": "water",
             "headline": "water",
             "version": 2,
@@ -426,204 +398,151 @@ class BelgaNewsML12FormatterTextTest(TestCase):
     )
 
     subscriber = {
-        '_id': 'some_id',
-        'name': 'Dev Subscriber',
+        "_id": "some_id",
+        "name": "Dev Subscriber",
     }
 
-    @mock.patch('superdesk.publish.subscribers.SubscribersService.generate_sequence_number', lambda s, sub: 1)
+    @mock.patch(
+        "superdesk.publish.subscribers.SubscribersService.generate_sequence_number",
+        lambda s, sub: 1,
+    )
     def setUp(self):
         init_app(self.app)
-        self.app.data.insert('users', self.users)
-        self.app.data.insert('archive', self.archive)
+        self.app.data.insert("users", self.users)
+        self.app.data.insert("archive", self.archive)
 
         # insert pictures
         media_items = (
             {
-                '_id': 'pic_1',
-                'content': BytesIO(b'pic_one_content'),
-                'content_type': 'image/jpeg',
-                'metadata': {
-                    'length': 10
-                }
+                "_id": "pic_1",
+                "content": BytesIO(b"pic_one_content"),
+                "content_type": "image/jpeg",
+                "metadata": {"length": 10},
             },
             {
-                '_id': 'video_1',
-                'content': BytesIO(b'czech rap xD'),
-                'content_type': 'video/mp4',
-                'metadata': {
-                    'length': 12
-                }
+                "_id": "video_1",
+                "content": BytesIO(b"czech rap xD"),
+                "content_type": "video/mp4",
+                "metadata": {"length": 12},
             },
         )
         for media_item in media_items:
             # base rendition
             self.app.media.put(**media_item)
 
-        self.article['state'] = 'published'
+        self.article["state"] = "published"
         self.formatter = BelgaNewsML12Formatter()
         seq, doc = self.formatter.format(self.article, self.subscriber)[0]
-        self.newsml = etree.XML(bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING)))
+        self.newsml = etree.XML(
+            bytes(bytearray(doc, encoding=BelgaNewsML12Formatter.ENCODING))
+        )
 
     def test_video_description(self):
         # no `people` && no `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="video-1"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="video-1"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'water'
-        )
+        self.assertEqual(datacontent.text, "water")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '5'
-        )
+        self.assertEqual(sizeinbytes.text, "5")
         # `people` && no `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="video-2"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="video-2"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'Video showing John Smith'
-        )
+        self.assertEqual(datacontent.text, "Video showing John Smith")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '24'
-        )
+        self.assertEqual(sizeinbytes.text, "24")
         # not `people` && `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="video-3"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="video-3"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'Video showing killing'
-        )
+        self.assertEqual(datacontent.text, "Video showing killing")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '21'
-        )
+        self.assertEqual(sizeinbytes.text, "21")
         # `people` && `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="video-4"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="video-4"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'John Smith on the video regarding killing'
-        )
+        self.assertEqual(datacontent.text, "John Smith on the video regarding killing")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Body"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '41'
-        )
+        self.assertEqual(sizeinbytes.text, "41")
 
     def test_picture_description(self):
         # no `people` && no `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="pic-1"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="pic-1"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'water'
-        )
+        self.assertEqual(datacontent.text, "water")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '5'
-        )
+        self.assertEqual(sizeinbytes.text, "5")
         # `people` && no `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="pic-2"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="pic-2"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'Picture showing John Smith'
-        )
+        self.assertEqual(datacontent.text, "Picture showing John Smith")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '26'
-        )
+        self.assertEqual(sizeinbytes.text, "26")
         # not `people` && `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="pic-3"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="pic-3"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
-        self.assertEqual(
-            datacontent.text,
-            'Picture showing killing'
-        )
+        self.assertEqual(datacontent.text, "Picture showing killing")
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '23'
-        )
+        self.assertEqual(sizeinbytes.text, "23")
         # `people` && `event_description`
         newscomponent_2_level = self.newsml.xpath(
-            'NewsItem/NewsComponent/NewsComponent'
-            '[@Duid="pic-4"]'
+            "NewsItem/NewsComponent/NewsComponent" '[@Duid="pic-4"]'
         )[0]
         datacontent = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent/ContentItem/DataContent'
         )[0]
         self.assertEqual(
-            datacontent.text,
-            'John Smith on the picture regarding killing'
+            datacontent.text, "John Smith on the picture regarding killing"
         )
         sizeinbytes = newscomponent_2_level.xpath(
             'NewsComponent/Role[@FormalName="Caption"]/ancestor::NewsComponent'
-            '/ContentItem/Characteristics/SizeInBytes'
+            "/ContentItem/Characteristics/SizeInBytes"
         )[0]
-        self.assertEqual(
-            sizeinbytes.text,
-            '43'
-        )
+        self.assertEqual(sizeinbytes.text, "43")

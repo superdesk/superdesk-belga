@@ -149,8 +149,8 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         city = BelgaANPNewsMLOneFeedParser().extract_city(item)
         self.assertEqual(city, "San Mateo")
 
-        item["body_html"] = (
-            "NL<p>San Mateo (ANP/RTL) - FNV kondigt werkonderbrekingen aan bij PostNL,"
-        )
+        item[
+            "body_html"
+        ] = "NL<p>San Mateo (ANP/RTL) - FNV kondigt werkonderbrekingen aan bij PostNL,"
         city = BelgaANPNewsMLOneFeedParser().extract_city(item)
         self.assertEqual(city, "San Mateo")
