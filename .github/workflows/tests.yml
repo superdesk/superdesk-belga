@@ -11,6 +11,14 @@ jobs:
     uses: superdesk/superdesk/.github/workflows/server.yml@develop
     with:
       python-version: ${{ matrix.python-version }}
-
+  
+  pytest:
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.10']
+    uses: superdesk/superdesk/.github/workflows/pytest.yml@develop
+    with:
+      python-version:  ${{ matrix.python-version }}
+  
   client:
     uses: superdesk/superdesk/.github/workflows/client.yml@develop
