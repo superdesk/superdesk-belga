@@ -1,14 +1,11 @@
 -r requirements.txt
 
-black>=23,<24
-flake8
-nose
-pep8
-httmock
-wooper
-mypy
-pytest
-pytest-env
+black==23.12.1
+flake8==7.1.1
+pep8==1.7.1
+httmock==1.4.9
+mypy==1.13.0
+pytest==8.3.3
 types-click==7.1.8
 types-docutils==0.21.0.20241005
 types-Flask==1.1.6
