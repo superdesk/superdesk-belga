@@ -7,7 +7,7 @@ httmock==1.4.0
 mypy==1.13.0
 pytest==8.3.3
 types-click==7.1.8
-types-docutils==0.21.0.20241005
+types-docutils==0.21.0.20241128
 types-Flask==1.1.6
 types-Jinja2==2.11.9
 types-MarkupSafe==1.1.10
