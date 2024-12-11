@@ -44,22 +44,22 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
         self.assertEqual(str(item["versioncreated"]), "2019-06-03 13:00:01+00:00")
         self.assertEqual(item["pubstatus"], "usable")
         expected_ednote = (
-            "\nNotizblock"
+            "Notizblock"
             "\nRedaktionelle Hinweise"
-            "\n Migranten sind nach Definition der Internationalen Organisation ‎für Migration (IOM) alle Menschen,"
+            "\nMigranten sind nach Definition der Internationalen Organisation ‎für Migration (IOM) alle Menschen,"
             " die ihren Wohnort verlassen – egal ‎aus welchen Gründen, wie lange oder ob freiwillig oder "
             "‎unfreiwillig. Flüchtlinge dagegen suchen Schutz vor Krieg oder vor ‎drohender Verfolgung, etwa "
             "wegen ihrer Religion, Nationalität oder ‎ihrer politischen Überzeugung. Damit sind Flüchtlinge "
             "auch Migranten‎, aber nicht alle Migranten Flüchtlinge."
-            "\n Internet"
+            "\nInternet"
             "\nKüstenwache Mitteilungen"
             "\nOrte"
-            "\n [Alexandroupolis](Alexandroupolis 681 00, Griechenland)"
+            "\n[Alexandroupolis](Alexandroupolis 681 00, Griechenland)"
             "\n[Kleininsel Agathonisi](Agathonisi, Griechenland)"
-            "\n Die folgenden Informationen sind nicht zur Veröffentlichung bestimmt"
+            "\nDie folgenden Informationen sind nicht zur Veröffentlichung bestimmt"
             "\nKontakte"
-            "\n Autor: Takis Tsafos (Athen), +30 6944 33 24 77, <tsafos.takis@dpa.com>"
-            "\ndpa tt xx n1\n"
+            "\nAutor: Takis Tsafos (Athen), +30 6944 33 24 77, <tsafos.takis@dpa.com>"
+            "\ndpa tt xx n1"
         )
         self.assertEqual(item["ednote"], expected_ednote)
         self.assertEqual(item["urgency"], 3)
@@ -184,3 +184,17 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
         expected_subject.sort(key=lambda i: i["name"])
         self.assertEqual(item["extra"], {"city": "Berlin", "country": "Germany"})
         self.assertEqual(item["genre"], [{"name": "EXTRA"}])
+
+    def test_edNote_content(self):
+        filename = "3FB1C600A1AC5567.xml"
+        self._initialize_parser(filename)
+        item = self.item[0]
+        expected_ednote = (
+            "Notebook"
+            "\nThe following information is not intended for publication"
+            "\nEditorial contacts"
+            "\nReporting by: Ciarán Sunderland and Ansgar Haase in Brussels"
+            "\nEditing by: Bill Heaney, +49 30 2852 31472, <international@dpa.com>"
+            "\ndpa cis aha wjh"
+        )
+        self.assertEqual(item["ednote"], expected_ednote)

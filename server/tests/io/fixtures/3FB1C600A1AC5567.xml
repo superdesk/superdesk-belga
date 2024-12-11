@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsMessage xmlns="http://iptc.org/std/nar/2006-10-01/">
+  <header>
+    <sent>2024-07-03T13:14:00+02:00</sent>
+    <priority>3</priority>
+    <origin>ines</origin>
+  </header>
+  <itemSet>
+    <newsItem xmlns:dpa="http://www.dpa.com/iptc/nar/2008-12-01/" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" conformance="power" guid="urn:newsml:dpa.com:20090101:240703-99-619526" standard="NewsML-G2" standardversion="2.28" version="4" xml:lang="en">
+      <catalogRef href="http://www.iptc.org/std/catalog/catalog.IPTC-G2-Standards_32.xml"/>
+   <catalogRef href="http://g2.dpa.com/catalog/catalog001.xml"/>
+   <rightsInfo>
+      <copyrightHolder qcode="nprov:dpa">
+         <name xml:lang="en">Deutsche Presse-Agentur GmbH</name>
+         <definition xml:lang="en">dpa - Deutsche Presse Agentur GmbH / Hamburg Trade Register, HRB 68431</definition>
+      </copyrightHolder>
+      <copyrightNotice xml:lang="en">(c) 2024 dpa Deutsche Presse Agentur GmbH</copyrightNotice>
+      <usageTerms xml:lang="en">Use only with the written agreement with dpa</usageTerms>
+   </rightsInfo>
+   <itemMeta>
+        <itemClass qcode="ninat:text">
+         <name xml:lang="en">Text Item(s)</name>
+      </itemClass>
+        <provider qcode="nprov:dpa">
+         <name xml:lang="en">Deutsche Presse-Agentur GmbH</name>
+      </provider>
+      <versionCreated>2024-07-03T13:13:54+02:00</versionCreated>
+        <pubStatus qcode="stat:usable">
+         <name xml:lang="en">Usable</name>
+      </pubStatus>
+      <generator versioninfo="2.1.73">service-ines</generator>
+      <profile versioninfo="2.0.0">dpa-G2</profile>
+        <service qcode="dpasrv:eca-mm">
+         <name role="nrol:full">Englischer Dienst multimedial</name>
+      </service>
+      <service qcode="dpasrv:eca">
+         <name role="nrol:full">Englischer Dienst</name>
+      </service>
+      <edNote role="dpaednoterole:closingline">dpa cis aha wjh</edNote>
+        <edNote pubconstraint="dpapconstraint:nonpublic" role="dpaednoterole:dpacontacts">Reporting by: Ciarán Sunderland and Ansgar Haase in Brussels</edNote>
+        <edNote pubconstraint="dpapconstraint:nonpublic" role="dpaednoterole:dpacontacts">Editing by: Bill Heaney, +49 30 2852 31472, &lt;international@dpa.com&gt;</edNote>
+        <edNote role="dpaednoterole:picture">dpa photos</edNote>
+        <edNote role="dpaednoterole:correctionshort">updated with a photo</edNote>
+        <edNote role="dpaednoterole:notepad">
+         <section xmlns="http://www.w3.org/1999/xhtml" class="notepad">
+            <header>
+               <h3>Notebook</h3>
+            </header>
+            <section class="np-nonpublic">
+               <p>The following information is not intended for publication</p>
+               <h4>Editorial contacts</h4>
+               <ul>
+                  <li>Reporting by: Ciarán Sunderland and Ansgar Haase in Brussels</li>
+                  <li>Editing by: Bill Heaney, +49 30 2852 31472, &lt;international@dpa.com&gt;</li>
+               </ul>
+            </section>
+            <p class="closingline">dpa cis aha wjh</p>
+         </section>
+      </edNote>
+      <signal qcode="sig:update">
+         <name xml:lang="en">Update</name>
+      </signal>
+        <link contenttype="application/vnd.iptc.g2.newsitem+xml" rank="1" rel="irel:seeAlso" residref="urn:newsml:dpa.com:20090101:240703-99-619602">
+          <itemClass qcode="ninat:picture">
+            <name xml:lang="en">Picture Item(s)</name>
+         </itemClass>
+          <title>NATO allies nix multi-year Ukraine aid plan</title>
+        </link>
+      </itemMeta>
+      <contentMeta>
+        <urgency>3</urgency>
+        <located>
+         <name>Brussels</name>
+      </located>
+      <creator qcode="dpa-ad:sunderland.ciaran">
+          <name>sunderland.ciaran</name>
+        </creator>
+        <contributor qcode="dpa-ad:sunderland.ciaran">
+          <name>sunderland.ciaran</name>
+        </contributor>
+        <contributor qcode="dpa-ad:heaney.william">
+          <name>heaney.william</name>
+        </contributor>
+        <contributor qcode="dpa-ad:qassem.shorook">
+          <name>qassem.shorook</name>
+        </contributor>
+        <altId environment="dpasrv:eca" type="dpa7901rendition:iptc7901Id">eca:0048:3:i:147:dpa:0772::20240703131400MESZ</altId>
+      <genre qcode="dpatextgenre:21">
+         <name role="nrol:display" xml:lang="en">DEVELOPING</name>
+      </genre>
+        <subject qcode="dpacountry:181" rank="1" type="cpnat:geoArea">
+          <name role="nrol:display" xml:lang="en">Ukraine</name>
+         <sameAs qcode="iso3166-1a3:UKR"/>
+         <sameAs qcode="wikidata:Q212"/>
+         <sameAs qcode="iso3166-1a2:UA"/>
+         <broader qcode="wldreg:r150">
+            <name xml:lang="en">Europe</name>
+         </broader>
+         <broader qcode="dpageosbj:44">
+            <name role="nrol:display" xml:lang="en">Europe</name>
+         </broader>
+      </subject>
+        <subject qcode="dpacountry:139" rank="2" type="cpnat:geoArea">
+          <name role="nrol:display" xml:lang="en">Russia</name>
+         <sameAs qcode="iso3166-1a3:RUS"/>
+         <sameAs qcode="wikidata:Q159"/>
+         <sameAs qcode="iso3166-1a2:RU"/>
+         <broader qcode="wldreg:r150">
+            <name xml:lang="en">Europe</name>
+         </broader>
+         <broader qcode="dpageosbj:44">
+            <name role="nrol:display" xml:lang="en">Europe</name>
+         </broader>
+      </subject>
+        <subject qcode="dpasubject:114" rank="1" type="dpatype:dpasubject">
+          <name xml:lang="en">conflict</name>
+         <broader qcode="medtop:16000000">
+            <name xml:lang="en">conflict, war and peace</name>
+         </broader>
+      </subject>
+        <keyword rank="1">NATO</keyword>
+        <subject qcode="dpacat:pl" type="dpatype:category">
+         <name role="nrol:mnemonic" xml:lang="en">i</name>
+      </subject>
+        
+      <headline rank="1">NATO allies nix multi-year Ukraine aid plan </headline>
+        <dateline>Brussels (dpa) - </dateline>
+      <creditline>dpa</creditline>
+        <language tag="en"/>
+      </contentMeta>
+      <assert qcode="dpapconstraint:nonpublic">
+      <name xml:lang="en">non public</name>
+   </assert>
+   <contentSet>
+        
+      
+      
+      
+      <inlineXML contenttype="application/xhtml+xml" wordcount="147">
+          <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+               <meta charset="utf-8"/>
+               <title>NATO allies nix multi-year Ukraine aid plan </title>
+            </head>
+            <body>
+               <header>
+                  <time class="publicationDate" data-datetime="2024-07-03T13:13:54+02:00">03.07.2024 11:13 GMT</time>
+                  <ul class="slugline">
+                     <li class="subject" data-qcode="dpasubject:114">conflict</li>
+                     <li class="geo" data-qcode="dpacountry:181">Ukraine</li>
+                     <li class="geo" data-qcode="dpacountry:139">Russia</li>
+                     <li class="keyword">NATO</li>
+                  </ul>
+                  <p class="genre dpatextgenre-21" data-qcode="dpatextgenre:21">DEVELOPING</p>
+                  <h1>NATO allies nix multi-year Ukraine aid plan</h1>
+               </header>
+               <section class="main dpatextgenre-21">
+                  <p>
+                     <span class="dateline">Brussels <span class="credit">(dpa)</span> - </span>NATO Secretary General Jens Stoltenberg has failed to get allies to commit to a multi-year financial pledge to support Ukraine, according to information obtained by dpa on Wednesday. </p>
+                  <p>Ahead of a NATO leaders' summit in Washington, allies would only commit to support for Ukraine worth €40 billion ($43 billion) within the next year, dpa learnt from delegations to the alliance.  </p>
+                  <p>Allies also did not reach an agreement on sharing the financial costs of supporting Ukraine, with NATO members vaguely stating that the gross domestic product (GDP) of a country's economy should play a role. </p>
+                  <p>At a meeting of NATO defence ministers in June, Stoltenberg called on allies to agree a plan to maintain over the long term their current level of support to Ukraine, which he put at €40 billion per year. </p>
+                  <p>The burden would be divided up according to NATO countries' GDP, with the United States contributing 50%. </p>
+               </section>
+            </body>
+          </html>
+        </inlineXML>
+      </contentSet>
+    </newsItem>
+  </itemSet>
+</newsMessage>
