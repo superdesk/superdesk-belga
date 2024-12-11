@@ -174,16 +174,27 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
 
     def parse_item_meta(self, tree, item):
         super().parse_item_meta(tree, item)
+        import re
+
         meta = tree.find(self.qname("itemMeta"))
         item["ednote"] = "\n".join(
             line.strip()
             for edNote in meta.findall(self.qname("edNote"))
-            if edNote.attrib.get("role") == "dpaednoterole:notepad"
-            for line in ElementTree.tostring(edNote, encoding="utf-8", method="text")
-            .decode("utf-8")
-            .splitlines()
+            if re.search(r"notepad$", edNote.attrib.get("role", ""))
+            for line in self.get_text_lines(edNote)
             if line.strip()
         )
+
+    def get_text_lines(self, edNote):
+        try:
+            text_content = (
+                ElementTree.tostring(edNote, encoding="utf-8", method="text").decode(
+                    "utf-8"
+                )
+            ).splitlines()
+            return text_content
+        except Exception as e:
+            return f"Error extracting text from edNote: {e}"
 
     def parse_content_meta(self, tree, item):
         meta = super().parse_content_meta(tree, item)
