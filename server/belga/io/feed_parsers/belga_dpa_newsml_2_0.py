@@ -180,7 +180,7 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
         item["ednote"] = "\n".join(
             line.strip()
             for edNote in meta.findall(self.qname("edNote"))
-            if re.search(r"notepad$", edNote.attrib.get("role", ""))
+            if re.search(r"correctionshort$", edNote.attrib.get("role", ""))
             for line in self.get_text_lines(edNote)
             if line.strip()
         )
