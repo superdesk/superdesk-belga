@@ -178,11 +178,10 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
 
         meta = tree.find(self.qname("itemMeta"))
         item["ednote"] = "\n".join(
-            line.strip()
+            edNote.text.strip()
             for edNote in meta.findall(self.qname("edNote"))
-            if re.search(r"correctionshort$", edNote.attrib.get("role", ""))
-            for line in self.get_text_lines(edNote)
-            if line.strip()
+            if "dpaednoterole:correctionshort" == edNote.attrib.get("role", "")
+            and edNote.text
         )
 
     def get_text_lines(self, edNote):
