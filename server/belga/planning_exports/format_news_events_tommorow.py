@@ -37,9 +37,11 @@ def format_event_for_tommorow(
         # Format event details
         formatted_event = {
             "subject": ",".join(get_subjects(event, "fr")),
-            "calendars": event["calendars"][0]["qcode"].capitalize()
-            if event.get("calendars")
-            else "",
+            "calendars": (
+                event["calendars"][0]["qcode"].capitalize()
+                if event.get("calendars")
+                else ""
+            ),
             "contacts": get_formatted_contacts(event),
             "coverages": get_coverages(event, locale),
             "location": get_item_location(event, locale),

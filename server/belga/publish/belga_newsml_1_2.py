@@ -355,9 +355,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_2_level,
             "Role",
             {
-                "FormalName": item["_role"]
-                if item.get("profile") in self.SD_CP_NAME_ROLE_MAP
-                else item.get("_role").split(" -")[0].title()
+                "FormalName": (
+                    item["_role"]
+                    if item.get("profile") in self.SD_CP_NAME_ROLE_MAP
+                    else item.get("_role").split(" -")[0].title()
+                )
             },
         )
         # NewsLines
