@@ -8,6 +8,7 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 
+import re
 import pytz
 import logging
 import itertools
@@ -123,11 +124,11 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                                     try:
                                         genre_role = genre_name.attrib["role"]
                                         if genre_role == "nrol:display":
-                                            item["headline"] = (
-                                                "({genre}): {headline}".format(
-                                                    genre=genre_name.text,
-                                                    headline=item["headline"],
-                                                )
+                                            item[
+                                                "headline"
+                                            ] = "({genre}): {headline}".format(
+                                                genre=genre_name.text,
+                                                headline=item["headline"],
                                             )
                                             break
                                     except KeyError:
@@ -174,7 +175,6 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
 
     def parse_item_meta(self, tree, item):
         super().parse_item_meta(tree, item)
-        import re
 
         meta = tree.find(self.qname("itemMeta"))
         item["ednote"] = "\n".join(
