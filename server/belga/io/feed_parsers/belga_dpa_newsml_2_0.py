@@ -183,17 +183,6 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
             and edNote.text
         )
 
-    def get_text_lines(self, edNote):
-        try:
-            text_content = (
-                ElementTree.tostring(edNote, encoding="utf-8", method="text").decode(
-                    "utf-8"
-                )
-            ).splitlines()
-            return text_content
-        except Exception as e:
-            return f"Error extracting text from edNote: {e}"
-
     def parse_content_meta(self, tree, item):
         meta = super().parse_content_meta(tree, item)
         elem = meta.find(self.qname("dateline"))
