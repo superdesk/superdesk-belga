@@ -4,7 +4,7 @@ black==23.12.1
 flake8==7.1.1
 pep8==1.7.1
 httmock==1.4.0
-mypy==1.14.0
+mypy==1.14.1
 pytest==8.3.4
 types-click==7.1.8
 types-docutils==0.21.0.20241128
