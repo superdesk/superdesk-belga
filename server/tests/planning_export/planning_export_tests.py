@@ -659,7 +659,7 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             )
             self.assertIn(
-                "<h4>Calendrier sportif international du dimanche 21 au lundi 22 avril</h4>",
+                "<h4>Calendrier sportif international du Dimanche 21 au Lundi 22 Avril</h4>",
                 french_template_headline_data,
             )
 
@@ -669,7 +669,7 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             )
             self.assertIn(
-                "<h4>Internationale sportkalender van zondag 21 tot maandag 22 april</h4>",
+                "<h4>Internationale sportkalender van Zondag 21 tot Maandag 22 April</h4>",
                 dutch_template_headline_data,
             )
 
