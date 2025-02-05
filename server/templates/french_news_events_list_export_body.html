@@ -3,7 +3,7 @@
     <p>Principaux événements inscrits au calendrier sportif international du {{ formatted_data.start_date }} au {{ formatted_data.end_date }} {{ formatted_data.month }} :</p>
 </div>
 {% for day_events in formatted_data.events_list %}
-    <h3>{{ day_events.date }}</h3>
+    <h3>{{ day_events.date.capitalize() }}</h3>
     <div>
         {% for subject, events in day_events.subjects.items() | sort %}
             <h4>{{ subject }}</h4>
