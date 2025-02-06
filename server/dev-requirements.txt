@@ -1,6 +1,6 @@
 -r requirements.txt
 
-black==23.12.1
+black==25.1.0
 flake8==7.1.1
 pep8==1.7.1
 httmock==1.4.0
