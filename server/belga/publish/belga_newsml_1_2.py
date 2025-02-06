@@ -259,12 +259,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(news_identifier, "RevisionId", attrib=revision).text = str(
             self._current_item.get(config.VERSION, "")
         )
-        SubElement(
-            news_identifier, "PublicIdentifier"
-        ).text = self._generate_public_identifier(
-            self._current_item[config.ID_FIELD],
-            self._current_item.get(config.VERSION, ""),
-            revision.get("Update", ""),
+        SubElement(news_identifier, "PublicIdentifier").text = (
+            self._generate_public_identifier(
+                self._current_item[config.ID_FIELD],
+                self._current_item.get(config.VERSION, ""),
+                revision.get("Update", ""),
+            )
         )
 
     def _format_newsmanagement(self, newsitem):

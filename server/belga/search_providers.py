@@ -549,11 +549,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "ednote": get_text(data.get("editorialInfo")),
         }
         if data.get("assetType") == "RelatedArticle" and data.get("comments"):
-            formatted_data["firstcreated"] = formatted_data[
-                "versioncreated"
-            ] = formatted_data["firstpublished"] = get_datetime(
-                datetime.strptime(data.get("comments"), "%Y%m%d%H%M%S")
-            )
+            formatted_data["firstcreated"] = formatted_data["versioncreated"] = (
+                formatted_data["firstpublished"]
+            ) = get_datetime(datetime.strptime(data.get("comments"), "%Y%m%d%H%M%S"))
 
         return formatted_data
 

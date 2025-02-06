@@ -52,9 +52,9 @@ def format_event_for_tommorow(
         dates = formatted_event["dates"]
         start_local = utc_to_local(dates["tz"], dates["start"])
         end_local = utc_to_local(dates["tz"], dates["end"])
-        formatted_event[
-            "time"
-        ] = f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
+        formatted_event["time"] = (
+            f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
+        )
 
         # Check if calendar has changed
         if formatted_event["calendars"] != calendar:
