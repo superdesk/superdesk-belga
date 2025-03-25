@@ -213,7 +213,7 @@ pymongo==3.11.4
     #   eve
     #   mongolock
     #   superdesk-core
-pyparsing==3.2.1
+pyparsing==3.2.2
     # via
     #   -r requirements.in
     #   httplib2
