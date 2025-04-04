@@ -162,6 +162,9 @@ module.exports = function(grunt) {
                 'desk',
                 'genre',
             ],
-        }
+        },
+        SUBJECT_SCHEME_LABELS: {
+            'belga-keywords': 'Belga Keywords'
+        }     
     };
 };
