@@ -7,12 +7,12 @@
 module.exports = function(grunt) {
     return {
         apps: [
-            'superdesk.analytics',
+            //'superdesk.analytics',
             'superdesk-planning',
             'belga',
         ],
         importApps: [
-            'superdesk-analytics',
+            //'superdesk-analytics',
             'superdesk-planning',
             '../index',
         ],

@@ -13,6 +13,7 @@ const extension: IExtension = {
             previewComponent: getBelgaCoveragePreview(superdesk),
             hasValue: (value) => value != null && value.length > 0,
             getEmptyValue: () => '',
+            generic: true,
         };
 
         const result: IExtensionActivationResult = {
