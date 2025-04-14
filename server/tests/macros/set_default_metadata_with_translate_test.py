@@ -36,7 +36,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
@@ -122,7 +122,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
@@ -211,7 +211,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
@@ -299,7 +299,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
@@ -377,7 +377,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
@@ -454,7 +454,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f31fe985ec67a0ca583"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
@@ -615,7 +615,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             [
                 {
                     "_id": ObjectId("5d385f17fe985ec5e1a88b49"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 1,
                     "content_expiry": None,
@@ -625,7 +625,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
                 },
                 {
                     "_id": ObjectId("5d385f17fe985ec5e1a89b49"),
-                    "name": "Incoming Stage",
+                    "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
