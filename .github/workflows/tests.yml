@@ -21,4 +21,9 @@ jobs:
       python-version:  ${{ matrix.python-version }}
   
   client:
+    strategy:
+      matrix:
+        node-version: ['14', '20']
     uses: superdesk/superdesk/.github/workflows/client.yml@develop
+    with:
+      node-version:  ${{ matrix.node-version }}
