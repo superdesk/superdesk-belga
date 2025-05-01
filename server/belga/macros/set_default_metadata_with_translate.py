@@ -18,6 +18,41 @@ from .update_translation_metadata_macro import update_translation_metadata_macro
 logger = logging.getLogger(__name__)
 
 
+def _map_eco_package_subject(original_item):
+    """Map BTL/ECO to EXT/ECO and vice versa if present in original_item."""
+    for subj in original_item.get("subject", []):
+        if subj.get("scheme") == "services-products" and subj.get("qcode") in (
+            "BTL/ECO",
+            "EXT/ECO",
+        ):
+            return "EXT/ECO" if subj["qcode"] == "BTL/ECO" else "BTL/ECO"
+    return None
+
+
+def _preserve_eco_package(original_item, new_item):
+    """Preserve and map ECO package subject from original_item to new_item."""
+    mapped = _map_eco_package_subject(original_item)
+    if not mapped:
+        return
+
+    # filter out any existing services-products entries
+    filtered = [
+        s for s in new_item.get("subject", []) if s.get("scheme") != "services-products"
+    ]
+
+    # build the new subject entry
+    filtered.append(
+        {
+            "name": mapped,
+            "qcode": mapped,
+            "parent": mapped.split("/")[0],
+            "scheme": "services-products",
+        }
+    )
+
+    new_item["subject"] = filtered
+
+
 def set_belga_keywords(item):
     """This field is used to set belga keyword field with the value "Brief" upon translation"""
     subjects = item.setdefault("subject", [])
@@ -127,6 +162,9 @@ def set_default_metadata_with_translate(item, **kwargs):
         kwargs["overwrite_keywords"] = False
 
     set_default_metadata(new_item, **kwargs)
+
+    # preserve original ECO package mapping
+    _preserve_eco_package(original_item, new_item)
 
     # untoggle coming up
     if new_item.get("extra", {}).get("DueBy"):
