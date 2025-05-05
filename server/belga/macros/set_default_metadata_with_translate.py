@@ -9,6 +9,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 import logging
 from copy import deepcopy
+from .common import get_cv_by_qcode
 from superdesk import get_resource_service
 from superdesk.errors import StopDuplication
 from apps.archive.common import ITEM_DUPLICATE
@@ -20,37 +21,28 @@ logger = logging.getLogger(__name__)
 
 def _map_eco_package_subject(original_item):
     """Map BTL/ECO to EXT/ECO and vice versa if present in original_item."""
+    mapping = {"BTL/ECO": "EXT/ECO", "EXT/ECO": "BTL/ECO"}
+
     for subj in original_item.get("subject", []):
-        if subj.get("scheme") == "services-products" and subj.get("qcode") in (
-            "BTL/ECO",
-            "EXT/ECO",
-        ):
-            return "EXT/ECO" if subj["qcode"] == "BTL/ECO" else "BTL/ECO"
+        if subj.get("scheme") == "services-products":
+            return mapping.get(subj.get("qcode"))
     return None
 
 
 def _preserve_eco_package(original_item, new_item):
-    """Preserve and map ECO package subject from original_item to new_item."""
-    mapped = _map_eco_package_subject(original_item)
-    if not mapped:
+    """Preserve and map ECO package subject from original_item to new_item using CV."""
+
+    mapped_qcode = _map_eco_package_subject(original_item)
+
+    if not mapped_qcode:
         return
 
-    # filter out any existing services-products entries
-    filtered = [
-        s for s in new_item.get("subject", []) if s.get("scheme") != "services-products"
-    ]
+    vocab_item = get_cv_by_qcode("services-products").get(mapped_qcode)
 
-    # build the new subject entry
-    filtered.append(
-        {
-            "name": mapped,
-            "qcode": mapped,
-            "parent": mapped.split("/")[0],
-            "scheme": "services-products",
-        }
-    )
+    if not vocab_item:
+        return
 
-    new_item["subject"] = filtered
+    new_item["subject"].append(vocab_item)
 
 
 def set_belga_keywords(item):

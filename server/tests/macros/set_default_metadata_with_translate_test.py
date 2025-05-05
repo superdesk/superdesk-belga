@@ -1,4 +1,6 @@
 from bson import ObjectId
+from unittest.mock import patch
+from tests.mock import resources
 from superdesk import get_resource_service
 from superdesk.tests import TestCase
 from superdesk.errors import StopDuplication
@@ -798,22 +800,23 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         }
         self.app.data.insert("archive", [item])
 
-        with self.assertRaises(StopDuplication):
-            set_default_metadata_with_translate(
-                item,
-                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-            )
+        with patch.dict("superdesk.resources", resources):
+            with self.assertRaises(StopDuplication):
+                set_default_metadata_with_translate(
+                    item,
+                    dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                    dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+                )
 
-        new_item = get_resource_service("archive").find_one(
-            req=None,
-            original_id="urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
-        )
-        services = [
-            s for s in new_item["subject"] if s["scheme"] == "services-products"
-        ]
-        self.assertEqual(len(services), 1)
-        self.assertEqual(services[0]["qcode"], "EXT/ECO")
+            new_item = get_resource_service("archive").find_one(
+                req=None,
+                original_id="urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
+            )
+            services = [
+                s for s in new_item["subject"] if s["scheme"] == "services-products"
+            ]
+            self.assertEqual(len(services), 1)
+            self.assertEqual(services[0]["qcode"], "EXT/ECO")
 
     def test_preserve_ext_to_btl_eco_package(self):
 
@@ -881,19 +884,20 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         }
         self.app.data.insert("archive", [item])
 
-        with self.assertRaises(StopDuplication):
-            set_default_metadata_with_translate(
-                item,
-                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-            )
+        with patch.dict("superdesk.resources", resources):
+            with self.assertRaises(StopDuplication):
+                set_default_metadata_with_translate(
+                    item,
+                    dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                    dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+                )
 
-        new_item = get_resource_service("archive").find_one(
-            req=None,
-            original_id="urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
-        )
-        services = [
-            s for s in new_item["subject"] if s["scheme"] == "services-products"
-        ]
-        self.assertEqual(len(services), 1)
-        self.assertEqual(services[0]["qcode"], "BTL/ECO")
+            new_item = get_resource_service("archive").find_one(
+                req=None,
+                original_id="urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
+            )
+            services = [
+                s for s in new_item["subject"] if s["scheme"] == "services-products"
+            ]
+            self.assertEqual(len(services), 1)
+            self.assertEqual(services[0]["qcode"], "BTL/ECO")
