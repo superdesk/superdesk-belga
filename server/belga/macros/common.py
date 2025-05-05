@@ -1,7 +1,8 @@
 from superdesk import get_resource_service
+from typing import Optional
 
 
-def get_cv_by_qcode(scheme: str, field: str = None) -> dict:
+def get_cv_by_qcode(scheme: str, field: Optional[str] = None) -> dict:
     """
     Retrieve cv items by qcode for a given scheme.
     """
