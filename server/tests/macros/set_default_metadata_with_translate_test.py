@@ -901,3 +901,101 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             ]
             self.assertEqual(len(services), 1)
             self.assertEqual(services[0]["qcode"], "BTL/ECO")
+
+    def test_removes_old_eco_and_adds_mapped(self):
+        self.app.data.insert(
+            "desks",
+            [
+                {
+                    "_id": ObjectId("5d385f17fe985ec5e1a78b49"),
+                    "name": "Economics Desk",
+                    "default_content_profile": "belga_text",
+                    "default_content_template": "content_template_eco_fr",
+                    "desk_language": "nl",
+                    "source": "eco",
+                }
+            ],
+        )
+
+        self.app.data.insert(
+            "stages",
+            [
+                {
+                    "_id": ObjectId("5d385f31fe985ec67a0ca583"),
+                    "desk": ObjectId("5d385f17fe985ec5e1a78b49"),
+                    "default_incoming": True,
+                    "desk_order": 1,
+                    "is_visible": True,
+                }
+            ],
+        )
+
+        self.app.data.insert(
+            "content_templates",
+            [
+                {
+                    "_id": "content_template_eco_fr",
+                    "template_name": "eco fr template",
+                    "is_public": True,
+                    "data": {
+                        "language": "fr",
+                        "profile": "belga_text",
+                        "type": "text",
+                        "pubstatus": "usable",
+                        "format": "HTML",
+                        "subject": [
+                            {"qcode": "INT/ECO", "scheme": "services-products"}
+                        ],
+                        "keywords": [],
+                        "body_html": "",
+                    },
+                    "template_type": "create",
+                }
+            ],
+        )
+
+        item = {
+            "_id": "urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
+            "guid": "urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
+            "language": "nl",
+            "state": "published",
+            "type": "text",
+            "subject": [
+                {
+                    "scheme": "services-products",
+                    "qcode": "BTL/ECO",
+                    "parent": "BTL",
+                    "name": "BTL/ECO",
+                }
+            ],
+        }
+        self.app.data.insert("archive", [item])
+
+        with patch.dict("superdesk.resources", resources):
+            with self.assertRaises(StopDuplication):
+                set_default_metadata_with_translate(
+                    item,
+                    dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                    dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+                )
+
+            new_item = get_resource_service("archive").find_one(
+                req=None,
+                original_id="urn:newsml:localhost:5000:2019-12-10T14:43:46.224107:d13ac5ae-7f43-4b7f-89a5-2c6835389564",
+            )
+
+            eco_subjects = [
+                s["qcode"]
+                for s in new_item.get("subject", [])
+                if s.get("scheme") == "services-products"
+                and s.get("qcode", "").endswith("/ECO")
+            ]
+
+            self.assertEqual(
+                len(eco_subjects),
+                1,
+                msg=f"Unexpected ECO subjects found: {eco_subjects}",
+            )
+            self.assertNotIn(
+                "BTL/ECO", eco_subjects, msg="BTL/ECO should have been removed."
+            )

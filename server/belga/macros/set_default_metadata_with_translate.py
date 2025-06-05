@@ -42,6 +42,15 @@ def _preserve_eco_package(original_item, new_item):
     if not vocab_item:
         return
 
+    # Remove all existing ECO-related services-products entries
+    new_item["subject"] = [
+        s
+        for s in new_item.get("subject", [])
+        if not (
+            s.get("scheme") == "services-products"
+            and s.get("qcode", "").endswith("/ECO")
+        )
+    ]
     new_item["subject"].append(vocab_item)
 
 
