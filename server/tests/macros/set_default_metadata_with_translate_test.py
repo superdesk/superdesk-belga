@@ -999,3 +999,137 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             self.assertNotIn(
                 "BTL/ECO", eco_subjects, msg="BTL/ECO should have been removed."
             )
+
+    def test_should_fallback_to_second_subject_if_first_does_not_match_filter(self):
+        self.app.data.insert(
+            "filter_conditions",
+            [
+                {
+                    "_id": ObjectId("7d385f17fe985ec5e1a78b49"),
+                    "operator": "in",
+                    "field": "subject",
+                    "value": "EXT/ECO",
+                    "name": "EXT/ECO filter",
+                }
+            ],
+        )
+
+        filter_id = ObjectId("7d385f17fe985ec5e1a78b50")
+
+        self.app.data.insert(
+            "content_filters",
+            [
+                {
+                    "_id": filter_id,
+                    "name": "EXT/ECO Filter",
+                    "content_filter": [
+                        {"expression": {"fc": [ObjectId("7d385f17fe985ec5e1a78b49")]}}
+                    ],
+                }
+            ],
+        )
+
+        self.app.data.insert(
+            "desks",
+            [
+                {
+                    "_id": ObjectId("5d385f17fe985ec5e1a78b49"),
+                    "name": "Economics Desk",
+                    "default_content_profile": "belga_text",
+                    "default_content_template": "content_template_eco",
+                    "desk_language": "en",
+                    "source": "eco",
+                }
+            ],
+        )
+        self.app.data.insert(
+            "stages",
+            [
+                {
+                    "_id": ObjectId("5d385f31fe985ec67a0ca583"),
+                    "desk": ObjectId("5d385f17fe985ec5e1a78b49"),
+                    "default_incoming": True,
+                    "desk_order": 1,
+                    "is_visible": True,
+                }
+            ],
+        )
+
+        self.app.data.insert(
+            "content_templates",
+            [
+                {
+                    "_id": "content_template_eco",
+                    "template_name": "eco template",
+                    "is_public": True,
+                    "data": {
+                        "language": "en",
+                        "profile": "belga_text",
+                        "type": "text",
+                        "pubstatus": "usable",
+                        "format": "HTML",
+                        "subject": [],
+                        "keywords": [],
+                        "body_html": "",
+                    },
+                    "template_type": "create",
+                }
+            ],
+        )
+
+        # Internal destination points to content filter for EXT/ECO only
+        internal_destination = {
+            "_id": "dest_eco",
+            "is_active": True,
+            "name": "EXT/ECO",
+            "filter": str(filter_id),
+            "desk": "123",
+            "stage": "213",
+            "macro": "Set Default Metadata With Translate",
+        }
+        self.app.data.insert("internal_destinations", [internal_destination])
+
+        # Item with two subjects: first one won't match, second one will
+        item = {
+            "_id": "urn:test:multi-subject-case",
+            "guid": "urn:test:multi-subject-case",
+            "language": "fr",
+            "state": "published",
+            "type": "text",
+            "subject": [
+                {
+                    "scheme": "services-products",
+                    "qcode": "EXT/POL",
+                    "parent": "EXT",
+                    "name": "EXT/POL",
+                },
+                {
+                    "scheme": "services-products",
+                    "qcode": "EXT/ECO",
+                    "parent": "EXT",
+                    "name": "EXT/ECO",
+                },
+            ],
+        }
+
+        self.app.data.insert("archive", [item])
+
+        with patch.dict("superdesk.resources", resources):
+            with self.assertRaises(StopDuplication):
+                set_default_metadata_with_translate(
+                    item,
+                    dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                    dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+                    internal_destination=internal_destination,
+                )
+
+            new_item = get_resource_service("archive").find_one(
+                req=None,
+                original_id="urn:test:multi-subject-case",
+            )
+            assert new_item is not None
+            services = [
+                s for s in new_item["subject"] if s["scheme"] == "services-products"
+            ]
+            self.assertEqual(len(services), 1)
+            self.assertEqual(services[0]["qcode"], "BTL/ECO")

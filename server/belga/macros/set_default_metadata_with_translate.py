@@ -116,22 +116,29 @@ def set_default_metadata_with_translate(item, **kwargs):
 
     # SDBELGA-538
     if item.get("subject"):
-        test_item = item.copy()
-        test_item["subject"] = [
+        services_subjects = [
             s for s in item["subject"] if s.get("scheme") == "services-products"
-        ][
-            :1
-        ]  # only first if there is one
+        ]
         internal_destination = kwargs.get("internal_destination", {})
         content_filter_id = internal_destination.get("filter", "")
         content_filter_service = get_resource_service("content_filters")
         content_filter = content_filter_service.find_one(
             req=None, _id=content_filter_id
         )
-        if content_filter and not content_filter_service.does_match(
-            content_filter, test_item, cache=False
-        ):
-            raise StopDuplication()
+
+        if content_filter:
+            for subject in services_subjects:
+                temp_item = item.copy()
+                temp_item["subject"] = [subject]
+
+                if content_filter_service.does_match(
+                    content_filter, temp_item, cache=False
+                ):
+                    # Use the first matching subject for translation
+                    original_item["subject"] = [subject]
+                    break
+            else:
+                raise StopDuplication()
 
     # we first do the translation, we need destination language for that
     content_template = get_default_content_template(item, **kwargs)
