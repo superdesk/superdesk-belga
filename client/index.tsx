@@ -145,7 +145,23 @@ setTimeout(() => {
         },
         {
             id: 'availability-manager',
-            load: () => import('superdesk-core/scripts/extensions/availability-manager'),
+            load: () => import('superdesk-core/scripts/extensions/availability-manager').then((extension) => {
+                extension.configure({
+                    dashboard: {
+                        addLinkToSideMenu: {
+                            icon: 'user',
+                            order: 1100,
+                            keyBinding: 'ctrl+alt+c',
+                        },
+
+                        tags: {
+                            leafsOnly: true,
+                        },
+                    },
+                });
+
+                return extension;
+            }),
         },
     ], {
         UserAvatar,
