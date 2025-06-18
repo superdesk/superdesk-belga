@@ -5,7 +5,7 @@ flake8==7.2.0
 pep8==1.7.1
 httmock==1.4.0
 mypy==1.16.1
-pytest==8.4.0
+pytest==8.4.1
 types-click==7.1.8
 types-Flask==1.1.6
 types-Jinja2==2.11.9
