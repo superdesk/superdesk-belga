@@ -65,11 +65,6 @@ module.exports = function(grunt) {
             assignments: true
         },
 
-        ui: {
-            publishEmbargo: false,
-            sendEmbargo: false,
-        },
-
         langOverride: {
             'en': {
                 'slugline': 'topic',
