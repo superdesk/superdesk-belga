@@ -8,6 +8,7 @@ export default class BelgaSearchPanelController {
     subjects : Array<Subject>;
     sources: Array<Subject>;
     periods: Array<Subject>;
+    mediaTypes: Array<Subject>;
 
     $onInit() {
         this.subjects = [
@@ -34,6 +35,11 @@ export default class BelgaSearchPanelController {
             {name: 'Last month', id: 'month'},
             {name: 'Last year', id: 'year'},
             {name: 'Last 2 years', id: 'year2'},
+        ];
+
+        this.mediaTypes = [
+            {id: '0', name: 'Images'},
+            {id: '1', name: 'Videos'},
         ];
     }
 }

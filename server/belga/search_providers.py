@@ -240,6 +240,142 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         base_url = config.get("url") or self.base_url
         return urljoin(base_url, resource.lstrip("/"))
 
+    def find(self, query, params=None):
+        api_params = {
+            "s": query.get("from", 0),
+            "l": query.get("size", 25),
+        }
+
+        if params:
+            for api_param, param in {"c": "source", "h": "subject"}.items():
+                items = [key for key, val in params.get(param, {}).items() if val]
+                if items:
+                    api_params[api_param] = ",".join(sorted(items))
+
+            dates = params.get("dates", {})
+            if dates.get("start"):
+                api_params["f"] = int(
+                    arrow.get(dates["start"], "DD/MM/YYYY").timestamp() * 1000
+                )
+            if dates.get("end"):
+                api_params["e"] = int(
+                    arrow.get(dates["end"], "DD/MM/YYYY").timestamp() * 1000
+                )
+
+            if params.get("period"):
+                api_params["p"] = params["period"].upper()
+
+            # Media type filter: 0 = picture, 1 = video
+            if app.config.get("BELGA_VIDEO_ENABLED", False):
+                if (
+                    params.get("objecttypes") is not None
+                    and params["objecttypes"] != ""
+                ):
+                    api_params["o"] = params["objecttypes"]
+
+        try:
+            query_string = query["query"]["filtered"]["query"]["query_string"]["query"]
+            query_string_parts = query_string.strip().replace("  ", " ").split()
+            if query_string_parts:
+                api_params["t"] = " AND ".join(query_string_parts)
+        except KeyError:
+            pass
+
+        data = self.api_get(self.search_endpoint, api_params)
+        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        return BelgaListCursor(docs, data[self.count_field])
+
+    def format_list_item(self, data):
+        is_video = False
+
+        if "ID" in data:
+            item_id = str(data["ID"])
+        else:
+            item_id = str(data.get("imageId", ""))
+
+        # Check if it's a video
+        if (
+            data.get("ObjectType") == 1
+            or "picturepackmedia" in item_id
+            or data.get("width") == 0
+            or data.get("height") == 0
+            or (data.get("description_text", "") or data.get("Description", "") or "")
+            .lower()
+            .startswith("video")
+            or (data.get("headline", "") or data.get("Title", "") or "")
+            .lower()
+            .startswith("video")
+        ):
+            is_video = True
+
+        if is_video:
+            guid = "urn:belga.be:picturepackmedia:%s" % item_id
+        else:
+            guid = "urn:belga.be:picturepackimage:%s" % item_id
+
+        created = get_datetime(data.get("EntryDate", data.get("createDate")))
+
+        item = {
+            "pubstatus": "usable",
+            "_id": guid,
+            "guid": guid,
+            "headline": get_text(data.get("Title", data.get("name", ""))),
+            "description_text": get_text(
+                data.get("Description", data.get("caption", ""))
+            ),
+            "versioncreated": created,
+            "firstcreated": created,
+            "byline": get_text(data.get("author", ""))
+            or get_text(data.get("userId", "")),
+            "creditline": get_text(data.get("credit", "")),
+            "source": get_text(data.get("credit", ""))
+            or get_text(data.get("source", "")),
+            "_fetchable": False,
+        }
+
+        if is_video:
+            item["type"] = "video"
+            item["mimetype"] = "video/mp4"
+            item["renditions"] = {
+                "thumbnail": {
+                    "href": data.get("ThumbnailURL", data.get("thumbnailUrl", ""))
+                },
+                "viewImage": {
+                    "href": data.get("previewUrl", data.get("PreviewURL", "")),
+                    "mimetype": "image/jpeg",
+                },
+                "original": {
+                    "href": data.get("videoPreviewUrl")
+                    or data.get("VideoURL")
+                    or data.get("detailUrl", ""),
+                    "mimetype": "video/mp4",
+                },
+            }
+        else:
+            item["type"] = "picture"
+            item["renditions"] = {
+                "original": {
+                    "width": data.get("Width", data.get("width", 0)),
+                    "height": data.get("Height", data.get("height", 0)),
+                    "href": data.get(
+                        "detailUrl", data.get("PreviewURL", data.get("previewUrl", ""))
+                    ),
+                },
+                "thumbnail": {
+                    "href": data.get("ThumbnailURL", data.get("smallUrl", ""))
+                },
+                "viewImage": {
+                    "href": data.get("PreviewURL", data.get("previewUrl", ""))
+                },
+                "baseImage": {
+                    "href": data.get(
+                        "detailUrl", data.get("PreviewURL", data.get("previewUrl", ""))
+                    )
+                },
+            }
+
+        return item
+
 
 class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
     GUID_PREFIX = "urn:belga.be:coverage:"

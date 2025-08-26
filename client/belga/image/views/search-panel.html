@@ -31,4 +31,12 @@
             ></div>
         </div>
     </div>
+
+    <div class="field">
+        <label class="search-label" translate>Media Type</label>
+        <label class="search-label" ng-repeat="media in searchPanel.mediaTypes">
+            <input type="radio" ng-model="params.objecttypes" value="{{media.id}}" />
+            {{ media.name }}
+        </label>
+    </div>
 </fieldset>
