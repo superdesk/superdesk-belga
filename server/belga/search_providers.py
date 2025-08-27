@@ -274,6 +274,7 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
                 "renditions": {
                     "thumbnail": {
                         "href": data.get("ThumbnailURL", data.get("thumbnailUrl", "")),
+                        "mimetype": "image/jpeg",
                     },
                     "viewImage": {
                         "href": data.get("previewUrl", data.get("PreviewURL", "")),
