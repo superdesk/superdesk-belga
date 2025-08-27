@@ -109,7 +109,6 @@ class BelgaVideoTestCase(unittest.TestCase):
         )
         self.assertEqual("video/mp4", renditions["original"]["mimetype"])
 
-
     @patch("belga.search_providers.session.get")
     def test_fetch_v2_video(self, session_get):
         """Test fetching a single video by ID"""
