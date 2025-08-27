@@ -157,6 +157,13 @@ setTimeout(() => {
                         tags: {
                             leafsOnly: true,
                         },
+
+                        compareUsers: (a, b) => {
+                            const nameA: string = a.username ?? a.display_name;
+                            const nameB: string = b.username ?? b.display_name;
+
+                            return nameA.localeCompare(nameB);
+                        },
                     },
                 });
 
