@@ -1,0 +1,22 @@
+{
+  "nrImages": 100,
+  "images": [
+    {
+      "imageId": 123456789,
+      "ObjectType": 1,
+      "width": 0,
+      "height": 0,
+      "createDate": "2025-01-01T13:00:00Z",
+      "name": "Video: Event Coverage",
+      "caption": "Video coverage of event in Brussels",
+      "author": "John Doe",
+      "credit": "BELGA",
+      "source": "BELGA",
+      "thumbnailUrl": "https://belga-websvc.picturepack.com/belgaimage-api/thumbnail/123456789.jpg",
+      "previewUrl": "https://belga-websvc.picturepack.com/belgaimage-api/preview/123456789.jpg",
+      "videoPreviewUrl": "https://belga-websvc.picturepack.com/belgaimage-api/video/123456789.mp4",
+      "detailUrl": "https://belga-websvc.picturepack.com/belgaimage-api/video/123456789.mp4",
+      "smallUrl": "https://belga-websvc.picturepack.com/belgaimage-api/thumbnail/123456789.jpg"
+    }
+  ]
+}

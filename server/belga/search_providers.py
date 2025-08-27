@@ -246,9 +246,11 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
             "l": query.get("size", 25),
         }
 
-        if params and app.config.get("BELGA_VIDEO_ENABLED", False):
-            if params.get("objecttypes") not in (None, ""):
+        if app.config.get("BELGA_VIDEO_ENABLED", False):
+            if params and params.get("objecttypes"):
                 api_params["o"] = params["objecttypes"]
+        else:
+            api_params["o"] = "0"
 
         data = self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
@@ -257,60 +259,37 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
     def format_list_item(self, data):
         """Format list items. Only override for videos, delegate pictures to parent."""
 
-        item_id = str(data.get("ID") or data.get("imageId") or "")
-        is_video = (
-            data.get("ObjectType") == 1
-            or "picturepackmedia" in item_id
-            or data.get("width") == 0
-            or data.get("height") == 0
-            or (data.get("description_text", "") or data.get("Description", "") or "")
-            .lower()
-            .startswith("video")
-            or (data.get("headline", "") or data.get("Title", "") or "")
-            .lower()
-            .startswith("video")
-        )
-
+        is_video = bool(data.get("videoPreviewUrl"))
         if not is_video:
             return super().format_list_item(data)
 
-        guid = "urn:belga.be:picturepackmedia:%s" % item_id
-        created = get_datetime(data.get("EntryDate", data.get("createDate")))
+        item = super().format_list_item(data)
 
-        return {
-            "type": "video",
-            "pubstatus": "usable",
-            "_id": guid,
-            "guid": guid,
-            "headline": get_text(data.get("Title", data.get("name", ""))),
-            "description_text": get_text(
-                data.get("Description", data.get("caption", ""))
-            ),
-            "versioncreated": created,
-            "firstcreated": created,
-            "byline": get_text(data.get("author", ""))
-            or get_text(data.get("userId", "")),
-            "creditline": get_text(data.get("credit", "")),
-            "source": get_text(data.get("credit", ""))
-            or get_text(data.get("source", "")),
-            "renditions": {
-                "thumbnail": {
-                    "href": data.get("ThumbnailURL", data.get("thumbnailUrl", ""))
+        item.update(
+            {
+                "_id": f"urn:belga.be:picturepackmedia:{data.get('ID') or data.get('imageId')}",
+                "guid": f"urn:belga.be:picturepackmedia:{data.get('ID') or data.get('imageId')}",
+                "type": "video",
+                "mimetype": "video/mp4",
+                "renditions": {
+                    "thumbnail": {
+                        "href": data.get("ThumbnailURL", data.get("thumbnailUrl", "")),
+                    },
+                    "viewImage": {
+                        "href": data.get("previewUrl", data.get("PreviewURL", "")),
+                        "mimetype": "image/jpeg",
+                    },
+                    "original": {
+                        "href": data.get("videoPreviewUrl")
+                        or data.get("VideoURL")
+                        or data.get("detailUrl", ""),
+                        "mimetype": "video/mp4",
+                    },
                 },
-                "viewImage": {
-                    "href": data.get("previewUrl", data.get("PreviewURL", "")),
-                    "mimetype": "image/jpeg",
-                },
-                "original": {
-                    "href": data.get("videoPreviewUrl")
-                    or data.get("VideoURL")
-                    or data.get("detailUrl", ""),
-                    "mimetype": "video/mp4",
-                },
-            },
-            "mimetype": "video/mp4",
-            "_fetchable": False,
-        }
+            }
+        )
+
+        return item
 
 
 class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
