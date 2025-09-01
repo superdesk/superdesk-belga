@@ -61,5 +61,25 @@
       "body_html_template": "dutch_news_events_tommorrow.html"
   },
   "label": "Program of the day - NPN"
+},
+{
+  "_id": "french_planning_advisory_tomorrow",
+  "init_version": 1,
+  "name": "french_planning_advisory_tomorrow",
+  "type": "planning",
+  "data": {
+      "body_html_template": "french_planning_advisory_tomorrow.html"
+  },
+  "label": "Programme du jour - NPF (Planning)"
+},
+{
+  "_id": "dutch_planning_advisory_tomorrow",
+  "init_version": 1,
+  "name": "dutch_planning_advisory_tomorrow",
+  "type": "planning",
+  "data": {
+      "body_html_template": "dutch_planning_advisory_tomorrow.html"
+  },
+  "label": "Programma van de dag - NPN (Planning)"
 }
 ]
