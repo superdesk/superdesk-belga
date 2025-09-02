@@ -779,3 +779,91 @@ class PlanningExportTests(TestCase):
                 "<p>Oud Gerechtshof, Havermarkt 10, 3500 Hasselt, Belgium<br></p>",
                 dutch_data,
             )
+
+    def test_planning_advisory_export_tomorrow(self):
+        with self.app.app_context():
+            self.app.data.insert("events", self.events_for_tommorow)
+
+            # Insert plannings linked to those events
+            planning_items = []
+            for ev in self.events_for_tommorow:
+                planning_items.append(
+                    {
+                        "_id": ObjectId(),
+                        "type": "planning",
+                        "slugline": f"planning for {ev['name']}",
+                        "description_text": "planning desc",
+                        "dates": ev["dates"],
+                        "location": ev.get(
+                            "location", {"name": "Unknown", "country": ""}
+                        ),
+                        "links": ev.get("links", []),
+                        "coverages": [
+                            {
+                                "planning": {"g2_content_type": "picture"},
+                                "news_coverage_status": {"label": "Planned"},
+                            }
+                        ],
+                        "event_item": ev.get("_id") or str(ObjectId()),
+                        "event_contact_info": ev.get("event_contact_info", []),
+                        "language": "en",
+                    }
+                )
+            self.app.data.insert("planning", planning_items)
+
+            dutch_data = render_template(
+                "dutch_planning_advisory_tomorrow.html",
+                items=planning_items,
+                app=self.app,
+            )
+            french_data = render_template(
+                "french_planning_advisory_tomorrow.html",
+                items=planning_items,
+                app=self.app,
+            )
+
+            self.assertIn(
+                (
+                    "<h2>Voici l’agenda Belga des événements belges et internationaux qui bénéficieront "
+                    "d’une couverture de notre part. Les mentions TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, "
+                    "LIVE VIDEO et LIVE BLOG vous précisent si nous couvrons le sujet. La mention ON MERIT "
+                    "vous signale que Belga suit le sujet mais ne peut pas encore assurer qu’il donnera lieu "
+                    "à une couverture spécifique. La rédaction vous souhaite une bonne journée de travail</h2>"
+                ),
+                french_data,
+            )
+            self.assertIn(
+                (
+                    "<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen, "
+                    "met de vermelding of wij dit in TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE "
+                    "VIDEO en LIVE BLOG coveren. De vermelding ON MERIT betekent dat Belga dit onderwerp "
+                    "opvolgt, maar dat voorlopig niet gegarandeerd kan worden dat er ook een specifieke "
+                    "coverage zal volgen. De redactie van Belga wenst u een prettige werkdag.</h2>"
+                ),
+                dutch_data,
+            )
+
+            self.assertIn("<h3>General</h3>", dutch_data)
+            self.assertIn("<h3>Sports</h3>", dutch_data)
+            self.assertIn("<h3>Economy</h3>", dutch_data)
+            self.assertIn("<h3>General</h3>", french_data)
+            self.assertIn("<h3>Sports</h3>", french_data)
+            self.assertIn("<h3>Economy</h3>", french_data)
+
+            general_section = dutch_data[dutch_data.index("<h3>General</h3>") :]
+            self.assertIn("<p>another one</p>", general_section)
+            self.assertIn("Moscow", general_section)
+
+            sports_section = dutch_data[dutch_data.index("<h3>Sports</h3>") :]
+            self.assertIn("<p>NExxxxt Sunday 21.04.2024</p>", sports_section)
+            self.assertIn("New York", sports_section)
+
+            economy_section = dutch_data[dutch_data.index("<h3>Economy</h3>") :]
+            self.assertIn("<p>another two</p>", economy_section)
+            self.assertIn("Belgium", economy_section)
+
+            self.assertIn(
+                "FUBAR - Billiam Doe - Associate Consultant - "
+                "funkbio@fubar.com - 99999999 - 666 - funkbar.com",
+                dutch_data,
+            )
