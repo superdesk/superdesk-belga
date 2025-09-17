@@ -1,6 +1,9 @@
 from .format_news_events_week import format_event_for_week
 from .format_news_events_tommorow import format_event_for_tommorow
 from .format_planning_for_tomorrow import format_planning_for_tomorrow
+from .format_planning_for_tomorrow_bilingual import (
+    format_planning_for_tomorrow_bilingual,
+)
 
 
 def init_app(app):
@@ -8,4 +11,7 @@ def init_app(app):
     app.jinja_env.globals.update(format_event_for_tommorow=format_event_for_tommorow)
     app.jinja_env.globals.update(
         format_planning_for_tomorrow=format_planning_for_tomorrow
+    )
+    app.jinja_env.globals.update(
+        format_planning_for_tomorrow_bilingual=format_planning_for_tomorrow_bilingual
     )

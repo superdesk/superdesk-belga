@@ -529,25 +529,25 @@ class PlanningExportTests(TestCase):
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", dutch_template_data)
             self.assertIn(
-                "<p>New York, United States<br></p>",
+                "<p>New York, United States</p>",
                 dutch_template_data,
             )
             self.assertIn(
-                "<p>16u00, NExxxxt Sunday 21.04.2024 NL<br></p>", dutch_template_data
+                "<p>16u00, NExxxxt Sunday 21.04.2024 NL</p>", dutch_template_data
             )
-            self.assertIn("<p>Description of event NL<br></p>", dutch_template_data)
+            self.assertIn("<p>Description of event NL</p>", dutch_template_data)
             self.assertIn(
-                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 dutch_template_data,
             )
             self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
             self.assertIn("<h4>SPORTS</h4>", dutch_template_data)
             self.assertIn(
-                "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", dutch_template_data
+                "<p>16u00, NExxxxt Monday 22.04.2024</p>", dutch_template_data
             )
-            self.assertIn("<p>Description of event<br></p>", dutch_template_data)
+            self.assertIn("<p>Description of event</p>", dutch_template_data)
             self.assertIn(
-                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 dutch_template_data,
             )
 
@@ -564,48 +564,48 @@ class PlanningExportTests(TestCase):
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", french_template_data)
             self.assertIn(
-                "<p>New York, United States<br></p>",
+                "<p>New York, United States</p>",
                 french_template_data,
             )
             self.assertIn(
-                "<p>16u00, NExxxxt Sunday 21.04.2024 FR<br></p>", french_template_data
+                "<p>16u00, NExxxxt Sunday 21.04.2024 FR</p>", french_template_data
             )
-            self.assertIn("<p>Description of event FR<br></p>", french_template_data)
+            self.assertIn("<p>Description of event FR</p>", french_template_data)
             self.assertIn(
-                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
 
             self.assertIn("<h4>SPORTS</h4>", french_template_data)
             self.assertIn(
-                "<p>Kubang Putiah, Indonesien<br></p>",
+                "<p>Kubang Putiah, Indonesien</p>",
                 french_template_data,
             )
             self.assertIn(
-                "<p>16u00, NExxxxt Monday 22.04.2024<br></p>", french_template_data
+                "<p>16u00, NExxxxt Monday 22.04.2024</p>", french_template_data
             )
-            self.assertIn("<p>Description of event<br></p>", french_template_data)
+            self.assertIn("<p>Description of event</p>", french_template_data)
             self.assertIn(
-                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )
 
             self.assertIn("<h4>WC2028</h4>", french_template_data)
 
-            self.assertIn("<p>16u00, First<br></p>", french_template_data)
+            self.assertIn("<p>16u00, First</p>", french_template_data)
             self.assertIn(
-                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )
             self.assertIn(
-                "<p>Rabat, Morocco<br></p>",
+                "<p>Rabat, Morocco</p>",
                 french_template_data,
             )
 
-            self.assertIn("<p>16u00, second<br></p>", french_template_data)
+            self.assertIn("<p>16u00, second</p>", french_template_data)
             self.assertIn(
-                '<p><a href="www.google.xom/new">www.google.xom/new</a><br></p>',
+                '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )
 
@@ -641,8 +641,8 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             )
             self.assertIn("<h3>Donderdag 25 april</h3>", template_data)
-            self.assertIn("<p>00u00, one event<br></p>", template_data)
-            self.assertIn("<p>00u59, Two event<br></p>", template_data)
+            self.assertIn("<p>00u00, one event</p>", template_data)
+            self.assertIn("<p>00u59, Two event</p>", template_data)
 
             template_data = render_template(
                 "french_news_events_list_export_body.html",
@@ -650,8 +650,8 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             )
             self.assertIn("<h3>Jeudi 25 avril</h3>", template_data)
-            self.assertIn("<p>00u00, one event<br></p>", template_data)
-            self.assertIn("<p>00u59, Two event<br></p>", template_data)
+            self.assertIn("<p>00u00, one event</p>", template_data)
+            self.assertIn("<p>00u59, Two event</p>", template_data)
 
             french_template_headline_data = render_template(
                 "french_news_events_list_export_headline.html",
@@ -703,80 +703,80 @@ class PlanningExportTests(TestCase):
                 dutch_data,
             )
             self.assertIn("<h3>General</h3>", dutch_data)
-            self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
-            self.assertIn("<p>another one<br></p>", dutch_data)
-            self.assertIn("<p>Description of event<br></p>", dutch_data)
+            self.assertIn("<p>00:00 - 23:59</p>", dutch_data)
+            self.assertIn("<p>another one</p>", dutch_data)
+            self.assertIn("<p>Description of event</p>", dutch_data)
             self.assertIn(
-                "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
+                "<p><a href='www.google.xom/new'>www.google.xom/new</a></p>",
                 dutch_data,
             )
             self.assertIn(
-                "<p>FUBAR - John Doe - Media Contact - jdoe@fubar.com - 99999999 - 666 - fubar.com<br></p>",
+                "<p>FUBAR - John Doe - Media Contact - jdoe@fubar.com - 99999999 - 666 - fubar.com</p>",
                 dutch_data,
             )
             self.assertIn(
                 (
                     "<p>FUBAR - Billiam Doe - Associate Consultant - "
-                    "funkbio@fubar.com - 99999999 - 666 - funkbar.com<br></p>"
+                    "funkbio@fubar.com - 99999999 - 666 - funkbar.com</p>"
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
+            self.assertIn("<p>PICTURE (PLANNED)</p>", dutch_data)
 
             self.assertIn("<h3>Economy</h3>", dutch_data)
-            self.assertIn("<p>16:00 - 21:00<br></p>", dutch_data)
+            self.assertIn("<p>16:00 - 21:00</p>", dutch_data)
             self.assertIn(
-                "<p>City of New York, New York, United States<br></p>",
+                "<p>City of New York, New York, United States</p>",
                 dutch_data,
             )
-            self.assertIn("another two<br></p>", dutch_data)
-            self.assertIn("<p>Description of event<br></p>", dutch_data)
+            self.assertIn("another two</p>", dutch_data)
+            self.assertIn("<p>Description of event</p>", dutch_data)
             self.assertIn(
-                "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
+                "<p><a href='www.google.xom/new'>www.google.xom/new</a></p>",
                 dutch_data,
             )
             self.assertIn(
-                "<p>FUBAR - John Doe - Media Contact - jdoe@fubar.com - 99999999 - 666 - fubar.com<br></p>",
+                "<p>FUBAR - John Doe - Media Contact - jdoe@fubar.com - 99999999 - 666 - fubar.com</p>",
                 dutch_data,
             )
             self.assertIn(
                 (
                     "<p>FUBAR - Billiam Doe - Associate Consultant "
-                    "- funkbio@fubar.com - 99999999 - 666 - funkbar.com<br></p>"
+                    "- funkbio@fubar.com - 99999999 - 666 - funkbar.com</p>"
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
+            self.assertIn("<p>PICTURE (PLANNED)</p>", dutch_data)
 
             self.assertIn("<h3>Sports</h3>", dutch_data)
-            self.assertIn("<p>00:00 - 23:59<br></p>", dutch_data)
-            self.assertIn("<p>NExxxxt Sunday 21.04.2024<br></p>", dutch_data)
-            self.assertIn("<p>Description of event<br></p>", dutch_data)
+            self.assertIn("<p>00:00 - 23:59</p>", dutch_data)
+            self.assertIn("<p>NExxxxt Sunday 21.04.2024</p>", dutch_data)
+            self.assertIn("<p>Description of event</p>", dutch_data)
             self.assertIn(
-                "<p><a href='www.google.xom/new'>www.google.xom/new</a><br></p>",
+                "<p><a href='www.google.xom/new'>www.google.xom/new</a></p>",
                 dutch_data,
             )
             self.assertIn(
-                "<p>FUBAR - John Doe - Media Contact - jdoe@fubar.com - 99999999 - 666 - fubar.com<br></p>",
+                "<p>FUBAR - John Doe - Media Contact - jdoe@fubar.com - 99999999 - 666 - fubar.com</p>",
                 dutch_data,
             )
             self.assertIn(
                 (
                     "<p>FUBAR - Billiam Doe - Associate Consultant - "
-                    "funkbio@fubar.com - 99999999 - 666 - funkbar.com<br></p>"
+                    "funkbio@fubar.com - 99999999 - 666 - funkbar.com</p>"
                 ),
                 dutch_data,
             )
-            self.assertIn("<p>PICTURE (PLANNED)<br></p>", dutch_data)
+            self.assertIn("<p>PICTURE (PLANNED)</p>", dutch_data)
 
             self.assertNotIn("<h3>Business</h3>", dutch_data)
 
             self.assertIn(
-                "<p>Москва, Moscow, Russia<br></p>",
+                "<p>Москва, Moscow, Russia</p>",
                 dutch_data,
             )
             self.assertIn(
-                "<p>Oud Gerechtshof, Havermarkt 10, 3500 Hasselt, Belgium<br></p>",
+                "<p>Oud Gerechtshof, Havermarkt 10, 3500 Hasselt, Belgium</p>",
                 dutch_data,
             )
 
@@ -866,4 +866,276 @@ class PlanningExportTests(TestCase):
                 "FUBAR - Billiam Doe - Associate Consultant - "
                 "funkbio@fubar.com - 99999999 - 666 - funkbar.com",
                 dutch_data,
+            )
+
+    def test_bilingual_planning_advisory_export_tomorrow(self):
+        """Test the bilingual planning advisory template with various scenarios"""
+        with self.app.app_context():
+            test_contact_id = ObjectId()
+            test_contact = {
+                "_id": test_contact_id,
+                "first_name": "John",
+                "last_name": "Doe",
+                "organisation": "Test Org",
+                "job_title": "Media Contact",
+                "contact_email": ["jdoe@test.org"],
+                "contact_phone": [{"number": "123456789", "public": True}],
+                "mobile": [{"number": "987654321", "public": True}],
+                "website": "test.org",
+            }
+            self.app.data.insert("contacts", [test_contact])
+
+            event_1_id = ObjectId()
+            event_2_id = ObjectId()
+
+            bilingual_events = [
+                {
+                    "_id": event_1_id,
+                    "name": "Test Event NL",
+                    "slugline": "test-event-nl",
+                    "definition_long": "Dutch description of the event",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 22, 9, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 22, 17, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "general", "name": "General"}],
+                    "location": [
+                        {
+                            "name": "Brussels",
+                            "address": {"city": "Brussels", "country": "Belgium"},
+                        }
+                    ],
+                    "links": ["http://test-event.com"],
+                    "event_contact_info": [str(test_contact_id)],
+                    "translations": [
+                        {"field": "name", "language": "fr", "value": "Test Event FR"},
+                        {
+                            "field": "definition_long",
+                            "language": "fr",
+                            "value": "French description of the event",
+                        },
+                    ],
+                },
+                {
+                    "_id": event_2_id,
+                    "name": "All Day Event",
+                    "slugline": "all-day-event",
+                    "definition_long": "This is an all-day event",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 22, 0, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 22, 23, 59, 59, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "politics", "name": "Politics"}],
+                    "location": [
+                        {
+                            "name": "Brussels",
+                            "address": {"city": "Brussels", "country": "Belgium"},
+                        }
+                    ],
+                    "links": ["http://allday-event.com"],
+                    "event_contact_info": [str(test_contact_id)],
+                },
+            ]
+
+            self.app.data.insert("events", bilingual_events)
+
+            planning_1_id = ObjectId()
+            planning_2_id = ObjectId()
+            planning_3_id = ObjectId()
+            planning_4_id = ObjectId()
+
+            planning_items = [
+                {
+                    "_id": planning_1_id,
+                    "type": "planning",
+                    "slugline": "planning-dutch-text",
+                    "description_text": "Planning for Dutch text coverage",
+                    "dates": bilingual_events[0]["dates"],
+                    "coverages": [
+                        {
+                            "coverage_id": "cov1",
+                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": event_1_id,
+                },
+                {
+                    "_id": planning_2_id,
+                    "type": "planning",
+                    "slugline": "planning-french-text",
+                    "description_text": "Planning for French text coverage",
+                    "dates": bilingual_events[0]["dates"],
+                    "coverages": [
+                        {
+                            "coverage_id": "cov1",
+                            "planning": {"g2_content_type": "text", "language": "fr"},
+                            "news_coverage_status": {"label": "On Merit"},
+                        }
+                    ],
+                    "event_item": event_1_id,
+                },
+                {
+                    "_id": planning_3_id,
+                    "type": "planning",
+                    "slugline": "planning-picture",
+                    "description_text": "Planning for picture coverage",
+                    "dates": bilingual_events[0]["dates"],
+                    "coverages": [
+                        {
+                            "coverage_id": "cov2",
+                            "planning": {
+                                "g2_content_type": "picture",
+                            },
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": event_1_id,
+                },
+                {
+                    "_id": planning_4_id,
+                    "type": "planning",
+                    "slugline": "planning-all-day",
+                    "description_text": "Planning for all-day event",
+                    "dates": bilingual_events[1]["dates"],
+                    "coverages": [
+                        {
+                            "coverage_id": "cov2",
+                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": event_2_id,
+                },
+            ]
+
+            self.app.data.insert("planning", planning_items)
+
+            self.app.data.update(
+                "events",
+                event_1_id,
+                {"planning_ids": [planning_1_id, planning_2_id, planning_3_id]},
+                bilingual_events[0],
+            )
+
+            self.app.data.update(
+                "events",
+                event_2_id,
+                {"planning_ids": [planning_4_id]},
+                bilingual_events[1],
+            )
+
+            bilingual_data = render_template(
+                "bilingual_planning_advisory_tomorrow.html",
+                items=planning_items,
+                app=self.app,
+            )
+
+            self.assertIn(
+                "<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen",
+                bilingual_data,
+                "Dutch introduction should be present",
+            )
+            self.assertIn(
+                "<h2>Voici l'agenda Belga des événements belges et internationaux",
+                bilingual_data,
+                "French introduction should be present",
+            )
+
+            self.assertIn(
+                "<h3>General</h3>",
+                bilingual_data,
+                "General calendar section should be present",
+            )
+            self.assertIn(
+                "<h3>Politics</h3>",
+                bilingual_data,
+                "Politics calendar section should be present",
+            )
+
+            self.assertIn(
+                "<p>Test Event NL</p>", bilingual_data, "Dutch title should be present"
+            )
+            self.assertIn(
+                "<p>Test Event FR</p>", bilingual_data, "French title should be present"
+            )
+            self.assertIn(
+                "<p>Dutch description of the event</p>",
+                bilingual_data,
+                "Dutch description should be present",
+            )
+            self.assertIn(
+                "<p>French description of the event</p>",
+                bilingual_data,
+                "French description should be present",
+            )
+
+            self.assertIn(
+                "<p>TEXT N (PLANNED)</p>",
+                bilingual_data,
+                "Dutch text coverage should be tagged as TEXT N",
+            )
+            self.assertIn(
+                "<p>TEXT F (ON MERIT)</p>",
+                bilingual_data,
+                "French text coverage should be tagged as TEXT F",
+            )
+
+            self.assertIn(
+                "<p>PICTURE (PLANNED)</p>",
+                bilingual_data,
+                "Picture coverage should not have language tag",
+            )
+
+            self.assertNotIn(
+                "00:00 - 23:59",
+                bilingual_data,
+                "All-day events should not show 00:00-23:59 time",
+            )
+            self.assertIn(
+                "11:00 - 19:00",
+                bilingual_data,
+                "Regular events should show specific time range",
+            )
+
+            self.assertIn(
+                "Test Org - John Doe - Media Contact - jdoe@test.org - 123456789 - 987654321 - test.org",
+                bilingual_data,
+                "Contact information should be present",
+            )
+
+            self.assertIn(
+                "Brussels, Belgium",
+                bilingual_data,
+                "Location information should be present",
+            )
+
+            self.assertIn(
+                'href="http://test-event.com"',
+                bilingual_data,
+                "Event links should be present",
+            )
+
+            general_section = bilingual_data.split("<h3>General</h3>")[1].split("<h3>")[
+                0
+            ]
+            self.assertIn(
+                "11:00 - 19:00", general_section, "Timed event should come first"
+            )
+
+            politics_section = bilingual_data.split("<h3>Politics</h3>")[1].split(
+                "<h3>"
+            )[0]
+            self.assertNotIn(
+                "00:00 - 23:59", politics_section, "All-day event should not show time"
             )

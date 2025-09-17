@@ -81,5 +81,15 @@
       "body_html_template": "dutch_planning_advisory_tomorrow.html"
   },
   "label": "Programma van de dag - NPN (Planning)"
+},
+{
+  "_id": "bilingual_planning_advisory_tomorrow",
+  "init_version": 1,
+  "name": "bilingual_planning_advisory_tomorrow",
+  "type": "planning",
+  "data": {
+      "body_html_template": "bilingual_planning_advisory_tomorrow.html"
+  },
+  "label": "Daily program (NL/FR)"
 }
 ]
