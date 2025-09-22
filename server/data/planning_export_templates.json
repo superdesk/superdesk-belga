@@ -91,5 +91,15 @@
       "body_html_template": "bilingual_planning_advisory_tomorrow.html"
   },
   "label": "Daily program (NL/FR)"
+},
+{
+  "_id": "bilingual_events_advisory_tomorrow", 
+  "init_version": 1,
+  "name": "bilingual_events_advisory_tomorrow",
+  "type": "event",
+  "data": {
+    "body_html_template": "bilingual_news_events_tommorrow.html"
+  },
+  "label": "Daily program Events (NL/FR)"
 }
 ]

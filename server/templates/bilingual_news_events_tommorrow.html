@@ -1,0 +1,48 @@
+{% set formatted_data = format_event_for_tommorow_bilingual(items, "bilingual") %}
+<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen, met de vermelding of wij dit in TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO en LIVE BLOG coveren. De vermelding ON MERIT betekent dat Belga dit onderwerp opvolgt, maar dat voorlopig niet gegarandeerd kan worden dat er ook een specifieke coverage zal volgen. De redactie van Belga wenst u een prettige werkdag.</h2>
+
+<h2>Voici l'agenda Belga des événements belges et internationaux qui bénéficieront d'une couverture de notre part. Les mentions TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO et LIVE BLOG vous précisent si nous couvrons le sujet. La mention ON MERIT vous signale que Belga suit le sujet mais ne peut pas encore assurer qu'il donnera lieu à une couverture spécifique. La rédaction vous souhaite une bonne journée de travail</h2>
+
+{% for data in formatted_data %}
+    <h3>{{ data.calendar }}</h3>
+
+    {% for event in data.events %}
+        {% if event.time %}<p>{{ event.time }}</p>{% endif %}
+
+        {% if event.location %}
+            <p>{{ event.location }}</p>
+        {% endif %}
+
+        {# Display both Dutch and French titles if they differ #}
+        {% if event.title_nl and event.title_fr and event.title_nl != event.title_fr %}
+            <p>{{ event.title_nl }}</p>
+            <p>{{ event.title_fr }}</p>
+        {% elif event.title_nl %}
+            <p>{{ event.title_nl }}</p>
+        {% elif event.title_fr %}
+            <p>{{ event.title_fr }}</p>
+        {% endif %}
+
+        {# Display both Dutch and French descriptions if they differ #}
+        {% if event.description_nl and event.description_fr and event.description_nl != event.description_fr %}
+            <p>{{ event.description_nl }}</p>
+            <p>{{ event.description_fr }}</p>
+        {% elif event.description_nl %}
+            <p>{{ event.description_nl }}</p>
+        {% elif event.description_fr %}
+            <p>{{ event.description_fr }}</p>
+        {% endif %}
+
+        {% for link in event.links %}
+            <p><a href="{{ link }}">{{ link }}</a></p>
+        {% endfor %}
+
+        {% for contact in event.contacts %}
+            <p>{{ contact.organisation }} - {{ contact.name }} - {{ contact.job_title }} - {{ contact.email|join(", ") }} - {{ contact.phone|join(", ") }} - {{ contact.mobile|join(", ") }} - {{ contact.website }}</p>
+        {% endfor %}
+
+        {% for coverage in event.coverages %}
+            <p>{{ coverage.display }}</p>
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
