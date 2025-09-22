@@ -133,6 +133,7 @@ def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:
     formatted_coverages = []
     planning_ids = event.get("planning_ids", [])
     planning_service = get_resource_service("planning")
+    desk_service = get_resource_service("desks")
 
     for planning_id in planning_ids:
         planning_item = planning_service.find_one(req=None, _id=planning_id)
@@ -148,14 +149,24 @@ def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:
             cov_status = (
                 coverage.get("news_coverage_status", {}).get("label", "ON MERIT")
             ).upper()
-            cov_language = planning_info.get("language", "nl")
 
-            # Format coverage for bilingual output
+            desk_language_code = "N"
+            desk_id = (
+                planning_info.get("desk")
+                or coverage.get("assigned_to", {}).get("desk")
+                or event.get("task", {}).get("desk")
+            )
+
+            if desk_id:
+                desk_item = desk_service.find_one(req=None, _id=desk_id)
+                if desk_item:
+                    lang = desk_item.get("desk_language")
+                    if lang:
+                        desk_language_code = "N" if lang.lower() in ("nl", "n") else "F"
+
             if cov_type == "text":
-                # Text coverages get language-specific tags (TEXT N / TEXT F)
-                coverage_display = f"TEXT {cov_language.upper()[0]} ({cov_status})"
+                coverage_display = f"TEXT {desk_language_code} ({cov_status})"
             else:
-                # Other coverage types don't get language tags
                 coverage_display = f"{cov_type.upper()} ({cov_status})"
 
             formatted_coverages.append(
@@ -163,7 +174,7 @@ def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:
                     "display": coverage_display,
                     "type": cov_type,
                     "status": cov_status,
-                    "language": cov_language,
+                    "language": desk_language_code,
                 }
             )
 

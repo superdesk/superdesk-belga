@@ -884,6 +884,17 @@ class PlanningExportTests(TestCase):
                 "website": "test.org",
             }
             self.app.data.insert("contacts", [test_contact])
+            desk_nl = ObjectId()
+            desk_fr = ObjectId()
+
+            test_desks = [
+                {"_id": desk_nl, "desk_language": "nl", "name": "Test Desk NL"},
+                {"_id": desk_fr, "desk_language": "fr", "name": "Test Desk FR"},
+            ]
+            self.app.data.remove(
+                "desks", {"name": {"$in": ["Test Desk NL", "Test Desk FR"]}}
+            )
+            self.app.data.insert("desks", test_desks)
 
             event_1_id = ObjectId()
             event_2_id = ObjectId()
@@ -964,7 +975,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov1",
-                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_nl,
+                            },
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
@@ -979,7 +993,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov1",
-                            "planning": {"g2_content_type": "text", "language": "fr"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_fr,
+                            },
                             "news_coverage_status": {"label": "On Merit"},
                         }
                     ],
@@ -994,9 +1011,7 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov2",
-                            "planning": {
-                                "g2_content_type": "picture",
-                            },
+                            "planning": {"g2_content_type": "picture"},
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
@@ -1011,7 +1026,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov2",
-                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_nl,
+                            },
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
@@ -1156,6 +1174,16 @@ class PlanningExportTests(TestCase):
                 "website": "test.org",
             }
             self.app.data.insert("contacts", [test_contact])
+            desk_nl = ObjectId()
+            desk_fr = ObjectId()
+            test_desks = [
+                {"_id": desk_nl, "desk_language": "nl", "name": "Test Desk NL"},
+                {"_id": desk_fr, "desk_language": "fr", "name": "Test Desk FR"},
+            ]
+            self.app.data.remove(
+                "desks", {"name": {"$in": ["Test Desk NL", "Test Desk FR"]}}
+            )
+            self.app.data.insert("desks", test_desks)
 
             event_1_id = ObjectId()
             event_2_id = ObjectId()
@@ -1275,7 +1303,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov1",
-                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_nl,
+                            },
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
@@ -1290,7 +1321,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov2",
-                            "planning": {"g2_content_type": "text", "language": "fr"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_fr,
+                            },
                             "news_coverage_status": {"label": "On Merit"},
                         }
                     ],
@@ -1320,7 +1354,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov4",
-                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_nl,
+                            },
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
@@ -1335,7 +1372,10 @@ class PlanningExportTests(TestCase):
                     "coverages": [
                         {
                             "coverage_id": "cov5",
-                            "planning": {"g2_content_type": "text", "language": "nl"},
+                            "planning": {
+                                "g2_content_type": "text",
+                                "desk": desk_nl,
+                            },
                             "news_coverage_status": {"label": "Planned"},
                         },
                         {
