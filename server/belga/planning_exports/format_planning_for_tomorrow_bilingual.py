@@ -29,7 +29,10 @@ def format_planning_for_tomorrow_bilingual(
 
     # Collect unique event IDs from planning items with matching coverages
     event_ids = set()
+    standalone_plannings: List[Dict[str, Any]] = []
+
     for item in planning_data:
+        has_valid_coverage = False
         for coverage in item.get("coverages", []):
             cov_type = None
 
@@ -39,8 +42,14 @@ def format_planning_for_tomorrow_bilingual(
             elif isinstance(coverage, str):
                 cov_type = coverage.lower()
 
-            if cov_type in ["picture", "video", "text"] and item.get("event_item"):
-                event_ids.add(item["event_item"])
+            if cov_type in ["picture", "video", "text"]:
+                has_valid_coverage = True
+                if item.get("event_item"):
+                    event_ids.add(item["event_item"])
+
+        # If coverage exists but no linked event → keep as standalone planning
+        if has_valid_coverage and not item.get("event_item"):
+            standalone_plannings.append(item)
 
     # Fetch associated events
     events_service = get_resource_service("events")
@@ -53,23 +62,20 @@ def format_planning_for_tomorrow_bilingual(
 
     # Process events for both languages
     for event in events:
-        # Get Dutch version
-        event_nl = event.copy()
-        set_event_translations_value(event_nl, "nl")
-
-        # Get French version
-        event_fr = event.copy()
-        set_event_translations_value(event_fr, "fr")
-
         calendar = (
             event["calendars"][0]["qcode"].capitalize()
             if event.get("calendars")
             else "Overig / Divers"
         )
 
+        event_nl = event.copy()
+        set_event_translations_value(event_nl, "nl")
+        event_fr = event.copy()
+        set_event_translations_value(event_fr, "fr")
+
         formatted_event = {
             "subject": ",".join(get_subjects(event, "nl")),
-            "calendars": calendar,
+            "calendar": calendar,
             "contacts": get_formatted_contacts(event),
             "coverages": get_coverages_bilingual(event),
             "location": get_item_location(event, "nl"),
@@ -104,16 +110,31 @@ def format_planning_for_tomorrow_bilingual(
             and end_local.minute == 59
         )
 
-        if is_all_day:
-            # For all-day events, don't show the time range
-            formatted_event["time"] = ""
-        else:
-            # Show specific time range
-            formatted_event["time"] = (
-                f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
-            )
+        formatted_event["time"] = (
+            ""
+            if is_all_day
+            else (f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}")
+        )
 
         calendar_groups.setdefault(calendar, []).append(formatted_event)
+
+    for planning in standalone_plannings:
+        calendar = "Overig / Divers"
+
+        formatted_planning = {
+            "subject": "",
+            "calendar": calendar,
+            "coverages": get_coverages_bilingual(planning),
+            "location": get_item_location(planning, "nl"),
+            "links": planning.get("links", []),
+            "title_nl": planning.get("slugline") or planning.get("headline") or "",
+            "title_fr": planning.get("slugline") or planning.get("headline") or "",
+            "description_nl": (planning.get("description_text") or "").rstrip(),
+            "description_fr": (planning.get("description_text") or "").rstrip(),
+            "time": "",
+        }
+
+        calendar_groups.setdefault(calendar, []).append(formatted_planning)
 
     # Sort and merge by CALENDAR_ORDER
     for calendar in CALENDAR_ORDER + sorted(
@@ -128,12 +149,15 @@ def format_planning_for_tomorrow_bilingual(
     return events_list
 
 
-def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Get coverages with language information formatted for bilingual output"""
+def get_coverages_bilingual(item: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Get coverage info with language and status for bilingual output"""
     formatted_coverages = []
-    planning_ids = event.get("planning_ids", [])
     planning_service = get_resource_service("planning")
     desk_service = get_resource_service("desks")
+
+    lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "N"}
+
+    planning_ids = item.get("planning_ids") or [item.get("_id")]
 
     for planning_id in planning_ids:
         planning_item = planning_service.find_one(req=None, _id=planning_id)
@@ -144,26 +168,32 @@ def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:
             if not isinstance(coverage, dict):
                 continue
 
-            planning_info = coverage.get("planning", {})
-            cov_type = (planning_info.get("g2_content_type") or "").lower()
+            # Coverage type
+            planning_info = coverage.get("planning") or {}
+            cov_type = (
+                planning_info.get("g2_content_type")
+                or coverage.get("g2_content_type")
+                or ""
+            ).lower()
             cov_status = (
-                coverage.get("news_coverage_status", {}).get("label", "ON MERIT")
+                coverage.get("news_coverage_status", {}).get("label") or "ON MERIT"
             ).upper()
 
+            # Desk language
             desk_language_code = "N"
             desk_id = (
                 planning_info.get("desk")
                 or coverage.get("assigned_to", {}).get("desk")
-                or event.get("task", {}).get("desk")
+                or item.get("task", {}).get("desk")
             )
 
             if desk_id:
                 desk_item = desk_service.find_one(req=None, _id=desk_id)
                 if desk_item:
-                    lang = desk_item.get("desk_language")
-                    if lang:
-                        desk_language_code = "N" if lang.lower() in ("nl", "n") else "F"
+                    lang = desk_item.get("desk_language", "").lower()
+                    desk_language_code = lang_map.get(lang, "N")
 
+            # Format coverage display
             if cov_type == "text":
                 coverage_display = f"TEXT {desk_language_code} ({cov_status})"
             else:
