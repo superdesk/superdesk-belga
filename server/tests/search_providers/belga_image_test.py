@@ -120,6 +120,7 @@ class BelgaImageTestCase(unittest.TestCase):
                 params={
                     "s": 10,
                     "l": 20,
+                    "o": "0",
                     "c": "ansa,belga",
                     "h": "news,sports",
                     "f": 1598918400000,

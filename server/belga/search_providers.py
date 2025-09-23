@@ -115,6 +115,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         api_params = {
             "s": query.get("from", 0),
             "l": query.get("size", 25),
+            "o": "0",
         }
 
         if params:
