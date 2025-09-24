@@ -80,6 +80,7 @@ class BelgaVideoTestCase(unittest.TestCase):
                     "s": 0,
                     "l": 10,
                     "o": "1",
+                    "t": "test AND video",
                     "p": "TODAY",
                 },
             )
