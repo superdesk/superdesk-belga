@@ -112,6 +112,13 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         return urljoin(self.base_url, resource.lstrip("/"))
 
     def find(self, query, params=None):
+        api_params = self.parse_search_params(query, params)
+        data = self.api_get(self.search_endpoint, api_params)
+        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        return BelgaListCursor(docs, data[self.count_field])
+
+    def parse_search_params(self, query, params=None):
+        """Parse search parameters into API parameters."""
         api_params = {
             "s": query.get("from", 0),
             "l": query.get("size", 25),
@@ -146,9 +153,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         except KeyError:
             pass
 
-        data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.format_list_item(item) for item in data[self.items_field]]
-        return BelgaListCursor(docs, data[self.count_field])
+        return api_params
 
     def api_get(self, endpoint, params):
         url = (
@@ -240,49 +245,19 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         base_url = config.get("url") or self.base_url
         return urljoin(base_url, resource.lstrip("/"))
 
-    def find(self, query, params=None):
-        api_params = {
-            "s": query.get("from", 0),
-            "l": query.get("size", 25),
-        }
+    def parse_search_params(self, query, params=None):
+        """Extend base parameter parsing with video support."""
+        api_params = super().parse_search_params(query, params)
 
-        if params:
-            for api_param, param in {"c": "source", "h": "subject"}.items():
-                items = [key for key, val in params.get(param, {}).items() if val]
-                if items:
-                    api_params[api_param] = ",".join(sorted(items))
-
-            dates = params.get("dates", {})
-            if dates.get("start"):
-                api_params["f"] = int(
-                    arrow.get(dates["start"], "DD/MM/YYYY").timestamp() * 1000
-                )
-            if dates.get("end"):
-                api_params["e"] = int(
-                    arrow.get(dates["end"], "DD/MM/YYYY").timestamp() * 1000
-                )
-
-            if params.get("period"):
-                api_params["p"] = params["period"].upper()
-
-            if app.config.get("BELGA_VIDEO_ENABLED", False) and params.get(
-                "objecttypes"
-            ):
+        if app.config.get("BELGA_VIDEO_ENABLED", False):
+            if params and params.get("objecttypes"):
                 api_params["o"] = params["objecttypes"]
             else:
                 api_params["o"] = "0"
+        else:
+            api_params["o"] = "0"
 
-        try:
-            query_string = query["query"]["filtered"]["query"]["query_string"]["query"]
-            query_string_parts = query_string.strip().replace("  ", " ").split()
-            if query_string_parts:
-                api_params["t"] = " AND ".join(query_string_parts)
-        except KeyError:
-            pass
-
-        data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.format_list_item(item) for item in data[self.items_field]]
-        return BelgaListCursor(docs, data[self.count_field])
+        return api_params
 
     def format_list_item(self, data):
         """Format list items. Only override for videos, delegate pictures to parent."""

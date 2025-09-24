@@ -13,6 +13,7 @@ import copy
 
 from flask import json
 from pathlib import Path
+from distutils.util import strtobool
 from superdesk.default_settings import (
     DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES,
     env,
@@ -357,8 +358,7 @@ DATE_FORMAT_SHORT = "%d/%m/%Y"
 
 BELGA_AI_URL = env("BELGA_AI_URL")
 
-BELGA_VIDEO_ENABLED = env("BELGA_VIDEO_ENABLED", True)
-
+BELGA_VIDEO_ENABLED = bool(strtobool(env("BELGA_VIDEO_ENABLED", "False")))
 START_OF_WEEK = 1
 
 ASSIGNMENT_MAIL_ICAL_USE_EVENT_DATES = True
