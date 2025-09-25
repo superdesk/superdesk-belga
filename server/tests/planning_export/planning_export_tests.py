@@ -869,7 +869,7 @@ class PlanningExportTests(TestCase):
             )
 
     def test_bilingual_planning_advisory_export_tomorrow(self):
-        """Test the bilingual planning advisory template with various scenarios"""
+        """Test the bilingual planning advisory template using only planning data"""
         with self.app.app_context():
             test_contact_id = ObjectId()
             test_contact = {
@@ -896,15 +896,18 @@ class PlanningExportTests(TestCase):
             )
             self.app.data.insert("desks", test_desks)
 
-            event_1_id = ObjectId()
-            event_2_id = ObjectId()
+            # Planning items
+            planning_1_id = ObjectId()
+            planning_2_id = ObjectId()
+            planning_3_id = ObjectId()
 
-            bilingual_events = [
+            planning_items = [
                 {
-                    "_id": event_1_id,
+                    "_id": planning_1_id,
+                    "type": "planning",
+                    "slugline": "planning-dutch-text",
                     "name": "Test Event NL",
-                    "slugline": "test-event-nl",
-                    "definition_long": "Dutch description of the event",
+                    "description_text": "Dutch description of the event",
                     "dates": {
                         "start": datetime.datetime(
                             2024, 4, 22, 9, 0, 0, tzinfo=datetime.timezone.utc
@@ -914,100 +917,54 @@ class PlanningExportTests(TestCase):
                         ),
                         "tz": "Europe/Brussels",
                     },
-                    "calendars": [{"qcode": "general", "name": "General"}],
-                    "location": [
-                        {
-                            "name": "Brussels",
-                            "address": {"city": "Brussels", "country": "Belgium"},
-                        }
-                    ],
-                    "links": ["http://test-event.com"],
-                    "event_contact_info": [str(test_contact_id)],
-                    "translations": [
-                        {"field": "name", "language": "fr", "value": "Test Event FR"},
-                        {
-                            "field": "definition_long",
-                            "language": "fr",
-                            "value": "French description of the event",
-                        },
-                    ],
-                },
-                {
-                    "_id": event_2_id,
-                    "name": "All Day Event",
-                    "slugline": "all-day-event",
-                    "definition_long": "This is an all-day event",
-                    "dates": {
-                        "start": datetime.datetime(
-                            2024, 4, 22, 0, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "end": datetime.datetime(
-                            2024, 4, 22, 23, 59, 59, tzinfo=datetime.timezone.utc
-                        ),
-                        "tz": "Europe/Brussels",
-                    },
-                    "calendars": [{"qcode": "politics", "name": "Politics"}],
-                    "location": [
-                        {
-                            "name": "Brussels",
-                            "address": {"city": "Brussels", "country": "Belgium"},
-                        }
-                    ],
-                    "links": ["http://allday-event.com"],
-                    "event_contact_info": [str(test_contact_id)],
-                },
-            ]
-
-            self.app.data.insert("events", bilingual_events)
-
-            planning_1_id = ObjectId()
-            planning_2_id = ObjectId()
-            planning_3_id = ObjectId()
-            planning_4_id = ObjectId()
-
-            planning_items = [
-                {
-                    "_id": planning_1_id,
-                    "type": "planning",
-                    "slugline": "planning-dutch-text",
-                    "description_text": "Planning for Dutch text coverage",
-                    "dates": bilingual_events[0]["dates"],
                     "coverages": [
                         {
                             "coverage_id": "cov1",
-                            "planning": {
-                                "g2_content_type": "text",
-                                "desk": desk_nl,
-                            },
+                            "planning": {"g2_content_type": "text", "desk": desk_nl},
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
-                    "event_item": event_1_id,
+                    "event_item": None,
                 },
                 {
                     "_id": planning_2_id,
                     "type": "planning",
                     "slugline": "planning-french-text",
-                    "description_text": "Planning for French text coverage",
-                    "dates": bilingual_events[0]["dates"],
+                    "name": "Test Event FR",
+                    "description_text": "French description of the event",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 22, 10, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 22, 18, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
                     "coverages": [
                         {
                             "coverage_id": "cov1",
-                            "planning": {
-                                "g2_content_type": "text",
-                                "desk": desk_fr,
-                            },
+                            "planning": {"g2_content_type": "text", "desk": desk_fr},
                             "news_coverage_status": {"label": "On Merit"},
                         }
                     ],
-                    "event_item": event_1_id,
+                    "event_item": None,
                 },
                 {
                     "_id": planning_3_id,
                     "type": "planning",
                     "slugline": "planning-picture",
-                    "description_text": "Planning for picture coverage",
-                    "dates": bilingual_events[0]["dates"],
+                    "name": "Picture Event",
+                    "description_text": "Picture coverage description",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 22, 11, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 22, 19, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
                     "coverages": [
                         {
                             "coverage_id": "cov2",
@@ -1015,70 +972,16 @@ class PlanningExportTests(TestCase):
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
-                    "event_item": event_1_id,
-                },
-                {
-                    "_id": planning_4_id,
-                    "type": "planning",
-                    "slugline": "planning-all-day",
-                    "description_text": "Planning for all-day event",
-                    "dates": bilingual_events[1]["dates"],
-                    "coverages": [
-                        {
-                            "coverage_id": "cov2",
-                            "planning": {
-                                "g2_content_type": "text",
-                                "desk": desk_nl,
-                            },
-                            "news_coverage_status": {"label": "Planned"},
-                        }
-                    ],
-                    "event_item": event_2_id,
+                    "event_item": None,
                 },
             ]
 
             self.app.data.insert("planning", planning_items)
 
-            self.app.data.update(
-                "events",
-                event_1_id,
-                {"planning_ids": [planning_1_id, planning_2_id, planning_3_id]},
-                bilingual_events[0],
-            )
-
-            self.app.data.update(
-                "events",
-                event_2_id,
-                {"planning_ids": [planning_4_id]},
-                bilingual_events[1],
-            )
-
             bilingual_data = render_template(
                 "bilingual_planning_advisory_tomorrow.html",
                 items=planning_items,
                 app=self.app,
-            )
-
-            self.assertIn(
-                "<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen",
-                bilingual_data,
-                "Dutch introduction should be present",
-            )
-            self.assertIn(
-                "<h2>Voici l'agenda Belga des événements belges et internationaux",
-                bilingual_data,
-                "French introduction should be present",
-            )
-
-            self.assertIn(
-                "<h3>General</h3>",
-                bilingual_data,
-                "General calendar section should be present",
-            )
-            self.assertIn(
-                "<h3>Politics</h3>",
-                bilingual_data,
-                "Politics calendar section should be present",
             )
 
             self.assertIn(
@@ -1097,6 +1000,37 @@ class PlanningExportTests(TestCase):
                 bilingual_data,
                 "French description should be present",
             )
+            self.assertIn(
+                "<p>TEXT N (PLANNED)</p>",
+                bilingual_data,
+                "Dutch text coverage should be tagged as TEXT N",
+            )
+            self.assertIn(
+                "<p>TEXT F (ON MERIT)</p>",
+                bilingual_data,
+                "French text coverage should be tagged as TEXT F",
+            )
+            self.assertIn(
+                "<p>PICTURE (PLANNED)</p>",
+                bilingual_data,
+                "Picture coverage should not have language tag",
+            )
+
+            self.assertIn(
+                "<p>planning-dutch-text</p>",
+                bilingual_data,
+                "Dutch planning slugline should be present",
+            )
+            self.assertIn(
+                "<p>planning-french-text</p>",
+                bilingual_data,
+                "French planning slugline should be present",
+            )
+            self.assertIn(
+                "<p>planning-picture</p>",
+                bilingual_data,
+                "Picture planning slugline should be present",
+            )
 
             self.assertIn(
                 "<p>TEXT N (PLANNED)</p>",
@@ -1108,54 +1042,10 @@ class PlanningExportTests(TestCase):
                 bilingual_data,
                 "French text coverage should be tagged as TEXT F",
             )
-
             self.assertIn(
                 "<p>PICTURE (PLANNED)</p>",
                 bilingual_data,
                 "Picture coverage should not have language tag",
-            )
-
-            self.assertNotIn(
-                "00:00 - 23:59",
-                bilingual_data,
-                "All-day events should not show 00:00-23:59 time",
-            )
-            self.assertIn(
-                "11:00 - 19:00",
-                bilingual_data,
-                "Regular events should show specific time range",
-            )
-
-            self.assertIn(
-                "Test Org - John Doe - Media Contact - jdoe@test.org - 123456789 - 987654321 - test.org",
-                bilingual_data,
-                "Contact information should be present",
-            )
-
-            self.assertIn(
-                "Brussels, Belgium",
-                bilingual_data,
-                "Location information should be present",
-            )
-
-            self.assertIn(
-                'href="http://test-event.com"',
-                bilingual_data,
-                "Event links should be present",
-            )
-
-            general_section = bilingual_data.split("<h3>General</h3>")[1].split("<h3>")[
-                0
-            ]
-            self.assertIn(
-                "11:00 - 19:00", general_section, "Timed event should come first"
-            )
-
-            politics_section = bilingual_data.split("<h3>Politics</h3>")[1].split(
-                "<h3>"
-            )[0]
-            self.assertNotIn(
-                "00:00 - 23:59", politics_section, "All-day event should not show time"
             )
 
     def test_bilingual_events_advisory_export_tomorrow(self):

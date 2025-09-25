@@ -8,13 +8,23 @@
     <h3>{{ data.calendar }}</h3>
     
     {% for event in data.events %}
+        {# Display both Dutch and French topics if they differ #}
+        {% if event.topic_nl and event.topic_fr and event.topic_nl != event.topic_fr %}
+            <p>{{ event.topic_nl }}</p>
+            <p>{{ event.topic_fr }}</p>
+        {% elif event.topic_nl %}
+            <p>{{ event.topic_nl }}</p>
+        {% elif event.topic_fr %}
+            <p>{{ event.topic_fr }}</p>
+        {% endif %}
+        
         {% if event.time %}<p>{{ event.time }}</p>{% endif %}
         {% if event.location %}<p>{{ event.location }}</p>{% endif %}
         
-        {# Display Dutch title #}
-        {% if event.title_nl %}<p>{{ event.title_nl }}</p>{% endif %}
-        {# Display French title if different #}
-        {% if event.title_fr and event.title_fr != event.title_nl %}<p>{{ event.title_fr }}</p>{% endif %}
+        {# Display Dutch title if not same as topic #}
+        {% if event.title_nl and event.title_nl != event.topic_nl %}<p>{{ event.title_nl }}</p>{% endif %}
+        {# Display French title if different and not same as topic #}
+        {% if event.title_fr and event.title_fr != event.title_nl and event.title_fr != event.topic_fr %}<p>{{ event.title_fr }}</p>{% endif %}
         
         {# Display Dutch description #}
         {% if event.description_nl %}<p>{{ event.description_nl }}</p>{% endif %}

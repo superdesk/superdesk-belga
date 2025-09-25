@@ -7,6 +7,15 @@
     <h3>{{ data.calendar }}</h3>
 
     {% for event in data.events %}
+        {# Display both Dutch and French topics if they differ #}
+        {% if event.topic_nl and event.topic_fr and event.topic_nl != event.topic_fr %}
+            <p>{{ event.topic_nl }}</p>
+            <p>{{ event.topic_fr }}</p>
+        {% elif event.topic_nl %}
+            <p>{{ event.topic_nl }}</p>
+        {% elif event.topic_fr %}
+            <p>{{ event.topic_fr }}</p>
+        {% endif %}
         {% if event.time %}<p>{{ event.time }}</p>{% endif %}
 
         {% if event.location %}

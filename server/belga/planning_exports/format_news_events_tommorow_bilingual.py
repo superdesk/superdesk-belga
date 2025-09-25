@@ -64,6 +64,8 @@ def format_event_for_tommorow_bilingual(
                 or event_fr.get("definition_short")
                 or ""
             ).rstrip(),
+            "topic_nl": event_nl.get("slugline", ""),
+            "topic_fr": event_fr.get("slugline", ""),
         }
 
         # Set metadata (links, etc.)
