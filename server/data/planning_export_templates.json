@@ -84,13 +84,13 @@
 },
 {
   "_id": "bilingual_planning_advisory_tomorrow",
-  "init_version": 1,
+  "init_version": 2,
   "name": "bilingual_planning_advisory_tomorrow",
   "type": "planning",
   "data": {
       "body_html_template": "bilingual_planning_advisory_tomorrow.html"
   },
-  "label": "Daily program (NL/FR)"
+  "label": "Daily program Planning (NL/FR)"
 },
 {
   "_id": "bilingual_events_advisory_tomorrow", 
