@@ -57,12 +57,15 @@ def format_planning_for_tomorrow_bilingual(
         if not has_valid_coverage:
             continue
 
-        # Set calendar from linked event if exists
-        calendar = "Overig / Divers"
+        # Fetch linked event
+        event_item = None
         if planning.get("event_item"):
             event_item = event_service.find_one(req=None, _id=planning["event_item"])
-            if event_item and event_item.get("calendars"):
-                calendar = event_item["calendars"][0]["qcode"].capitalize()
+
+        # Calendar
+        calendar = "Overig / Divers"
+        if event_item and event_item.get("calendars"):
+            calendar = event_item["calendars"][0]["qcode"].capitalize()
 
         # Set translations
         planning_nl = planning.copy()
@@ -70,15 +73,29 @@ def format_planning_for_tomorrow_bilingual(
         planning_fr = planning.copy()
         set_event_translations_value(planning_fr, "fr")
 
+        # Contacts
+        contacts = (
+            get_formatted_contacts(event_item)
+            if event_item
+            else get_formatted_contacts(planning)
+        )
+
+        # Location
+        location = (
+            get_item_location(event_item, "nl")
+            if event_item
+            else get_item_location(planning, "nl")
+        )
+
         # Format item
         formatted_planning = {
             "subject": ",".join(get_subjects(planning, "nl")),
             "calendar": calendar,
-            "contacts": get_formatted_contacts(planning),
+            "contacts": contacts,
             "coverages": get_coverages_bilingual(
                 planning, planning_service, desk_service
             ),
-            "location": get_item_location(planning, "nl"),
+            "location": location,
             "links": planning.get("links", []),
             "title_nl": planning.get("name")
             or planning.get("slugline")
