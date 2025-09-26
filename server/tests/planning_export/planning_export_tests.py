@@ -908,15 +908,6 @@ class PlanningExportTests(TestCase):
                     "slugline": "planning-dutch-text",
                     "name": "Test Event NL",
                     "description_text": "Dutch description of the event",
-                    "dates": {
-                        "start": datetime.datetime(
-                            2024, 4, 22, 9, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "end": datetime.datetime(
-                            2024, 4, 22, 17, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "tz": "Europe/Brussels",
-                    },
                     "coverages": [
                         {
                             "coverage_id": "cov1",
@@ -932,15 +923,6 @@ class PlanningExportTests(TestCase):
                     "slugline": "planning-french-text",
                     "name": "Test Event FR",
                     "description_text": "French description of the event",
-                    "dates": {
-                        "start": datetime.datetime(
-                            2024, 4, 22, 10, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "end": datetime.datetime(
-                            2024, 4, 22, 18, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "tz": "Europe/Brussels",
-                    },
                     "coverages": [
                         {
                             "coverage_id": "cov1",
@@ -956,15 +938,6 @@ class PlanningExportTests(TestCase):
                     "slugline": "planning-picture",
                     "name": "Picture Event",
                     "description_text": "Picture coverage description",
-                    "dates": {
-                        "start": datetime.datetime(
-                            2024, 4, 22, 11, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "end": datetime.datetime(
-                            2024, 4, 22, 19, 0, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "tz": "Europe/Brussels",
-                    },
                     "coverages": [
                         {
                             "coverage_id": "cov2",
