@@ -28,6 +28,16 @@ def format_event_for_tommorow_bilingual(
     events_list: List[Dict[str, Any]] = []
     calendar_groups: Dict[str, List[Dict[str, Any]]] = {}
 
+    # Determine weekday and date from the event
+    if event_data:
+        first_event_start = utc_to_local(
+            event_data[0]["dates"].get("tz", "Europe/Brussels"),
+            event_data[0]["dates"]["start"],
+        )
+        weekday_date = first_event_start.strftime("%A %d %B %Y").upper()
+    else:
+        weekday_date = ""
+
     # Process events for both languages
     for event in event_data:
         # Get Dutch version
@@ -64,8 +74,6 @@ def format_event_for_tommorow_bilingual(
                 or event_fr.get("definition_short")
                 or ""
             ).rstrip(),
-            "topic_nl": event_nl.get("slugline", ""),
-            "topic_fr": event_fr.get("slugline", ""),
         }
 
         # Set metadata (links, etc.)
@@ -111,7 +119,7 @@ def format_event_for_tommorow_bilingual(
             )
             events_list.append({"calendar": calendar, "events": events_sorted})
 
-    return events_list
+    return {"weekday_date": weekday_date, "events": events_list}
 
 
 def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:

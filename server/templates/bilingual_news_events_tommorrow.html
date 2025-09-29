@@ -1,21 +1,16 @@
 {% set formatted_data = format_event_for_tommorow_bilingual(items, "bilingual") %}
+
+{# Weekday and date in English #}
+<h1>{{ formatted_data.weekday_date }}</h1>
+
 <h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen, met de vermelding of wij dit in TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO en LIVE BLOG coveren. De vermelding ON MERIT betekent dat Belga dit onderwerp opvolgt, maar dat voorlopig niet gegarandeerd kan worden dat er ook een specifieke coverage zal volgen. De redactie van Belga wenst u een prettige werkdag.</h2>
 
 <h2>Voici l'agenda Belga des événements belges et internationaux qui bénéficieront d'une couverture de notre part. Les mentions TEXT, PICTURE, VIDEO, AUDIO, INFOGRAPHICS, LIVE VIDEO et LIVE BLOG vous précisent si nous couvrons le sujet. La mention ON MERIT vous signale que Belga suit le sujet mais ne peut pas encore assurer qu'il donnera lieu à une couverture spécifique. La rédaction vous souhaite une bonne journée de travail</h2>
 
-{% for data in formatted_data %}
+{% for data in formatted_data.events %}
     <h3>{{ data.calendar }}</h3>
 
     {% for event in data.events %}
-        {# Display both Dutch and French topics if they differ #}
-        {% if event.topic_nl and event.topic_fr and event.topic_nl != event.topic_fr %}
-            <p>{{ event.topic_nl }}</p>
-            <p>{{ event.topic_fr }}</p>
-        {% elif event.topic_nl %}
-            <p>{{ event.topic_nl }}</p>
-        {% elif event.topic_fr %}
-            <p>{{ event.topic_fr }}</p>
-        {% endif %}
         {% if event.time %}<p>{{ event.time }}</p>{% endif %}
 
         {% if event.location %}

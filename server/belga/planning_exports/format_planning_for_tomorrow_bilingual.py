@@ -40,6 +40,14 @@ def format_planning_for_tomorrow_bilingual(
         "live_blog",
     ]
 
+    # weekday and date
+    weekday_date = ""
+    if planning_data:
+        weekday_date = get_advisory_weekday_date(
+            planning_data[0], planning_service=planning_service
+        )
+
+    # Process each planning
     for planning in planning_data:
         coverages = planning.get("coverages", [])
         has_valid_coverage = any(
@@ -59,8 +67,11 @@ def format_planning_for_tomorrow_bilingual(
 
         # Fetch linked event
         event_item = None
+        event_links = []
         if planning.get("event_item"):
             event_item = event_service.find_one(req=None, _id=planning["event_item"])
+            if event_item:
+                event_links = event_item.get("links", [])
 
         # Calendar
         calendar = "Overig / Divers"
@@ -96,7 +107,7 @@ def format_planning_for_tomorrow_bilingual(
                 planning, planning_service, desk_service
             ),
             "location": location,
-            "links": planning.get("links", []),
+            "links": event_links,
             "title_nl": planning.get("name")
             or planning.get("slugline")
             or planning.get("headline")
@@ -107,8 +118,6 @@ def format_planning_for_tomorrow_bilingual(
             or "",
             "description_nl": (planning_nl.get("description_text") or "").rstrip(),
             "description_fr": (planning_fr.get("description_text") or "").rstrip(),
-            "topic_nl": planning_nl.get("slugline", ""),
-            "topic_fr": planning_fr.get("slugline", ""),
             "time": "",
         }
 
@@ -133,7 +142,7 @@ def format_planning_for_tomorrow_bilingual(
             )
             events_list.append({"calendar": calendar, "events": events_sorted})
 
-    return events_list
+    return {"weekday_date": weekday_date, "events": events_list}
 
 
 def get_coverages_bilingual(
@@ -194,3 +203,29 @@ def get_coverages_bilingual(
             )
 
     return formatted_coverages
+
+
+def get_advisory_weekday_date(planning_item, planning_service=None):
+    """Get weekday/date of planning, preferring scheduled from coverage"""
+    if planning_service:
+        planning_item = planning_service.find_one(req=None, _id=planning_item["_id"])
+
+    coverages = planning_item.get("coverages", [])
+    scheduled = None
+
+    # Find scheduled from coverage
+    for cov in coverages:
+        if isinstance(cov, dict):
+            scheduled = cov.get("planning", {}).get("scheduled")
+            if scheduled:
+                break
+
+    # Fallback to planning_date
+    if not scheduled:
+        scheduled = planning_item.get("planning_date")
+
+    if scheduled:
+        local_dt = utc_to_local("Europe/Brussels", scheduled)
+        return local_dt.strftime("%A %d %B %Y").upper()
+
+    return ""

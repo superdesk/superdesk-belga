@@ -990,22 +990,6 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn(
-                "<p>planning-dutch-text</p>",
-                bilingual_data,
-                "Dutch planning slugline should be present",
-            )
-            self.assertIn(
-                "<p>planning-french-text</p>",
-                bilingual_data,
-                "French planning slugline should be present",
-            )
-            self.assertIn(
-                "<p>planning-picture</p>",
-                bilingual_data,
-                "Picture planning slugline should be present",
-            )
-
-            self.assertIn(
                 "<p>TEXT N (PLANNED)</p>",
                 bilingual_data,
                 "Dutch text coverage should be tagged as TEXT N",
