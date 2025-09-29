@@ -43,8 +43,11 @@ def format_planning_for_tomorrow_bilingual(
     # weekday and date
     weekday_date = ""
     if planning_data:
+        first_planning = planning_data[0]
         weekday_date = get_advisory_weekday_date(
-            planning_data[0], planning_service=planning_service
+            first_planning,
+            planning_service=planning_service,
+            event_service=event_service,
         )
 
     # Process each planning
@@ -205,8 +208,18 @@ def get_coverages_bilingual(
     return formatted_coverages
 
 
-def get_advisory_weekday_date(planning_item, planning_service=None):
-    """Get weekday/date of planning, preferring scheduled from coverage"""
+def get_advisory_weekday_date(planning_item, planning_service=None, event_service=None):
+    """Get weekday/date of planning, preferring linked event date"""
+    # If planning has linked event, use event start date
+    event_item = None
+    if event_service and planning_item.get("event_item"):
+        event_item = event_service.find_one(req=None, _id=planning_item["event_item"])
+        if event_item and event_item.get("dates") and event_item["dates"].get("start"):
+            tz = event_item["dates"].get("tz", "Europe/Brussels")
+            local_dt = utc_to_local(tz, event_item["dates"]["start"])
+            return local_dt.strftime("%A %d %B %Y").upper()
+
+    # Otherwise, fallback to scheduled in coverages or planning_date
     if planning_service:
         planning_item = planning_service.find_one(req=None, _id=planning_item["_id"])
 
