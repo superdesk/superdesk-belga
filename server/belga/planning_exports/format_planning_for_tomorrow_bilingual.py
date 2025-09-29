@@ -22,7 +22,7 @@ CALENDAR_ORDER = [
 
 def format_planning_for_tomorrow_bilingual(
     planning_data: List[Dict[str, Any]],
-) -> List[Dict[str, Any]]:
+) -> Dict[str, Any]:
     """Format planning items into bilingual advisory output"""
     events_list: List[Dict[str, Any]] = []
     calendar_groups: Dict[str, List[Dict[str, Any]]] = {}

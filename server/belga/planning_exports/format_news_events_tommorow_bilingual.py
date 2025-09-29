@@ -23,7 +23,7 @@ CALENDAR_ORDER = [
 
 def format_event_for_tommorow_bilingual(
     event_data: List[Dict[str, Any]], locale: str
-) -> List[Dict[str, Any]]:
+) -> Dict[str, Any]:
     """Format events into bilingual event list for advisory output"""
     events_list: List[Dict[str, Any]] = []
     calendar_groups: Dict[str, List[Dict[str, Any]]] = {}
