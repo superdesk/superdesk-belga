@@ -43,8 +43,6 @@ def format_planning_for_tomorrow_bilingual(
 
     # Process each planning
     for planning in planning_data:
-        coverages = planning.get("coverages", [])
-
         # Fetch linked event
         event_item = None
         event_links = []
@@ -103,6 +101,7 @@ def format_planning_for_tomorrow_bilingual(
 
         # Set time from first coverage or planning date
         scheduled = planning.get("planning_date")
+        coverages = planning.get("coverages", [])
         if coverages and isinstance(coverages[0], dict):
             scheduled = coverages[0].get("planning", {}).get("scheduled", scheduled)
         if scheduled:
@@ -159,7 +158,11 @@ def get_coverages_bilingual(
 
             # Desk language
             desk_language_code = "N"
-            desk_id = planning_info.get("desk") or item.get("task", {}).get("desk")
+            desk_id = (
+                planning_info.get("desk")
+                or coverage.get("assigned_to", {}).get("desk")
+                or item.get("task", {}).get("desk")
+            )
             if desk_id:
                 desk_item = desk_service.find_one(req=None, _id=desk_id)
                 if desk_item and desk_item.get("desk_language"):
