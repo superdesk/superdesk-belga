@@ -30,15 +30,6 @@ def format_planning_for_tomorrow_bilingual(
     planning_service = get_resource_service("planning")
     desk_service = get_resource_service("desks")
     event_service = get_resource_service("events")
-    VALID_COVERAGE_TYPES = [
-        "text",
-        "picture",
-        "video",
-        "audio",
-        "infographics",
-        "live_video",
-        "live_blog",
-    ]
 
     # weekday and date
     weekday_date = ""
@@ -53,20 +44,6 @@ def format_planning_for_tomorrow_bilingual(
     # Process each planning
     for planning in planning_data:
         coverages = planning.get("coverages", [])
-        has_valid_coverage = any(
-            (
-                (
-                    c.get("planning", {}).get("g2_content_type")
-                    if isinstance(c, dict)
-                    else c
-                )
-                or ""
-            ).lower()
-            in VALID_COVERAGE_TYPES
-            for c in coverages
-        )
-        if not has_valid_coverage:
-            continue
 
         # Fetch linked event
         event_item = None
