@@ -7,6 +7,13 @@ from .format_planning_for_tomorrow_bilingual import (
 from .format_news_events_tommorow_bilingual import (
     format_event_for_tommorow_bilingual,
 )
+from .internal_bilingual_events_advisory_tomorrow import (
+    format_event_for_tommorow_bilingual_internal,
+)
+
+from .internal_bilingual_planning_advisory_tomorrow import (
+    format_planning_for_tomorrow_bilingual_internal,
+)
 
 
 def init_app(app):
@@ -20,4 +27,11 @@ def init_app(app):
     )
     app.jinja_env.globals.update(
         format_event_for_tommorow_bilingual=format_event_for_tommorow_bilingual
+    )
+    app.jinja_env.globals.update(
+        format_event_for_tommorow_bilingual_internal=format_event_for_tommorow_bilingual_internal
+    )
+
+    app.jinja_env.globals.update(
+        format_planning_for_tomorrow_bilingual_internal=format_planning_for_tomorrow_bilingual_internal
     )
