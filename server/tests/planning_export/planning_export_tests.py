@@ -1382,3 +1382,452 @@ class PlanningExportTests(TestCase):
                 politics_section,
                 "All-day event should not show time",
             )
+
+    def test_internal_bilingual_events_advisory_export_tomorrow(self):
+        """Test the internal bilingual events advisory template with usernames"""
+        with self.app.app_context():
+            user_nl_id = ObjectId()
+            user_fr_id = ObjectId()
+            user_picture_id = ObjectId()
+
+            timestamp = str(int(datetime.datetime.now().timestamp()))[-6:]
+            test_users = [
+                {
+                    "_id": user_nl_id,
+                    "username": f"reporternl_{timestamp}",
+                    "sign_off": "RNL",
+                    "display_name": "Reporter NL",
+                    "email": f"reporter.nl_{timestamp}@test.com",
+                },
+                {
+                    "_id": user_fr_id,
+                    "username": f"reporterfr_{timestamp}",
+                    "sign_off": "RFR",
+                    "display_name": "Reporter FR",
+                    "email": f"reporter.fr_{timestamp}@test.com",
+                },
+                {
+                    "_id": user_picture_id,
+                    "username": f"photographer_{timestamp}",
+                    "sign_off": "PHOTO",
+                    "display_name": "Photographer",
+                    "email": f"photo_{timestamp}@test.com",
+                },
+            ]
+
+            self.app.data.insert("users", test_users)
+
+            desk_nl = ObjectId()
+            desk_fr = ObjectId()
+            desk_picture = ObjectId()
+
+            test_desks = [
+                {
+                    "_id": desk_nl,
+                    "desk_language": "nl",
+                    "name": f"Test Desk NL {timestamp}",
+                    "members": [{"user": user_nl_id}],
+                },
+                {
+                    "_id": desk_fr,
+                    "desk_language": "fr",
+                    "name": f"Test Desk FR {timestamp}",
+                    "members": [{"user": user_fr_id}],
+                },
+                {
+                    "_id": desk_picture,
+                    "desk_language": "nl",
+                    "name": f"Picture Desk {timestamp}",
+                    "members": [{"user": user_picture_id}],
+                },
+            ]
+            self.app.data.remove(
+                "desks",
+                {
+                    "name": {
+                        "$in": [
+                            f"Test Desk NL {timestamp}",
+                            f"Test Desk FR {timestamp}",
+                            f"Picture Desk {timestamp}",
+                        ]
+                    }
+                },
+            )
+            self.app.data.insert("desks", test_desks)
+
+            event_1_id = ObjectId()
+            event_2_id = ObjectId()
+
+            bilingual_events = [
+                {
+                    "_id": event_1_id,
+                    "name": "Test Event with User Assignment",
+                    "slugline": "test-event-users",
+                    "definition_long": "Event with user assignments",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 22, 9, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 22, 17, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "general", "name": "General"}],
+                    "location": [
+                        {
+                            "name": "Brussels",
+                            "address": {"city": "Brussels", "country": "Belgium"},
+                        }
+                    ],
+                    "translations": [
+                        {
+                            "field": "name",
+                            "language": "fr",
+                            "value": "Test Event FR avec utilisateurs",
+                        },
+                        {
+                            "field": "definition_long",
+                            "language": "fr",
+                            "value": "Événement avec assignation d'utilisateurs",
+                        },
+                    ],
+                },
+                {
+                    "_id": event_2_id,
+                    "name": "Event with Direct User Assignment",
+                    "slugline": "direct-user-event",
+                    "definition_long": "Event with direct user assignment in coverage",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2024, 4, 22, 14, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2024, 4, 22, 16, 0, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "politics", "name": "Politics"}],
+                    "location": [
+                        {
+                            "name": "Brussels",
+                            "address": {"city": "Brussels", "country": "Belgium"},
+                        }
+                    ],
+                    "translations": [
+                        {
+                            "field": "name",
+                            "language": "fr",
+                            "value": "Événement avec assignation directe",
+                        },
+                    ],
+                },
+            ]
+
+            self.app.data.insert("events", bilingual_events)
+
+            planning_1_id = ObjectId()
+            planning_2_id = ObjectId()
+            planning_3_id = ObjectId()
+            planning_4_id = ObjectId()
+
+            planning_items = [
+                {
+                    "_id": planning_1_id,
+                    "type": "planning",
+                    "slugline": "planning-desk-nl",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov1",
+                            "planning": {"g2_content_type": "text", "desk": desk_nl},
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": event_1_id,
+                },
+                {
+                    "_id": planning_2_id,
+                    "type": "planning",
+                    "slugline": "planning-desk-fr",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov2",
+                            "planning": {"g2_content_type": "text", "desk": desk_fr},
+                            "news_coverage_status": {"label": "On Merit"},
+                        }
+                    ],
+                    "event_item": event_1_id,
+                },
+                {
+                    "_id": planning_3_id,
+                    "type": "planning",
+                    "slugline": "planning-picture-desk",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov3",
+                            "planning": {
+                                "g2_content_type": "picture",
+                                "desk": desk_picture,
+                            },
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": event_1_id,
+                },
+                {
+                    "_id": planning_4_id,
+                    "type": "planning",
+                    "slugline": "planning-direct-user",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov4",
+                            "planning": {"g2_content_type": "text", "desk": desk_nl},
+                            "assigned_to": {"user": user_nl_id},
+                            "news_coverage_status": {"label": "Planned"},
+                        },
+                        {
+                            "coverage_id": "cov5",
+                            "planning": {"g2_content_type": "video"},
+                            "assigned_to": {"user": user_picture_id},
+                            "news_coverage_status": {"label": "On Merit"},
+                        },
+                    ],
+                    "event_item": event_2_id,
+                },
+            ]
+
+            self.app.data.insert("planning", planning_items)
+
+            bilingual_events[0]["planning_ids"] = [
+                planning_1_id,
+                planning_2_id,
+                planning_3_id,
+            ]
+            bilingual_events[1]["planning_ids"] = [planning_4_id]
+
+            internal_data = render_template(
+                "internal_bilingual_news_events_tomorrow.html",
+                items=bilingual_events,
+                app=self.app,
+            )
+
+            self.assertIn(
+                "<p>TEXT N (PLANNED) BY RNL</p>",
+                internal_data,
+                "Dutch text coverage should show username from desk member",
+            )
+            self.assertIn(
+                "<p>TEXT F (ON MERIT) BY RFR</p>",
+                internal_data,
+                "French text coverage should show username from desk member",
+            )
+            self.assertIn(
+                "<p>PICTURE (PLANNED) BY PHOTO</p>",
+                internal_data,
+                "Picture coverage should show username from desk member",
+            )
+            self.assertIn(
+                "<p>TEXT N (PLANNED) BY RNL</p>",
+                internal_data,
+                "Direct user assignment should show username",
+            )
+            self.assertIn(
+                "<p>VIDEO (ON MERIT) BY PHOTO</p>",
+                internal_data,
+                "Video coverage with direct user assignment should show username",
+            )
+
+            self.assertIn(
+                "<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen",
+                internal_data,
+                "Dutch introduction should be present",
+            )
+            self.assertIn(
+                "<h2>Voici l'agenda Belga des événements belges et internationaux",
+                internal_data,
+                "French introduction should be present",
+            )
+
+    def test_internal_bilingual_planning_advisory_export_tomorrow(self):
+        """Test the internal bilingual planning advisory template with usernames"""
+        with self.app.app_context():
+            user_nl_id = ObjectId()
+            user_fr_id = ObjectId()
+            user_video_id = ObjectId()
+
+            timestamp = str(int(datetime.datetime.now().timestamp()))[-6:]
+            test_users = [
+                {
+                    "_id": user_nl_id,
+                    "username": f"plannernl_{timestamp}",
+                    "sign_off": "PNL",
+                    "display_name": "Planner NL",
+                    "email": f"planner.nl_{timestamp}@test.com",
+                },
+                {
+                    "_id": user_fr_id,
+                    "username": f"plannerfr_{timestamp}",
+                    "sign_off": "PFR",
+                    "display_name": "Planner FR",
+                    "email": f"planner.fr_{timestamp}@test.com",
+                },
+                {
+                    "_id": user_video_id,
+                    "username": f"videographer_{timestamp}",
+                    "sign_off": "VIDEO",
+                    "display_name": "Videographer",
+                    "email": f"video_{timestamp}@test.com",
+                },
+            ]
+
+            self.app.data.insert("users", test_users)
+
+            desk_nl = ObjectId()
+            desk_fr = ObjectId()
+            desk_video = ObjectId()
+
+            test_desks = [
+                {
+                    "_id": desk_nl,
+                    "desk_language": "nl",
+                    "name": f"Planning Desk NL {timestamp}",
+                    "members": [{"user": user_nl_id}],
+                },
+                {
+                    "_id": desk_fr,
+                    "desk_language": "fr",
+                    "name": f"Planning Desk FR {timestamp}",
+                    "members": [{"user": user_fr_id}],
+                },
+                {
+                    "_id": desk_video,
+                    "desk_language": "nl",
+                    "name": f"Video Desk {timestamp}",
+                    "members": [{"user": user_video_id}],
+                },
+            ]
+            self.app.data.remove(
+                "desks",
+                {
+                    "name": {
+                        "$in": [
+                            f"Planning Desk NL {timestamp}",
+                            f"Planning Desk FR {timestamp}",
+                            f"Video Desk {timestamp}",
+                        ]
+                    }
+                },
+            )
+            self.app.data.insert("desks", test_desks)
+
+            planning_1_id = ObjectId()
+            planning_2_id = ObjectId()
+            planning_3_id = ObjectId()
+
+            planning_items = [
+                {
+                    "_id": planning_1_id,
+                    "type": "planning",
+                    "slugline": "internal-planning-nl",
+                    "name": "Internal Planning NL",
+                    "description_text": "Dutch planning with user assignments",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov1",
+                            "planning": {"g2_content_type": "text", "desk": desk_nl},
+                            "news_coverage_status": {"label": "Planned"},
+                        },
+                        {
+                            "coverage_id": "cov2",
+                            "planning": {"g2_content_type": "text", "desk": desk_fr},
+                            "news_coverage_status": {"label": "On Merit"},
+                        },
+                    ],
+                    "event_item": None,
+                },
+                {
+                    "_id": planning_2_id,
+                    "type": "planning",
+                    "slugline": "internal-planning-mixed",
+                    "name": "Internal Planning Mixed",
+                    "description_text": "Planning with mixed coverage types",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov3",
+                            "planning": {"g2_content_type": "picture", "desk": desk_nl},
+                            "news_coverage_status": {"label": "Planned"},
+                        },
+                        {
+                            "coverage_id": "cov4",
+                            "planning": {
+                                "g2_content_type": "video",
+                                "desk": desk_video,
+                            },
+                            "assigned_to": {"user": user_video_id},
+                            "news_coverage_status": {"label": "Planned"},
+                        },
+                    ],
+                    "event_item": None,
+                },
+                {
+                    "_id": planning_3_id,
+                    "type": "planning",
+                    "slugline": "internal-planning-fr",
+                    "name": "Internal Planning FR",
+                    "description_text": "French planning with direct user assignment",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov5",
+                            "planning": {"g2_content_type": "text", "desk": desk_fr},
+                            "assigned_to": {"user": user_fr_id},
+                            "news_coverage_status": {"label": "On Merit"},
+                        }
+                    ],
+                    "event_item": None,
+                },
+            ]
+
+            self.app.data.insert("planning", planning_items)
+
+            internal_data = render_template(
+                "internal_bilingual_planning_advisory_tomorrow.html",
+                items=planning_items,
+                app=self.app,
+            )
+
+            self.assertIn(
+                "<p>TEXT N (PLANNED) BY PNL</p>",
+                internal_data,
+                "Dutch text coverage should show username from desk member",
+            )
+            self.assertIn(
+                "<p>TEXT F (ON MERIT) BY PFR</p>",
+                internal_data,
+                "French text coverage should show username from desk member",
+            )
+            self.assertIn(
+                "<p>PICTURE (PLANNED) BY PNL</p>",
+                internal_data,
+                "Picture coverage should show username from desk member",
+            )
+            self.assertIn(
+                "<p>VIDEO (PLANNED) BY VIDEO</p>",
+                internal_data,
+                "Video coverage with direct user assignment should show username",
+            )
+            self.assertIn(
+                "<p>TEXT F (ON MERIT) BY PFR</p>",
+                internal_data,
+                "French text with direct user assignment should show username",
+            )
+
+            self.assertIn(
+                "<p>Internal Planning NL</p>",
+                internal_data,
+                "Dutch planning title should be present",
+            )
+            self.assertIn(
+                "<p>Internal Planning FR</p>",
+                internal_data,
+                "French planning title should be present",
+            )
