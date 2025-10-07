@@ -1,51 +1,136 @@
-from .format_planning_for_tomorrow_bilingual import (
-    format_planning_for_tomorrow_bilingual as format_public_planning,
+from .common import (
+    get_subjects,
+    get_formatted_contacts,
+    get_item_location,
+    set_event_translations_value,
 )
 from typing import List, Dict, Any
+from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
+
+CALENDAR_ORDER = [
+    "General",
+    "Politics",
+    "Economy",
+    "Regional",
+    "Justice",
+    "International",
+    "Sports",
+    "Culture",
+]
 
 
 def format_planning_for_tomorrow_bilingual_internal(
     planning_data: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
-    """
-    Reuse the bilingual planning formatter for general info,
-    but replace coverages with internal-specific coverage logic.
-    """
-    # Get the daily program planning formatte
-    base_formatted = format_public_planning(planning_data)
+    """Format planning items into bilingual advisory output"""
+    events_list: List[Dict[str, Any]] = []
+    calendar_groups: Dict[str, List[Dict[str, Any]]] = {}
 
     planning_service = get_resource_service("planning")
     desk_service = get_resource_service("desks")
-    user_service = get_resource_service("users")
+    event_service = get_resource_service("events")
 
-    # Replace coverages with internal logic
-    for calendar_group in base_formatted["events"]:
-        for planning in calendar_group["events"]:
-            # Find the original planning item
-            original = next(
-                (
-                    p
-                    for p in planning_data
-                    if (p.get("name") or p.get("slugline") or p.get("headline"))
-                    in (planning["title_nl"], planning["title_fr"])
-                ),
-                None,
+    # weekday and date
+    weekday_date = ""
+    if planning_data:
+        first_planning = planning_data[0]
+        weekday_date = get_advisory_weekday_date(
+            first_planning,
+            planning_service=planning_service,
+            event_service=event_service,
+        )
+
+    # Process each planning
+    for planning in planning_data:
+        # Fetch linked event
+        event_item = None
+        event_links = []
+        if planning.get("event_item"):
+            event_item = event_service.find_one(req=None, _id=planning["event_item"])
+            if event_item:
+                event_links = event_item.get("links", [])
+
+        # Calendar
+        calendar = "Overig / Divers"
+        if event_item and event_item.get("calendars"):
+            calendar = event_item["calendars"][0]["qcode"].capitalize()
+
+        # Set translations
+        planning_nl = planning.copy()
+        set_event_translations_value(planning_nl, "nl")
+        planning_fr = planning.copy()
+        set_event_translations_value(planning_fr, "fr")
+
+        # Contacts
+        contacts = (
+            get_formatted_contacts(event_item)
+            if event_item
+            else get_formatted_contacts(planning)
+        )
+
+        # Location
+        location = (
+            get_item_location(event_item, "nl")
+            if event_item
+            else get_item_location(planning, "nl")
+        )
+
+        # Format item
+        formatted_planning = {
+            "subject": ",".join(get_subjects(planning, "nl")),
+            "calendar": calendar,
+            "contacts": contacts,
+            "coverages": get_coverages_bilingual_internal(
+                planning, planning_service, desk_service
+            ),
+            "location": location,
+            "links": event_links,
+            "title_nl": planning.get("name")
+            or planning.get("slugline")
+            or planning.get("headline")
+            or "",
+            "title_fr": planning.get("name")
+            or planning.get("slugline")
+            or planning.get("headline")
+            or "",
+            "description_nl": (planning_nl.get("description_text") or "").rstrip(),
+            "description_fr": (planning_fr.get("description_text") or "").rstrip(),
+            "time": "",
+        }
+
+        # Set time from first coverage or planning date
+        scheduled = planning.get("planning_date")
+        coverages = planning.get("coverages", [])
+        if coverages and isinstance(coverages[0], dict):
+            scheduled = coverages[0].get("planning", {}).get("scheduled", scheduled)
+        if scheduled:
+            tz = "Europe/Brussels"
+            start_local = utc_to_local(tz, scheduled)
+            formatted_planning["time"] = start_local.strftime("%H:%M")
+
+        calendar_groups.setdefault(calendar, []).append(formatted_planning)
+
+    # Merge and sort by CALENDAR_ORDER
+    for calendar in CALENDAR_ORDER + sorted(
+        [c for c in calendar_groups if c not in CALENDAR_ORDER]
+    ):
+        if calendar in calendar_groups:
+            events_sorted = sorted(
+                calendar_groups[calendar], key=lambda x: (x["time"] == "", x["time"])
             )
-            if original:
-                planning["coverages"] = get_coverages_bilingual_internal(
-                    original, planning_service, desk_service, user_service
-                )
+            events_list.append({"calendar": calendar, "events": events_sorted})
 
-    return base_formatted
+    return {"weekday_date": weekday_date, "events": events_list}
 
 
 def get_coverages_bilingual_internal(
-    item: Dict[str, Any], planning_service, desk_service, user_service
+    item: Dict[str, Any], planning_service, desk_service
 ) -> List[Dict[str, Any]]:
-    """Get coverage info with proper status, language and assigned user for export"""
+    """Get coverage info with proper status and language for export"""
+    user_service = get_resource_service("users")
     formatted_coverages = []
-    lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "DE"}
+    lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "N"}
 
     planning_ids = item.get("planning_ids") or [item.get("_id")]
 
@@ -88,22 +173,16 @@ def get_coverages_bilingual_internal(
                 if user_item:
                     username = user_item.get("sign_off") or user_item.get("username")
 
-            elif desk_id:
+            if desk_id:
                 desk_item = desk_service.find_one(req=None, _id=desk_id)
-                if desk_item and desk_item.get("desk_language"):
-                    desk_language_code = lang_map.get(
-                        desk_item["desk_language"].lower(), "N"
-                    )
-                    # first member’s sign_off as fallback
-                    if desk_item.get("members"):
-                        first_member = desk_item["members"][0]
-                        user_item = user_service.find_one(
-                            req=None, _id=first_member["user"]
+                if desk_item:
+                    # Get desk name for display
+                    desk_name = desk_item.get("name", "")
+
+                    if desk_item and desk_item.get("desk_language"):
+                        desk_language_code = lang_map.get(
+                            desk_item["desk_language"].lower(), "N"
                         )
-                        if user_item:
-                            username = user_item.get("sign_off") or user_item.get(
-                                "username"
-                            )
 
             # Format coverage display
             if cov_type == "text":
@@ -111,8 +190,12 @@ def get_coverages_bilingual_internal(
             else:
                 coverage_display = f"{cov_type.upper()} ({cov_status})"
 
+            # Add assigned user or desk name
             if username:
                 coverage_display = f"{coverage_display} BY {username.upper()}"
+            elif desk_name:
+                # When no user assigned, show full desk name only
+                coverage_display = f"{coverage_display} BY {desk_name.upper()}"
 
             formatted_coverages.append(
                 {
@@ -121,7 +204,44 @@ def get_coverages_bilingual_internal(
                     "status": cov_status,
                     "language": desk_language_code,
                     "username": username,
+                    "desk_name": desk_name,
                 }
             )
 
     return formatted_coverages
+
+
+def get_advisory_weekday_date(planning_item, planning_service=None, event_service=None):
+    """Get weekday/date of planning, preferring linked event date"""
+    # If planning has linked event, use event start date
+    event_item = None
+    if event_service and planning_item.get("event_item"):
+        event_item = event_service.find_one(req=None, _id=planning_item["event_item"])
+        if event_item and event_item.get("dates") and event_item["dates"].get("start"):
+            tz = event_item["dates"].get("tz", "Europe/Brussels")
+            local_dt = utc_to_local(tz, event_item["dates"]["start"])
+            return local_dt.strftime("%A %d %B %Y").upper()
+
+    # Otherwise, fallback to scheduled in coverages or planning_date
+    if planning_service:
+        planning_item = planning_service.find_one(req=None, _id=planning_item["_id"])
+
+    coverages = planning_item.get("coverages", [])
+    scheduled = None
+
+    # Find scheduled from coverage
+    for cov in coverages:
+        if isinstance(cov, dict):
+            scheduled = cov.get("planning", {}).get("scheduled")
+            if scheduled:
+                break
+
+    # Fallback to planning_date
+    if not scheduled:
+        scheduled = planning_item.get("planning_date")
+
+    if scheduled:
+        local_dt = utc_to_local("Europe/Brussels", scheduled)
+        return local_dt.strftime("%A %d %B %Y").upper()
+
+    return ""

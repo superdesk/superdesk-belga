@@ -1384,7 +1384,7 @@ class PlanningExportTests(TestCase):
             )
 
     def test_internal_bilingual_events_advisory_export_tomorrow(self):
-        """Test the internal bilingual events advisory template with usernames"""
+        """Test the internal bilingual events advisory template with usernames and full desk names"""
         with self.app.app_context():
             user_nl_id = ObjectId()
             user_fr_id = ObjectId()
@@ -1612,19 +1612,19 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn(
-                "<p>TEXT N (PLANNED) BY RNL</p>",
+                f"<p>TEXT N (PLANNED) BY TEST DESK NL {timestamp}</p>",
                 internal_data,
-                "Dutch text coverage should show username from desk member",
+                "Dutch text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                "<p>TEXT F (ON MERIT) BY RFR</p>",
+                f"<p>TEXT F (ON MERIT) BY TEST DESK FR {timestamp}</p>",
                 internal_data,
-                "French text coverage should show username from desk member",
+                "French text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                "<p>PICTURE (PLANNED) BY PHOTO</p>",
+                f"<p>PICTURE (PLANNED) BY PICTURE DESK {timestamp}</p>",
                 internal_data,
-                "Picture coverage should show username from desk member",
+                "Picture coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
                 "<p>TEXT N (PLANNED) BY RNL</p>",
@@ -1649,7 +1649,7 @@ class PlanningExportTests(TestCase):
             )
 
     def test_internal_bilingual_planning_advisory_export_tomorrow(self):
-        """Test the internal bilingual planning advisory template with usernames"""
+        """Test the internal bilingual planning advisory template with usernames and desk names"""
         with self.app.app_context():
             user_nl_id = ObjectId()
             user_fr_id = ObjectId()
@@ -1796,19 +1796,19 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn(
-                "<p>TEXT N (PLANNED) BY PNL</p>",
+                f"<p>TEXT N (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
                 internal_data,
-                "Dutch text coverage should show username from desk member",
+                "Dutch text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                "<p>TEXT F (ON MERIT) BY PFR</p>",
+                f"<p>TEXT F (ON MERIT) BY PLANNING DESK FR {timestamp}</p>",
                 internal_data,
-                "French text coverage should show username from desk member",
+                "French text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                "<p>PICTURE (PLANNED) BY PNL</p>",
+                f"<p>PICTURE (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
                 internal_data,
-                "Picture coverage should show username from desk member",
+                "Picture coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
                 "<p>VIDEO (PLANNED) BY VIDEO</p>",
