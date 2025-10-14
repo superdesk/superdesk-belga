@@ -163,6 +163,14 @@ module.exports = function(grunt) {
                 'desk',
                 'genre',
             ],
-        }
+        },
+        coverage: {
+            assignments: {
+                fields: {
+                    assignmentPriority: false,
+                    coverageProvider: false,
+                },
+            },
+        },
     };
 };
