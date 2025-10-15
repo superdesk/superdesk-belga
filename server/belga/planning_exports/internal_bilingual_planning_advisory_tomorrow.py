@@ -52,7 +52,7 @@ def format_planning_for_tomorrow_bilingual_internal(
                 event_links = event_item.get("links", [])
 
         # Calendar
-        calendar = "Overig / Divers"
+        calendar = ""
         if event_item and event_item.get("calendars"):
             calendar = event_item["calendars"][0]["qcode"].capitalize()
 

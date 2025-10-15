@@ -48,11 +48,12 @@ def format_event_for_tommorow_bilingual_internal(
         event_fr = event.copy()
         set_event_translations_value(event_fr, "fr")
 
-        calendar = (
-            event["calendars"][0]["qcode"].capitalize()
-            if event.get("calendars")
-            else "Overig / Divers"
-        )
+        # Get primary calendar
+        if event.get("calendars") and len(event["calendars"]) > 0:
+            calendar = event["calendars"][0]["qcode"].capitalize()
+        else:
+            # Fallback only for safety — not expected in real data
+            calendar = ""
 
         formatted_event = {
             "subject": ",".join(get_subjects(event, "nl")),
@@ -147,7 +148,9 @@ def get_coverages_bilingual_internal(event: Dict[str, Any]) -> List[Dict[str, An
                 .upper()
             )
 
-            desk_language_code = "N"
+            desk_language_code = ""
+            desk_name = ""
+
             desk_id = (
                 planning_info.get("desk")
                 or coverage.get("assigned_to", {}).get("desk")
@@ -171,8 +174,16 @@ def get_coverages_bilingual_internal(event: Dict[str, Any]) -> List[Dict[str, An
                             desk_language_code = "N"
                         elif lang in ("fr", "f"):
                             desk_language_code = "F"
-                        else:
-                            desk_language_code = "N"
+
+            # Apply coverage type–specific language logic
+            if cov_type == "text":
+                desk_language_code = (
+                    desk_language_code or "N"
+                )  # Default to Dutch if missing
+            else:
+                desk_language_code = (
+                    desk_language_code or "EN"
+                )  # Default to English for photos/videos
 
             if cov_type == "text":
                 coverage_display = f"TEXT {desk_language_code} ({cov_status})"
