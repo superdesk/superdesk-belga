@@ -29,6 +29,13 @@ module.exports = function(grunt) {
             dateformat: 'DD.MM.YYYY',
         },
 
+        planning: {
+            externalContacts: {
+                editUrl: 'http://contact-bos.staging.belga.be/contacts/editContact',
+                createUrl: 'http://contact-bos.staging.belga.be/contacts/addContact',
+            }
+        },
+
         item_profile: {
             change_profile: 1
         },
@@ -78,8 +85,8 @@ module.exports = function(grunt) {
                 'Keywords': 'Storytags',
                 'KEYWORDS': 'STORYTAGS',
                 'keywords': 'storytags'
-                }
-            },
+            }
+        },
 
         search_cvs: [
             {id: 'belga-keywords', name:'Belga keywords', field: 'subject', list: 'belga-keywords'},
@@ -143,6 +150,7 @@ module.exports = function(grunt) {
                 'translations',
             ]
         },
+
         monitoring: {
             scheduled: {
                 sort: {
@@ -151,6 +159,7 @@ module.exports = function(grunt) {
                 }
             },
         },
+
         assignmentsList: {
             firstLine: ['slugline', 'name'],
             secondLine: [
