@@ -188,3 +188,17 @@ def init_app(_app):
         superdesk.resources["contacts"].service = BelgaContactsProxy(
             os.environ["BELGA_CONTACTS_URL"]
         )
+        _app.client_config.update(
+            {
+                "external_contacts": {
+                    "create_url": os.environ.get(
+                        "BELGA_CONTACTS_CREATE_URL",
+                        "http://contact-bos.staging.belga.be/contacts/addContact",
+                    ),
+                    "edit_url": os.environ.get(
+                        "BELGA_CONTACTS_EDIT_URL",
+                        "http://contact-bos.staging.belga.be/contacts/editContact",
+                    ),
+                }
+            }
+        )

@@ -29,13 +29,6 @@ module.exports = function(grunt) {
             dateformat: 'DD.MM.YYYY',
         },
 
-        planning: {
-            externalContacts: {
-                editUrl: 'http://contact-bos.staging.belga.be/contacts/editContact',
-                createUrl: 'http://contact-bos.staging.belga.be/contacts/addContact',
-            }
-        },
-
         item_profile: {
             change_profile: 1
         },
