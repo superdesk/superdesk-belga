@@ -30,6 +30,8 @@ class KeycloakAuth:
             or datetime.now() >= self._token_expiry
         ):
             self._fetch_new_token()
+
+        assert self._token is not None, "Access token was not fetched"
         return self._token
 
     def _fetch_new_token(self):
