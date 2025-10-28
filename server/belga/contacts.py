@@ -5,11 +5,49 @@ import requests
 import superdesk
 
 from flask import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import urljoin
 from superdesk.utils import ListCursor
 
 BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
+
+
+class KeycloakAuth:
+    """Handles Keycloak authentication and token management."""
+
+    def __init__(self, endpoint: str, client_id: str, client_secret: str):
+        self.endpoint = endpoint
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self._token = None
+        self._token_expiry = None
+
+    def get_token(self) -> str:
+        """Get a valid access token"""
+        if (
+            not self._token
+            or not self._token_expiry
+            or datetime.now() >= self._token_expiry
+        ):
+            self._fetch_new_token()
+        return self._token
+
+    def _fetch_new_token(self):
+        """Fetch new token from Keycloak."""
+        data = {
+            "grant_type": "client_credentials",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+        }
+        response = requests.post(self.endpoint, data=data, verify=False)
+        response.raise_for_status()
+
+        token_data = response.json()
+        self._token = token_data["access_token"]
+        # Set expiry 5 minutes before actual expiry to be safe
+        self._token_expiry = datetime.now() + timedelta(
+            seconds=token_data["expires_in"] - 300
+        )
 
 
 class Contact(TypedDict, total=False):
@@ -117,6 +155,17 @@ class BelgaContactsProxy(superdesk.Service):
         self.timeout = 30
         self.session = requests.Session()
 
+        # Initialize Keycloak auth
+        self.auth = KeycloakAuth(
+            endpoint=os.environ.get("BELGA_KEYCLOAK_ENDPOINT"),
+            client_id=os.environ.get("BELGA_KEYCLOAK_CLIENT_ID"),
+            client_secret=os.environ.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
+        )
+
+    def _get_headers(self):
+        """Get request headers with auth token."""
+        return {"Authorization": f"Bearer {self.auth.get_token()}"}
+
     def get(self, req, lookup):
         if req.args.get("source"):
             source = json.loads(req.args.get("source"))
@@ -135,6 +184,7 @@ class BelgaContactsProxy(superdesk.Service):
         res = self.session.get(
             urljoin(self.base, "contacts"),
             params=params,
+            headers=self._get_headers(),
             verify=False,
             timeout=self.timeout,
         )
@@ -150,6 +200,7 @@ class BelgaContactsProxy(superdesk.Service):
             contact_id = _id.replace(BELGA_CONTACTS_PREFIX, "")
             res = self.session.get(
                 urljoin(self.base, f"contacts/{contact_id}"),
+                headers=self._get_headers(),
                 verify=False,
                 timeout=self.timeout,
             )
@@ -185,6 +236,19 @@ class BelgaContactsProxy(superdesk.Service):
 
 def init_app(_app):
     if os.environ.get("BELGA_CONTACTS_URL"):
+        # Add required environment variables
+        required_vars = [
+            "BELGA_CONTACTS_URL",
+            "BELGA_KEYCLOAK_ENDPOINT",
+            "BELGA_KEYCLOAK_CLIENT_ID",
+            "BELGA_KEYCLOAK_CLIENT_SECRET",
+        ]
+        missing = [var for var in required_vars if not os.environ.get(var)]
+        if missing:
+            raise ValueError(
+                f"Missing required environment variables: {', '.join(missing)}"
+            )
+
         superdesk.resources["contacts"].service = BelgaContactsProxy(
             os.environ["BELGA_CONTACTS_URL"]
         )
