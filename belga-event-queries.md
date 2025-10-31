@@ -41,7 +41,7 @@ GET /prodapi/v1/events
   "query": {
     "bool": {
       "filter": [
-        { "term": { "place.country": "BE" } }
+        { "term": { "location.address.country": "Belgium" } }
       ]
     }
   }
@@ -55,7 +55,7 @@ GET /prodapi/v1/events
   "query": {
     "bool": {
       "must_not": [
-        { "term": { "place.country": "BE" } }
+        { "term": { "location.address.country": "Belgium" } }
       ]
     }
   }
@@ -146,7 +146,7 @@ GET /prodapi/v1/events
       ],
       "filter": [
         { "terms": { "calendars._id": ["CALENDAR_ID"] } },
-        { "term": { "place.country": "BE" } },
+        { "term": { "location.address.country": "Belgium" } },
         {
           "range": {
             "dates.start": {
@@ -171,7 +171,7 @@ curl -g -H "Authorization: Bearer $JWT_TOKEN" \
 
 # Filter by region (Belgium)
 curl -g -H "Authorization: Bearer $JWT_TOKEN" \
-  "$PRODAPI/events?source={\"query\":{\"bool\":{\"filter\":[{\"term\":{\"place.country\":\"BE\"}}]}}}"
+  "$PRODAPI/events?source={\"query\":{\"bool\":{\"filter\":[{\"term\":{\"location.address.country\":\"Belgium\"}}]}}}"
 
 # Filter by date range
 curl -g -H "Authorization: Bearer $JWT_TOKEN" \
