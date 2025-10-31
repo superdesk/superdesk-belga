@@ -1,6 +1,7 @@
 import os
 from typing import TypedDict
 import requests
+import logging
 
 import superdesk
 
@@ -8,6 +9,8 @@ from flask import json
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
 from superdesk.utils import ListCursor
+
+logger = logging.getLogger(__name__)
 
 BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
 
@@ -247,9 +250,11 @@ def init_app(_app):
         ]
         missing = [var for var in required_vars if not os.environ.get(var)]
         if missing:
-            raise ValueError(
-                f"Missing required environment variables: {', '.join(missing)}"
+            logger.warning(
+                "External contacts feature disabled. Missing environment variables: %s",
+                ", ".join(missing),
             )
+            return
 
         superdesk.resources["contacts"].service = BelgaContactsProxy(
             os.environ["BELGA_CONTACTS_URL"]
