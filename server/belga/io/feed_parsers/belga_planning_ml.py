@@ -14,11 +14,15 @@ class BelgaPlanningMLParser(PlanningMLParser):
 
     def datetime(self, string):
         try:
-            return datetime.datetime.strptime(string.strip(), "%Y-%m-%dT%H:%M:%S.000Z")
+            return datetime.datetime.strptime(string.strip(), "%Y-%m-%dT%H:%M:%S.000Z").replace(
+                tzinfo=datetime.timezone.utc
+            )
         except (ValueError, TypeError):
             pass
         try:
-            return datetime.datetime.strptime(string.strip(), "%Y-%m-%dT%H:%M:%SZ")
+            return datetime.datetime.strptime(string.strip(), "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=datetime.timezone.utc
+            )
         except (ValueError, TypeError):
             pass
         try:
