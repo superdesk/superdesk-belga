@@ -90,7 +90,7 @@ GET /prodapi/v1/events
   "query": {
     "multi_match": {
       "query": "search text",
-      "fields": ["name^3", "definition", "slugline", "description"]
+      "fields": ["name", "definition", "slugline", "description"]
     }
   }
 }
