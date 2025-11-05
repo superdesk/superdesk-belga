@@ -201,20 +201,26 @@ class BelgaContactsProxy(superdesk.Service):
 
     def find_one(self, req, **lookup):
         _id = str(lookup.get("_id"))
-        if _id and _id.startswith(BELGA_CONTACTS_PREFIX):
-            contact_id = _id.replace(BELGA_CONTACTS_PREFIX, "")
-            res = self.session.get(
-                urljoin(self.base, f"contacts/{contact_id}"),
-                headers=self._get_headers(),
-                verify=False,
-                timeout=self.timeout,
-            )
-            if res.status_code == 500:  # returns 500 on missing contact
-                return None
-            res.raise_for_status()
-            data = res.json()
-            return parse_contact(data)
-        return None
+        if not _id:
+            return None
+
+        contact_id = (
+            _id.replace(BELGA_CONTACTS_PREFIX, "")
+            if _id.startswith(BELGA_CONTACTS_PREFIX)
+            else _id
+        )
+
+        res = self.session.get(
+            urljoin(self.base, f"contacts/{contact_id}"),
+            headers=self._get_headers(),
+            verify=False,
+            timeout=self.timeout,
+        )
+        if res.status_code == 500:  # returns 500 on missing contact
+            return None
+        res.raise_for_status()
+        data = res.json()
+        return parse_contact(data)
 
     def search(self, source):
         try:
