@@ -30,11 +30,24 @@ def format_event_for_tommorow_bilingual(
 
     # Determine weekday and date from the event
     if event_data:
-        first_event_start = utc_to_local(
-            event_data[0]["dates"].get("tz", "Europe/Brussels"),
-            event_data[0]["dates"]["start"],
-        )
-        weekday_date = first_event_start.strftime("%A %d %B %Y").upper()
+        local_dates = []
+        for ev in event_data:
+            dates = ev.get("dates") or {}
+            start = dates.get("start")
+            if not start:
+                continue
+            tz = dates.get("tz") or "Europe/Brussels"
+            local_dt = utc_to_local(tz, start)
+            local_dates.append(local_dt.date())
+
+        if local_dates:
+            first_date = min(local_dates)
+            weekday = first_date.strftime("%A").upper()
+            day = first_date.day
+            month_year = first_date.strftime("%B %Y").upper()
+            weekday_date = f"{weekday} {day} {month_year}"
+        else:
+            weekday_date = ""
     else:
         weekday_date = ""
 

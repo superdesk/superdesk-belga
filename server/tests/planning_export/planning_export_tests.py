@@ -3,6 +3,15 @@ import datetime
 from flask import render_template
 from app import get_app
 from bson import ObjectId
+from belga.planning_exports.format_news_events_tommorow_bilingual import (
+    format_event_for_tommorow_bilingual,
+)
+from belga.planning_exports.internal_bilingual_events_advisory_tomorrow import (
+    format_event_for_tommorow_bilingual_internal,
+)
+from belga.planning_exports.internal_bilingual_planning_advisory_tomorrow import (
+    format_planning_for_tomorrow_bilingual_internal,
+)
 
 
 class PlanningExportTests(TestCase):
@@ -1830,4 +1839,185 @@ class PlanningExportTests(TestCase):
                 "<p>Internal Planning FR</p>",
                 internal_data,
                 "French planning title should be present",
+            )
+
+    def test_bilingual_events_header_uses_earliest_date_no_leading_zero(self):
+        """
+        - Events-only advisory header must use the earliest local date
+        - Day should be rendered without leading zero (e.g. 5, not 05)
+        """
+        with self.app.app_context():
+            events = [
+                {
+                    "_id": ObjectId(),
+                    "name": "Later event",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2025, 11, 6, 10, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2025, 11, 6, 11, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "general", "name": "General"}],
+                    "location": [],
+                    "links": [],
+                    "event_contact_info": [],
+                },
+                {
+                    "_id": ObjectId(),
+                    "name": "Earlier event",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2025, 11, 5, 9, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2025, 11, 5, 10, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "general", "name": "General"}],
+                    "location": [],
+                    "links": [],
+                    "event_contact_info": [],
+                },
+            ]
+
+            formatted = format_event_for_tommorow_bilingual(events, locale="nl")
+
+            self.assertEqual(
+                "WEDNESDAY 5 NOVEMBER 2025",
+                formatted["weekday_date"],
+                "Header date should use earliest local event date without leading zero",
+            )
+
+    def test_internal_bilingual_events_header_uses_earliest_date_no_leading_zero(self):
+        """
+        - Internal events-only advisory header must also use earliest local date
+        - Day should be rendered without leading zero
+        """
+        with self.app.app_context():
+            events = [
+                {
+                    "_id": ObjectId(),
+                    "name": "Later event (internal)",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2025, 11, 6, 10, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2025, 11, 6, 11, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "general", "name": "General"}],
+                    "location": [],
+                    "links": [],
+                    "event_contact_info": [],
+                },
+                {
+                    "_id": ObjectId(),
+                    "name": "Earlier event (internal)",
+                    "dates": {
+                        "start": datetime.datetime(
+                            2025, 11, 5, 9, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "end": datetime.datetime(
+                            2025, 11, 5, 10, 0, tzinfo=datetime.timezone.utc
+                        ),
+                        "tz": "Europe/Brussels",
+                    },
+                    "calendars": [{"qcode": "general", "name": "General"}],
+                    "location": [],
+                    "links": [],
+                    "event_contact_info": [],
+                },
+            ]
+
+            formatted = format_event_for_tommorow_bilingual_internal(
+                events, locale="nl"
+            )
+
+            self.assertEqual(
+                "WEDNESDAY 5 NOVEMBER 2025",
+                formatted["weekday_date"],
+                "Internal header date should use earliest local event date without leading zero",
+            )
+
+    def test_internal_bilingual_planning_uses_french_translation_and_header_date(self):
+        """
+        - Planning-only internal advisory should:
+          * Use French translations for the title (so FR name is not missing)
+          * Render header date without leading zero, based on scheduled date
+        """
+        with self.app.app_context():
+            planning_id = ObjectId()
+            scheduled = datetime.datetime(
+                2025, 11, 5, 10, 0, tzinfo=datetime.timezone.utc
+            )
+
+            planning_item = {
+                "_id": planning_id,
+                "type": "planning",
+                "name": "Base EN name",
+                "description_text": "Base EN description",
+                "translations": [
+                    {"field": "name", "language": "nl", "value": "Naam NL"},
+                    {"field": "name", "language": "fr", "value": "Nom FR"},
+                    {
+                        "field": "description_text",
+                        "language": "nl",
+                        "value": "Beschrijving NL",
+                    },
+                    {
+                        "field": "description_text",
+                        "language": "fr",
+                        "value": "Description FR",
+                    },
+                ],
+                "coverages": [
+                    {
+                        "coverage_id": "cov1",
+                        "planning": {
+                            "g2_content_type": "text",
+                            "scheduled": scheduled,
+                        },
+                        "news_coverage_status": {"label": "Planned"},
+                    }
+                ],
+                "event_item": None,
+            }
+
+            self.app.data.insert("planning", [planning_item])
+
+            formatted = format_planning_for_tomorrow_bilingual_internal([planning_item])
+
+            self.assertEqual(
+                "WEDNESDAY 5 NOVEMBER 2025",
+                formatted["weekday_date"],
+                "Planning advisory header date should not have leading zero",
+            )
+
+            self.assertEqual(1, len(formatted["events"]))
+            events_for_calendar = formatted["events"][0]["events"]
+            self.assertEqual(1, len(events_for_calendar))
+
+            item = events_for_calendar[0]
+
+            self.assertEqual(
+                "Nom FR",
+                item["title_fr"],
+                "French title should come from FR translation (not be missing)",
+            )
+            self.assertEqual(
+                "Description FR",
+                item["description_fr"],
+                "French description should come from FR translation",
+            )
+
+            self.assertEqual(
+                "Beschrijving NL",
+                item["description_nl"],
+                "Dutch description should come from NL translation",
             )
