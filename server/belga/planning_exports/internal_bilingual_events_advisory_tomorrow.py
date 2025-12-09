@@ -4,6 +4,8 @@ from .common import (
     get_formatted_contacts,
     get_item_location,
     set_event_translations_value,
+    ADVISORY_TIMEZONE,
+    format_advisory_weekday_date,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -36,16 +38,13 @@ def format_event_for_tommorow_bilingual_internal(
             start = dates.get("start")
             if not start:
                 continue
-            tz = dates.get("tz") or "Europe/Brussels"
+            tz = dates.get("tz") or ADVISORY_TIMEZONE
             local_dt = utc_to_local(tz, start)
             local_dates.append(local_dt.date())
 
         if local_dates:
             first_date = min(local_dates)
-            weekday = first_date.strftime("%A").upper()
-            day = first_date.day
-            month_year = first_date.strftime("%B %Y").upper()
-            weekday_date = f"{weekday} {day} {month_year}"
+            weekday_date = format_advisory_weekday_date(first_date)
         else:
             weekday_date = ""
     else:

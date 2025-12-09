@@ -3,6 +3,10 @@ from flask import current_app as app
 from typing import List, Dict, Any, TypedDict
 from babel.dates import format_date
 from superdesk import get_resource_service
+from typing import Union as _Union
+from datetime import date as _date_type, datetime as _datetime_type
+
+ADVISORY_TIMEZONE = "Europe/Brussels"
 
 
 class FormattedContact(TypedDict):
@@ -241,3 +245,17 @@ def reorder_address(address: str) -> str:
     if parts[0].isdigit() and len(parts) == 2:
         return f"{parts[1]} {parts[0]}"
     return address
+
+
+def format_advisory_weekday_date(d: _Union[_date_type, _datetime_type]) -> str:
+    """
+    Format date for Belga advisories: WEEKDAY D MONTH YYYY (no leading zero).
+    """
+    if isinstance(d, _datetime_type):
+        d = d.date()
+
+    weekday = d.strftime("%A").upper()
+    day = d.day
+    month_year = d.strftime("%B %Y").upper()
+
+    return f"{weekday} {day} {month_year}"
