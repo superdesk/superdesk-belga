@@ -7,6 +7,7 @@ from typing import Union as _Union
 from datetime import date as _date_type, datetime as _datetime_type
 
 ADVISORY_TIMEZONE = "Europe/Brussels"
+COVERAGE_PREFIX = "BELGA "
 
 
 class FormattedContact(TypedDict):
@@ -55,6 +56,21 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     start_local = utc_to_local(tz, item["dates"]["start"])
     item["local_time"] = start_local.strftime("%Hu%M")
     item["local_date_time"] = start_local.strftime("%Y%m%d")
+
+
+def format_coverage_label(cov_type: str, language_code: str, status: str) -> str:
+    """
+    Return a coverage label prefixed with BELGA.
+    Examples:
+      BELGA TEXT N (PLANNED)
+      BELGA PICTURE (PLANNED)
+      BELGA VIDEO (ON MERIT)
+    """
+    ct = (cov_type or "").strip().upper()
+    if ct == "TEXT":
+        lang = (language_code or "").strip().upper() or "N"
+        return f"{COVERAGE_PREFIX}TEXT {lang} ({status})"
+    return f"{COVERAGE_PREFIX}{ct} ({status})"
 
 
 def get_item_location(

@@ -5,6 +5,7 @@ from .common import (
     set_event_translations_value,
     ADVISORY_TIMEZONE,
     format_advisory_weekday_date,
+    format_coverage_label,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -188,10 +189,9 @@ def get_coverages_bilingual_internal(
                         )
 
             # Format coverage display
-            if cov_type == "text":
-                coverage_display = f"TEXT {desk_language_code} ({cov_status})"
-            else:
-                coverage_display = f"{cov_type.upper()} ({cov_status})"
+            coverage_display = format_coverage_label(
+                cov_type, desk_language_code, cov_status
+            )
 
             # Add assigned user or desk name
             if username:

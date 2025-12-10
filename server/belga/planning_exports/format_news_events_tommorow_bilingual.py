@@ -5,6 +5,7 @@ from .common import (
     get_item_location,
     set_event_translations_value,
     get_advisory_date_from_events,
+    format_coverage_label,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -160,10 +161,8 @@ def get_coverages_bilingual(event: Dict[str, Any]) -> List[Dict[str, Any]]:
                         else:
                             desk_language_code = "N"
 
-            coverage_display = (
-                f"TEXT {desk_language_code} ({cov_status})"
-                if cov_type == "text"
-                else f"{cov_type.upper()} ({cov_status})"
+            coverage_display = format_coverage_label(
+                cov_type, desk_language_code, cov_status
             )
 
             formatted_coverages.append(

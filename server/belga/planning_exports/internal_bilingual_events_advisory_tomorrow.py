@@ -5,6 +5,7 @@ from .common import (
     get_item_location,
     set_event_translations_value,
     get_advisory_date_from_events,
+    format_coverage_label,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -160,7 +161,7 @@ def get_coverages_bilingual_internal(event: Dict[str, Any]) -> List[Dict[str, An
             if desk_id:
                 desk_item = desk_service.find_one(req=None, _id=desk_id)
                 if desk_item:
-                    desk_name = desk_item.get("name", "")
+                    desk_name = desk_item.get("name", "") or ""
                     lang = desk_item.get("desk_language")
                     if lang:
                         lang = lang.lower()
@@ -179,11 +180,9 @@ def get_coverages_bilingual_internal(event: Dict[str, Any]) -> List[Dict[str, An
                     desk_language_code or "EN"
                 )  # Default to English for photos/videos
 
-            if cov_type == "text":
-                coverage_display = f"TEXT {desk_language_code} ({cov_status})"
-            else:
-                coverage_display = f"{cov_type.upper()} ({cov_status})"
-
+            coverage_display = format_coverage_label(
+                cov_type, desk_language_code, cov_status
+            )
             # Add assigned user or desk name
             if username:
                 coverage_display = f"{coverage_display} BY {username.upper()}"

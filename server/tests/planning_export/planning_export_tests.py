@@ -983,33 +983,33 @@ class PlanningExportTests(TestCase):
                 "French description should be present",
             )
             self.assertIn(
-                "<p>TEXT N (PLANNED)</p>",
+                "<p>BELGA TEXT N (PLANNED)</p>",
                 bilingual_data,
                 "Dutch text coverage should be tagged as TEXT N",
             )
             self.assertIn(
-                "<p>TEXT F (ON MERIT)</p>",
+                "<p>BELGA TEXT F (ON MERIT)</p>",
                 bilingual_data,
                 "French text coverage should be tagged as TEXT F",
             )
             self.assertIn(
-                "<p>PICTURE (PLANNED)</p>",
+                "<p>BELGA PICTURE (PLANNED)</p>",
                 bilingual_data,
                 "Picture coverage should not have language tag",
             )
 
             self.assertIn(
-                "<p>TEXT N (PLANNED)</p>",
+                "<p>BELGA TEXT N (PLANNED)</p>",
                 bilingual_data,
                 "Dutch text coverage should be tagged as TEXT N",
             )
             self.assertIn(
-                "<p>TEXT F (ON MERIT)</p>",
+                "<p>BELGA TEXT F (ON MERIT)</p>",
                 bilingual_data,
                 "French text coverage should be tagged as TEXT F",
             )
             self.assertIn(
-                "<p>PICTURE (PLANNED)</p>",
+                "<p>BELGA PICTURE (PLANNED)</p>",
                 bilingual_data,
                 "Picture coverage should not have language tag",
             )
@@ -1621,27 +1621,27 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn(
-                f"<p>TEXT N (PLANNED) BY TEST DESK NL {timestamp}</p>",
+                f"<p>BELGA TEXT N (PLANNED) BY TEST DESK NL {timestamp}</p>",
                 internal_data,
                 "Dutch text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                f"<p>TEXT F (ON MERIT) BY TEST DESK FR {timestamp}</p>",
+                f"<p>BELGA TEXT F (ON MERIT) BY TEST DESK FR {timestamp}</p>",
                 internal_data,
                 "French text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                f"<p>PICTURE (PLANNED) BY PICTURE DESK {timestamp}</p>",
+                f"<p>BELGA PICTURE (PLANNED) BY PICTURE DESK {timestamp}</p>",
                 internal_data,
                 "Picture coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                "<p>TEXT N (PLANNED) BY RNL</p>",
+                "<p>BELGA TEXT N (PLANNED) BY RNL</p>",
                 internal_data,
                 "Direct user assignment should show username",
             )
             self.assertIn(
-                "<p>VIDEO (ON MERIT) BY PHOTO</p>",
+                "<p>BELGA VIDEO (ON MERIT) BY PHOTO</p>",
                 internal_data,
                 "Video coverage with direct user assignment should show username",
             )
@@ -1805,27 +1805,27 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn(
-                f"<p>TEXT N (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
+                f"<p>BELGA TEXT N (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
                 internal_data,
                 "Dutch text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                f"<p>TEXT F (ON MERIT) BY PLANNING DESK FR {timestamp}</p>",
+                f"<p>BELGA TEXT F (ON MERIT) BY PLANNING DESK FR {timestamp}</p>",
                 internal_data,
                 "French text coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                f"<p>PICTURE (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
+                f"<p>BELGA PICTURE (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
                 internal_data,
                 "Picture coverage should show full desk name in UPPERCASE when no direct user",
             )
             self.assertIn(
-                "<p>VIDEO (PLANNED) BY VIDEO</p>",
+                "<p>BELGA VIDEO (PLANNED) BY VIDEO</p>",
                 internal_data,
                 "Video coverage with direct user assignment should show username",
             )
             self.assertIn(
-                "<p>TEXT F (ON MERIT) BY PFR</p>",
+                "<p>BELGA TEXT F (ON MERIT) BY PFR</p>",
                 internal_data,
                 "French text with direct user assignment should show username",
             )

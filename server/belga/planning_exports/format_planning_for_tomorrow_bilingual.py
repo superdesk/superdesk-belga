@@ -5,6 +5,7 @@ from .common import (
     set_event_translations_value,
     ADVISORY_TIMEZONE,
     format_advisory_weekday_date,
+    format_coverage_label,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -109,7 +110,11 @@ def format_planning_for_tomorrow_bilingual(
         if scheduled:
             tz = "Europe/Brussels"
             start_local = utc_to_local(tz, scheduled)
-            formatted_planning["time"] = start_local.strftime("%H:%M")
+            # hide midnight/no-time stamp
+            if start_local.hour == 0 and start_local.minute == 0:
+                formatted_planning["time"] = ""
+            else:
+                formatted_planning["time"] = start_local.strftime("%H:%M")
 
         calendar_groups.setdefault(calendar, []).append(formatted_planning)
 
@@ -172,11 +177,9 @@ def get_coverages_bilingual(
                         desk_item["desk_language"].lower(), "N"
                     )
 
-            # Format coverage display
-            if cov_type == "text":
-                coverage_display = f"TEXT {desk_language_code} ({cov_status})"
-            else:
-                coverage_display = f"{cov_type.upper()} ({cov_status})"
+            coverage_display = format_coverage_label(
+                cov_type, desk_language_code, cov_status
+            )
 
             formatted_coverages.append(
                 {
