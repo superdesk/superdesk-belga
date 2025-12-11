@@ -334,12 +334,15 @@ def get_display_times(
         return {"time": "", "display_time": ""}
 
     is_all_day = (
-        start.hour == 0 and start.minute == 0 and end.hour == 23 and end.minute == 59
+        start_local.hour == 0
+        and start_local.minute == 0
+        and end_local.hour == 23
+        and end_local.minute == 59
     )
     if is_all_day:
         return {"time": "", "display_time": ""}
 
-    is_true_no_time = start.hour == 0 and start.minute == 0
+    is_true_no_time = start_local.hour == 0 and start_local.minute == 0
     if is_true_no_time:
         return {"time": "", "display_time": ""}
 

@@ -2042,10 +2042,10 @@ class PlanningExportTests(TestCase):
             self.app.data.insert("contacts", [contact])
 
             all_day_start = datetime.datetime(
-                2025, 1, 10, 0, 0, tzinfo=datetime.timezone.utc
+                2025, 1, 9, 23, 0, tzinfo=datetime.timezone.utc
             )
             all_day_end = datetime.datetime(
-                2025, 1, 10, 23, 59, 59, tzinfo=datetime.timezone.utc
+                2025, 1, 10, 22, 59, 59, tzinfo=datetime.timezone.utc
             )
             all_day_event = {
                 "_id": ObjectId(),
