@@ -308,3 +308,41 @@ def get_advisory_date_from_events(
         return ""
 
     return format_advisory_weekday_date(min(local_dates))
+
+
+def get_display_times(
+    dates: Dict[str, Any], default_tz: str = ADVISORY_TIMEZONE
+) -> Dict[str, str]:
+    """
+    Return time strings, hiding all-day and no-time events but showing real timed ranges.
+    """
+
+    if not dates:
+        return {"time": "", "display_time": ""}
+
+    tz = dates.get("tz") or default_tz
+    start = dates.get("start")
+    end = dates.get("end")
+
+    if not start or not end:
+        return {"time": "", "display_time": ""}
+
+    try:
+        start_local = utc_to_local(tz, start)
+        end_local = utc_to_local(tz, end)
+    except Exception:
+        return {"time": "", "display_time": ""}
+
+    is_all_day = (
+        start.hour == 0 and start.minute == 0 and end.hour == 23 and end.minute == 59
+    )
+    if is_all_day:
+        return {"time": "", "display_time": ""}
+
+    is_true_no_time = start.hour == 0 and start.minute == 0
+    if is_true_no_time:
+        return {"time": "", "display_time": ""}
+
+    time_range = f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
+    display_time = start_local.strftime("%H:%M")
+    return {"time": time_range, "display_time": display_time}

@@ -6,6 +6,7 @@ from .common import (
     set_event_translations_value,
     get_advisory_date_from_events,
     format_coverage_label,
+    get_display_times,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -74,28 +75,11 @@ def format_event_for_tommorow_bilingual(
         # Set metadata (links, etc.)
         set_metadata(formatted_event, event, locale)
 
-        # Set dates and handle all-day events
-        dates = event["dates"]
-        tz = dates.get("tz") or "Europe/Brussels"
-        start_local = utc_to_local(tz, dates["start"])
-        end_local = utc_to_local(tz, dates["end"])
-
-        # Check if this is an all-day event (00:00-23:59)
-        is_all_day = (
-            start_local.hour == 0
-            and start_local.minute == 0
-            and end_local.hour == 23
-            and end_local.minute == 59
-        )
-
-        if is_all_day:
-            # For all-day events, don't show the time range
-            formatted_event["time"] = ""
-        else:
-            # Show specific time range
-            formatted_event["time"] = (
-                f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
-            )
+        # Use shared helper to compute display times and handle all-day events
+        dates = event.get("dates", {})
+        times = get_display_times(dates, default_tz="Europe/Brussels")
+        formatted_event["time"] = times.get("time", "")
+        formatted_event["display_time"] = times.get("display_time", "")
 
         calendar_groups.setdefault(calendar, []).append(formatted_event)
 

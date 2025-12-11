@@ -6,6 +6,7 @@ from .common import (
     ADVISORY_TIMEZONE,
     format_advisory_weekday_date,
     format_coverage_label,
+    get_display_times,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -108,13 +109,16 @@ def format_planning_for_tomorrow_bilingual(
         if coverages and isinstance(coverages[0], dict):
             scheduled = coverages[0].get("planning", {}).get("scheduled", scheduled)
         if scheduled:
-            tz = "Europe/Brussels"
-            start_local = utc_to_local(tz, scheduled)
-            # hide midnight/no-time stamp
-            if start_local.hour == 0 and start_local.minute == 0:
-                formatted_planning["time"] = ""
-            else:
-                formatted_planning["time"] = start_local.strftime("%H:%M")
+            tz = planning.get("dates", {}).get("tz") or "Europe/Brussels"
+            times = get_display_times(
+                {"start": scheduled, "end": scheduled, "tz": tz},
+                default_tz="Europe/Brussels",
+            )
+            formatted_planning["time"] = times.get("time", "")
+            formatted_planning["display_time"] = times.get("display_time", "")
+        else:
+            # ensure key exists for backward-compatibility
+            formatted_planning["display_time"] = ""
 
         calendar_groups.setdefault(calendar, []).append(formatted_planning)
 
