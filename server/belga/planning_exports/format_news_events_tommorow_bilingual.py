@@ -7,6 +7,7 @@ from .common import (
     get_advisory_date_from_events,
     format_coverage_label,
     get_display_times,
+    ADVISORY_TIMEZONE,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -77,7 +78,7 @@ def format_event_for_tommorow_bilingual(
 
         # Use shared helper to compute display times and handle all-day events
         dates = event.get("dates", {})
-        times = get_display_times(dates, default_tz="Europe/Brussels")
+        times = get_display_times(dates, default_tz=ADVISORY_TIMEZONE)
         formatted_event["time"] = times.get("time", "")
         formatted_event["display_time"] = times.get("display_time", "")
 

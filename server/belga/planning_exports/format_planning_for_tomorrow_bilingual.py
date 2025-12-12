@@ -109,10 +109,10 @@ def format_planning_for_tomorrow_bilingual(
         if coverages and isinstance(coverages[0], dict):
             scheduled = coverages[0].get("planning", {}).get("scheduled", scheduled)
         if scheduled:
-            tz = planning.get("dates", {}).get("tz") or "Europe/Brussels"
+            tz = planning.get("dates", {}).get("tz") or ADVISORY_TIMEZONE
             times = get_display_times(
                 {"start": scheduled, "end": scheduled, "tz": tz},
-                default_tz="Europe/Brussels",
+                default_tz=ADVISORY_TIMEZONE,
             )
             formatted_planning["time"] = times.get("time", "")
             formatted_planning["display_time"] = times.get("display_time", "")

@@ -7,7 +7,7 @@ from typing import Union as _Union
 from datetime import date as _date_type, datetime as _datetime_type
 
 ADVISORY_TIMEZONE = "Europe/Brussels"
-COVERAGE_PREFIX = "BELGA "
+COVERAGE_PREFIX = "BELGA"
 
 
 class FormattedContact(TypedDict):
@@ -69,8 +69,8 @@ def format_coverage_label(cov_type: str, language_code: str, status: str) -> str
     ct = (cov_type or "").strip().upper()
     if ct == "TEXT":
         lang = (language_code or "").strip().upper() or "N"
-        return f"{COVERAGE_PREFIX}TEXT {lang} ({status})"
-    return f"{COVERAGE_PREFIX}{ct} ({status})"
+        return f"{COVERAGE_PREFIX} TEXT {lang} ({status})"
+    return f"{COVERAGE_PREFIX} {ct} ({status})"
 
 
 def get_item_location(
@@ -342,9 +342,16 @@ def get_display_times(
     if is_all_day:
         return {"time": "", "display_time": ""}
 
-    is_true_no_time = start_local.hour == 0 and start_local.minute == 0
-    if is_true_no_time:
+    if (
+        start_local.hour == 0
+        and start_local.minute == 0
+        and not (start_local == end_local)
+    ):
         return {"time": "", "display_time": ""}
+
+    if start_local == end_local:
+        single = start_local.strftime("%H:%M")
+        return {"time": single, "display_time": single}
 
     time_range = f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
     display_time = start_local.strftime("%H:%M")
