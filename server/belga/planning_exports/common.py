@@ -54,7 +54,7 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
 
     tz = item["dates"]["tz"]
     start_local = utc_to_local(tz, item["dates"]["start"])
-    item["local_time"] = start_local.strftime("%Hu%M")
+    item["local_time"] = start_local.strftime("%H:%M")
     item["local_date_time"] = start_local.strftime("%Y%m%d")
 
 

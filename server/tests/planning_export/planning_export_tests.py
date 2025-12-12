@@ -537,13 +537,10 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Zondag 21 april</h3>", dutch_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", dutch_template_data)
-            self.assertIn(
-                "<p>New York, United States</p>",
-                dutch_template_data,
-            )
-            self.assertIn(
-                "<p>16u00, NExxxxt Sunday 21.04.2024 NL</p>", dutch_template_data
-            )
+            self.assertIn("<p>New York, United States</p>", dutch_template_data)
+
+            self.assertIn("<p>16:00</p>", dutch_template_data)
+            self.assertIn("<p>NExxxxt Sunday 21.04.2024 NL</p>", dutch_template_data)
             self.assertIn("<p>Description of event NL</p>", dutch_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
@@ -551,9 +548,8 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Maandag 22 april</h3>", dutch_template_data)
             self.assertIn("<h4>SPORTS</h4>", dutch_template_data)
-            self.assertIn(
-                "<p>16u00, NExxxxt Monday 22.04.2024</p>", dutch_template_data
-            )
+            self.assertIn("<p>16:00</p>", dutch_template_data)
+            self.assertIn("<p>NExxxxt Monday 22.04.2024</p>", dutch_template_data)
             self.assertIn("<p>Description of event</p>", dutch_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
@@ -572,13 +568,10 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Dimanche 21 avril</h3>", french_template_data)
             self.assertIn("<h4>REDWOLVES</h4>", french_template_data)
-            self.assertIn(
-                "<p>New York, United States</p>",
-                french_template_data,
-            )
-            self.assertIn(
-                "<p>16u00, NExxxxt Sunday 21.04.2024 FR</p>", french_template_data
-            )
+            self.assertIn("<p>New York, United States</p>", french_template_data)
+
+            self.assertIn("<p>16:00</p>", french_template_data)
+            self.assertIn("<p>NExxxxt Sunday 21.04.2024 FR</p>", french_template_data)
             self.assertIn("<p>Description of event FR</p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
@@ -586,14 +579,11 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
 
+            self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
             self.assertIn("<h4>SPORTS</h4>", french_template_data)
-            self.assertIn(
-                "<p>Kubang Putiah, Indonesien</p>",
-                french_template_data,
-            )
-            self.assertIn(
-                "<p>16u00, NExxxxt Monday 22.04.2024</p>", french_template_data
-            )
+            self.assertIn("<p>Kubang Putiah, Indonesien</p>", french_template_data)
+            self.assertIn("<p>16:00</p>", french_template_data)
+            self.assertIn("<p>NExxxxt Monday 22.04.2024</p>", french_template_data)
             self.assertIn("<p>Description of event</p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
@@ -601,18 +591,14 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn("<h4>WC2028</h4>", french_template_data)
-
-            self.assertIn("<p>16u00, First</p>", french_template_data)
+            self.assertIn("<p>16:00</p>", french_template_data)
+            self.assertIn("<p>First</p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
             )
-            self.assertIn(
-                "<p>Rabat, Morocco</p>",
-                french_template_data,
-            )
-
-            self.assertIn("<p>16u00, second</p>", french_template_data)
+            self.assertIn("<p>Rabat, Morocco</p>", french_template_data)
+            self.assertIn("<p>second</p>", french_template_data)
             self.assertIn(
                 '<p><a href="www.google.xom/new">www.google.xom/new</a></p>',
                 french_template_data,
@@ -622,7 +608,7 @@ class PlanningExportTests(TestCase):
                 {
                     "dates": {
                         "start": datetime.datetime(
-                            2024, 4, 24, 22, 00, 00, tzinfo=datetime.timezone.utc
+                            2024, 4, 24, 22, 0, 0, tzinfo=datetime.timezone.utc
                         ),
                         "end": datetime.datetime(
                             2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
@@ -634,7 +620,7 @@ class PlanningExportTests(TestCase):
                 {
                     "dates": {
                         "start": datetime.datetime(
-                            2024, 4, 24, 22, 59, 00, tzinfo=datetime.timezone.utc
+                            2024, 4, 24, 22, 59, 0, tzinfo=datetime.timezone.utc
                         ),
                         "end": datetime.datetime(
                             2024, 4, 25, 21, 59, 59, tzinfo=datetime.timezone.utc
@@ -650,8 +636,11 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             )
             self.assertIn("<h3>Donderdag 25 april</h3>", template_data)
-            self.assertIn("<p>00u00, one event</p>", template_data)
-            self.assertIn("<p>00u59, Two event</p>", template_data)
+            self.assertNotIn("<p>00:00</p>", template_data)
+            self.assertIn("<p>one event</p>", template_data)
+
+            self.assertIn("<p>00:59</p>", template_data)
+            self.assertIn("<p>Two event</p>", template_data)
 
             template_data = render_template(
                 "french_news_events_list_export_body.html",
@@ -659,8 +648,10 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             )
             self.assertIn("<h3>Jeudi 25 avril</h3>", template_data)
-            self.assertIn("<p>00u00, one event</p>", template_data)
-            self.assertIn("<p>00u59, Two event</p>", template_data)
+            self.assertNotIn("<p>00:00</p>", template_data)
+            self.assertIn("<p>one event</p>", template_data)
+            self.assertIn("<p>00:59</p>", template_data)
+            self.assertIn("<p>Two event</p>", template_data)
 
             french_template_headline_data = render_template(
                 "french_news_events_list_export_headline.html",
