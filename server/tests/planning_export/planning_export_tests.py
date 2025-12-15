@@ -579,7 +579,6 @@ class PlanningExportTests(TestCase):
             )
             self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
 
-            self.assertIn("<h3>Lundi 22 avril</h3>", french_template_data)
             self.assertIn("<h4>SPORTS</h4>", french_template_data)
             self.assertIn("<p>Kubang Putiah, Indonesien</p>", french_template_data)
             self.assertIn("<p>16:00</p>", french_template_data)

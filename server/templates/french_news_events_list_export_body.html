@@ -7,20 +7,25 @@
     {% for subject, events in day_events.subjects.items() | sort %}
         <h4>{{ subject }}</h4>
         {% for event in events %}
+            {# Time (own line) - only if present #}
             {% if event.local_time %}
                 <p>{{ event.local_time }}</p>
             {% endif %}
 
+            {# Location (city, country) #}
             {% if event.location %}
                 <p>{{ event.location }}</p>
             {% endif %}
 
+            {# Title #}
             <p>{{ event.title }}</p>
 
+            {# Description #}
             {% if event.description %}
                 <p>{{ event.description }}</p>
             {% endif %}
 
+            {# Links #}
             {% for link in event.links %}
                 <p><a href="{{ link }}">{{ link }}</a></p>
             {% endfor %}
