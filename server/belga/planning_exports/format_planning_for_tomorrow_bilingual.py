@@ -55,18 +55,23 @@ def format_planning_for_tomorrow_bilingual(
             if event_item:
                 event_links = event_item.get("links", [])
 
-        # Calendar
+        planning_nl = planning.copy()
+        planning_fr = planning.copy()
+        set_event_translations_value(planning_nl, "nl")
+        set_event_translations_value(planning_fr, "fr")
+
+        event_nl = None
+        event_fr = None
+        if event_item:
+            event_nl = event_item.copy()
+            event_fr = event_item.copy()
+            set_event_translations_value(event_nl, "nl")
+            set_event_translations_value(event_fr, "fr")
+
         calendar = "Overig / Divers"
         if event_item and event_item.get("calendars"):
             calendar = event_item["calendars"][0]["qcode"].capitalize()
 
-        # Set translations
-        planning_nl = planning.copy()
-        set_event_translations_value(planning_nl, "nl")
-        planning_fr = planning.copy()
-        set_event_translations_value(planning_fr, "fr")
-
-        # Contacts
         contacts = (
             get_formatted_contacts(event_item)
             if event_item
@@ -80,7 +85,24 @@ def format_planning_for_tomorrow_bilingual(
             else get_item_location(planning, "nl")
         )
 
-        # Format item
+        title_nl = (
+            (event_nl.get("name") if event_nl else None)
+            or planning_nl.get("name")
+            or planning_nl.get("slugline")
+            or planning_nl.get("headline")
+            or ""
+        )
+
+        title_fr = (
+            (event_fr.get("name") if event_fr else None)
+            or planning_fr.get("name")
+            or planning_fr.get("slugline")
+            or planning_fr.get("headline")
+            or ""
+        )
+
+        description_nl = (planning_nl.get("description_text") or "").rstrip()
+        description_fr = (planning_fr.get("description_text") or "").rstrip()
         formatted_planning = {
             "subject": ",".join(get_subjects(planning, "nl")),
             "calendar": calendar,
@@ -90,17 +112,12 @@ def format_planning_for_tomorrow_bilingual(
             ),
             "location": location,
             "links": event_links,
-            "title_nl": planning.get("name")
-            or planning.get("slugline")
-            or planning.get("headline")
-            or "",
-            "title_fr": planning_fr.get("name")
-            or planning_fr.get("slugline")
-            or planning_fr.get("headline")
-            or "",
-            "description_nl": (planning_nl.get("description_text") or "").rstrip(),
-            "description_fr": (planning_fr.get("description_text") or "").rstrip(),
+            "title_nl": title_nl,
+            "title_fr": title_fr,
+            "description_nl": description_nl,
+            "description_fr": description_fr,
             "time": "",
+            "display_time": "",
         }
 
         # Set time from first coverage or planning date
