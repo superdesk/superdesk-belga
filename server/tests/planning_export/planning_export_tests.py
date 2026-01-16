@@ -2101,3 +2101,139 @@ class PlanningExportTests(TestCase):
                 f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
             )
             self.assertIn(expected_range, events_html)
+
+    def test_bilingual_events_excludes_editorial_calendar(self):
+        """Events with Editorial calendar must be excluded"""
+        with self.app.app_context():
+            editorial_event = {
+                "_id": ObjectId(),
+                "name": "Editorial Event",
+                "definition_long": "Should never appear",
+                "dates": {
+                    "start": datetime.datetime(
+                        2025, 1, 10, 10, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2025, 1, 10, 12, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [
+                    {"qcode": "Editorial", "name": "(I) Editorial"},
+                    {"qcode": "Justice", "name": "(5) Justice"},
+                ],
+                "location": [],
+                "links": [],
+                "event_contact_info": [],
+            }
+
+            normal_event = {
+                "_id": ObjectId(),
+                "name": "Public Event",
+                "definition_long": "Should appear",
+                "dates": {
+                    "start": datetime.datetime(
+                        2025, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2025, 1, 10, 16, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [{"qcode": "General", "name": "(1) General"}],
+                "location": [],
+                "links": [],
+                "event_contact_info": [],
+            }
+
+            html = render_template(
+                "bilingual_news_events_tommorrow.html",
+                items=[editorial_event, normal_event],
+                app=self.app,
+            )
+
+            self.assertNotIn("Editorial Event", html)
+            self.assertIn("Public Event", html)
+
+    def test_bilingual_planning_excludes_editorial_event_link(self):
+        """Planning linked to Editorial events must be excluded"""
+        with self.app.app_context():
+            editorial_event_id = ObjectId()
+            public_event_id = ObjectId()
+
+            self.app.data.insert(
+                "events",
+                [
+                    {
+                        "_id": editorial_event_id,
+                        "name": "Editorial Event",
+                        "dates": {
+                            "start": datetime.datetime(
+                                2025, 1, 10, 10, 0, tzinfo=datetime.timezone.utc
+                            ),
+                            "end": datetime.datetime(
+                                2025, 1, 10, 12, 0, tzinfo=datetime.timezone.utc
+                            ),
+                            "tz": "Europe/Brussels",
+                        },
+                        "calendars": [{"qcode": "Editorial", "name": "(I) Editorial"}],
+                    },
+                    {
+                        "_id": public_event_id,
+                        "name": "Public Event",
+                        "dates": {
+                            "start": datetime.datetime(
+                                2025, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
+                            ),
+                            "end": datetime.datetime(
+                                2025, 1, 10, 16, 0, tzinfo=datetime.timezone.utc
+                            ),
+                            "tz": "Europe/Brussels",
+                        },
+                        "calendars": [{"qcode": "General", "name": "(1) General"}],
+                    },
+                ],
+            )
+
+            planning_items = [
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "name": "Planning Editorial",
+                    "description_text": "Should not appear",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov-editorial-1",
+                            "planning": {"g2_content_type": "text"},
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": editorial_event_id,
+                },
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "name": "Planning Public",
+                    "description_text": "Should appear",
+                    "coverages": [
+                        {
+                            "coverage_id": "cov-public-1",
+                            "planning": {"g2_content_type": "text"},
+                            "news_coverage_status": {"label": "Planned"},
+                        }
+                    ],
+                    "event_item": public_event_id,
+                },
+            ]
+
+            self.app.data.insert("planning", planning_items)
+
+            html = render_template(
+                "bilingual_planning_advisory_tomorrow.html",
+                items=planning_items,
+                app=self.app,
+            )
+
+            self.assertNotIn("Planning Editorial", html)
+            self.assertNotIn("Editorial Event", html)
+            self.assertIn("Public Event", html)

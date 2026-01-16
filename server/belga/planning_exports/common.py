@@ -356,3 +356,16 @@ def get_display_times(
     time_range = f"{start_local.strftime('%H:%M')} - {end_local.strftime('%H:%M')}"
     display_time = start_local.strftime("%H:%M")
     return {"time": time_range, "display_time": display_time}
+
+
+def is_editorial_calendar(item):
+    calendars = item.get("calendars", [])
+
+    for cal in calendars:
+        qcode = (cal.get("qcode") or "").lower()
+        name = (cal.get("name") or "").lower()
+
+        if "editorial" in qcode or "editorial" in name:
+            return True
+
+    return False

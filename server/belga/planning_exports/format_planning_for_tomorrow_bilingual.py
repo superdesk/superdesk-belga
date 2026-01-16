@@ -7,6 +7,7 @@ from .common import (
     format_advisory_weekday_date,
     format_coverage_label,
     get_display_times,
+    is_editorial_calendar,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
@@ -52,6 +53,8 @@ def format_planning_for_tomorrow_bilingual(
         event_links = []
         if planning.get("event_item"):
             event_item = event_service.find_one(req=None, _id=planning["event_item"])
+            if event_item and is_editorial_calendar(event_item):
+                continue
             if event_item:
                 event_links = event_item.get("links", [])
 

@@ -7,6 +7,7 @@ from .common import (
     get_advisory_date_from_events,
     format_coverage_label,
     get_display_times,
+    is_editorial_calendar,
     ADVISORY_TIMEZONE,
 )
 from typing import List, Dict, Any
@@ -37,6 +38,8 @@ def format_event_for_tommorow_bilingual(
 
     # Process events for both languages
     for event in event_data:
+        if is_editorial_calendar(event):
+            continue
         # Get Dutch version
         event_nl = event.copy()
         set_event_translations_value(event_nl, "nl")
