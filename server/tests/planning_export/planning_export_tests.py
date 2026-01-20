@@ -2237,3 +2237,125 @@ class PlanningExportTests(TestCase):
             self.assertNotIn("Planning Editorial", html)
             self.assertNotIn("Editorial Event", html)
             self.assertIn("Public Event", html)
+
+    def test_belga_image_photo_planning_renders_title_without_non_picture_coverages(
+        self,
+    ):
+        """Belga Image Photo Planning renders the title and excludes text/video coverage output."""
+        with self.app.app_context():
+            event_id = ObjectId()
+            planning_id = ObjectId()
+
+            event = {
+                "_id": event_id,
+                "name": "Sports Photo Event",
+                "dates": {
+                    "start": datetime.datetime(
+                        2026, 1, 9, 9, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2026, 1, 9, 18, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+            }
+
+            planning = {
+                "_id": planning_id,
+                "type": "planning",
+                "name": "Mixed coverage planning",
+                "description_text": "Planning description",
+                "coverages": [
+                    {
+                        "planning": {"g2_content_type": "text"},
+                        "news_coverage_status": {"label": "Planned"},
+                    },
+                    {
+                        "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {"label": "Planned"},
+                    },
+                    {
+                        "planning": {"g2_content_type": "video"},
+                        "news_coverage_status": {"label": "On Merit"},
+                    },
+                ],
+                "event_item": event_id,
+            }
+
+            self.app.data.insert("events", [event])
+            self.app.data.insert("planning", [planning])
+
+            self.app.data.update(
+                "events",
+                event_id,
+                {"planning_ids": [planning_id]},
+                event,
+            )
+
+            html = render_template(
+                "internal_image_photo_planning.html",
+                items=[planning],
+                app=self.app,
+            )
+
+            self.assertIn("<h1>Belga Image Photo Planning</h1>", html)
+            self.assertNotIn("TEXT", html)
+            self.assertNotIn("VIDEO", html)
+
+    def test_belga_image_video_planning_renders_title_without_non_video_coverages(self):
+        """Belga Image Video Planning renders the title and excludes picture/text coverage output."""
+        with self.app.app_context():
+            event_id = ObjectId()
+            planning_id = ObjectId()
+
+            event = {
+                "_id": event_id,
+                "name": "Video Event",
+                "dates": {
+                    "start": datetime.datetime(
+                        2026, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2026, 1, 10, 16, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+            }
+
+            planning = {
+                "_id": planning_id,
+                "type": "planning",
+                "name": "Video planning",
+                "description_text": "Video planning description",
+                "coverages": [
+                    {
+                        "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {"label": "Planned"},
+                    },
+                    {
+                        "planning": {"g2_content_type": "video"},
+                        "news_coverage_status": {"label": "On Merit"},
+                    },
+                ],
+                "event_item": event_id,
+            }
+
+            self.app.data.insert("events", [event])
+            self.app.data.insert("planning", [planning])
+
+            self.app.data.update(
+                "events",
+                event_id,
+                {"planning_ids": [planning_id]},
+                event,
+            )
+
+            html = render_template(
+                "internal_image_video_planning.html",
+                items=[planning],
+                app=self.app,
+            )
+
+            self.assertIn("<h1>Belga Image Video Planning</h1>", html)
+            self.assertNotIn("PICTURE", html)
+            self.assertNotIn("TEXT", html)

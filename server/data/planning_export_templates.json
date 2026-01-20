@@ -121,5 +121,25 @@
     "body_html_template": "internal_bilingual_planning_advisory_tomorrow.html"
   },
   "label": "Bilingual daily program for internal use"
+},
+{
+  "_id": "internal_image_photo_planning",
+  "init_version": 1,
+  "name": "internal_image_photo_planning",
+  "type": "planning",
+  "data": {
+    "body_html_template": "internal_image_photo_planning.html"
+  },
+  "label": "Belga Image Photo Planning"
+},
+{
+  "_id": "internal_image_video_planning",
+  "init_version": 1,
+  "name": "internal_image_video_planning",
+  "type": "planning",
+  "data": {
+    "body_html_template": "internal_image_video_planning.html"
+  },
+  "label": "Belga Image Video Planning"
 }
 ]

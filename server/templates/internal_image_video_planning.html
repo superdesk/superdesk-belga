@@ -1,0 +1,46 @@
+{% set data = format_internal_image_video_planning(items) %}
+
+<h1>{{ data.title }}</h1>
+
+{% for day, calendars in data.days.items() %}
+    <h2>{{ day }}</h2>
+
+    {% for calendar in data.calendar_order %}
+        {% if calendar in calendars %}
+            <h3>{{ calendar }}</h3>
+
+            {% for event in calendars[calendar] %}
+                {% if event.time %}<p>{{ event.time }}</p>{% endif %}
+                {% if event.location %}<p>{{ event.location }}</p>{% endif %}
+
+                {% if event.title_nl %}<p>{{ event.title_nl }}</p>{% endif %}
+                {% if event.title_fr and event.title_fr != event.title_nl %}
+                    <p>{{ event.title_fr }}</p>
+                {% endif %}
+
+                {% if event.description_nl %}<p>{{ event.description_nl }}</p>{% endif %}
+                {% if event.description_fr and event.description_fr != event.description_nl %}
+                    <p>{{ event.description_fr }}</p>{% endif %}
+
+                {% for link in event.links %}
+                    <p><a href="{{ link }}">{{ link }}</a></p>
+                {% endfor %}
+
+                {% for contact in event.contacts %}
+                    <p>
+                        {{ contact.organisation }} - {{ contact.name }}
+                        - {{ contact.job_title }}
+                        - {{ contact.email|join(", ") }}
+                        - {{ contact.phone|join(", ") }}
+                        - {{ contact.mobile|join(", ") }}
+                        - {{ contact.website }}
+                    </p>
+                {% endfor %}
+
+                {% for cov in event.coverages %}
+                    <p>{{ cov.display }}</p>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
