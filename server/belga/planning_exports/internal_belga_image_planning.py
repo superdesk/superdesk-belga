@@ -3,7 +3,6 @@ from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
 
 from .common import (
-    get_subjects,
     get_formatted_contacts,
     get_item_location,
     set_event_translations_value,
