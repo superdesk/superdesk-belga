@@ -60,7 +60,7 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
 
     try:
         start_local = utc_to_local(tz, start)
-    except Exception:
+    except ValueError:
         item["local_time"] = ""
         item["local_date_time"] = ""
         return
@@ -169,7 +169,7 @@ def format_datetime(event: Dict[str, Any], locale: str, format: str):
         return ""
     try:
         return format_date(utc_to_local(tz, start_time), format, locale=locale)
-    except Exception:
+    except ValueError:
         return ""
 
 
@@ -320,7 +320,7 @@ def get_advisory_date_from_events(
         tz = dates.get("tz") or default_tz
         try:
             local_dt = utc_to_local(tz, start)
-        except Exception:
+        except ValueError:
             continue
         local_dates.append(local_dt.date())
 
@@ -350,7 +350,7 @@ def get_display_times(
     try:
         start_local = utc_to_local(tz, start)
         end_local = utc_to_local(tz, end)
-    except Exception:
+    except ValueError:
         return {"time": "", "display_time": ""}
 
     is_all_day = (
