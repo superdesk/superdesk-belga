@@ -46,14 +46,25 @@ def set_item_description(item: Dict[str, Any], event: Dict[str, Any]):
 
 def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     """Set the item's dates to be used for sorting"""
-    item["dates"] = {
-        "start": event["dates"]["start"],
-        "end": event["dates"]["end"],
-        "tz": event.get("dates", {}).get("tz") or app.config.get("DEFAULT_TIMEZONE"),
-    }
+    dates = event.get("dates") or {}
+    start = dates.get("start")
+    end = dates.get("end")
+    tz = dates.get("tz") or app.config.get("DEFAULT_TIMEZONE")
 
-    tz = item["dates"]["tz"]
-    start_local = utc_to_local(tz, item["dates"]["start"])
+    item["dates"] = {"start": start, "end": end, "tz": tz}
+
+    if not start:
+        item["local_time"] = ""
+        item["local_date_time"] = ""
+        return
+
+    try:
+        start_local = utc_to_local(tz, start)
+    except Exception:
+        item["local_time"] = ""
+        item["local_date_time"] = ""
+        return
+
     item["local_time"] = start_local.strftime("%H:%M")
     item["local_date_time"] = start_local.strftime("%Y%m%d")
 
@@ -89,6 +100,7 @@ def get_item_location(
         location_data = get_resource_service("locations").find_one(
             req=None, guid=location[0].get("qcode")
         )
+
         if location_data:
             translated_name = (
                 location_data.get("translations", {})
@@ -101,7 +113,8 @@ def get_item_location(
     location_items = []
     if not is_only_city_and_country:
         address = location[0].get("address", {})
-        address_line = address.get("line", [""])[0]
+        address_lines = address.get("line") or []
+        address_line = address_lines[0] if address_lines else ""
 
         # Check if name and address line are identical, and skip address if they are
         if location_name.lower() != address_line.lower():
@@ -152,7 +165,12 @@ def get_subjects(event: Dict[str, Any], language: str):
 def format_datetime(event: Dict[str, Any], locale: str, format: str):
     tz = event.get("dates", {}).get("tz") or app.config.get("DEFAULT_TIMEZONE")
     start_time = event.get("dates", {}).get("start")
-    return format_date(utc_to_local(tz, start_time), format, locale=locale)
+    if not start_time:
+        return ""
+    try:
+        return format_date(utc_to_local(tz, start_time), format, locale=locale)
+    except Exception:
+        return ""
 
 
 def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale: str):
@@ -209,6 +227,8 @@ def get_coverages(event: Dict[str, Any], locale: str):
     planning_service = get_resource_service("planning")
     for id in planning_ids:
         planning_item = planning_service.find_one(req=None, _id=id)
+        if not planning_item:
+            continue
         for coverage in planning_item.get("coverages", []):
             cov_planning = coverage.get("planning", {})
             cov_type = cov_planning.get("g2_content_type", "").upper()
@@ -231,9 +251,9 @@ def set_event_translations_value(event: Dict[str, Any], locale: str):
     if translations is not None:
         translated_value.update(
             {
-                entry["field"]: entry["value"]
+                entry.get("field"): entry.get("value")
                 for entry in translations or []
-                if entry["language"] == locale
+                if entry.get("language") == locale and entry.get("field")
             }
         )
         event.update(
