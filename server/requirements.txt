@@ -125,7 +125,7 @@ google-auth-oauthlib==1.2.2
     # via gspread
 gspread==6.2.1
     # via -r requirements.in
-gunicorn==23.0.0
+gunicorn==24.1.0
     # via -r requirements.in
 hachoir==3.3.0
     # via superdesk-core
