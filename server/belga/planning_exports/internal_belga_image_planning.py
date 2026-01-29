@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+from datetime import date
 from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
 
@@ -34,8 +35,7 @@ def format_image_planning(
     desk_service = get_resource_service("desks")
     event_service = get_resource_service("events")
 
-    days: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
-    ordered_days: List[str] = []
+    days: Dict[date, Dict[str, Any]] = {}
 
     for planning in planning_data:
         event_item = None
@@ -78,11 +78,13 @@ def format_image_planning(
             continue
 
         local_dt = utc_to_local(ADVISORY_TIMEZONE, scheduled)
-        day_label = format_advisory_weekday_date(local_dt)
+        day_date = local_dt.date()
 
-        if day_label not in days:
-            days[day_label] = {}
-            ordered_days.append(day_label)
+        if day_date not in days:
+            days[day_date] = {
+                "label": format_advisory_weekday_date(local_dt),
+                "calendars": {},
+            }
 
         tz = planning.get("dates", {}).get("tz") or ADVISORY_TIMEZONE
         times = get_display_times(
@@ -112,11 +114,17 @@ def format_image_planning(
         if not event["coverages"]:
             continue
 
-        days[day_label].setdefault(calendar, []).append(event)
+        days[day_date]["calendars"].setdefault(calendar, []).append(event)
+
+    ordered_days = sorted(days.keys())
 
     return {
-        "title": build_title(title_prefix, ordered_days),
+        "title": build_title(
+            title_prefix,
+            [days[d]["label"] for d in ordered_days],
+        ),
         "days": days,
+        "ordered_days": ordered_days,
         "calendar_order": CALENDAR_ORDER,
     }
 

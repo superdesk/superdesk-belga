@@ -2,8 +2,10 @@
 
 <h1>{{ data.title }}</h1>
 
-{% for day, calendars in data.days.items() %}
-    <h2>{{ day }}</h2>
+{% for day in data.ordered_days %}
+    <h2>{{ data.days[day].label }}</h2>
+
+    {% set calendars = data.days[day].calendars %}
 
     {% for calendar in data.calendar_order %}
         {% if calendar in calendars %}
