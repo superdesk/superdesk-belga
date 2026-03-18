@@ -77,7 +77,7 @@ cryptography==46.0.5
     #   authlib
     #   google-auth
     #   jwcrypto
-deepdiff==8.6.1
+deepdiff==8.6.2
     # via superdesk-planning
 draftjs-exporter[lxml]==5.1.0
     # via superdesk-core
