@@ -20,4 +20,6 @@ class CleanupPlanningExportTemplatesCommand(superdesk.Command):
             print(f"Deleted {template_id}")
 
 
-superdesk.command("belga:cleanup_planning_export_templates", CleanupPlanningExportTemplatesCommand())
+superdesk.command(
+    "belga:cleanup_planning_export_templates", CleanupPlanningExportTemplatesCommand()
+)
