@@ -19,7 +19,7 @@
 
   {% if item.get('agendas')|length > 1 %}
     <p>
-      <i translate>also in:</i> <span>{{ item.get('agendas') | rejectattr('_id', 'equalto', agenda.get('_id')) | map(attribute='name') | list | join(', ') }}</span>
+      <i translate>also in:</i> <span>{{ item.get('agendas') | rejectattr('_id', 'equalto', agenda.get('_id')) | map(attribute='name') | list | join(', ') }}</span>
     </p>
   {% endif %}
 
@@ -27,4 +27,3 @@
   {% endfor %}
 
 {% endfor %}
-

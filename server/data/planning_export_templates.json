@@ -1,27 +1,5 @@
 [
   {
-    "_id": "planning_multiple_agendas",
-    "name": "multiple-agendas",
-    "init_version": 1,
-    "type": "planning",
-    "data": {
-      "slugline": "multiple-agendas",
-      "body_html_template": "planning_multiple_agendas_template.html"
-    },
-    "label": "Multiple Agendas"
-  },
-  {
-    "_id": "planning_multiple_agendas_internal",
-    "name": "internal",
-    "init_version": 1,
-    "type": "planning",
-    "data": {
-      "slugline": "internal",
-      "body_html_template": "planning_multiple_agendas_internal_template.html"
-    },
-    "label": "Internal"
-  },
-  {
     "_id": "dutch_news_events_list",
     "init_version": 2,
     "name": "dutch_news_events_list",
@@ -62,29 +40,9 @@
   },
   "label": "Program of the day - NPN"
 },
-{
-  "_id": "french_planning_advisory_tomorrow",
-  "init_version": 1,
-  "name": "french_planning_advisory_tomorrow",
-  "type": "planning",
-  "data": {
-      "body_html_template": "french_planning_advisory_tomorrow.html"
-  },
-  "label": "Programme du jour - NPF (Planning)"
-},
-{
-  "_id": "dutch_planning_advisory_tomorrow",
-  "init_version": 1,
-  "name": "dutch_planning_advisory_tomorrow",
-  "type": "planning",
-  "data": {
-      "body_html_template": "dutch_planning_advisory_tomorrow.html"
-  },
-  "label": "Programma van de dag - NPN (Planning)"
-},
-{
-  "_id": "bilingual_planning_advisory_tomorrow",
-  "init_version": 4,
+  {
+    "_id": "bilingual_planning_advisory_tomorrow",
+    "init_version": 4,
   "name": "bilingual_planning_advisory_tomorrow",
   "type": "planning",
   "data": {

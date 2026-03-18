@@ -811,12 +811,12 @@ class PlanningExportTests(TestCase):
             self.app.data.insert("planning", planning_items)
 
             dutch_data = render_template(
-                "dutch_planning_advisory_tomorrow.html",
+                "archived/dutch_planning_advisory_tomorrow.html",
                 items=planning_items,
                 app=self.app,
             )
             french_data = render_template(
-                "french_planning_advisory_tomorrow.html",
+                "archived/french_planning_advisory_tomorrow.html",
                 items=planning_items,
                 app=self.app,
             )
