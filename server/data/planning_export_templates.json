@@ -1,5 +1,21 @@
 [
   {
+    "_id": "planning_multiple_agendas",
+    "_deleted": true
+  },
+  {
+    "_id": "planning_multiple_agendas_internal",
+    "_deleted": true
+  },
+  {
+    "_id": "french_planning_advisory_tomorrow",
+    "_deleted": true
+  },
+  {
+    "_id": "dutch_planning_advisory_tomorrow",
+    "_deleted": true
+  },
+  {
     "_id": "dutch_news_events_list",
     "init_version": 2,
     "name": "dutch_news_events_list",
