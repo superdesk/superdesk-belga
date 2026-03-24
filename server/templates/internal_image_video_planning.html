@@ -2,21 +2,25 @@
 
 <h1>{{ data.title }}</h1>
 
-{% for event in data.events %}
-    {% if event.time %}<p>{{ event.time }}</p>{% endif %}
-    {% if event.location %}<p>{{ event.location }}</p>{% endif %}
+{% for day in data.ordered_days %}
+    <h2>{{ data.days[day].label }}</h2>
 
-    {% if event.title_nl %}<p><b>{{ event.title_nl }}</b></p>{% endif %}
-    {% if event.title_fr and event.title_fr != event.title_nl %}
-        <p><b>{{ event.title_fr }}</b></p>
-    {% endif %}
+    {% for event in data.days[day].events %}
+        {% if event.time %}<p>{{ event.time }}</p>{% endif %}
+        {% if event.location %}<p>{{ event.location }}</p>{% endif %}
 
-    {% for link in event.links %}
-        <p><a href="{{ link }}">{{ link }}</a></p>
+        {% if event.title_nl %}<p><b>{{ event.title_nl }}</b></p>{% endif %}
+        {% if event.title_fr and event.title_fr != event.title_nl %}
+            <p><b>{{ event.title_fr }}</b></p>
+        {% endif %}
+
+        {% for link in event.links %}
+            <p><a href="{{ link }}">{{ link }}</a></p>
+        {% endfor %}
+
+        {% for cov in event.coverages %}
+            <p>{{ cov.display }}</p>
+        {% endfor %}
+        <br>
     {% endfor %}
-
-    {% for cov in event.coverages %}
-        <p>{{ cov.display }}</p>
-    {% endfor %}
-    <br>
 {% endfor %}

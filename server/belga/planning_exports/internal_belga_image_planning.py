@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+import datetime
 from datetime import date
 from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
@@ -91,6 +92,7 @@ def format_image_planning(
 
         event = {
             "calendar": calendar,
+            "scheduled": scheduled,
             "time": times.get("time", ""),
             "display_time": times.get("display_time", ""),
             "location": location,
@@ -128,17 +130,23 @@ def format_image_planning(
             "group_by_calendar": True,
         }
     else:
-        all_events = []
         for day in ordered_days:
             day_calendars = days[day]["calendars"]
+            all_day_events = []
             for cal in day_calendars:
-                all_events.extend(day_calendars[cal])
+                all_day_events.extend(day_calendars[cal])
+            all_day_events.sort(
+                key=lambda e: e.get("scheduled")
+                or datetime.datetime.max.replace(tzinfo=datetime.timezone.utc)
+            )
+            days[day]["events"] = all_day_events
         return {
             "title": build_title(
                 title_prefix,
                 [days[d]["label"] for d in ordered_days],
             ),
-            "events": all_events,
+            "days": days,
+            "ordered_days": ordered_days,
             "group_by_calendar": False,
         }
 
@@ -146,7 +154,6 @@ def format_image_planning(
 def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
     user_service = get_resource_service("users")
     formatted = []
-    lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F"}
 
     planning_ids = item.get("planning_ids") or [item.get("_id")]
 
@@ -170,7 +177,6 @@ def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
                 coverage.get("news_coverage_status", {}).get("label") or "ON MERIT"
             ).upper()
 
-            desk_language = "N"
             desk_name = ""
             username = ""
 
@@ -179,9 +185,6 @@ def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
                 desk = desk_service.find_one(req=None, _id=desk_id)
                 if desk:
                     desk_name = desk.get("name", "")
-                    desk_language = lang_map.get(
-                        desk.get("desk_language", "").lower(), "N"
-                    )
 
             user_id = coverage.get("assigned_to", {}).get("user")
             if user_id:
@@ -194,10 +197,9 @@ def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
             elif desk_name:
                 display = desk_name.upper()
             else:
-                display = ""
+                display = cov_status
 
-            if display:
-                formatted.append({"display": display})
+            formatted.append({"display": display})
 
     return formatted
 
