@@ -6,4 +6,5 @@ def format_internal_image_video_planning(items):
         planning_data=items,
         allowed_coverage_types={"video"},
         title_prefix="Belga Image Video Planning",
+        group_by_calendar=False,
     )

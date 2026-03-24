@@ -2243,6 +2243,14 @@ class PlanningExportTests(TestCase):
         with self.app.app_context():
             event_id = ObjectId()
             planning_id = ObjectId()
+            user_id = ObjectId()
+
+            user = {
+                "_id": user_id,
+                "username": f"testuser_photo_{user_id}",
+                "sign_off": "TST",
+            }
+            self.app.data.insert("users", [user])
 
             event = {
                 "_id": event_id,
@@ -2265,7 +2273,7 @@ class PlanningExportTests(TestCase):
                 "planning_date": datetime.datetime(
                     2026, 1, 9, 9, 0, tzinfo=datetime.timezone.utc
                 ),
-                "name": "Mixed coverage planning",
+                "name": "Sports Photo Event",
                 "description_text": "Planning description",
                 "coverages": [
                     {
@@ -2276,6 +2284,7 @@ class PlanningExportTests(TestCase):
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "picture"},
                         "news_coverage_status": {"label": "Planned"},
+                        "assigned_to": {"user": user_id},
                     },
                     {
                         "coverage_id": ObjectId(),
@@ -2302,15 +2311,24 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn("<h1>Belga Image Photo Planning", html)
-            self.assertIn("BELGA PICTURE (PLANNED)", html)
+            self.assertIn("<b>Sports Photo Event</b>", html)
             self.assertNotIn("TEXT", html)
             self.assertNotIn("VIDEO", html)
+            self.assertNotIn("BELGA PICTURE", html)
 
     def test_belga_image_video_planning_renders_video_only(self):
         """Belga Image Video Planning renders video coverage and excludes picture/text."""
         with self.app.app_context():
             event_id = ObjectId()
             planning_id = ObjectId()
+            user_id = ObjectId()
+
+            user = {
+                "_id": user_id,
+                "username": f"testuser_video_{user_id}",
+                "sign_off": "TST",
+            }
+            self.app.data.insert("users", [user])
 
             event = {
                 "_id": event_id,
@@ -2333,7 +2351,7 @@ class PlanningExportTests(TestCase):
                 "planning_date": datetime.datetime(
                     2026, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
                 ),
-                "name": "Video planning",
+                "name": "Video Event",
                 "description_text": "Video planning description",
                 "coverages": [
                     {
@@ -2345,6 +2363,7 @@ class PlanningExportTests(TestCase):
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "video"},
                         "news_coverage_status": {"label": "On Merit"},
+                        "assigned_to": {"user": user_id},
                     },
                 ],
                 "event_item": event_id,
@@ -2367,6 +2386,7 @@ class PlanningExportTests(TestCase):
             )
 
             self.assertIn("<h1>Belga Image Video Planning", html)
-            self.assertIn("BELGA VIDEO (ON MERIT)", html)
+            self.assertIn("<b>Video Event</b>", html)
             self.assertNotIn("PICTURE", html)
             self.assertNotIn("TEXT", html)
+            self.assertNotIn("BELGA VIDEO", html)

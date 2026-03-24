@@ -9,27 +9,19 @@ from .common import (
     set_event_translations_value,
     ADVISORY_TIMEZONE,
     format_advisory_weekday_date,
-    format_coverage_label,
     get_display_times,
     is_editorial_calendar,
 )
 
-CALENDAR_ORDER = [
-    "Sports",
-    "General",
-    "Politics",
-    "Economy",
-    "Regional",
-    "Justice",
-    "International",
-    "Culture",
-]
+CALENDAR_ORDER_PHOTO = ["Sports", "General"]
 
 
 def format_image_planning(
     planning_data: List[Dict[str, Any]],
     allowed_coverage_types: set,
     title_prefix: str,
+    group_by_calendar: bool = True,
+    sports_first: bool = False,
 ) -> Dict[str, Any]:
 
     planning_service = get_resource_service("planning")
@@ -52,6 +44,8 @@ def format_image_planning(
         calendar = ""
         if event_item and event_item.get("calendars"):
             calendar = event_item["calendars"][0]["qcode"].capitalize()
+            if sports_first and calendar != "Sports":
+                calendar = "General"
 
         planning_nl = planning.copy()
         planning_fr = planning.copy()
@@ -121,15 +115,32 @@ def format_image_planning(
 
     ordered_days = sorted(days.keys())
 
-    return {
-        "title": build_title(
-            title_prefix,
-            [days[d]["label"] for d in ordered_days],
-        ),
-        "days": days,
-        "ordered_days": ordered_days,
-        "calendar_order": CALENDAR_ORDER,
-    }
+    if group_by_calendar:
+        calendar_order = CALENDAR_ORDER_PHOTO if sports_first else None
+        return {
+            "title": build_title(
+                title_prefix,
+                [days[d]["label"] for d in ordered_days],
+            ),
+            "days": days,
+            "ordered_days": ordered_days,
+            "calendar_order": calendar_order,
+            "group_by_calendar": True,
+        }
+    else:
+        all_events = []
+        for day in ordered_days:
+            day_calendars = days[day]["calendars"]
+            for cal in day_calendars:
+                all_events.extend(day_calendars[cal])
+        return {
+            "title": build_title(
+                title_prefix,
+                [days[d]["label"] for d in ordered_days],
+            ),
+            "events": all_events,
+            "group_by_calendar": False,
+        }
 
 
 def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
@@ -178,14 +189,15 @@ def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
                 if user:
                     username = user.get("sign_off") or user.get("username")
 
-            display = format_coverage_label(cov_type, desk_language, cov_status)
-
             if username:
-                display = f"{display} BY {username.upper()}"
+                display = username.upper()
             elif desk_name:
-                display = f"{display} BY {desk_name.upper()}"
+                display = desk_name.upper()
+            else:
+                display = ""
 
-            formatted.append({"display": display})
+            if display:
+                formatted.append({"display": display})
 
     return formatted
 
