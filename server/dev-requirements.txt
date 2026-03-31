@@ -4,7 +4,7 @@ black==25.12.0
 flake8==7.3.0
 pep8==1.7.1
 httmock==1.4.0
-mypy==1.19.1
+mypy==1.20.0
 pytest==9.0.2
 types-click==7.1.8
 types-Flask==1.1.6
