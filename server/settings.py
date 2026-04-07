@@ -365,3 +365,6 @@ ASSIGNMENT_MAIL_ICAL_USE_EVENT_DATES = True
 PLANNING_MANUAL_NEWS_COVERAGE_STATUS = True
 
 AMAZON_MEDIA_ID_TIME_PREFIX = "none"
+
+# It will expand/unfold Event's planning-related items in the Planning Combined view
+PLANNING_EXPAND_RELATED_PLANNINGS = True
