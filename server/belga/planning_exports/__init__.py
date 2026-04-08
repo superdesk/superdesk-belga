@@ -17,9 +17,11 @@ from .internal_bilingual_planning_advisory_tomorrow import (
 
 from .internal_image_photo_planning import (
     format_internal_image_photo_planning,
+    format_internal_image_photo_planning_event_ids_json,
 )
 from .internal_image_video_planning import (
     format_internal_image_video_planning,
+    format_internal_image_video_planning_event_ids_json,
 )
 
 
@@ -47,4 +49,10 @@ def init_app(app):
     )
     app.jinja_env.globals.update(
         format_internal_image_video_planning=format_internal_image_video_planning
+    )
+    app.jinja_env.globals.update(
+        format_internal_image_photo_planning_event_ids_json=format_internal_image_photo_planning_event_ids_json
+    )
+    app.jinja_env.globals.update(
+        format_internal_image_video_planning_event_ids_json=format_internal_image_video_planning_event_ids_json
     )

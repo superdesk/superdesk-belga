@@ -115,5 +115,25 @@
     "body_html_template": "internal_image_video_planning.html"
   },
   "label": "Belga Image Video Planning"
+},
+{
+  "_id": "internal_image_photo_planning_event_ids",
+  "init_version": 1,
+  "name": "internal_image_photo_planning_event_ids",
+  "type": "planning",
+  "data": {
+    "body_html_template": "internal_image_photo_planning_event_ids.html"
+  },
+  "label": "Belga Image Photo Planning Event IDs"
+},
+{
+  "_id": "internal_image_video_planning_event_ids",
+  "init_version": 1,
+  "name": "internal_image_video_planning_event_ids",
+  "type": "planning",
+  "data": {
+    "body_html_template": "internal_image_video_planning_event_ids.html"
+  },
+  "label": "Belga Image Video Planning Event IDs"
 }
 ]

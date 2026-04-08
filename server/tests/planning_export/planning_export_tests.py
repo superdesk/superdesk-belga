@@ -1,5 +1,6 @@
 from unittest import TestCase
 import datetime
+import json
 from flask import render_template
 from app import get_app
 from bson import ObjectId
@@ -2505,3 +2506,90 @@ class PlanningExportTests(TestCase):
             self.assertLess(
                 earlier_pos, later_pos, "Earlier Event should appear before Later Event"
             )
+
+    def test_belga_image_photo_planning_event_ids_json(self):
+        with self.app.app_context():
+            photo_event_id = ObjectId()
+            video_event_id = ObjectId()
+
+            planning_items = [
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": photo_event_id,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "picture"},
+                        }
+                    ],
+                },
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": photo_event_id,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "picture"},
+                        }
+                    ],
+                },
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": video_event_id,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "video"},
+                        }
+                    ],
+                },
+            ]
+
+            output = render_template(
+                "internal_image_photo_planning_event_ids.html",
+                items=planning_items,
+                app=self.app,
+            ).strip()
+
+            self.assertEqual(output, json.dumps([str(photo_event_id)]))
+
+    def test_belga_image_video_planning_event_ids_json(self):
+        with self.app.app_context():
+            video_event_id = ObjectId()
+            photo_event_id = ObjectId()
+
+            planning_items = [
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": video_event_id,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "video"},
+                        }
+                    ],
+                },
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": photo_event_id,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "picture"},
+                        }
+                    ],
+                },
+            ]
+
+            output = render_template(
+                "internal_image_video_planning_event_ids.html",
+                items=planning_items,
+                app=self.app,
+            ).strip()
+
+            self.assertEqual(output, json.dumps([str(video_event_id)]))
