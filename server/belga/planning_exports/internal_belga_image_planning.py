@@ -2,6 +2,7 @@ from typing import List, Dict, Any
 import json
 import datetime
 from datetime import date
+from markupsafe import Markup
 from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
 
@@ -42,7 +43,7 @@ def format_image_planning_event_ids_json(
         seen_ids.add(event_id)
         event_ids.append(event_id)
 
-    return json.dumps(event_ids)
+    return Markup(json.dumps(event_ids))
 
 
 def format_image_planning(
@@ -181,12 +182,15 @@ def format_image_planning(
 
 def has_allowed_coverage(coverages, allowed_types) -> bool:
     for cov in coverages:
-        cov_type = (
-            (cov.get("planning") or {}).get("g2_content_type")
-            if isinstance(cov, dict)
-            else cov
-        )
-        if (cov_type or "").lower() in allowed_types:
+        if isinstance(cov, dict):
+            cov_type = (
+                (cov.get("planning") or {}).get("g2_content_type")
+                or cov.get("g2_content_type")
+                or ""
+            )
+        else:
+            cov_type = cov or ""
+        if cov_type.lower() in allowed_types:
             return True
     return False
 

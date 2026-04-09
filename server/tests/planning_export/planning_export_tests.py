@@ -2554,7 +2554,7 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             ).strip()
 
-            self.assertEqual(output, json.dumps([str(photo_event_id)]))
+            self.assertEqual(json.loads(output), [str(photo_event_id)])
 
     def test_belga_image_video_planning_event_ids_json(self):
         with self.app.app_context():
@@ -2592,4 +2592,4 @@ class PlanningExportTests(TestCase):
                 app=self.app,
             ).strip()
 
-            self.assertEqual(output, json.dumps([str(video_event_id)]))
+            self.assertEqual(json.loads(output), [str(video_event_id)])
