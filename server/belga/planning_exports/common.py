@@ -9,6 +9,17 @@ from datetime import date as _date_type, datetime as _datetime_type
 ADVISORY_TIMEZONE = "Europe/Brussels"
 COVERAGE_PREFIX = "BELGA"
 
+CALENDAR_ORDER = [
+    "General",
+    "Politics",
+    "Economy",
+    "Regional",
+    "Justice",
+    "International",
+    "Sports",
+    "Culture",
+]
+
 
 class FormattedContact(TypedDict):
     name: str
@@ -389,3 +400,202 @@ def is_editorial_calendar(item):
             return True
 
     return False
+
+
+def get_advisory_weekday_date(planning_item, planning_service=None, event_service=None):
+    """Get weekday/date of planning, preferring linked event date."""
+    if event_service is None:
+        event_service = get_resource_service("events")
+    if planning_service is None:
+        planning_service = get_resource_service("planning")
+
+    if planning_item.get("event_item"):
+        event_item = event_service.find_one(req=None, _id=planning_item["event_item"])
+        if event_item and event_item.get("dates") and event_item["dates"].get("start"):
+            tz = event_item["dates"].get("tz", ADVISORY_TIMEZONE)
+            local_dt = utc_to_local(tz, event_item["dates"]["start"])
+            return format_advisory_weekday_date(local_dt)
+
+    planning_item = planning_service.find_one(req=None, _id=planning_item["_id"])
+    scheduled = None
+    for cov in planning_item.get("coverages", []):
+        if isinstance(cov, dict):
+            scheduled = cov.get("planning", {}).get("scheduled")
+            if scheduled:
+                break
+
+    if not scheduled:
+        scheduled = planning_item.get("planning_date")
+
+    if scheduled:
+        local_dt = utc_to_local(ADVISORY_TIMEZONE, scheduled)
+        return format_advisory_weekday_date(local_dt)
+
+    return ""
+
+
+def get_coverages_bilingual(item, include_assignee=False):
+    """Get coverages formatted for bilingual output.
+
+    Works for both event items (uses planning_ids field) and planning items
+    (falls back to _id). If include_assignee=True, appends BY <USER/DESK>
+    to the display string and includes username/desk_name in the result.
+    """
+    planning_service = get_resource_service("planning")
+    desk_service = get_resource_service("desks")
+    user_service = get_resource_service("users") if include_assignee else None
+    lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "N"}
+    planning_ids = item.get("planning_ids") or [item.get("_id")]
+    formatted_coverages = []
+
+    for planning_id in planning_ids:
+        planning_item = planning_service.find_one(req=None, _id=planning_id)
+        if not planning_item:
+            continue
+
+        for coverage in planning_item.get("coverages", []):
+            if not isinstance(coverage, dict):
+                continue
+
+            planning_info = coverage.get("planning") or {}
+            cov_type = (
+                planning_info.get("g2_content_type")
+                or coverage.get("g2_content_type")
+                or ""
+            ).lower()
+            cov_status = (
+                coverage.get("news_coverage_status", {}).get("label") or "ON MERIT"
+            ).upper()
+
+            desk_language_code = "N"
+            desk_name = ""
+            desk_id = (
+                planning_info.get("desk")
+                or coverage.get("assigned_to", {}).get("desk")
+                or item.get("task", {}).get("desk")
+            )
+            if desk_id:
+                desk_item = desk_service.find_one(req=None, _id=desk_id)
+                if desk_item:
+                    desk_name = desk_item.get("name", "")
+                    if desk_item.get("desk_language"):
+                        desk_language_code = lang_map.get(
+                            desk_item["desk_language"].lower(), "N"
+                        )
+
+            coverage_display = format_coverage_label(
+                cov_type, desk_language_code, cov_status
+            )
+
+            username = ""
+            if include_assignee:
+                assigned_user_id = coverage.get("assigned_to", {}).get("user")
+                if assigned_user_id and user_service:
+                    user_item = user_service.find_one(req=None, _id=assigned_user_id)
+                    if user_item:
+                        username = user_item.get("sign_off") or user_item.get(
+                            "username"
+                        )
+                if username:
+                    coverage_display = f"{coverage_display} BY {username.upper()}"
+                elif desk_name:
+                    coverage_display = f"{coverage_display} BY {desk_name.upper()}"
+
+            entry = {
+                "display": coverage_display,
+                "type": cov_type,
+                "status": cov_status,
+                "language": desk_language_code,
+            }
+            if include_assignee:
+                entry["username"] = username
+                entry["desk_name"] = desk_name
+
+            formatted_coverages.append(entry)
+
+    return formatted_coverages
+
+
+def sort_calendar_groups(calendar_groups):
+    """Sort and merge calendar groups following CALENDAR_ORDER, timed events first."""
+    events_list = []
+    for calendar in CALENDAR_ORDER + sorted(
+        [c for c in calendar_groups if c not in CALENDAR_ORDER]
+    ):
+        if calendar in calendar_groups:
+            events_sorted = sorted(
+                calendar_groups[calendar],
+                key=lambda x: (x["time"] == "", x["time"]),
+            )
+            events_list.append({"calendar": calendar, "events": events_sorted})
+    return events_list
+
+
+def get_planning_display_times(planning, event_item=None):
+    """Get (time, display_time) for a planning item, preferring linked event dates."""
+    if event_item and event_item.get("dates"):
+        times = get_display_times(event_item["dates"], default_tz=ADVISORY_TIMEZONE)
+        return times.get("time", ""), times.get("display_time", "")
+
+    scheduled = planning.get("planning_date")
+    coverages = planning.get("coverages", [])
+    if coverages and isinstance(coverages[0], dict):
+        scheduled = coverages[0].get("planning", {}).get("scheduled", scheduled)
+    if scheduled:
+        tz = planning.get("dates", {}).get("tz") or ADVISORY_TIMEZONE
+        times = get_display_times(
+            {"start": scheduled, "end": scheduled, "tz": tz},
+            default_tz=ADVISORY_TIMEZONE,
+        )
+        return times.get("time", ""), times.get("display_time", "")
+    return "", ""
+
+
+def format_bilingual_event_item(
+    event, locale, include_assignee=False, calendar_fallback="Overig / Divers"
+):
+    """Format a single event item for bilingual advisory output.
+
+    Returns the formatted dict ready to append to a calendar group.
+    """
+    event_nl = event.copy()
+    event_fr = event.copy()
+    set_event_translations_value(event_nl, "nl")
+    set_event_translations_value(event_fr, "fr")
+
+    calendar = (
+        event["calendars"][0]["qcode"].capitalize()
+        if event.get("calendars")
+        else calendar_fallback
+    )
+
+    formatted_event = {
+        "subject": ",".join(get_subjects(event, "nl")),
+        "calendar": calendar,
+        "contacts": get_formatted_contacts(event),
+        "coverages": get_coverages_bilingual(event, include_assignee=include_assignee),
+        "location": get_item_location(event, "nl"),
+        "title_nl": event_nl.get("name") or event_nl.get("slugline") or "",
+        "title_fr": event_fr.get("name") or event_fr.get("slugline") or "",
+        "description_nl": (
+            event_nl.get("definition_long")
+            or event_nl.get("description_text")
+            or event_nl.get("definition_short")
+            or ""
+        ).rstrip(),
+        "description_fr": (
+            event_fr.get("definition_long")
+            or event_fr.get("description_text")
+            or event_fr.get("definition_short")
+            or ""
+        ).rstrip(),
+    }
+
+    set_metadata(formatted_event, event, locale)
+
+    dates = event.get("dates", {})
+    times = get_display_times(dates, default_tz=ADVISORY_TIMEZONE)
+    formatted_event["time"] = times.get("time", "")
+    formatted_event["display_time"] = times.get("display_time", "")
+
+    return formatted_event

@@ -5,21 +5,11 @@ from .common import (
     get_coverages,
     get_item_location,
     set_event_translations_value,
+    CALENDAR_ORDER,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
-
-CALENDAR_ORDER = [
-    "General",
-    "Politics",
-    "Economy",
-    "Regional",
-    "Justice",
-    "International",
-    "Sports",
-    "Culture",
-]
 
 
 def format_planning_for_tomorrow(

@@ -4,21 +4,10 @@ from .common import (
     get_formatted_contacts,
     get_coverages,
     get_item_location,
+    CALENDAR_ORDER,
 )
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
-
-
-CALENDAR_ORDER = [
-    "General",
-    "Politics",
-    "Economy",
-    "Regional",
-    "Justice",
-    "International",
-    "Sports",
-    "Culture",
-]
 
 
 def format_event_for_tommorow(
