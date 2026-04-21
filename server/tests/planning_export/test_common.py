@@ -65,9 +65,7 @@ class GetPlanningDisplayTimesTests(TestCase):
             "coverages": [
                 {
                     "planning": {
-                        "scheduled": datetime(
-                            2024, 4, 23, 11, 0, tzinfo=timezone.utc
-                        )
+                        "scheduled": datetime(2024, 4, 23, 11, 0, tzinfo=timezone.utc)
                     }
                 }
             ],
@@ -94,9 +92,7 @@ class GetPlanningDisplayTimesTests(TestCase):
             "coverages": [
                 {
                     "planning": {
-                        "scheduled": datetime(
-                            2024, 4, 23, 12, 0, tzinfo=timezone.utc
-                        )
+                        "scheduled": datetime(2024, 4, 23, 12, 0, tzinfo=timezone.utc)
                     }
                 }
             ],
