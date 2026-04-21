@@ -447,6 +447,8 @@ def get_coverages_bilingual(item, include_assignee=False):
     lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "N"}
     planning_ids = item.get("planning_ids") or [item.get("_id")]
     formatted_coverages = []
+    desk_cache = {}
+    user_cache = {}
 
     for planning_id in planning_ids:
         planning_item = planning_service.find_one(req=None, _id=planning_id)
@@ -475,7 +477,9 @@ def get_coverages_bilingual(item, include_assignee=False):
                 or item.get("task", {}).get("desk")
             )
             if desk_id:
-                desk_item = desk_service.find_one(req=None, _id=desk_id)
+                if desk_id not in desk_cache:
+                    desk_cache[desk_id] = desk_service.find_one(req=None, _id=desk_id)
+                desk_item = desk_cache[desk_id]
                 if desk_item:
                     desk_name = desk_item.get("name", "")
                     if desk_item.get("desk_language"):
@@ -491,11 +495,16 @@ def get_coverages_bilingual(item, include_assignee=False):
             if include_assignee:
                 assigned_user_id = coverage.get("assigned_to", {}).get("user")
                 if assigned_user_id and user_service:
-                    user_item = user_service.find_one(req=None, _id=assigned_user_id)
-                    if user_item:
-                        username = user_item.get("sign_off") or user_item.get(
-                            "username"
+                    if assigned_user_id not in user_cache:
+                        user_item = user_service.find_one(
+                            req=None, _id=assigned_user_id
                         )
+                        user_cache[assigned_user_id] = (
+                            (user_item.get("sign_off") or user_item.get("username"))
+                            if user_item
+                            else ""
+                        )
+                    username = user_cache[assigned_user_id]
                 if username:
                     coverage_display = f"{coverage_display} BY {username.upper()}"
                 elif desk_name:
@@ -533,8 +542,9 @@ def sort_calendar_groups(calendar_groups):
 
 def get_planning_display_times(planning, event_item=None):
     """Get (time, display_time) for a planning item, preferring linked event dates."""
-    if event_item and event_item.get("dates"):
-        times = get_display_times(event_item["dates"], default_tz=ADVISORY_TIMEZONE)
+    event_dates = (event_item or {}).get("dates") or {}
+    if event_dates.get("start") and event_dates.get("end"):
+        times = get_display_times(event_dates, default_tz=ADVISORY_TIMEZONE)
         return times.get("time", ""), times.get("display_time", "")
 
     scheduled = planning.get("planning_date")
