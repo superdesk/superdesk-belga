@@ -100,7 +100,13 @@ def format_image_planning(
         if not scheduled:
             continue
 
-        local_dt = utc_to_local(tz, scheduled)
+        try:
+            local_dt = utc_to_local(tz, scheduled)
+        except ValueError:
+            try:
+                local_dt = utc_to_local(ADVISORY_TIMEZONE, scheduled)
+            except ValueError:
+                continue
         day_date = local_dt.date()
 
         if day_date not in days:

@@ -320,8 +320,6 @@ def get_advisory_date_from_events(
     if not event_data:
         return ""
 
-    from superdesk.utc import utc_to_local
-
     local_dates = []
     for ev in event_data:
         dates = ev.get("dates") or {}
@@ -420,7 +418,13 @@ def get_advisory_weekday_date(planning_item, planning_service=None, event_servic
     scheduled, _, tz = get_planning_schedule_info(planning_item, event_item)
 
     if scheduled:
-        local_dt = utc_to_local(tz, scheduled)
+        try:
+            local_dt = utc_to_local(tz, scheduled)
+        except ValueError:
+            try:
+                local_dt = utc_to_local(ADVISORY_TIMEZONE, scheduled)
+            except ValueError:
+                return ""
         return format_advisory_weekday_date(local_dt)
 
     return ""
