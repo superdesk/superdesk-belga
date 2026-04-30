@@ -86,7 +86,7 @@ class GetPlanningDisplayTimesTests(TestCase):
         self.assertEqual(result_time, expected["time"])
         self.assertEqual(result_display, expected["display_time"])
 
-    def test_falls_back_to_coverage_scheduled_when_event_dates_incomplete(self):
+    def test_falls_back_to_coverage_scheduled_when_no_event(self):
         planning = {
             "planning_date": datetime(2024, 4, 23, 10, 0, tzinfo=timezone.utc),
             "coverages": [
@@ -98,12 +98,6 @@ class GetPlanningDisplayTimesTests(TestCase):
             ],
             "dates": {"tz": "Europe/Brussels"},
         }
-        event_item = {
-            "dates": {
-                "start": datetime(2024, 4, 23, 8, 0, tzinfo=timezone.utc),
-                "tz": "Europe/Brussels",
-            }
-        }
 
         fallback_dates = {
             "start": planning["coverages"][0]["planning"]["scheduled"],
@@ -112,22 +106,18 @@ class GetPlanningDisplayTimesTests(TestCase):
         }
         expected = get_display_times(fallback_dates)
 
-        result_time, result_display = get_planning_display_times(planning, event_item)
+        result_time, result_display = get_planning_display_times(
+            planning, event_item=None
+        )
 
         self.assertEqual(result_time, expected["time"])
         self.assertEqual(result_display, expected["display_time"])
 
-    def test_falls_back_to_planning_date_when_no_coverage_scheduled(self):
+    def test_falls_back_to_planning_date_when_no_event_and_no_coverage_scheduled(self):
         planning = {
             "planning_date": datetime(2024, 4, 23, 13, 30, tzinfo=timezone.utc),
             "coverages": [],
             "dates": {"tz": "Europe/Brussels"},
-        }
-        event_item = {
-            "dates": {
-                "start": datetime(2024, 4, 23, 8, 0, tzinfo=timezone.utc),
-                "tz": "Europe/Brussels",
-            }
         }
 
         fallback_dates = {
@@ -137,7 +127,9 @@ class GetPlanningDisplayTimesTests(TestCase):
         }
         expected = get_display_times(fallback_dates)
 
-        result_time, result_display = get_planning_display_times(planning, event_item)
+        result_time, result_display = get_planning_display_times(
+            planning, event_item=None
+        )
 
         self.assertEqual(result_time, expected["time"])
         self.assertEqual(result_display, expected["display_time"])

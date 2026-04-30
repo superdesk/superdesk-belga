@@ -409,26 +409,18 @@ def get_advisory_weekday_date(planning_item, planning_service=None, event_servic
     if planning_service is None:
         planning_service = get_resource_service("planning")
 
+    event_item = None
     if planning_item.get("event_item"):
         event_item = event_service.find_one(req=None, _id=planning_item["event_item"])
-        if event_item and event_item.get("dates") and event_item["dates"].get("start"):
-            tz = event_item["dates"].get("tz", ADVISORY_TIMEZONE)
-            local_dt = utc_to_local(tz, event_item["dates"]["start"])
-            return format_advisory_weekday_date(local_dt)
 
     planning_item = planning_service.find_one(req=None, _id=planning_item["_id"])
-    scheduled = None
-    for cov in planning_item.get("coverages", []):
-        if isinstance(cov, dict):
-            scheduled = cov.get("planning", {}).get("scheduled")
-            if scheduled:
-                break
+    if not planning_item:
+        return ""
 
-    if not scheduled:
-        scheduled = planning_item.get("planning_date")
+    scheduled, _, tz = get_planning_schedule_info(planning_item, event_item)
 
     if scheduled:
-        local_dt = utc_to_local(ADVISORY_TIMEZONE, scheduled)
+        local_dt = utc_to_local(tz, scheduled)
         return format_advisory_weekday_date(local_dt)
 
     return ""
@@ -540,23 +532,59 @@ def sort_calendar_groups(calendar_groups):
     return events_list
 
 
-def get_planning_display_times(planning, event_item=None):
-    """Get (time, display_time) for a planning item, preferring linked event dates."""
+def get_planning_schedule_info(
+    planning,
+    event_item=None,
+    fallback_to_planning_if_event_dates_missing=True,
+):
+    """Get schedule info for planning exports.
+
+    Returns a tuple: (scheduled, display_dates, tz)
+    - If event_item has dates.start, event dates are used.
+    - If event_item exists without dates.start, fallback behavior is configurable.
+    - Otherwise, falls back to coverage scheduled / planning_date.
+    """
     event_dates = (event_item or {}).get("dates") or {}
-    if event_dates.get("start") and event_dates.get("end"):
-        times = get_display_times(event_dates, default_tz=ADVISORY_TIMEZONE)
-        return times.get("time", ""), times.get("display_time", "")
+
+    if event_item:
+        tz = event_dates.get("tz") or ADVISORY_TIMEZONE
+        event_start = event_dates.get("start")
+        if event_start:
+            return (
+                event_start,
+                {
+                    "start": event_start,
+                    "end": event_dates.get("end") or event_start,
+                    "tz": tz,
+                },
+                tz,
+            )
+
+        if not fallback_to_planning_if_event_dates_missing:
+            return None, {"start": None, "end": None, "tz": tz}, tz
 
     scheduled = planning.get("planning_date")
-    coverages = planning.get("coverages", [])
-    if coverages and isinstance(coverages[0], dict):
-        scheduled = coverages[0].get("planning", {}).get("scheduled", scheduled)
+    for coverage in planning.get("coverages", []):
+        if not isinstance(coverage, dict):
+            continue
+        cov_scheduled = coverage.get("planning", {}).get("scheduled")
+        if cov_scheduled:
+            scheduled = cov_scheduled
+            break
+
+    tz = planning.get("dates", {}).get("tz") or ADVISORY_TIMEZONE
+    return (
+        scheduled,
+        {"start": scheduled, "end": scheduled, "tz": tz},
+        tz,
+    )
+
+
+def get_planning_display_times(planning, event_item=None):
+    """Get (time, display_time) for a planning item, preferring linked event dates."""
+    scheduled, display_dates, _ = get_planning_schedule_info(planning, event_item)
     if scheduled:
-        tz = planning.get("dates", {}).get("tz") or ADVISORY_TIMEZONE
-        times = get_display_times(
-            {"start": scheduled, "end": scheduled, "tz": tz},
-            default_tz=ADVISORY_TIMEZONE,
-        )
+        times = get_display_times(display_dates, default_tz=ADVISORY_TIMEZONE)
         return times.get("time", ""), times.get("display_time", "")
     return "", ""
 

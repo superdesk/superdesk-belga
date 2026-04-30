@@ -13,6 +13,7 @@ from .common import (
     ADVISORY_TIMEZONE,
     format_advisory_weekday_date,
     get_display_times,
+    get_planning_schedule_info,
     is_editorial_calendar,
 )
 
@@ -94,17 +95,12 @@ def format_image_planning(
             else get_item_location(planning, "nl")
         )
 
-        scheduled = planning.get("planning_date")
-        for cov in planning.get("coverages", []):
-            if isinstance(cov, dict):
-                scheduled = cov.get("planning", {}).get("scheduled", scheduled)
-                if scheduled:
-                    break
+        scheduled, display_dates, tz = get_planning_schedule_info(planning, event_item)
 
         if not scheduled:
             continue
 
-        local_dt = utc_to_local(ADVISORY_TIMEZONE, scheduled)
+        local_dt = utc_to_local(tz, scheduled)
         day_date = local_dt.date()
 
         if day_date not in days:
@@ -113,11 +109,7 @@ def format_image_planning(
                 "calendars": {},
             }
 
-        tz = planning.get("dates", {}).get("tz") or ADVISORY_TIMEZONE
-        times = get_display_times(
-            {"start": scheduled, "end": scheduled, "tz": tz},
-            default_tz=ADVISORY_TIMEZONE,
-        )
+        times = get_display_times(display_dates, default_tz=ADVISORY_TIMEZONE)
 
         event = {
             "calendar": calendar,
