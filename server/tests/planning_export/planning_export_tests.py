@@ -2593,3 +2593,75 @@ class PlanningExportTests(TestCase):
             ).strip()
 
             self.assertEqual(json.loads(output), [str(video_event_id)])
+
+    def test_internal_bilingual_planning_advisory_tomorrow_event_ids_json(self):
+        with self.app.app_context():
+            event_id_1 = ObjectId()
+            event_id_2 = ObjectId()
+            event_id_internal = ObjectId()
+
+            planning_items = [
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": event_id_1,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "text"},
+                        }
+                    ],
+                },
+                # Duplicate event reference - should be deduplicated
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": event_id_1,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "picture"},
+                        }
+                    ],
+                },
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": event_id_2,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "video"},
+                        }
+                    ],
+                },
+                # Event with internal Calendar set must still be delivered
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "event_item": event_id_internal,
+                    "coverages": [
+                        {
+                            "coverage_id": ObjectId(),
+                            "planning": {"g2_content_type": "text"},
+                        }
+                    ],
+                },
+                # Planning item without an event_item should be skipped
+                {
+                    "_id": ObjectId(),
+                    "type": "planning",
+                    "coverages": [],
+                },
+            ]
+
+            output = render_template(
+                "internal_bilingual_planning_advisory_tomorrow_event_ids.html",
+                items=planning_items,
+                app=self.app,
+            ).strip()
+
+            self.assertEqual(
+                json.loads(output),
+                [str(event_id_1), str(event_id_2), str(event_id_internal)],
+            )

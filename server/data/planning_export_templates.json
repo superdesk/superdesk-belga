@@ -135,5 +135,15 @@
     "body_html_template": "internal_image_video_planning_event_ids.html"
   },
   "label": "Belga Image Video Planning Event IDs"
+},
+{
+  "_id": "internal_bilingual_planning_advisory_tomorrow_event_ids",
+  "init_version": 1,
+  "name": "internal_bilingual_planning_advisory_tomorrow_event_ids",
+  "type": "planning",
+  "data": {
+    "body_html_template": "internal_bilingual_planning_advisory_tomorrow_event_ids.html"
+  },
+  "label": "Event IDs: Program of the day for internal use"
 }
 ]

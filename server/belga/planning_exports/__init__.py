@@ -13,6 +13,7 @@ from .internal_bilingual_events_advisory_tomorrow import (
 
 from .internal_bilingual_planning_advisory_tomorrow import (
     format_planning_for_tomorrow_bilingual_internal,
+    format_planning_for_tomorrow_bilingual_internal_event_ids_json,
 )
 
 from .internal_image_photo_planning import (
@@ -43,6 +44,9 @@ def init_app(app):
 
     app.jinja_env.globals.update(
         format_planning_for_tomorrow_bilingual_internal=format_planning_for_tomorrow_bilingual_internal
+    )
+    app.jinja_env.globals.update(
+        format_planning_for_tomorrow_bilingual_internal_event_ids_json=format_planning_for_tomorrow_bilingual_internal_event_ids_json
     )
     app.jinja_env.globals.update(
         format_internal_image_photo_planning=format_internal_image_photo_planning

@@ -9,6 +9,8 @@ from .common import (
     get_planning_display_times,
 )
 from typing import List, Dict, Any
+import json
+from markupsafe import Markup
 from superdesk import get_resource_service
 
 
@@ -72,3 +74,31 @@ def format_planning_for_tomorrow_bilingual_internal(
         "weekday_date": weekday_date,
         "events": sort_calendar_groups(calendar_groups),
     }
+
+
+def format_planning_for_tomorrow_bilingual_internal_event_ids_json(
+    planning_data: List[Dict[str, Any]],
+) -> str:
+    """Return a JSON list of unique event IDs for the selected planning items.
+
+    Used by the "Event IDs: Program of the day for internal use" custom layout.
+    The selection of valid items (events with associated planning items, including
+    those with the internal Calendar set) is performed by the user in the
+    Planning only view, so no coverage-type or calendar filtering is applied here.
+    """
+    event_ids: List[str] = []
+    seen_ids = set()
+
+    for planning in planning_data:
+        event_item = planning.get("event_item")
+        if not event_item:
+            continue
+
+        event_id = str(event_item)
+        if event_id in seen_ids:
+            continue
+
+        seen_ids.add(event_id)
+        event_ids.append(event_id)
+
+    return Markup(json.dumps(event_ids))
