@@ -21,129 +21,94 @@
     "name": "dutch_news_events_list",
     "type": "event",
     "data": {
-        "body_html_template": "dutch_news_events_list_export_body.html",
-        "headline_template": "dutch_news_events_list_export_headline.html"
+      "body_html_template": "dutch_news_events_list_export_body.html",
+      "headline_template": "dutch_news_events_list_export_headline.html"
     },
     "label": "Internationale sportkalender"
-},{
-  "_id": "french_news_events_list",
-  "init_version": 2,
-  "name": "french_news_events_list",
-  "type": "event",
-  "data": {
+  },
+  {
+    "_id": "french_news_events_list",
+    "init_version": 2,
+    "name": "french_news_events_list",
+    "type": "event",
+    "data": {
       "body_html_template": "french_news_events_list_export_body.html",
       "headline_template": "french_news_events_list_export_headline.html"
+    },
+    "label": "Calendrier sportif international"
   },
-  "label": "Calendrier sportif international"
-},
-{
-  "_id": "french_news_events_list_tommorrow",
-  "init_version": 1,
-  "name": "french_news_events_list_tommorrow",
-  "type": "event",
-  "data": {
-      "body_html_template": "french_news_events_tommorrow.html"
+  {
+    "_id": "french_news_events_list_tommorrow",
+    "_deleted": true
   },
-  "label": "Program of the day - NPF"
-},
-{
-  "_id": "dutch_news_events_list_tommorrow",
-  "init_version": 1,
-  "name": "dutch_news_events_list_tommorrow",
-  "type": "event",
-  "data": {
-      "body_html_template": "dutch_news_events_tommorrow.html"
+  {
+    "_id": "dutch_news_events_list_tommorrow",
+    "_deleted": true
   },
-  "label": "Program of the day - NPN"
-},
   {
     "_id": "bilingual_planning_advisory_tomorrow",
     "init_version": 4,
-  "name": "bilingual_planning_advisory_tomorrow",
-  "type": "planning",
-  "data": {
+    "name": "bilingual_planning_advisory_tomorrow",
+    "type": "planning",
+    "data": {
       "body_html_template": "bilingual_planning_advisory_tomorrow.html"
+    },
+    "label": "Bilingual daily program"
   },
-  "label": "Bilingual daily program"
-},
-{
-  "_id": "bilingual_events_advisory_tomorrow", 
-  "init_version": 2,
-  "name": "bilingual_events_advisory_tomorrow",
-  "type": "event",
-  "data": {
-    "body_html_template": "bilingual_news_events_tommorrow.html"
+  {
+    "_id": "bilingual_events_advisory_tomorrow",
+    "_deleted": true
   },
-  "label": "Bilingual daily program"
-},
-{
-  "_id": "internal_bilingual_events_advisory_tomorrow",
-  "init_version": 2,
-  "name": "internal_bilingual_events_advisory_tomorrow",
-  "type": "event",
-  "data": {
-    "body_html_template": "internal_bilingual_news_events_tomorrow.html"
+  {
+    "_id": "internal_bilingual_events_advisory_tomorrow",
+    "_deleted": true
   },
-  "label": "Bilingual daily program for internal use"
-},
-{
-  "_id": "internal_bilingual_planning_advisory_tomorrow",
-  "init_version": 2,
-  "name": "internal_bilingual_planning_advisory_tomorrow",
-  "type": "planning",
-  "data": {
-    "body_html_template": "internal_bilingual_planning_advisory_tomorrow.html"
+  {
+    "_id": "internal_bilingual_planning_advisory_tomorrow",
+    "init_version": 2,
+    "name": "internal_bilingual_planning_advisory_tomorrow",
+    "type": "planning",
+    "data": {
+      "body_html_template": "internal_bilingual_planning_advisory_tomorrow.html"
+    },
+    "label": "Bilingual daily program for internal use"
   },
-  "label": "Bilingual daily program for internal use"
-},
-{
-  "_id": "internal_image_photo_planning",
-  "init_version": 1,
-  "name": "internal_image_photo_planning",
-  "type": "planning",
-  "data": {
-    "body_html_template": "internal_image_photo_planning.html"
+  {
+    "_id": "internal_image_photo_planning",
+    "init_version": 1,
+    "name": "internal_image_photo_planning",
+    "type": "planning",
+    "data": {
+      "body_html_template": "internal_image_photo_planning.html"
+    },
+    "label": "Belga Image Photo Planning"
   },
-  "label": "Belga Image Photo Planning"
-},
-{
-  "_id": "internal_image_video_planning",
-  "init_version": 1,
-  "name": "internal_image_video_planning",
-  "type": "planning",
-  "data": {
-    "body_html_template": "internal_image_video_planning.html"
+  {
+    "_id": "internal_image_video_planning",
+    "init_version": 1,
+    "name": "internal_image_video_planning",
+    "type": "planning",
+    "data": {
+      "body_html_template": "internal_image_video_planning.html"
+    },
+    "label": "Belga Image Video Planning"
   },
-  "label": "Belga Image Video Planning"
-},
-{
-  "_id": "internal_image_photo_planning_event_ids",
-  "init_version": 1,
-  "name": "internal_image_photo_planning_event_ids",
-  "type": "planning",
-  "data": {
-    "body_html_template": "internal_image_photo_planning_event_ids.html"
+  {
+    "_id": "internal_image_photo_planning_event_ids",
+    "_deleted": true
   },
-  "label": "Belga Image Photo Planning Event IDs"
-},
-{
-  "_id": "internal_image_video_planning_event_ids",
-  "init_version": 1,
-  "name": "internal_image_video_planning_event_ids",
-  "type": "planning",
-  "data": {
-    "body_html_template": "internal_image_video_planning_event_ids.html"
+  {
+    "_id": "internal_image_video_planning_event_ids",
+    "_deleted": true
   },
-  "label": "Belga Image Video Planning Event IDs"
-},
-{
-  "_id": "internal_bilingual_planning_advisory_tomorrow_event_ids",
-  "init_version": 1,
-  "name": "internal_bilingual_planning_advisory_tomorrow_event_ids",
-  "type": "planning",
-  "data": {
-    "body_html_template": "internal_bilingual_planning_advisory_tomorrow_event_ids.html"
-  },
-  "label": "Event IDs: Program of the day for internal use"
-}
+  {
+    "_id": "internal_bilingual_planning_advisory_tomorrow_event_ids",
+    "init_version": 1,
+    "name": "internal_bilingual_planning_advisory_tomorrow_event_ids",
+    "type": "planning",
+    "data": {
+      "body_html_template": "internal_bilingual_planning_advisory_tomorrow_event_ids.html"
+    },
+    "label": "Event IDs: Program of the day for internal use"
+  }
 ]
