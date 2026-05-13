@@ -39,7 +39,7 @@ function getCoverageDueDate(
 ): moment.Moment | null {
     let coverageTime: moment.Moment | null = null;
 
-    if (eventItem && eventUtils.isEventAllDay(eventItem.dates?.start, eventItem.dates?.end, true)) {
+    if (eventItem && eventUtils.isEventAllDay(eventItem)) {
         coverageTime = moment(eventItem.dates?.end);
         coverageTime.set('hour', 20);
         coverageTime.set('minute', 0);

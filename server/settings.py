@@ -17,6 +17,7 @@ from distutils.util import strtobool
 from superdesk.default_settings import (
     DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES,
     env,
+    MODULES,
 )
 
 ABS_PATH = str(Path(__file__).resolve().parent)
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     "belga.planning_exports",
     "belga.contacts",
 ]
+
+MODULES.append("planning")
 
 SECRET_KEY = env("SECRET_KEY", "")
 
@@ -327,7 +330,7 @@ STATISTICS_ELASTIC_SETTINGS = ELASTICSEARCH_SETTINGS.copy()
 
 # ver. 1: update schema to use new analyzer
 # ver. 2: change default analyzer config
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 4
 
 DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES = []
 
