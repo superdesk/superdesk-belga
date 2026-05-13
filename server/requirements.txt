@@ -163,7 +163,7 @@ hyperframe==6.1.0
     # via h2
 icalendar==5.0.14
     # via superdesk-planning
-idna==3.14
+idna==3.15
     # via
     #   requests
     #   yarl
@@ -253,8 +253,9 @@ pyjwt==2.10.1
     # via superdesk-core
 pymemcache==4.0.0
     # via superdesk-core
-pymongo==4.15.5
+pymongo==4.9.2
     # via
+    #   -r requirements.in
     #   eve
     #   motor
     #   superdesk-core
@@ -301,9 +302,9 @@ redis==6.4.0
     # via kombu
 regex==2026.1.15
     # via superdesk-core
-reportlab==4.5.0
+reportlab==4.5.1
     # via superdesk-core
-requests==2.33.1
+requests==2.34.0
     # via
     #   python-twitter
     #   requests-oauthlib
