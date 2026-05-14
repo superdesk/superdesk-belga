@@ -5,7 +5,7 @@ import unittest
 import requests
 import superdesk
 
-from flask import json
+from superdesk.core import json
 from httmock import all_requests, HTTMock
 from unittest.mock import patch
 

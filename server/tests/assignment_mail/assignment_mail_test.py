@@ -1,5 +1,5 @@
 from unittest import TestCase
-from flask import render_template
+from superdesk.flask import render_template
 from app import get_app
 
 

@@ -13,8 +13,9 @@ from pytz import utc
 from datetime import datetime
 from urllib.parse import urljoin
 from typing import Any, Dict, Optional
-from flask import json, current_app as app, request, jsonify, Response, abort
 from superdesk import get_resource_service
+from superdesk.core import json, get_current_app, get_config
+from superdesk.flask import request, jsonify, Response, abort
 from superdesk.utc import local_to_utc
 from superdesk.utils import ListCursor
 from superdesk.metadata.item import MEDIA_TYPES
@@ -233,12 +234,11 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
 
     def api_get(self, endpoint, params):
         print("params", params)
-        if app.config.get("BELGA_IMAGE_LIMIT") and not any(
-            [param in params for param in ["c", "h", "e"]]
-        ):
+        image_limit = get_config(str, "BELGA_IMAGE_LIMIT", "")
+        if image_limit and not any([param in params for param in ["c", "h", "e"]]):
             # set limit when not doing any filtering
             # to avoid some images from the future
-            params.setdefault("p", app.config["BELGA_IMAGE_LIMIT"])
+            params.setdefault("p", image_limit)
         return super().api_get(endpoint, params)
 
     def url(self, resource):
@@ -250,7 +250,7 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         """Extend base parameter parsing with video support."""
         api_params = super().parse_search_params(query, params)
 
-        if app.config.get("BELGA_VIDEO_ENABLED", False):
+        if get_config(bool, "BELGA_VIDEO_ENABLED", False):
             if params and params.get("objecttypes"):
                 api_params["o"] = params["objecttypes"]
             else:
@@ -307,7 +307,7 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
     count_field = "nrGalleries"
 
     def format_list_item(self, data):
-        if app.debug:
+        if get_current_app().debug:
             print(json.dumps(data, indent=2))
         guid = "%s%s" % (self.GUID_PREFIX, data["galleryId"])
         created = get_datetime(data["createDate"])
@@ -520,7 +520,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             return ""
 
     def _get_period(self, period):
-        today = arrow.now(superdesk.app.config["DEFAULT_TIMEZONE"])
+        today = arrow.now(get_config(str, "DEFAULT_TIMEZONE"))
         return {
             "fromDate": today.shift(**self.PERIODS.get(period)).format("YYYYMMDD"),
             "toDate": today.format("YYYYMMDD"),
@@ -836,7 +836,7 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
 
 def belga_image_proxy(url):
     headers = {
-        "Access-Control-Allow-Origin": app.config["CLIENT_URL"],
+        "Access-Control-Allow-Origin": get_config(str, "CLIENT_URL"),
         "Access-Control-Allow-Methods": "GET",
         "Access-Control-Allow-Headers": "Content-Type,Authorization",
         "Access-Control-Allow-Credentials": "true",
@@ -856,7 +856,7 @@ def belga_image_proxy(url):
         service = get_service_by_id(provider_id)
     if service:
         data = service.proxy(url, params)
-        if app.debug:
+        if get_current_app().debug:
             print(json.dumps(data, indent=2))
         response = jsonify(data)
         for k, v in headers.items():

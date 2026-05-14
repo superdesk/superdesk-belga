@@ -1,8 +1,9 @@
 from superdesk.utc import utc_to_local
-from flask import current_app as app
+
 from typing import List, Dict, Any, TypedDict
 from babel.dates import format_date
 from superdesk import get_resource_service
+from superdesk.core import get_config
 from typing import Union as _Union
 from datetime import date as _date_type, datetime as _datetime_type
 
@@ -60,7 +61,7 @@ def set_item_dates(item: Dict[str, Any], event: Dict[str, Any]):
     dates = event.get("dates") or {}
     start = dates.get("start")
     end = dates.get("end")
-    tz = dates.get("tz") or app.config.get("DEFAULT_TIMEZONE")
+    tz = dates.get("tz") or get_config(str, "DEFAULT_TIMEZONE")
 
     item["dates"] = {"start": start, "end": end, "tz": tz}
 
@@ -174,7 +175,7 @@ def get_subjects(event: Dict[str, Any], language: str):
 
 
 def format_datetime(event: Dict[str, Any], locale: str, format: str):
-    tz = event.get("dates", {}).get("tz") or app.config.get("DEFAULT_TIMEZONE")
+    tz = event.get("dates", {}).get("tz") or get_config(str, "DEFAULT_TIMEZONE")
     start_time = event.get("dates", {}).get("start")
     if not start_time:
         return ""

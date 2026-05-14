@@ -1,7 +1,8 @@
 import os
 import unittest
 import requests
-from flask import Flask, json
+from quart import Quart
+from superdesk.core import json
 from httmock import all_requests
 from unittest.mock import patch
 from belga.search_providers import BelgaImageV2SearchProvider, TIMEOUT
@@ -32,7 +33,7 @@ class VideoDetailResponse:
 
 class BelgaVideoTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = Flask(__name__)
+        self.app = Quart(__name__)
         self.app.config["BELGA_VIDEO_ENABLED"] = True
         self.app.config["BELGA_IMAGE_LIMIT"] = "TODAY"
         self.app_context = self.app.app_context()

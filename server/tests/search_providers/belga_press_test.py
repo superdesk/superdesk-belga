@@ -2,7 +2,7 @@ import os
 import superdesk
 
 import arrow
-from flask import json
+from superdesk.core import json
 from httmock import all_requests, HTTMock
 from unittest.mock import MagicMock, patch
 from belga.search_providers import BelgaPressSearchProvider, TIMEOUT, get_datetime

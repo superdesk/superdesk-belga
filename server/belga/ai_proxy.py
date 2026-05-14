@@ -1,5 +1,5 @@
 import logging
-from flask import Flask
+from superdesk.flask import Flask
 from superdesk.http_proxy import HTTPProxy, register_http_proxy
 
 

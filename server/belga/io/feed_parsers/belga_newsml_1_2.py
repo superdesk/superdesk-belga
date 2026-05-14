@@ -19,10 +19,10 @@ from ftplib import error_perm
 from tempfile import gettempdir
 from datetime import datetime
 
-from flask import current_app as app
 from xml.etree import ElementTree
 
 from superdesk import get_resource_service
+from superdesk.core import get_current_app
 from superdesk.ftp import ftp_connect
 from superdesk.errors import ParserError
 from superdesk.io.registry import register_feed_parser
@@ -546,6 +546,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             )
 
         # read files and save them into the storage
+        app = get_current_app()
         for newscomponent in newscomponent_el.findall("NewsComponent"):
             component_role = self._get_role(newscomponent)
             if (
@@ -901,6 +902,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             content, "application/" + format_name
         )
         content.seek(0)
+        app = get_current_app()
         media_id = app.media.put(
             content,
             filename=filename,

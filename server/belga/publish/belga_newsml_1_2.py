@@ -22,9 +22,9 @@ from lxml.etree import SubElement
 from lxml.html.clean import Cleaner
 from eve.utils import config
 from eve.utils import ParsedRequest
-from flask import current_app as app
 
 import superdesk
+from superdesk.core import get_config, get_current_app
 from superdesk.etree import parse_html, to_string
 from superdesk import text_utils
 from apps.archive.common import get_utc_schedule
@@ -171,7 +171,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # SDBELGA-348
             self._duid = self._original_item[GUID_FIELD]
 
-            self._tz = pytz.timezone(superdesk.app.config["DEFAULT_TIMEZONE"])
+            self._tz = pytz.timezone(get_config(str, "DEFAULT_TIMEZONE"))
             self._string_now = self._get_formatted_datetime(
                 self._current_item["firstpublished"]
             )
@@ -248,9 +248,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         identification = SubElement(newsitem, "Identification")
         news_identifier = SubElement(identification, "NewsIdentifier")
-        SubElement(news_identifier, "ProviderId").text = app.config[
-            "NEWSML_PROVIDER_ID"
-        ]
+        SubElement(news_identifier, "ProviderId").text = get_config(str, "NEWSML_PROVIDER_ID")
         SubElement(news_identifier, "DateId").text = self._get_formatted_datetime(
             self._current_item.get("firstcreated")
         )
@@ -833,10 +831,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 "media": attachment["media"],
                 "mimetype": attachment["mimetype"],
                 "href": urljoin(
-                    app.config["MEDIA_PREFIX"] + "/", "{}".format(attachment["media"])
+                    get_config(str, "MEDIA_PREFIX") + "/", "{}".format(attachment["media"])
                 ),
                 "belga-urn": "urn:www.belga.be:superdesk:{}:{}".format(
-                    app.config["OUTPUT_BELGA_URN_SUFFIX"], attachment["media"]
+                    get_config(str, "OUTPUT_BELGA_URN_SUFFIX"), attachment["media"]
                 ),
             },
         )
@@ -868,7 +866,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # the rest are internaly uploaded media: pictures, video and audio
             elif "media" in rendition:
                 rendition["belga-urn"] = "urn:www.belga.be:superdesk:{}:{}".format(
-                    app.config["OUTPUT_BELGA_URN_SUFFIX"], rendition["media"]
+                    get_config(str, "OUTPUT_BELGA_URN_SUFFIX"), rendition["media"]
                 )
 
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
@@ -945,7 +943,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         characteristics = SubElement(contentitem, "Characteristics")
 
         if rendition.get("media"):
-            media = app.media.get(str(rendition["media"]))
+            media = get_current_app().media.get(str(rendition["media"]))
             length = media.length if media.length else media.metadata.get("length")
             SubElement(characteristics, "SizeInBytes").text = str(length)
         if rendition.get("width"):

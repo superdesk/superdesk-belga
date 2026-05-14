@@ -5,9 +5,9 @@ import logging
 
 import superdesk
 
-from flask import json
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
+from superdesk.core import json
 from superdesk.utils import ListCursor
 
 logger = logging.getLogger(__name__)

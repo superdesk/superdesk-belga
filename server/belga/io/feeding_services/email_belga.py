@@ -12,7 +12,8 @@ import email
 import imaplib
 import io
 import logging
-from flask import current_app as app
+
+from superdesk.core import get_config, get_current_app
 from superdesk.media.media_operations import process_file_from_stream
 from superdesk.io.feeding_services import EmailFeedingService
 from superdesk.io.feed_parsers.rfc822 import EMailRFC822FeedParser
@@ -98,7 +99,7 @@ class EmailBelgaFeedingService(EmailFeedingService):
 
         try:
             try:
-                socket.setdefaulttimeout(app.config.get("EMAIL_TIMEOUT", 10))
+                socket.setdefaulttimeout(get_config(int, "EMAIL_TIMEOUT", 10))
                 imap = imaplib.IMAP4_SSL(host=server, port=port)
             except (socket.gaierror, OSError) as e:
                 raise IngestEmailError.emailHostError(exception=e, provider=provider)
@@ -144,6 +145,7 @@ class EmailBelgaFeedingService(EmailFeedingService):
 
         """
         attachments = []
+        app = get_current_app()
         for response_part in data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])

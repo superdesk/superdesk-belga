@@ -3,11 +3,11 @@ import arrow
 import superdesk
 
 from pytz import utc
-from flask import json
 from datetime import datetime
 from httmock import all_requests, HTTMock
 from unittest.mock import patch, MagicMock
 from belga.search_providers import Belga360ArchiveSearchProvider, TIMEOUT
+from superdesk.core import json
 from superdesk.tests import TestCase
 
 

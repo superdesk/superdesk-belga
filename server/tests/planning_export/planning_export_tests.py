@@ -1,7 +1,7 @@
 from unittest import TestCase
 import datetime
 import json
-from flask import render_template
+from superdesk.flask import render_template
 from app import get_app
 from bson import ObjectId
 from belga.planning_exports.format_news_events_tommorow_bilingual import (
