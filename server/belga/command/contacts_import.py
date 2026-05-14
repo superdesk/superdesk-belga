@@ -1,13 +1,16 @@
-import superdesk
+import logging
 import json
 
+import click
+
 from superdesk import get_resource_service
-import logging
+from superdesk.commands import cli
+
 
 logger = logging.getLogger(__name__)
 
 
-def import_contacts_via_json_file(path_file):
+async def import_contacts_via_json_file(path_file: str) -> None:
     """
     Get info contacts in file and add to database
     :param path_file:
@@ -169,7 +172,7 @@ def import_contacts_via_json_file(path_file):
             # use original_id check and sync the contact from the belga.
             doc["original_id"] = str(item.get("contactId"))
             count_import += 1
-            contact_service.post([doc])
+            await contact_service.post_async([doc])
             docs.append(doc)
         logger.info(
             "number item: "
@@ -177,24 +180,15 @@ def import_contacts_via_json_file(path_file):
             + ", number imported item: "
             + str(count_import)
         )
-        return docs
 
 
-class ContactImportCommand(superdesk.Command):
+@cli.command("contact:import")
+@click.option("--file", "-f", "contacts_file_path", default="contacts.json")
+async def contacts_import_cli(contacts_file_path: str) -> None:
     """Import contact from belga to Superdesk.
     This command use for inserting a large number contact from Belga to Superdesk.
     Only support for format json file.
     """
 
-    option_list = [
-        superdesk.Option(
-            "--file", "-f", dest="contacts_file_path", default="contacts.json"
-        )
-    ]
-
-    def run(self, contacts_file_path):
-        logger.info("import file: " + contacts_file_path)
-        import_contacts_via_json_file(contacts_file_path)
-
-
-superdesk.command("contact:import", ContactImportCommand())
+    logger.info("import file: " + contacts_file_path)
+    await import_contacts_via_json_file(contacts_file_path)
