@@ -16,7 +16,6 @@ from superdesk.io.registry import register_feed_parser
 
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 import logging
-from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +37,8 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         item["firstcreated"] = item["firstcreated"].astimezone(pytz.utc)
         item["versioncreated"] = item["versioncreated"].astimezone(pytz.utc)
 
-    def parse_newsitem(self, item, newsitem_el):
-        super().parse_newsitem(item, newsitem_el)
+    async def parse_newsitem(self, item, newsitem_el):
+        await super().parse_newsitem(item, newsitem_el)
         for genre in self._get_genre(item):
             qcode = self.MAPPING_PRODUCTS.get(genre.get("name"), "NEWS/GENERAL")
             item.setdefault("subject", []).append(
@@ -72,7 +71,7 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             ):
                 for keyword in set(re.split("[-;]", subject["name"])):
                     # SDBELGA-713
-                    item.setdefault("subject", []).extend(self._get_keywords(keyword))
+                    item.setdefault("subject", []).extend(await self._get_keywords(keyword))
                 item["subject"].remove(subject)
                 item["subject"] = [
                     dict(i)

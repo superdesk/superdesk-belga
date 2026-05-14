@@ -26,6 +26,10 @@ from superdesk.utc import local_to_utc
 logger = logging.getLogger(__name__)
 
 
+class TitleException(KeyError):
+    pass
+
+
 class BelgaSpreadsheetParser(FeedParser):
     """Feed Parser for Spreadsheet"""
 
@@ -85,11 +89,15 @@ class BelgaSpreadsheetParser(FeedParser):
         try:
             self.parse_titles(titles)
             return True
-        except ParserError:
+        except TitleException:
             return False
 
-    def parse(self, data, provider=None):
-        index = self.parse_titles(data[0])
+    async def parse(self, data, provider=None):
+        try:
+            index = self.parse_titles(data[0])
+        except TitleException:
+            raise await ParserError.parseFileError().send_notifications()
+
         items = []
         cells_list = []  # use for patch update to reduce write requests usage
         # skip first two title rows
@@ -110,9 +118,7 @@ class BelgaSpreadsheetParser(FeedParser):
                 if is_updated in ("UPDATED", "ERROR"):
                     guid = values[index["_GUID"]]
                     # check if it's exists and guid is valid
-                    if not superdesk.get_resource_service("events").find_one(
-                        guid=guid, req=None
-                    ):
+                    if not await superdesk.get_resource_service("events").find_one_async(guid=guid, req=None):
                         raise KeyError("GUID is not exists")
                 else:
                     guid = generate_guid(type=GUID_NEWSML)
@@ -272,7 +278,7 @@ class BelgaSpreadsheetParser(FeedParser):
         titles = [s.lower().strip() for s in titles]
         for field in self.titles:
             if field.lower().strip() not in titles:
-                raise ParserError.parseFileError()
+                raise TitleException()
             index[field] = titles.index(field.lower().strip())
         # generate_fields may not present when testing config
         for field in self.generate_fields:

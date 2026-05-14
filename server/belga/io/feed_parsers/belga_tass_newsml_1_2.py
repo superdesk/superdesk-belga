@@ -33,8 +33,8 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         item["firstcreated"] = item["firstcreated"].replace(tzinfo=utc)
         item["versioncreated"] = item["firstcreated"]
 
-    def parse_newsitem(self, item, newsitem_el):
-        super().parse_newsitem(item, newsitem_el)
+    async def parse_newsitem(self, item, newsitem_el):
+        await super().parse_newsitem(item, newsitem_el)
         # mapping news services-products from keywords
         if item.get("keywords"):
             for keyword in item["keywords"]:
@@ -66,7 +66,7 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         credit = {"name": "TASS", "qcode": "TASS", "scheme": "sources"}
         item["subject"].append(credit)
 
-    def parse_newscomponent(self, item, newscomponent_el):
+    async def parse_newscomponent(self, item, newscomponent_el):
         """
         Example:
         <NewsComponent Duid="03AE4325838900396A95" Essential="no" EquivalentsList="no">
@@ -81,7 +81,7 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param newscomponent_el:
         :return:
         """
-        super().parse_newscomponent(
+        await super().parse_newscomponent(
             item, newscomponent_el.find("NewsComponent/NewsComponent")
         )
         if newscomponent_el.attrib.get("Duid") is not None:
@@ -108,7 +108,7 @@ class BelgaTASSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         for ele in newscomponent_el.findall(
             "NewsComponent/NewsComponent/item_keywords/item_keyword"
         ):
-            item.setdefault("subject", []).extend(self._get_keywords(ele.text))
+            item.setdefault("subject", []).extend(await self._get_keywords(ele.text))
 
 
 register_feed_parser(BelgaTASSNewsMLOneFeedParser.NAME, BelgaTASSNewsMLOneFeedParser())

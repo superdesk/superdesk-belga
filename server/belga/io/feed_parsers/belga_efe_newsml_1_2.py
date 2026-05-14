@@ -8,7 +8,6 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.appendsourcefabric.org/superdesk/license
 
-from superdesk import get_resource_service
 from superdesk.io.registry import register_feed_parser
 
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
@@ -26,8 +25,8 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
     }
 
     # efe related logic goes here
-    def parse_contentitem(self, item, content_el):
-        super().parse_contentitem(item, content_el)
+    async def parse_contentitem(self, item, content_el):
+        await super().parse_contentitem(item, content_el)
         categoria = content_el.find('DataContent/nitf/head/meta[@name="categoria"]')
         if categoria is not None:
             content = categoria.attrib.get("content")
@@ -59,7 +58,7 @@ class BelgaEFENewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # store data in original_metadata and belga-keyword CV
         for ele in content_el.findall("DataContent/nitf/head/docdata/key-list/keyword"):
             item.setdefault("subject", []).extend(
-                self._get_keywords(ele.attrib.get("key"))
+                await self._get_keywords(ele.attrib.get("key"))
             )
 
         return item

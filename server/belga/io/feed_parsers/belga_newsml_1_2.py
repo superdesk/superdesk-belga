@@ -74,7 +74,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         """
         return xml.tag == "NewsML"
 
-    def parse(self, xml, provider=None):
+    async def parse(self, xml, provider=None):
         """
         Parse content the xml newsml file to json object.
 
@@ -119,13 +119,13 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             # parser the NewsItem element
             for newsitem_el in xml.findall("NewsItem"):
                 try:
-                    self.parse_newsitem(newsitem_el)
+                    await self.parse_newsitem(newsitem_el)
                 except SkipItemException:
                     continue
 
             return self._items
         except Exception as ex:
-            raise ParserError.newsmlOneParserError(ex, self._provider)
+            raise await ParserError.newsmlOneParserError(ex, self._provider).send_notifications()
 
     def parse_newsenvelop(self, envelop_el):
         """
@@ -145,7 +145,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # not that much we can get here
         return {}
 
-    def parse_newsitem(self, newsitem_el):
+    async def parse_newsitem(self, newsitem_el):
         """
         Parse Newsitem element.
 
@@ -201,7 +201,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # save media items as attachments for text items
         if not all(is_text_roles) and not all(is_media_roles):
             # parse attachment
-            self._item_seed.update(self.parse_attachments(news_component_1))
+            self._item_seed.update(await self.parse_attachments(news_component_1))
 
         # NewsComponent 2nd level
         # NOTE: each NewsComponent of 2nd level is a separate item with unique GUID
@@ -219,11 +219,11 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 # all 2nd level NewsComponents are media items,
                 # ingest them as a standalone media items (not attachments)
                 if all(is_media_roles):
-                    self.parse_newscomponent_media(item, news_component_2)
+                    await self.parse_newscomponent_media(item, news_component_2)
                 # all 2nd level NewsComponents are text items,
                 # ingest them as a text items
                 else:
-                    self.parse_newscomponent_text(item, news_component_2)
+                    await self.parse_newscomponent_text(item, news_component_2)
             except SkipItemException:
                 continue
             self._items.append(item)
@@ -333,7 +333,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return newsmanagement
 
-    def parse_newscomponent_text(self, item, newscomponent_el):
+    async def parse_newscomponent_text(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
         Supports only text items which roles are in `SUPPORTED_TEXT_ASSET_TYPES`
@@ -389,15 +389,15 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         # NewsLines
         newslines_el = newscomponent_el.find("NewsLines")
-        self.parse_newslines(item, newslines_el)
+        await self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
         admin_el = newscomponent_el.find("AdministrativeMetadata")
-        self.parse_administrativemetadata(item, admin_el)
+        await self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
         descript_el = newscomponent_el.find("DescriptiveMetadata")
-        self.parse_descriptivemetadata(item, descript_el)
+        await self.parse_descriptivemetadata(item, descript_el)
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
@@ -446,7 +446,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         return item
 
-    def parse_newscomponent_media(self, item, newscomponent_el):
+    async def parse_newscomponent_media(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
         Supports only text items which roles are in `SUPPORTED_MEDIA_ASSET_TYPES`
@@ -485,15 +485,15 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         # NewsLines
         newslines_el = newscomponent_el.find("NewsLines")
-        self.parse_newslines(item, newslines_el)
+        await self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
         admin_el = newscomponent_el.find("AdministrativeMetadata")
-        self.parse_administrativemetadata(item, admin_el)
+        await self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
         descript_el = newscomponent_el.find("DescriptiveMetadata")
-        self.parse_descriptivemetadata(item, descript_el)
+        await self.parse_descriptivemetadata(item, descript_el)
 
         # description_text, headline
         for formalname, item_key in (
@@ -566,7 +566,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                 if format_el is not None:
                     format_name = format_el.attrib.get("FormalName")
 
-                content = self._get_file(filename)
+                content = await self._get_file(filename)
                 if not content:
                     continue
 
@@ -604,7 +604,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             if i["scheme"] not in subject_to_be_removed
         ]
 
-    def parse_newslines(self, item, newslines_el):
+    async def parse_newslines(self, item, newslines_el):
         """Parse NewsLines in 2nd level NewsComponent element."""
         if newslines_el is None:
             return
@@ -644,12 +644,12 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             if element is not None and element.text:
                 try:
                     item.setdefault("subject", []).extend(
-                        self._get_keywords(element.text.strip())
+                        await self._get_keywords(element.text.strip())
                     )
                 except (StopIteration, IndexError) as e:
                     logger.error(e)
 
-    def parse_administrativemetadata(self, item, admin_el):
+    async def parse_administrativemetadata(self, item, admin_el):
         """Parse AdministrativeMetadata in 2nd level NewsComponent element."""
         if admin_el is None:
             return
@@ -660,7 +660,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get("FormalName"):
             item["administrative"]["provider"] = element.get("FormalName")
 
-        self.parse_sources(item, admin_el)
+        await self.parse_sources(item, admin_el)
 
         signoff_list = []
         for element in admin_el.findall("Creator/Party"):
@@ -676,9 +676,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     "sub_label": author_name,
                 }
                 # try to find an author in DB
-                user = get_resource_service("users").find_one(
-                    req=None, username=author_name
-                )
+                user = await get_resource_service("users").find_one_async(req=None, username=author_name)
                 if user:
                     author["_id"] = [
                         str(user["_id"]),
@@ -776,7 +774,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if element is not None and element.get("Value"):
             item["ednote"] = element.get("Value")
 
-    def parse_descriptivemetadata(self, item, descript_el):
+    async def parse_descriptivemetadata(self, item, descript_el):
         """
         Parse DescriptiveMetadata in NewsComponent element.
 
@@ -811,12 +809,12 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     "FormalName", ""
                 ) == "Country" and element.attrib.get("Value"):
                     country_val = element.attrib.get("Value")
-                    countries = self._get_mapped_keywords(
+                    countries = await self._get_mapped_keywords(
                         country_val, country_val.capitalize(), "countries"
                     )
                     if countries:
                         item.setdefault("subject", []).extend(
-                            countries + self._get_country(countries[0]["qcode"])
+                            countries + await self._get_country(countries[0]["qcode"])
                         )
 
                 # city
@@ -833,7 +831,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             )
         ]
 
-    def parse_attachments(self, news_component_1):
+    async def parse_attachments(self, news_component_1):
         attachments = []
         for news_component_2 in news_component_1.findall("NewsComponent"):
             role_name = self._get_role(news_component_2)
@@ -845,7 +843,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                         and component_role.upper()
                         in self.SUPPORTED_BINARY_ASSET_SUBTYPES
                     ):
-                        attachment = self.parse_attachment(newscomponent)
+                        attachment = await self.parse_attachment(newscomponent)
                         if attachment:
                             attachments.append(attachment)
                 # remove element to avoid parsing it as news item
@@ -857,7 +855,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             }
         return {}
 
-    def parse_attachment(self, newscomponent_el):
+    async def parse_attachment(self, newscomponent_el):
         """
         Parse attachment component, save it to storage and return attachment id
 
@@ -883,7 +881,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         # avoid re-adding media after item is ingested
         guid = hashlib.md5(ElementTree.tostring(content_item)).hexdigest()
         attachment_service = get_resource_service("attachments")
-        old_attachment = attachment_service.find_one(req=None, guid=guid)
+        old_attachment = await attachment_service.find_one_async(req=None, guid=guid)
         if old_attachment:
             return {"attachment": old_attachment["_id"]}
 
@@ -896,7 +894,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if format_el is not None:
             format_name = format_el.attrib.get("FormalName")
 
-        content = self._get_file(filename)
+        content = await self._get_file(filename)
         if not content:
             return
         _, content_type, metadata = process_file_from_stream(
@@ -911,7 +909,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             resource="attachments",
         )
         try:
-            ids = attachment_service.post(
+            ids = await attachment_service.post_async(
                 [
                     {
                         "media": media_id,
@@ -926,14 +924,14 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         except Exception as ex:
             app.media.delete(media_id)
 
-    def parse_sources(self, item, admin_el):
+    async def parse_sources(self, item, admin_el):
         names = []
         source = admin_el.find("Source/Party")
         if source is not None and source.get("FormalName"):
             names.extend(source.get("FormalName").split("/"))
         if not names:
             names.append("BELGA")
-        sources = get_resource_service("vocabularies").get_items("sources")
+        sources = await get_resource_service("vocabularies").get_items_async("sources")
         for source in sources:
             if source["name"] in names:
                 item.setdefault("subject", []).append(source)
@@ -943,33 +941,34 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         if role is not None:
             return role.attrib.get("FormalName")
 
-    def _get_file(self, filename):
+    async def _get_file(self, filename):
         config = self._provider.get("config", {})
         path = config.get("path", "")
         file_dir = os.path.join(path, "attachments")
         file_path = os.path.join(file_dir, filename)
         try:
             if self._provider.get("feeding_service") == "ftp":
-                file_path = self._download_file(filename, file_path, config)
+                file_path = await self._download_file(filename, file_path, config)
             with open(file_path, "rb") as f:
                 content = f.read()
                 if self.MOVE_FILE:
-                    self._move_file(file_dir, filename, config)
+                    await self._move_file(file_dir, filename, config)
                 return BytesIO(content)
         except (FileNotFoundError, error_perm) as e:
             logger.warning("File %s not found", file_path)
         except Exception as e:
             logger.error(e)
 
-    def _download_file(self, filename, file_path, config):
+    async def _download_file(self, filename, file_path, config):
         tmp_dir = os.path.join(gettempdir(), filename)
-        with ftp_connect(config) as ftp, open(tmp_dir, "wb") as f:
-            ftp.retrbinary("RETR " + file_path, f.write)
-            return tmp_dir
+        async with ftp_connect(config) as ftp:
+            with open(tmp_dir, "wb") as f:
+                ftp.retrbinary("RETR " + file_path, f.write)
+                return tmp_dir
 
-    def _move_file(self, file_dir, filename, config):
+    async def _move_file(self, file_dir, filename, config):
         if self._provider.get("feeding_service") == "ftp":
-            with ftp_connect(config) as ftp:
+            async with ftp_connect(config) as ftp:
                 if config.get("move", False):
                     ftp_service = FTPFeedingService()
                     move_path, _ = ftp_service._create_move_folders(config, ftp)
@@ -984,7 +983,7 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             file_service = FileFeedingService()
             # move processed attachments to the same folder with XML
             file_dir = os.path.dirname(file_dir)
-            file_service.move_file(file_dir, "attachments/" + filename, self._provider)
+            await file_service.move_file(file_dir, "attachments/" + filename, self._provider)
 
 
 register_feed_parser(BelgaNewsMLOneFeedParser.NAME, BelgaNewsMLOneFeedParser())

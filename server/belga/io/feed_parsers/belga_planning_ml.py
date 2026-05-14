@@ -17,13 +17,13 @@ class BelgaPlanningMLParser(PlanningMLParser):
         "definition_short": "description_text",
     }
 
-    def parse_item(self, tree, original):
-        item = super().parse_item(tree, original)
+    async def parse_item(self, tree, original):
+        item = await super().parse_item(tree, original)
         event_id = (item or {}).get("event_item")
         if not event_id:
             return item
 
-        event = get_resource_service("events").find_one(req=None, _id=event_id)
+        event = await get_resource_service("events").find_one_async(req=None, _id=event_id)
         if event is None:
             return item
 
@@ -108,16 +108,16 @@ class BelgaPlanningMLParser(PlanningMLParser):
             pass
         raise ValueError(f"Invalid datetime format: {string}")
 
-    def parse_news_coverage_set(self, tree, item, original):
+    async def parse_news_coverage_set(self, tree, item, original):
         item.setdefault("firstcreated", item["versioncreated"])
-        return super().parse_news_coverage_set(tree, item, original)
+        return await super().parse_news_coverage_set(tree, item, original)
 
-    def get_coverage_details(self, news_coverage_elt, item, original):
+    async def get_coverage_details(self, news_coverage_elt, item, original):
         if news_coverage_elt.get("id") is None:
             news_coverage_elt.set(
                 "id", f"{item['guid']}-cov-{len(item.get('coverages', [])) + 1}"
             )
-        coverage = super().get_coverage_details(news_coverage_elt, item, original)
+        coverage = await super().get_coverage_details(news_coverage_elt, item, original)
         if coverage and coverage.get("planning"):
             if coverage["planning"].get("news_coverage_status"):
                 coverage["news_coverage_status"] = coverage["planning"].pop(

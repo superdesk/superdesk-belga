@@ -12,7 +12,6 @@ from superdesk.io.registry import register_feed_parser
 from superdesk.text_utils import get_text
 from .base_belga_newsml_1_2 import BaseBelgaNewsMLOneFeedParser
 import logging
-from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 
@@ -32,8 +31,8 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         "ECO": "NEWS/ECONOMY",
     }
 
-    def parse_newsitem(self, item, newsitem_el):
-        super().parse_newsitem(item, newsitem_el)
+    async def parse_newsitem(self, item, newsitem_el):
+        await super().parse_newsitem(item, newsitem_el)
         # mapping services-products from category, and have only one product
         matching = False
         for category in item.get("anpa_category", []):
@@ -75,7 +74,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             item["urgency"] = 3
         return item
 
-    def parse_descriptivemetadata(self, item, descript_el):
+    async def parse_descriptivemetadata(self, item, descript_el):
         """
         Function parser DescriptiveMetadata in NewsComponent element.
 
@@ -104,7 +103,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         subjects = descript_el.findall("SubjectCode/SubjectDetail")
         subjects += descript_el.findall("SubjectCode/SubjectMatter")
         subjects += descript_el.findall("SubjectCode/Subject")
-        item.setdefault("subject", []).extend(self.format_subjects(subjects))
+        item.setdefault("subject", []).extend(await self.format_subjects(subjects))
         for subject in subjects:
             if subject.get("cat"):
                 category = {"qcode": subject.get("cat")}
@@ -121,7 +120,7 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     country = element.attrib.get("Value")
                     item["extra"]["country"] = country
                     # country is cv
-                    item.setdefault("subject", []).extend(self._get_countries(country))
+                    item.setdefault("subject", []).extend(await self._get_countries(country))
                 if element.attrib.get("FormalName", "") == "City":
                     item["extra"]["city"] = element.attrib.get("Value")
 
@@ -135,18 +134,18 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     item["keywords"] = [data]
 
                 # store data in original_metadata, countries and belga-keyword CV
-                belga_keyword = self._get_mapped_keywords(
+                belga_keyword = await self._get_mapped_keywords(
                     data.upper(), data.upper(), "belga-keywords"
                 )
                 if belga_keyword:
                     item.setdefault("subject", []).extend(belga_keyword)
 
-                countries = self._get_mapped_keywords(
+                countries = await self._get_mapped_keywords(
                     data.lower(), data.title(), "countries"
                 )
                 if countries:
                     item.setdefault("subject", []).extend(
-                        self._get_country(countries[0]["qcode"])
+                        await self._get_country(countries[0]["qcode"])
                     )
 
                 if not belga_keyword and not countries:
