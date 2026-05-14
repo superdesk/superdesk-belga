@@ -1,5 +1,7 @@
 """This macro update the package if fetched item contain language is French or Dutch"""
 
+from inspect import isawaitable
+
 from apps.archive.common import CONTENT_STATE
 from belga.macros.set_default_metadata import set_default_metadata
 import logging
@@ -8,7 +10,7 @@ from superdesk import get_resource_service
 logger = logging.getLogger(__name__)
 
 
-def update_package(item, **kwargs):
+async def update_package(item, **kwargs):
     item = set_default_metadata(item, **kwargs)
 
     language = kwargs.get("desk", {}).get("desk_language", item.get("language"))
@@ -42,7 +44,9 @@ def update_package(item, **kwargs):
 
     macro_service = get_resource_service("macros")
     desk_routing_macro = macro_service.get_macro_by_name("desk_routing")
-    desk_routing_macro["callback"](item, **kwargs)
+    result = desk_routing_macro["callback"](item, **kwargs)
+    if isawaitable(result):
+        await result
 
 
 name = "Add specific package"

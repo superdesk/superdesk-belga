@@ -1,14 +1,14 @@
 import logging
-from flask_babel import lazy_gettext
+from quart_babel import lazy_gettext
 from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 
 
-def update_translation_metadata_macro(item, **kwargs):
+async def update_translation_metadata_macro(item, **kwargs):
     """This macro is used to change the correspondent author role to editor on translation"""
 
-    authoring_roles = get_resource_service("vocabularies").find_one(
+    authoring_roles = await get_resource_service("vocabularies").find_one_async(
         req=None, _id="author_roles"
     )
     if not authoring_roles or not authoring_roles.get("items"):

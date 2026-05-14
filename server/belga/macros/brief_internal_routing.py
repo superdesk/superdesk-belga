@@ -1,9 +1,10 @@
 import re
 import logging
-import superdesk
 from typing import List
 
 from datetime import timedelta, time
+from superdesk import get_resource_service
+from superdesk.core import get_config
 from superdesk.metadata.item import CONTENT_STATE, PUBLISH_SCHEDULE, SCHEDULE_SETTINGS
 from superdesk.macros.internal_destination_auto_publish import (
     internal_destination_auto_publish,
@@ -34,10 +35,8 @@ BRIEF_PROFILE = "BRIEF"
 logger = logging.getLogger(__name__)
 
 
-def _get_profile_id(label):
-    profile = superdesk.get_resource_service("content_types").find_one(
-        req=None, label=label
-    )
+async def _get_profile_id(label):
+    profile = await get_resource_service("content_types").find_one_async(req=None, label=label)
     if profile:
         return profile["_id"]
     return None
@@ -129,13 +128,13 @@ def _fix_body_html(item):
     filter_blocks(item, "body_html", BlockFilter())
 
 
-def brief_internal_routing(item: dict, **kwargs):
+async def brief_internal_routing(item: dict, **kwargs):
     guid = item.get("guid", "unknown")
     logger.info("macro started item=%s", guid)
 
     try:
         assert str(item["profile"]) == str(
-            _get_profile_id(TEXT_PROFILE)
+            await _get_profile_id(TEXT_PROFILE)
         ), "profile is not text"
         assert get_word_count(item["body_html"]) < 301, "body is too long"
         # The title should not start with the word "CORRECTION"
@@ -155,7 +154,7 @@ def brief_internal_routing(item: dict, **kwargs):
 
     item.setdefault("subject", [])
     item["urgency"] = 2
-    item["profile"] = _get_profile_id(BRIEF_PROFILE)
+    item["profile"] = await _get_profile_id(BRIEF_PROFILE)
     item["subject"] = _get_product_subject(_get_brief_subject(item.get("subject", [])))
     item["status"] = CONTENT_STATE.SCHEDULED
     item["operation"] = "publish"
@@ -174,7 +173,7 @@ def brief_internal_routing(item: dict, **kwargs):
 
     # Set item publish schedule to 7:30 am for autopublish between 4 to 7 am
     is_press_headline = item.get("headline") and "press" in item["headline"].lower()
-    current_datetime = utc_to_local(superdesk.app.config["DEFAULT_TIMEZONE"], utcnow())
+    current_datetime = utc_to_local(get_config(str, "DEFAULT_TIMEZONE"), utcnow())
     if is_press_headline and time(4, 00) <= current_datetime.time() <= time(7, 00):
         item[PUBLISH_SCHEDULE] = current_datetime.replace(hour=7, minute=30, second=00)
         logger.info(
@@ -197,7 +196,7 @@ def brief_internal_routing(item: dict, **kwargs):
 
     # publish
     try:
-        internal_destination_auto_publish(item)
+        await internal_destination_auto_publish(item)
     except StopDuplication:
         logger.info("macro done item=%s", guid)
     except DocumentError as err:
