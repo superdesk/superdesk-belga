@@ -47,7 +47,7 @@ def format_image_planning_event_ids_json(
     return Markup(json.dumps(event_ids))
 
 
-def format_image_planning(
+async def format_image_planning(
     planning_data: List[Dict[str, Any]],
     allowed_coverage_types: set,
     title_prefix: str,
@@ -66,7 +66,7 @@ def format_image_planning(
         links = []
 
         if planning.get("event_item"):
-            event_item = event_service.find_one(req=None, _id=planning["event_item"])
+            event_item = await event_service.find_one_async(req=None, _id=planning["event_item"])
             if event_item:
                 links = event_item.get("links", [])
                 if is_editorial_calendar(event_item):
@@ -83,17 +83,8 @@ def format_image_planning(
         set_event_translations_value(planning_nl, "nl")
         set_event_translations_value(planning_fr, "fr")
 
-        contacts = (
-            get_formatted_contacts(event_item)
-            if event_item
-            else get_formatted_contacts(planning)
-        )
-
-        location = (
-            get_item_location(event_item, "nl")
-            if event_item
-            else get_item_location(planning, "nl")
-        )
+        contacts = await get_formatted_contacts(event_item if event_item else planning)
+        location = await get_item_location(event_item if event_item else planning, "nl")
 
         scheduled, display_dates, tz = get_planning_schedule_info(planning, event_item)
 
@@ -129,7 +120,7 @@ def format_image_planning(
             "title_fr": planning_fr.get("name") or planning_fr.get("slugline") or "",
             "description_nl": (planning_nl.get("description_text") or "").rstrip(),
             "description_fr": (planning_fr.get("description_text") or "").rstrip(),
-            "coverages": get_filtered_coverages(
+            "coverages": await get_filtered_coverages(
                 planning,
                 planning_service,
                 desk_service,
@@ -193,14 +184,14 @@ def has_allowed_coverage(coverages, allowed_types) -> bool:
     return False
 
 
-def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
+async def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
     user_service = get_resource_service("users")
     formatted = []
 
     planning_ids = item.get("planning_ids") or [item.get("_id")]
 
     for pid in planning_ids:
-        planning_item = planning_service.find_one(req=None, _id=pid)
+        planning_item = await planning_service.find_one_async(req=None, _id=pid)
         if not planning_item:
             continue
 
@@ -224,13 +215,13 @@ def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
 
             desk_id = planning_info.get("desk")
             if desk_id:
-                desk = desk_service.find_one(req=None, _id=desk_id)
+                desk = await desk_service.find_one_async(req=None, _id=desk_id)
                 if desk:
                     desk_name = desk.get("name", "")
 
             user_id = coverage.get("assigned_to", {}).get("user")
             if user_id:
-                user = user_service.find_one(req=None, _id=user_id)
+                user = await user_service.find_one_async(req=None, _id=user_id)
                 if user:
                     username = user.get("sign_off") or user.get("username")
 

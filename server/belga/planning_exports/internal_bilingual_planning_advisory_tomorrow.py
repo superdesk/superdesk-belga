@@ -14,7 +14,7 @@ from markupsafe import Markup
 from superdesk import get_resource_service
 
 
-def format_planning_for_tomorrow_bilingual_internal(
+async def format_planning_for_tomorrow_bilingual_internal(
     planning_data: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
     """Format planning items into bilingual advisory output for internal use"""
@@ -23,13 +23,13 @@ def format_planning_for_tomorrow_bilingual_internal(
 
     weekday_date = ""
     if planning_data:
-        weekday_date = get_advisory_weekday_date(planning_data[0])
+        weekday_date = await get_advisory_weekday_date(planning_data[0])
 
     for planning in planning_data:
         event_item = None
         event_links = []
         if planning.get("event_item"):
-            event_item = event_service.find_one(req=None, _id=planning["event_item"])
+            event_item = await event_service.find_one_async(req=None, _id=planning["event_item"])
             if event_item:
                 event_links = event_item.get("links", [])
 
@@ -45,9 +45,9 @@ def format_planning_for_tomorrow_bilingual_internal(
         formatted_planning = {
             "subject": ",".join(get_subjects(planning, "nl")),
             "calendar": calendar,
-            "contacts": get_formatted_contacts(event_item if event_item else planning),
-            "coverages": get_coverages_bilingual(planning, include_assignee=True),
-            "location": get_item_location(event_item if event_item else planning, "nl"),
+            "contacts": await get_formatted_contacts(event_item if event_item else planning),
+            "coverages": await get_coverages_bilingual(planning, include_assignee=True),
+            "location": await get_item_location(event_item if event_item else planning, "nl"),
             "links": event_links,
             "title_nl": planning.get("name")
             or planning.get("slugline")

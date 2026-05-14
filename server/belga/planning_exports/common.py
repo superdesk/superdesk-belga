@@ -96,7 +96,7 @@ def format_coverage_label(cov_type: str, language_code: str, status: str) -> str
     return f"{COVERAGE_PREFIX} {ct} ({status})"
 
 
-def get_item_location(
+async def get_item_location(
     event: Dict[str, Any], locale: str, is_only_city_and_country: bool = False
 ) -> str:
     """Set the location to be used for sorting / displaying"""
@@ -109,7 +109,7 @@ def get_item_location(
 
     # find location on DB and then extract translation Name
     if location[0].get("qcode") and event_lang:
-        location_data = get_resource_service("locations").find_one(
+        location_data = await get_resource_service("locations").find_one_async(
             req=None, guid=location[0].get("qcode")
         )
 
@@ -193,12 +193,12 @@ def set_metadata(formatted_event: Dict[str, Any], event: Dict[str, Any], locale:
     set_item_description(formatted_event, event)
 
 
-def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
+async def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
     contacts = event.get("event_contact_info", [])
     formatted_contacts: List[FormattedContact] = []
 
     for contact_id in contacts:
-        contact_details = get_resource_service("contacts").find_one(
+        contact_details = await get_resource_service("contacts").find_one_async(
             req=None, _id=contact_id
         )
         if contact_details:
@@ -233,12 +233,12 @@ def get_formatted_contacts(event: Dict[str, Any]) -> List[FormattedContact]:
     return formatted_contacts
 
 
-def get_coverages(event: Dict[str, Any], locale: str):
+async def get_coverages(event: Dict[str, Any], locale: str):
     formatted_coverages = []
     planning_ids = event.get("planning_ids", [])
     planning_service = get_resource_service("planning")
     for id in planning_ids:
-        planning_item = planning_service.find_one(req=None, _id=id)
+        planning_item = await planning_service.find_one_async(req=None, _id=id)
         if not planning_item:
             continue
         for coverage in planning_item.get("coverages", []):
@@ -401,7 +401,7 @@ def is_editorial_calendar(item):
     return False
 
 
-def get_advisory_weekday_date(planning_item, planning_service=None, event_service=None):
+async def get_advisory_weekday_date(planning_item, planning_service=None, event_service=None):
     """Get weekday/date of planning, preferring linked event date."""
     if event_service is None:
         event_service = get_resource_service("events")
@@ -410,9 +410,9 @@ def get_advisory_weekday_date(planning_item, planning_service=None, event_servic
 
     event_item = None
     if planning_item.get("event_item"):
-        event_item = event_service.find_one(req=None, _id=planning_item["event_item"])
+        event_item = await event_service.find_one_async(req=None, _id=planning_item["event_item"])
 
-    planning_item = planning_service.find_one(req=None, _id=planning_item["_id"])
+    planning_item = await planning_service.find_one_async(req=None, _id=planning_item["_id"])
     if not planning_item:
         return ""
 
@@ -431,7 +431,7 @@ def get_advisory_weekday_date(planning_item, planning_service=None, event_servic
     return ""
 
 
-def get_coverages_bilingual(item, include_assignee=False):
+async def get_coverages_bilingual(item, include_assignee=False):
     """Get coverages formatted for bilingual output.
 
     Works for both event items (uses planning_ids field) and planning items
@@ -448,7 +448,7 @@ def get_coverages_bilingual(item, include_assignee=False):
     user_cache = {}
 
     for planning_id in planning_ids:
-        planning_item = planning_service.find_one(req=None, _id=planning_id)
+        planning_item = await planning_service.find_one_async(req=None, _id=planning_id)
         if not planning_item:
             continue
 
@@ -475,7 +475,7 @@ def get_coverages_bilingual(item, include_assignee=False):
             )
             if desk_id:
                 if desk_id not in desk_cache:
-                    desk_cache[desk_id] = desk_service.find_one(req=None, _id=desk_id)
+                    desk_cache[desk_id] = await desk_service.find_one_async(req=None, _id=desk_id)
                 desk_item = desk_cache[desk_id]
                 if desk_item:
                     desk_name = desk_item.get("name", "")
@@ -493,7 +493,7 @@ def get_coverages_bilingual(item, include_assignee=False):
                 assigned_user_id = coverage.get("assigned_to", {}).get("user")
                 if assigned_user_id and user_service:
                     if assigned_user_id not in user_cache:
-                        user_item = user_service.find_one(
+                        user_item = await user_service.find_one_async(
                             req=None, _id=assigned_user_id
                         )
                         user_cache[assigned_user_id] = (
@@ -594,7 +594,7 @@ def get_planning_display_times(planning, event_item=None):
     return "", ""
 
 
-def format_bilingual_event_item(
+async def format_bilingual_event_item(
     event, locale, include_assignee=False, calendar_fallback="Overig / Divers"
 ):
     """Format a single event item for bilingual advisory output.
@@ -615,9 +615,9 @@ def format_bilingual_event_item(
     formatted_event = {
         "subject": ",".join(get_subjects(event, "nl")),
         "calendar": calendar,
-        "contacts": get_formatted_contacts(event),
-        "coverages": get_coverages_bilingual(event, include_assignee=include_assignee),
-        "location": get_item_location(event, "nl"),
+        "contacts": await get_formatted_contacts(event),
+        "coverages": await get_coverages_bilingual(event, include_assignee=include_assignee),
+        "location": await get_item_location(event, "nl"),
         "title_nl": event_nl.get("name") or event_nl.get("slugline") or "",
         "title_fr": event_fr.get("name") or event_fr.get("slugline") or "",
         "description_nl": (

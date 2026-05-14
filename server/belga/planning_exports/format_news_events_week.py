@@ -8,7 +8,7 @@ from .common import (
 from typing import List, Dict, Any
 
 
-def format_event_for_week(event_data: List[Dict[str, Any]], locale: str):
+async def format_event_for_week(event_data: List[Dict[str, Any]], locale: str):
     events_list: List[Dict[str, Any]] = []
 
     if not event_data:
@@ -27,7 +27,7 @@ def format_event_for_week(event_data: List[Dict[str, Any]], locale: str):
         subjects = get_subjects(event, locale)
         formatted_event = {
             "subject": subjects[0] if len(subjects) != 0 else "",
-            "location": get_item_location(event, locale, True),
+            "location": await get_item_location(event, locale, True),
         }
         set_metadata(formatted_event, event, locale)
 

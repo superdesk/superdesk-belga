@@ -6,7 +6,7 @@ from .common import (
 from typing import List, Dict, Any
 
 
-def format_event_for_tommorow_bilingual_internal(
+async def format_event_for_tommorow_bilingual_internal(
     event_data: List[Dict[str, Any]], locale: str
 ) -> Dict[str, Any]:
     """Format events into bilingual event list for advisory output"""
@@ -17,7 +17,7 @@ def format_event_for_tommorow_bilingual_internal(
 
     # Process events for both languages
     for event in event_data:
-        formatted_event = format_bilingual_event_item(
+        formatted_event = await format_bilingual_event_item(
             event, locale, include_assignee=True, calendar_fallback=""
         )
         calendar = formatted_event["calendar"]
