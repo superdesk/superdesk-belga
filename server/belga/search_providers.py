@@ -1,23 +1,27 @@
+from typing import Any, Dict, Optional, ClassVar
+
+import asyncio
 import hmac
 import time
 import uuid
 import arrow
 import hashlib
-import requests
+import aiohttp
+import yarl
 import superdesk
 import logging
 import itertools
+from quart import current_app
 
 import re
 from pytz import utc
 from datetime import datetime
 from urllib.parse import urljoin
-from typing import Any, Dict, Optional
 from superdesk import get_resource_service
 from superdesk.core import json, get_current_app, get_config
+from superdesk.eve_async import AsyncListCursor
 from superdesk.flask import request, jsonify, Response, abort
 from superdesk.utc import local_to_utc
-from superdesk.utils import ListCursor
 from superdesk.metadata.item import MEDIA_TYPES
 from superdesk.timer import timer
 from superdesk.text_utils import get_text as _get_text
@@ -25,10 +29,8 @@ from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
 from apps.search_providers.registry import registered_search_providers
 
 BELGA_TZ = "Europe/Brussels"
-TIMEOUT = (5, 30)
-
+TIMEOUT = aiohttp.ClientTimeout(connect=5, sock_read=30)
 logger = logging.getLogger(__name__)
-session = requests.Session()
 
 
 def get_text(value, strip_html=True):
@@ -48,16 +50,53 @@ def get_datetime(value):
     return local_to_utc(BELGA_TZ, dt)
 
 
-class BelgaListCursor(ListCursor):
+class BelgaListCursor(AsyncListCursor):
     def __init__(self, docs, count):
         super().__init__(docs)
         self._count = count
 
-    def count(self, **kwargs):
+    async def count(self, **kwargs):
         return self._count
 
 
-class BelgaImageSearchProvider(superdesk.SearchProvider):
+class AsyncHttpClientSessionMixin:
+    session: ClassVar[aiohttp.ClientSession | None] = None
+    _connected_loop: ClassVar[asyncio.AbstractEventLoop | None] = None
+
+    @classmethod
+    async def _get_session(cls, config: dict | None = None) -> aiohttp.ClientSession:
+        # Lazy initialization of session
+        current_loop = asyncio.get_event_loop()
+        if cls._connected_loop != current_loop:
+            # Event loop has changed, make sure to re-connect to the new one
+            if cls.session and not cls.session.closed:
+                await cls.session.close()
+            cls.session = None
+            cls._connected_loop = current_loop
+
+        if cls.session is None or cls.session.closed:
+            session = aiohttp.ClientSession(timeout=TIMEOUT)
+
+            @current_app.after_serving
+            async def close_session():
+                await session.close()
+                cls.session = None
+
+            cls.session = session
+            await cls.auth(session, config)
+
+        return cls.session
+
+    async def http_session(self) -> aiohttp.ClientSession:
+        session = await self._get_session()
+        await self.auth(session)
+        return session
+
+    async def auth(self, session: aiohttp.ClientSession):
+        pass
+
+
+class BelgaImageSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionMixin):
     GUID_PREFIX = "urn:belga.be:image:"
     IMAGE_URN = "urn:www.belga.be:picturestore:{id}:{rendition}:true"
 
@@ -72,8 +111,6 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
         self._id_token = None
         self._auth_token = None
         self.provider = provider
-        if self.provider.get("config") and self.provider["config"].get("username"):
-            self.auth()
 
     def auth_headers(self, url, secret=None, nonce=None):
         if not secret and not self._id_token:
@@ -99,22 +136,29 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
             hashlib.sha256,
         ).hexdigest()
 
-    def auth(self):
-        url = "/authorizeUser?l={}".format(self.provider["config"]["username"])
+    async def auth(self, session: aiohttp.ClientSession):
+        try:
+            username = self.provider["config"]["username"]
+        except (KeyError, TypeError):
+            # No auth configured
+            return
+
+        url = "/authorizeUser?l={}".format(username)
         headers = self.auth_headers(url, self.provider["config"].get("password"))
-        resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
-        resp.raise_for_status()
-        if resp.status_code == 200 and resp.content:
-            data = resp.json()
-            self._id_token = data.get("idToken")
-            self._auth_token = data.get("authToken")
+
+        async with session.get(self.url(url), headers=headers) as resp:
+            resp.raise_for_status()
+            if resp.status == 200 and resp.content:
+                data = await resp.json()
+                self._id_token = data.get("idToken")
+                self._auth_token = data.get("authToken")
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip("/"))
 
-    def find(self, query, params=None):
+    async def find_async(self, query, params=None):
         api_params = self.parse_search_params(query, params)
-        data = self.api_get(self.search_endpoint, api_params)
+        data = await self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data[self.count_field])
 
@@ -157,22 +201,24 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 
         return api_params
 
-    def api_get(self, endpoint, params):
-        url = (
-            requests.Request("GET", "http://example.com/" + endpoint, params=params)
-            .prepare()
-            .path_url
+    async def api_get(self, endpoint, params):
+        url = str(
+            yarl.URL("http://example.com/" + endpoint)
+            .with_query(params)
+            .relative()
         )
+
         headers = self.auth_headers(url.replace("%2C", ","))  # decode spaces
         with timer(self.label):
-            resp = session.get(self.url(url), headers=headers, timeout=TIMEOUT)
-        resp.raise_for_status()
-        return resp.json()
+            session = await self.http_session()
+            async with session.get(self.url(url), headers=headers) as resp:
+                resp.raise_for_status()
+                return await resp.json()
 
-    def fetch(self, guid):
+    async def fetch_async(self, guid):
         _id = guid.replace(self.GUID_PREFIX, "")
         params = {"i": _id}
-        data = self.api_get("/getImageById", params)
+        data = await self.api_get("/getImageById", params)
         return self.format_list_item(data)
 
     def format_list_item(self, data):
@@ -209,8 +255,8 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
             "_fetchable": False,
         }
 
-    def proxy(self, url, params):
-        return self.api_get(url, params)
+    async def proxy(self, url, params):
+        return await self.api_get(url, params)
 
 
 class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
@@ -220,7 +266,7 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
     label = "Belga Image v2"
     base_url = "https://belga-websvc.picturepack.com/belgaimage-api/"
 
-    def auth(self):
+    async def auth(self, session: aiohttp.ClientSession):
         """No initial auth required."""
         pass
 
@@ -232,14 +278,14 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
             "X-Authorization": apikey,
         }
 
-    def api_get(self, endpoint, params):
+    async def api_get(self, endpoint, params):
         print("params", params)
         image_limit = get_config(str, "BELGA_IMAGE_LIMIT", "")
         if image_limit and not any([param in params for param in ["c", "h", "e"]]):
             # set limit when not doing any filtering
             # to avoid some images from the future
             params.setdefault("p", image_limit)
-        return super().api_get(endpoint, params)
+        return await super().api_get(endpoint, params)
 
     def url(self, resource):
         config = self.provider.get("config") or {}
@@ -354,7 +400,7 @@ class BelgaCoverageV2SearchProvider(
     GALLERY_URN = "urn:www.belga.be:picturepackgallery:{id}"
 
 
-class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
+class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, AsyncHttpClientSessionMixin):
     GUID_PREFIX = "urn:belga.be:360archive:"
 
     label = "Belga 360 Archive"
@@ -375,10 +421,14 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def __init__(self, provider):
         super().__init__(provider)
         self.base_url = provider.get("config", {}).get("url") or self.base_url
-        self.content_types = {
-            c["_id"] for c in superdesk.get_resource_service("content_types").find({})
-        }
         self._countries = []
+
+    async def auth(self, session: aiohttp.ClientSession):
+        # No auth required, but we'll use this to populate the content types
+        self.content_types = {
+            content_type["_id"]: content_type
+            async for content_type in await get_resource_service("content_types").get_all_async()
+        }
 
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip("/"))
@@ -410,7 +460,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
                 if highlighted_value[1]:
                     doc.setdefault("es_highlight", {})[field] = [highlighted_value[0]]
 
-    def find(self, query, params=None):
+    async def find_async(self, query, params=None):
         api_params = {
             "start": query.get("from", 0),
             "pageSize": query.get("size", 25),
@@ -418,7 +468,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         if params:
             if params.get("preview_id"):
-                return self.get_detailed_info(params["preview_id"], query)
+                return await self.get_detailed_info(params["preview_id"], query)
 
             if params.get("languages"):
                 api_params["language"] = params["languages"].lower()
@@ -448,8 +498,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         api_params["searchText"] = self.get_search_text(query)
 
-        data = self.api_get(self.search_endpoint, api_params)
-        docs = [self.format_list_item(item) for item in data[self.items_field]]
+        data = await self.api_get(self.search_endpoint, api_params)
+        docs = [await self.format_list_item(item) for item in data[self.items_field]]
 
         # SDBELGA-667
         if search_text := api_params.get("searchText"):
@@ -457,26 +507,26 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
 
         return BelgaListCursor(docs, data[self.count_field])
 
-    def get_detailed_info(self, newsObjectId, query):
+    async def get_detailed_info(self, newsObjectId, query):
         formatted_data = []
-        resp = self.api_get(self.search_endpoint + "/" + newsObjectId, {})
+        resp = await self.api_get(self.search_endpoint + "/" + newsObjectId, {})
         if not resp.get("newsItemId"):
             logger.warning(
                 "Unable to fetch detailed information for guid: {}".format(
                     str(newsObjectId)
                 )
             )
-            return [self.format_list_item(resp)]
+            return [await self.format_list_item(resp)]
 
-        detailed_resp = self.api_get("archivenewsitems/" + str(resp["newsItemId"]), {})
+        detailed_resp = await self.api_get("archivenewsitems/" + str(resp["newsItemId"]), {})
         data = detailed_resp.get(self.items_field)
         if data:
             if str(data[0]["newsObjectId"]) == newsObjectId:
-                formatted_data = [self.format_list_item(data[0])]
-                formatted_data[0]["associations"] = self.get_related_article(data)
+                formatted_data = [await self.format_list_item(data[0])]
+                formatted_data[0]["associations"] = await self.get_related_article(data)
             else:
                 formatted_data = [
-                    self.format_list_item(d)
+                    await self.format_list_item(d)
                     for d in data[1:]
                     if str(d["newsObjectId"]) == newsObjectId
                 ]
@@ -485,7 +535,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             self.set_highlight(searchText, formatted_data)
         return formatted_data
 
-    def get_related_article(self, data):
+    async def get_related_article(self, data):
         associations = {}
         related_articles = [
             item
@@ -500,18 +550,19 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
                     else "belga_related_articles--"
                 )
                 + str(idx)
-            ] = self.format_list_item(item)
+            ] = await self.format_list_item(item)
         return associations
 
-    def fetch(self, guid):
+    async def fetch_async(self, guid):
         _id = guid.replace(self.GUID_PREFIX, "")
-        data = self.api_get(self.search_endpoint + "/" + _id, {})
-        return self.format_list_item(data)
+        data = await self.api_get(self.search_endpoint + "/" + _id, {})
+        return await self.format_list_item(data)
 
-    def api_get(self, endpoint, params):
-        resp = session.get(self.url(endpoint), params=params, timeout=TIMEOUT)
-        resp.raise_for_status()
-        return resp.json()
+    async def api_get(self, endpoint, params):
+        session = await self.http_session()
+        async with session.get(self.url(endpoint), params=params) as resp:
+            resp.raise_for_status()
+            return await resp.json()
 
     def _get_belga_date(self, date):
         try:
@@ -565,7 +616,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
     def get_type(self, assetType):
         return assetType.lower() if assetType.lower() in MEDIA_TYPES else "text"
 
-    def format_list_item(self, data):
+    async def format_list_item(self, data):
         guid = "%s%d" % (self.GUID_PREFIX, data["newsObjectId"])
         formatted_data = {
             "type": self.get_type(data.get("assetType", "text")),
@@ -597,7 +648,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             "keywords": data.get("keywords"),
             "sign_off": self.get_sign_off(data.get("authors")),
             "authors": self.get_authors(data.get("authors")),
-            "subject": self.get_subjects(data),
+            "subject": await self.get_subjects(data),
             "renditions": (
                 self.get_renditions(data) if data.get("assetType") == "Picture" else {}
             ),
@@ -658,23 +709,23 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
             map(lambda x: x["name"] + "/" + x["type"].capitalize(), authors)
         )
 
-    def get_subjects(self, data):
+    async def get_subjects(self, data):
         subjects = []
         if data.get("keywords"):
             for key in data["keywords"]:
-                subjects += self._get_keywords(key)
+                subjects += await self._get_keywords(key)
 
         if data.get("country"):
-            countries = self._get_mapped_keywords(
+            countries = await self._get_mapped_keywords(
                 data["country"].lower(), data["country"].title(), "countries"
             )
             if countries:
-                subjects += countries + self._get_country(countries[0]["qcode"])
+                subjects += countries + await self._get_country(countries[0]["qcode"])
 
         if data.get("packages"):
             for package in data["packages"]:
                 key = package["newsService"] + "/" + package["newsProduct"]
-                serviceProduct = get_resource_service("vocabularies").get_items(
+                serviceProduct = await get_resource_service("vocabularies").get_items_async(
                     _id="services-products", qcode=key
                 )
                 if serviceProduct:
@@ -688,7 +739,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin):
         return subjects
 
 
-class BelgaPressSearchProvider(superdesk.SearchProvider):
+class BelgaPressSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionMixin):
     GUID_PREFIX = "urn:belga.be:belgapress:"
 
     label = "Belga Press"
@@ -710,26 +761,29 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
     def __init__(self, provider: Dict[str, Dict], **kwargs):
         super().__init__(provider, **kwargs)
         self._access_token = None
-        config = provider.get("config", {})
-        if config.get("username") and config.get("password"):
-            self.auth()
 
-    def auth(self):
-        resp = session.post(
+    async def auth(self, session: aiohttp.ClientSession):
+        try:
+            username = self.provider["config"]["username"]
+            password = self.provider["config"]["password"]
+        except (KeyError, TypeError):
+            # No auth configured
+            return
+
+        async with session.post(
             f"{self.openid_provider_url}?scope=openid%20profile",
             data={
-                "client_id": self.provider.get("config", {}).get("username"),
-                "client_secret": self.provider.get("config", {}).get("password"),
+                "client_id": username,
+                "client_secret": password,
                 "grant_type": "client_credentials",
             },
-            timeout=TIMEOUT,
-        )
-        resp.raise_for_status()
-        if resp.status_code == 200 and resp.content:
-            data = resp.json()
-            self._access_token = data.get("access_token")
+        ) as resp:
+            resp.raise_for_status()
+            if resp.status == 200 and resp.content:
+                data = await resp.json()
+                self._access_token = data.get("access_token")
 
-    def find(self, query: Dict[str, Any], params: Optional[Dict] = None):
+    async def find_async(self, query: Dict[str, Any], params: Optional[Dict] = None):
         api_params = {
             "offset": query.get("from", 0),
             "count": query.get("size", 25),
@@ -776,26 +830,26 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
         except KeyError:
             pass
 
-        data = self.api_get(self.search_endpoint, api_params)
+        data = await self.api_get(self.search_endpoint, api_params)
         docs = [self.format_list_item(item) for item in data[self.items_field]]
         return BelgaListCursor(docs, data.get("_meta", {}).get("total", len(docs)))
 
-    def api_get(self, endpoint: str, params: Dict) -> Dict:
-        resp = session.get(
+    async def api_get(self, endpoint: str, params: Dict) -> Dict:
+        session = await self.http_session()
+        async with session.get(
             f"{self.base_url}/{endpoint}",
             headers={
                 "Authorization": f"Bearer {self._access_token}",
                 "X-Belga-Context": "API",
             },
             params=params,
-            timeout=TIMEOUT,
-        )
-        resp.raise_for_status()
-        return resp.json()
+        ) as resp:
+            resp.raise_for_status()
+            return await resp.json()
 
-    def fetch(self, guid: str):
+    async def fetch_async(self, guid: str):
         _id = guid.replace(self.GUID_PREFIX, "")
-        data = self.api_get(f"newsobject/{_id}", {})
+        data = await self.api_get(f"newsobject/{_id}", {})
         return self.format_list_item(data)
 
     def _get_period(self, period: str) -> Dict[str, str]:
@@ -834,7 +888,7 @@ class BelgaPressSearchProvider(superdesk.SearchProvider):
         }
 
 
-def belga_image_proxy(url):
+async def belga_image_proxy(url):
     headers = {
         "Access-Control-Allow-Origin": get_config(str, "CLIENT_URL"),
         "Access-Control-Allow-Methods": "GET",
@@ -853,9 +907,9 @@ def belga_image_proxy(url):
         params["i"] = params["i"].split(":")[-1]
     service = None
     if provider_id:
-        service = get_service_by_id(provider_id)
+        service = await get_service_by_id(provider_id)
     if service:
-        data = service.proxy(url, params)
+        data = await service.proxy(url, params)
         if get_current_app().debug:
             print(json.dumps(data, indent=2))
         response = jsonify(data)
@@ -865,19 +919,18 @@ def belga_image_proxy(url):
     return abort(400)
 
 
-def get_service_by_id(provider_id):
-    provider = superdesk.get_resource_service("search_providers").find_one(
-        req=None, _id=provider_id
-    )
+async def get_service_by_id(provider_id):
+    provide_service = superdesk.get_resource_service("search_providers")
+    provider = await provide_service.find_one_async(req=None, _id=provider_id)
     if provider is None:
         # fallback to configured belga_coverage provider for old coverage ids
-        provider = superdesk.get_resource_service("search_providers").find_one(
-            req=None, search_provider="belga_coverage"
-        )
+        provider = await provide_service.find_one_async(req=None, search_provider="belga_coverage")
+
     if provider:
         return registered_search_providers[provider["search_provider"]]["class"](
             provider
         )
+    return None
 
 
 _image_coverage_providers = [
