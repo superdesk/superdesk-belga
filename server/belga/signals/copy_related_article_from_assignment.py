@@ -9,14 +9,14 @@ from planning.types import Event, Planning, Assignment, EventRelatedItem
 logger = logging.getLogger(__name__)
 
 
-def _get_associated_event_from_planning(planning: Planning) -> Optional[Event]:
+async def _get_associated_event_from_planning(planning: Planning) -> Optional[Event]:
     event_id = planning.get("event_item")
     if not event_id:
         # No Event associated with the Planning item, no need to continue
         return None
 
     try:
-        event = get_resource_service("events").find_one(req=None, _id=event_id)
+        event = await get_resource_service("events").find_one_async(req=None, _id=event_id)
     except Exception:
         # Failed to retrieve the Event
         logger.exception("Exception raised while finding event")
@@ -52,10 +52,10 @@ def _get_related_content_field_to_use(content_profile: Dict[str, Any]) -> Option
     return related_content_field
 
 
-def _get_related_items_from_planning(
+async def _get_related_items_from_planning(
     planning: Planning, language: Optional[str] = None
 ) -> List[EventRelatedItem]:
-    event = _get_associated_event_from_planning(planning)
+    event = await _get_associated_event_from_planning(planning)
     if not event:
         return []
 
@@ -66,7 +66,7 @@ def _get_related_items_from_planning(
     ]
 
 
-def _get_event_related_item_from_search_proxy(
+async def _get_event_related_item_from_search_proxy(
     related_item: EventRelatedItem,
 ) -> Optional[Dict[str, Any]]:
     provider_id = related_item.get("search_provider")
@@ -80,7 +80,7 @@ def _get_event_related_item_from_search_proxy(
         return None
 
     try:
-        external_item = get_resource_service(PROXY_ENDPOINT).fetch(
+        external_item = await get_resource_service(PROXY_ENDPOINT).fetch_async(
             related_item_id, provider_id
         )
     except Exception:
@@ -94,8 +94,7 @@ def _get_event_related_item_from_search_proxy(
     return external_item
 
 
-def on_assignment_start_working(
-    _sender: Any,
+async def on_assignment_start_working(
     assignment: Assignment,
     planning: Planning,
     item: Dict[str, Any],
@@ -107,7 +106,7 @@ def on_assignment_start_working(
         return
 
     # 2. Get list of related items, based on language of the content item
-    related_items = _get_related_items_from_planning(planning, item.get("language"))
+    related_items = await _get_related_items_from_planning(planning, item.get("language"))
     if not related_items:
         # No related items in the appropriate language attached, no need to continue
         return
@@ -118,7 +117,7 @@ def on_assignment_start_working(
     #   2.3. Add entire related item to content's related articles field
     content_index = 1
     for related_item in related_items:
-        external_item = _get_event_related_item_from_search_proxy(related_item)
+        external_item = await _get_event_related_item_from_search_proxy(related_item)
         if not external_item:
             continue
 

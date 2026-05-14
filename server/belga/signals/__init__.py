@@ -1,8 +1,9 @@
 from superdesk.signals import (
     item_create,
     item_update,
-    item_move,
+    item_move_async,
     item_rewrite,
+    item_rewrite_async,
     item_duplicate,
 )
 from planning.signals import assignment_content_create
@@ -19,9 +20,9 @@ def init_app(_app):
     item_create.connect(generate_id_for_url.handle_create)
     item_update.connect(generate_id_for_url.handle_update)
     # unmark user when moved to incoming stage
-    item_move.connect(unmark_user_when_moved_to_incoming_stage.unmark_user)
+    item_move_async.connect(unmark_user_when_moved_to_incoming_stage.unmark_user)
     # change profile from ALERT to TEXT on update
-    item_rewrite.connect(update.handle_update)
+    item_rewrite_async.connect(update.handle_update)
     # Disable and empty date time for coming_up field
     item_rewrite.connect(update.handle_coming_up_field)
     # remove all belga archive 360 associations from a translation item
