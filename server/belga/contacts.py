@@ -8,6 +8,7 @@ import superdesk
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
 from superdesk.core import json
+from superdesk.core.web import AsyncHttpClientSessionMixin
 from superdesk.factory.app import SuperdeskApp
 from superdesk.eve_async import AsyncBaseService, AsyncListCursor
 
@@ -19,27 +20,26 @@ BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
 class KeycloakAuth:
     """Handles Keycloak authentication and token management."""
 
-    def __init__(self, session: aiohttp.ClientSession, endpoint: str, client_id: str, client_secret: str):
-        self.session = session
+    def __init__(self, endpoint: str, client_id: str, client_secret: str):
         self.endpoint = endpoint
         self.client_id = client_id
         self.client_secret = client_secret
         self._token = None
         self._token_expiry = None
 
-    async def get_token(self) -> str:
+    async def get_token(self, http_client: aiohttp.ClientSession) -> str:
         """Get a valid access token"""
         if (
             not self._token
             or not self._token_expiry
             or datetime.now() >= self._token_expiry
         ):
-            await self._fetch_new_token()
+            await self._fetch_new_token(http_client)
 
         assert self._token is not None, "Access token was not fetched"
         return self._token
 
-    async def _fetch_new_token(self):
+    async def _fetch_new_token(self, http_client: aiohttp.ClientSession):
         """Fetch new token from Keycloak."""
         data = {
             "grant_type": "client_credentials",
@@ -47,7 +47,7 @@ class KeycloakAuth:
             "client_secret": self.client_secret,
         }
 
-        async with self.session.post(self.endpoint, data=data) as response:
+        async with http_client.post(self.endpoint, data=data) as response:
             response.raise_for_status()
             token_data = await response.json()
 
@@ -155,27 +155,24 @@ def parse_contact(contact) -> Contact:
     return parsed
 
 
-class BelgaContactsProxy(AsyncBaseService):
+class BelgaContactsProxy(AsyncBaseService, AsyncHttpClientSessionMixin):
+    # Disable SSL verification for the entire session
+    http_verify_ssl = False
 
     def __init__(self, url):
         self.base = url
         self.count = 50
 
-        # Disable SSL verification for the entire session
-        connector = aiohttp.TCPConnector(ssl=False)
-        self.session = aiohttp.ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=30))
-
         # Initialize Keycloak auth
         self.auth = KeycloakAuth(
-            self.session,
             endpoint=os.environ.get("BELGA_KEYCLOAK_ENDPOINT"),
             client_id=os.environ.get("BELGA_KEYCLOAK_CLIENT_ID"),
             client_secret=os.environ.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
         )
 
-    async def _get_headers(self):
+    async def _get_headers(self, http_client: aiohttp.ClientSession):
         """Get request headers with auth token."""
-        return {"Authorization": f"Bearer {await self.auth.get_token()}"}
+        return {"Authorization": f"Bearer {await self.auth.get_token(http_client)}"}
 
     async def get_async(self, req, lookup):
         if req.args.get("source"):
@@ -192,11 +189,11 @@ class BelgaContactsProxy(AsyncBaseService):
         page = int(req.args.get("page", 1)) - 1
 
         params = {"searchText": req.args.get("q", ""), "count": size, "offset": page}
-
-        async with self.session.get(
+        http_client = await self.http_session()
+        async with http_client.get(
             urljoin(self.base, "contacts"),
             params=params,
-            headers=self._get_headers(),
+            headers=await self._get_headers(http_client),
         ) as res:
             res.raise_for_status()
             data = await res.json()
@@ -215,9 +212,10 @@ class BelgaContactsProxy(AsyncBaseService):
             else _id
         )
 
-        async with self.session.get(
+        http_client = await self.http_session()
+        async with http_client.get(
             urljoin(self.base, f"contacts/{contact_id}"),
-            headers=self._get_headers()
+            headers=await self._get_headers(http_client)
         ) as res:
             if res.status == 500:  # returns 500 on missing contact
                 return None
@@ -285,15 +283,3 @@ def init_app(app: SuperdeskApp):
             }
         }
     )
-
-    @app.after_serving
-    async def close_session():
-        session = belga_contacts_service.session
-
-        if session is None or session.closed:
-            return
-
-        try:
-            await session.close()
-        except Exception:
-            logger.exception("Failed to close aiohttp ClientSession")

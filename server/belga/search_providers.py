@@ -1,6 +1,5 @@
-from typing import Any, Dict, Optional, ClassVar
+from typing import Any, Dict, Optional
 
-import asyncio
 import hmac
 import time
 import uuid
@@ -11,7 +10,6 @@ import yarl
 import superdesk
 import logging
 import itertools
-from quart import current_app
 
 import re
 from pytz import utc
@@ -19,6 +17,7 @@ from datetime import datetime
 from urllib.parse import urljoin
 from superdesk import get_resource_service
 from superdesk.core import json, get_current_app, get_config
+from superdesk.core.web import AsyncHttpClientSessionMixin
 from superdesk.eve_async import AsyncListCursor
 from superdesk.flask import request, jsonify, Response, abort
 from superdesk.utc import local_to_utc
@@ -29,7 +28,6 @@ from belga.io.feed_parsers.belga_newsml_mixin import BelgaNewsMLMixin
 from apps.search_providers.registry import registered_search_providers
 
 BELGA_TZ = "Europe/Brussels"
-TIMEOUT = aiohttp.ClientTimeout(connect=5, sock_read=30)
 logger = logging.getLogger(__name__)
 
 
@@ -57,43 +55,6 @@ class BelgaListCursor(AsyncListCursor):
 
     async def count(self, **kwargs):
         return self._count
-
-
-class AsyncHttpClientSessionMixin:
-    session: ClassVar[aiohttp.ClientSession | None] = None
-    _connected_loop: ClassVar[asyncio.AbstractEventLoop | None] = None
-
-    @classmethod
-    async def _get_session(cls, config: dict | None = None) -> aiohttp.ClientSession:
-        # Lazy initialization of session
-        current_loop = asyncio.get_event_loop()
-        if cls._connected_loop != current_loop:
-            # Event loop has changed, make sure to re-connect to the new one
-            if cls.session and not cls.session.closed:
-                await cls.session.close()
-            cls.session = None
-            cls._connected_loop = current_loop
-
-        if cls.session is None or cls.session.closed:
-            session = aiohttp.ClientSession(timeout=TIMEOUT)
-
-            @current_app.after_serving
-            async def close_session():
-                await session.close()
-                cls.session = None
-
-            cls.session = session
-            await cls.auth(session, config)
-
-        return cls.session
-
-    async def http_session(self) -> aiohttp.ClientSession:
-        session = await self._get_session()
-        await self.auth(session)
-        return session
-
-    async def auth(self, session: aiohttp.ClientSession):
-        pass
 
 
 class BelgaImageSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionMixin):
@@ -136,7 +97,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
             hashlib.sha256,
         ).hexdigest()
 
-    async def auth(self, session: aiohttp.ClientSession):
+    async def on_http_session_start(self, http_client: aiohttp.ClientSession):
         try:
             username = self.provider["config"]["username"]
         except (KeyError, TypeError):
@@ -146,7 +107,7 @@ class BelgaImageSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
         url = "/authorizeUser?l={}".format(username)
         headers = self.auth_headers(url, self.provider["config"].get("password"))
 
-        async with session.get(self.url(url), headers=headers) as resp:
+        async with http_client.get(self.url(url), headers=headers) as resp:
             resp.raise_for_status()
             if resp.status == 200 and resp.content:
                 data = await resp.json()
@@ -210,8 +171,8 @@ class BelgaImageSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
 
         headers = self.auth_headers(url.replace("%2C", ","))  # decode spaces
         with timer(self.label):
-            session = await self.http_session()
-            async with session.get(self.url(url), headers=headers) as resp:
+            http_client = await self.http_session()
+            async with http_client.get(self.url(url), headers=headers) as resp:
                 resp.raise_for_status()
                 return await resp.json()
 
@@ -266,7 +227,7 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
     label = "Belga Image v2"
     base_url = "https://belga-websvc.picturepack.com/belgaimage-api/"
 
-    async def auth(self, session: aiohttp.ClientSession):
+    async def on_http_session_start(self, http_client: aiohttp.ClientSession):
         """No initial auth required."""
         pass
 
@@ -423,7 +384,7 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
         self.base_url = provider.get("config", {}).get("url") or self.base_url
         self._countries = []
 
-    async def auth(self, session: aiohttp.ClientSession):
+    async def on_http_session_start(self, http_client: aiohttp.ClientSession):
         # No auth required, but we'll use this to populate the content types
         self.content_types = {
             content_type["_id"]: content_type
@@ -559,8 +520,8 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
         return await self.format_list_item(data)
 
     async def api_get(self, endpoint, params):
-        session = await self.http_session()
-        async with session.get(self.url(endpoint), params=params) as resp:
+        http_client = await self.http_session()
+        async with http_client.get(self.url(endpoint), params=params) as resp:
             resp.raise_for_status()
             return await resp.json()
 
@@ -762,7 +723,7 @@ class BelgaPressSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
         super().__init__(provider, **kwargs)
         self._access_token = None
 
-    async def auth(self, session: aiohttp.ClientSession):
+    async def on_http_session_start(self, http_client: aiohttp.ClientSession):
         try:
             username = self.provider["config"]["username"]
             password = self.provider["config"]["password"]
@@ -770,7 +731,7 @@ class BelgaPressSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
             # No auth configured
             return
 
-        async with session.post(
+        async with http_client.post(
             f"{self.openid_provider_url}?scope=openid%20profile",
             data={
                 "client_id": username,
@@ -835,8 +796,8 @@ class BelgaPressSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
         return BelgaListCursor(docs, data.get("_meta", {}).get("total", len(docs)))
 
     async def api_get(self, endpoint: str, params: Dict) -> Dict:
-        session = await self.http_session()
-        async with session.get(
+        http_client = await self.http_session()
+        async with http_client.get(
             f"{self.base_url}/{endpoint}",
             headers={
                 "Authorization": f"Bearer {self._access_token}",
