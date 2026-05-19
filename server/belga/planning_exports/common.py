@@ -7,6 +7,8 @@ from superdesk.core import get_config
 from typing import Union as _Union
 from datetime import date as _date_type, datetime as _datetime_type
 
+from planning.utils import get_related_event_items_for_planning_async
+
 ADVISORY_TIMEZONE = "Europe/Brussels"
 COVERAGE_PREFIX = "BELGA"
 
@@ -410,11 +412,12 @@ async def get_advisory_weekday_date(
     if planning_service is None:
         planning_service = get_resource_service("planning")
 
-    event_item = None
-    if planning_item.get("event_item"):
-        event_item = await event_service.find_one_async(
-            req=None, _id=planning_item["event_item"]
-        )
+    try:
+        event_item = (
+            await get_related_event_items_for_planning_async(planning_item, "primary")
+        )[0]
+    except (TypeError, IndexError):
+        event_item = None
 
     planning_item = await planning_service.find_one_async(
         req=None, _id=planning_item["_id"]

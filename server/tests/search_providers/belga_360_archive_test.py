@@ -279,7 +279,6 @@ class Belga360ArchiveTestCase(TestCase):
             },
         )
 
-    # TODO-PR: Re-test this
     @aioresponses()
     async def test_get_highlighted_text(self, http_mock):
         mock.http(http_mock, payload=json.loads(get_belga360_search()))

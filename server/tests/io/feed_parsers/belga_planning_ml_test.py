@@ -50,7 +50,9 @@ class BelgaPlanningMLTestCase(TestCase):
         assert len(self.item["coverages"]) == 2
         assert self.item["item_class"] == "plinat:newscoverage"
         assert self.item["planning_date"].isoformat() == "2025-05-05T22:00:00+00:00"
-        assert self.item["event_item"] == "urn:event:123"
+        assert self.item["related_events"] == [
+            {"_id": "urn:event:123", "link_type": "primary"}
+        ]
 
         assert self.item["coverages"][0]["planning"]["internal_note"] == "John"
         assert self.item["coverages"][0]["planning"]["ednote"] == "Planned coverage"

@@ -1,10 +1,14 @@
 from typing import List, Dict, Any
-import json
 import datetime
 from datetime import date
 from markupsafe import Markup
 from superdesk.utc import utc_to_local
+from superdesk.core import json
 from superdesk import get_resource_service
+from planning.utils import (
+    get_related_event_ids_for_planning,
+    get_related_event_items_for_planning_async,
+)
 
 from .common import (
     get_formatted_contacts,
@@ -28,17 +32,17 @@ def format_image_planning_event_ids_json(
     seen_ids = set()
 
     for planning in planning_data:
-        event_item = planning.get("event_item")
-        if not event_item:
+        try:
+            event_id = get_related_event_ids_for_planning(planning, "primary")[0]
+        except IndexError:
+            event_id = None
+
+        if not event_id or event_id in seen_ids:
             continue
 
-        if not has_allowed_coverage(
+        elif not has_allowed_coverage(
             planning.get("coverages", []), allowed_coverage_types
         ):
-            continue
-
-        event_id = str(event_item)
-        if event_id in seen_ids:
             continue
 
         seen_ids.add(event_id)
@@ -65,14 +69,12 @@ async def format_image_planning(
         event_item = None
         links = []
 
-        if planning.get("event_item"):
-            event_item = await event_service.find_one_async(
-                req=None, _id=planning["event_item"]
-            )
-            if event_item:
-                links = event_item.get("links", [])
-                if is_editorial_calendar(event_item):
-                    continue
+        for event_item in await get_related_event_items_for_planning_async(
+            planning, "primary"
+        ):
+            links.extend(event_item.get("links", []))
+            if is_editorial_calendar(event_item):
+                continue
 
         calendar = ""
         if event_item and event_item.get("calendars"):

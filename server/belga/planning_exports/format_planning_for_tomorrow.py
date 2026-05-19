@@ -10,6 +10,7 @@ from .common import (
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
+from planning.utils import get_related_event_links_for_planning
 
 
 async def format_planning_for_tomorrow(
@@ -30,8 +31,15 @@ async def format_planning_for_tomorrow(
             elif isinstance(coverage, str):
                 cov_type = coverage.lower()
 
-            if cov_type in ["picture", "video"] and item.get("event_item"):
-                event_ids.add(item["event_item"])
+            if cov_type in ["picture", "video"]:
+                event_ids.update(
+                    [
+                        link["_id"]
+                        for link in get_related_event_links_for_planning(
+                            item, "primary"
+                        )
+                    ]
+                )
 
     # Fetch associated events
     events_service = get_resource_service("events")

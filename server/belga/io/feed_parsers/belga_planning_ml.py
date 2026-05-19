@@ -1,12 +1,12 @@
 import datetime
 
-from superdesk import get_resource_service
 from superdesk.utc import local_to_utc
 from superdesk.io.registry import register_feed_parser
 from planning.feed_parsers.superdesk_planning_xml import (
     PlanningMLParser,
     get_coverage_status_from_cv,
 )
+from planning.utils import get_related_event_items_for_planning_async
 
 
 class BelgaPlanningMLParser(PlanningMLParser):
@@ -19,14 +19,17 @@ class BelgaPlanningMLParser(PlanningMLParser):
 
     async def parse_item(self, tree, original):
         item = await super().parse_item(tree, original)
-        event_id = (item or {}).get("event_item")
-        if not event_id:
+        if not item:
             return item
 
-        event = await get_resource_service("events").find_one_async(
-            req=None, _id=event_id
-        )
-        if event is None:
+        try:
+            event = (await get_related_event_items_for_planning_async(item, "primary"))[
+                0
+            ]
+        except IndexError:
+            event = None
+
+        if not event:
             return item
 
         self._apply_event_metadata(item, event)
@@ -171,7 +174,9 @@ class BelgaPlanningMLParser(PlanningMLParser):
         meta = tree.find(self.qname("itemMeta"))
         for link in meta.findall(self.qname("link")):
             if link.get("rel") == "irel:associatedWith":
-                item["event_item"] = link.get("residref")
+                item["related_events"] = [
+                    {"_id": link.get("residref"), "link_type": "primary"}
+                ]
                 break
 
 

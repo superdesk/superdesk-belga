@@ -9,9 +9,13 @@ from .common import (
     get_planning_display_times,
 )
 from typing import List, Dict, Any
-import json
 from markupsafe import Markup
 from superdesk import get_resource_service
+from superdesk.core import json
+from planning.utils import (
+    get_related_event_items_for_planning_async,
+    get_related_event_ids_for_planning,
+)
 
 
 async def format_planning_for_tomorrow_bilingual_internal(
@@ -28,12 +32,10 @@ async def format_planning_for_tomorrow_bilingual_internal(
     for planning in planning_data:
         event_item = None
         event_links = []
-        if planning.get("event_item"):
-            event_item = await event_service.find_one_async(
-                req=None, _id=planning["event_item"]
-            )
-            if event_item:
-                event_links = event_item.get("links", [])
+        for event_item in await get_related_event_items_for_planning_async(
+            planning, "primary"
+        ):
+            event_links.extend(event_item.get("links", []))
 
         calendar = ""
         if event_item and event_item.get("calendars"):
@@ -96,12 +98,12 @@ def format_planning_for_tomorrow_bilingual_internal_event_ids_json(
     seen_ids = set()
 
     for planning in planning_data:
-        event_item = planning.get("event_item")
-        if not event_item:
-            continue
+        try:
+            event_id = get_related_event_ids_for_planning(planning, "primary")[0]
+        except IndexError:
+            event_id = None
 
-        event_id = str(event_item)
-        if event_id in seen_ids:
+        if not event_id or event_id in seen_ids:
             continue
 
         seen_ids.add(event_id)

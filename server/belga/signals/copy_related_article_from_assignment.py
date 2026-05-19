@@ -3,33 +3,11 @@ import logging
 
 from superdesk import get_resource_service
 from apps.search_providers.proxy import PROXY_ENDPOINT
-from planning.types import Event, Planning, Assignment, EventRelatedItem
+from planning.types import Planning, Assignment, EventRelatedItem
+from planning.utils import get_related_event_items_for_planning_async
 
 
 logger = logging.getLogger(__name__)
-
-
-async def _get_associated_event_from_planning(planning: Planning) -> Optional[Event]:
-    event_id = planning.get("event_item")
-    if not event_id:
-        # No Event associated with the Planning item, no need to continue
-        return None
-
-    try:
-        event = await get_resource_service("events").find_one_async(
-            req=None, _id=event_id
-        )
-    except Exception:
-        # Failed to retrieve the Event
-        logger.exception("Exception raised while finding event")
-        return None
-
-    if not event:
-        # Event not found for some reason
-        logger.error("Associated event not found")
-        return None
-
-    return event
 
 
 def _get_related_content_field_to_use(content_profile: Dict[str, Any]) -> Optional[str]:
@@ -57,7 +35,14 @@ def _get_related_content_field_to_use(content_profile: Dict[str, Any]) -> Option
 async def _get_related_items_from_planning(
     planning: Planning, language: Optional[str] = None
 ) -> List[EventRelatedItem]:
-    event = await _get_associated_event_from_planning(planning)
+
+    try:
+        event = (await get_related_event_items_for_planning_async(planning, "primary"))[
+            0
+        ]
+    except (TypeError, IndexError):
+        event = None
+
     if not event:
         return []
 

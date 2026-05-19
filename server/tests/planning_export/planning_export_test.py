@@ -799,7 +799,12 @@ class PlanningExportTests(TestCase):
                             "news_coverage_status": {"label": "Planned"},
                         }
                     ],
-                    "event_item": ev.get("_id") or str(ObjectId()),
+                    "related_events": [
+                        {
+                            "_id": ev.get("_id") or str(ObjectId()),
+                            "link_type": "primary",
+                        }
+                    ],
                     "event_contact_info": ev.get("event_contact_info", []),
                     "language": "en",
                 }
@@ -909,7 +914,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": None,
+                "related_events": None,
             },
             {
                 "_id": planning_2_id,
@@ -924,7 +929,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     }
                 ],
-                "event_item": None,
+                "related_events": None,
             },
             {
                 "_id": planning_3_id,
@@ -939,7 +944,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": None,
+                "related_events": None,
             },
         ]
 
@@ -1150,7 +1155,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": event_1_id,
+                "related_events": [{"_id": event_1_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_2_id,
@@ -1168,7 +1173,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     }
                 ],
-                "event_item": event_1_id,
+                "related_events": [{"_id": event_1_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_3_id,
@@ -1183,7 +1188,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": event_1_id,
+                "related_events": [{"_id": event_1_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_4_id,
@@ -1201,7 +1206,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": event_2_id,
+                "related_events": [{"_id": event_2_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_5_id,
@@ -1224,7 +1229,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     },
                 ],
-                "event_item": event_3_id,
+                "related_events": [{"_id": event_3_id, "link_type": "primary"}],
             },
         ]
 
@@ -1533,7 +1538,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": event_1_id,
+                "related_events": [{"_id": event_1_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_2_id,
@@ -1546,7 +1551,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     }
                 ],
-                "event_item": event_1_id,
+                "related_events": [{"_id": event_1_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_3_id,
@@ -1562,7 +1567,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": event_1_id,
+                "related_events": [{"_id": event_1_id, "link_type": "primary"}],
             },
             {
                 "_id": planning_4_id,
@@ -1582,7 +1587,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     },
                 ],
-                "event_item": event_2_id,
+                "related_events": [{"_id": event_2_id, "link_type": "primary"}],
             },
         ]
 
@@ -1732,7 +1737,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     },
                 ],
-                "event_item": None,
+                "related_events": None,
             },
             {
                 "_id": planning_2_id,
@@ -1756,7 +1761,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     },
                 ],
-                "event_item": None,
+                "related_events": None,
             },
             {
                 "_id": planning_3_id,
@@ -1772,7 +1777,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "On Merit"},
                     }
                 ],
-                "event_item": None,
+                "related_events": None,
             },
         ]
 
@@ -1965,7 +1970,7 @@ class PlanningExportTests(TestCase):
                     "news_coverage_status": {"label": "Planned"},
                 }
             ],
-            "event_item": None,
+            "related_events": None,
         }
 
         self.app.data.insert("planning", [planning_item])
@@ -2194,7 +2199,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": editorial_event_id,
+                "related_events": [{"_id": editorial_event_id, "link_type": "primary"}],
             },
             {
                 "_id": ObjectId(),
@@ -2208,7 +2213,7 @@ class PlanningExportTests(TestCase):
                         "news_coverage_status": {"label": "Planned"},
                     }
                 ],
-                "event_item": public_event_id,
+                "related_events": [{"_id": public_event_id, "link_type": "primary"}],
             },
         ]
 
@@ -2276,7 +2281,7 @@ class PlanningExportTests(TestCase):
                     "planning": {"g2_content_type": "video"},
                 },
             ],
-            "event_item": event_id,
+            "related_events": [{"_id": event_id, "link_type": "primary"}],
         }
 
         self.app.data.insert("events", [event])
@@ -2352,7 +2357,7 @@ class PlanningExportTests(TestCase):
                     "assigned_to": {"user": user_id},
                 },
             ],
-            "event_item": event_id,
+            "related_events": [{"_id": event_id, "link_type": "primary"}],
         }
 
         self.app.data.insert("events", [event])
@@ -2424,7 +2429,7 @@ class PlanningExportTests(TestCase):
                     "assigned_to": {"user": user_id},
                 },
             ],
-            "event_item": event1_id,
+            "related_events": [{"_id": event1_id, "link_type": "primary"}],
         }
 
         event2 = {
@@ -2456,7 +2461,7 @@ class PlanningExportTests(TestCase):
                     "assigned_to": {"user": user_id},
                 },
             ],
-            "event_item": event2_id,
+            "related_events": [{"_id": event2_id, "link_type": "primary"}],
         }
 
         self.app.data.insert("events", [event1, event2])
@@ -2497,7 +2502,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": photo_event_id,
+                "related_events": [{"_id": photo_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2508,7 +2513,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": photo_event_id,
+                "related_events": [{"_id": photo_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2519,7 +2524,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": video_event_id,
+                "related_events": [{"_id": video_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2547,7 +2552,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": video_event_id,
+                "related_events": [{"_id": video_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2558,7 +2563,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": photo_event_id,
+                "related_events": [{"_id": photo_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2587,7 +2592,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": event_id_1,
+                "related_events": [{"_id": event_id_1, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2599,7 +2604,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": event_id_1,
+                "related_events": [{"_id": event_id_1, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2610,7 +2615,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": event_id_2,
+                "related_events": [{"_id": event_id_2, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
@@ -2622,7 +2627,7 @@ class PlanningExportTests(TestCase):
             {
                 "_id": ObjectId(),
                 "type": "planning",
-                "event_item": event_id_internal,
+                "related_events": [{"_id": event_id_internal, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),

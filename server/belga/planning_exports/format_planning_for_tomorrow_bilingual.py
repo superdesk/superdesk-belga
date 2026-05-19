@@ -11,6 +11,7 @@ from .common import (
 )
 from typing import List, Dict, Any
 from superdesk import get_resource_service
+from planning.utils import get_related_event_items_for_planning_async
 
 
 async def format_planning_for_tomorrow_bilingual(
@@ -27,16 +28,20 @@ async def format_planning_for_tomorrow_bilingual(
     # Process each planning
     for planning in planning_data:
         # Fetch linked event
-        event_item = None
         event_links = []
-        if planning.get("event_item"):
-            event_item = await event_service.find_one_async(
-                req=None, _id=planning["event_item"]
-            )
-            if event_item and is_editorial_calendar(event_item):
+
+        try:
+            event_item = (
+                await get_related_event_items_for_planning_async(planning, "primary")
+            )[0]
+        except (TypeError, IndexError):
+            event_item = None
+
+        if event_item:
+            if is_editorial_calendar(event_item):
                 continue
-            if event_item:
-                event_links = event_item.get("links", [])
+
+            event_links = event_item.get("links", [])
 
         planning_nl = planning.copy()
         planning_fr = planning.copy()
