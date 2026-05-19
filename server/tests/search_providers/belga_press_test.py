@@ -1,39 +1,22 @@
-import os
 import superdesk
 
+from aioresponses import aioresponses
+
 import arrow
-from superdesk.core import json
-from httmock import all_requests, HTTMock
-from unittest.mock import MagicMock, patch
-from belga.search_providers import BelgaPressSearchProvider, TIMEOUT, get_datetime
-from superdesk.tests import TestCase
+from unittest.mock import MagicMock
+from belga.search_providers import BelgaPressSearchProvider
 
-
-def fixture(filename):
-    return os.path.join(os.path.dirname(__file__), "..", "fixtures", filename)
-
-
-class DetailResponse:
-    status_code = 200
-
-    def raise_for_status(self):
-        pass
-
-
-@all_requests
-def archive_mock(url, request):
-    with open(fixture("belga-press-search.json")) as _file:
-        return _file.read()
+from .. import TestCase, mock
 
 
 def get_item():
-    with open(fixture("belga-press-search.json")) as _file:
-        items = json.load(_file)
-        return items["data"][0]
+    items = mock.fixture("belga-press-search.json", as_json=True)
+    return items["data"][0]
 
 
 class BelgaPressTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.provider = BelgaPressSearchProvider(dict())
         self.provider._access_token = "abc"
         self.query = {
@@ -53,16 +36,15 @@ class BelgaPressTestCase(TestCase):
         self.assertEqual("Belga Press", self.provider.label)
         self.assertIsInstance(self.provider, superdesk.SearchProvider)
 
-    @patch("belga.search_providers.session.get")
-    @patch("belga.search_providers.session.post")
-    def test_find_params(self, session_post, session_get):
+    @aioresponses()
+    async def test_find_params(self, http_mock):
         params = {
             "types": "ONLINE",
             "dates": {"start": "25/11/2020", "end": "26/11/2020"},
             "languages": "EN",
         }
-        session_post.return_value = {"access_token": "abc"}
-        self.provider.find(self.query, params)
+        mock.http(http_mock, method="get", payload={"data": {}})
+        await self.provider.find_async(self.query, params)
         url = self.provider.base_url + "/" + self.provider.search_endpoint
         api_params = {
             "offset": 50,
@@ -75,8 +57,11 @@ class BelgaPressTestCase(TestCase):
             "searchtext": "test query",
         }
         headers = {"Authorization": "Bearer abc", "X-Belga-Context": "API"}
-        session_get.assert_called_with(
-            url, headers=headers, params=api_params, timeout=TIMEOUT
+        http_mock.assert_called_with(
+            # url, headers=headers, params=api_params, timeout=TIMEOUT
+            url,
+            headers=headers,
+            params=api_params,
         )
         # Test combine period and date
         arrow.now = MagicMock(return_value=arrow.get("2020-11-26"))
@@ -85,8 +70,9 @@ class BelgaPressTestCase(TestCase):
             "period": "year",
         }
 
-        self.provider.find(self.query, params)
-        session_get.assert_called_with(
+        mock.http(http_mock, method="get", payload={"data": {}})
+        await self.provider.find_async(self.query, params)
+        http_mock.assert_called_with(
             url,
             headers=headers,
             params={
@@ -97,7 +83,6 @@ class BelgaPressTestCase(TestCase):
                 "order": "PUBLISHDATE",
                 "searchtext": "test query",
             },
-            timeout=TIMEOUT,
         )
 
     def test_format_list_item(self):
@@ -127,30 +112,30 @@ class BelgaPressTestCase(TestCase):
 
         self.assertFalse(item["_fetchable"])
 
-    def test_find_item(self):
-        with HTTMock(archive_mock):
-            items = self.provider.find(self.query)
+    @aioresponses()
+    async def test_find_item(self, http_mock):
+        mock.http(
+            http_mock, payload=mock.fixture("belga-press-search.json", as_json=True)
+        )
+        items = await self.provider.find_async(self.query)
         self.assertEqual(len(items.docs), 2)
         self.assertEqual(items._count, 3000)
 
-    @patch("belga.search_providers.session.get")
-    def test_fetch(self, session_get):
-        response = DetailResponse()
-        response.json = MagicMock(return_value=get_item())
-        session_get.return_value = response
+    @aioresponses()
+    async def test_fetch(self, http_mock):
+        mock.http(http_mock, payload=get_item())
 
-        item = self.provider.fetch(
+        item = await self.provider.fetch_async(
             "urn:belga.be:belgapress:4fe4c785-b4d4-43f9-b6e1-c28bbc53363c"
         )
         url = (
             self.provider.base_url + "/newsobject/4fe4c785-b4d4-43f9-b6e1-c28bbc53363c"
         )
 
-        session_get.assert_called_with(
+        http_mock.assert_called_with(
             url,
             headers={"Authorization": "Bearer abc", "X-Belga-Context": "API"},
             params={},
-            timeout=TIMEOUT,
         )
         self.assertEqual(
             "urn:belga.be:belgapress:4fe4c785-b4d4-43f9-b6e1-c28bbc53363c", item["guid"]

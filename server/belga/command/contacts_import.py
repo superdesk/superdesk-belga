@@ -10,7 +10,7 @@ from superdesk.commands import cli
 logger = logging.getLogger(__name__)
 
 
-async def import_contacts_via_json_file(path_file: str) -> None:
+async def import_contacts_via_json_file(path_file: str) -> list[dict]:
     """
     Get info contacts in file and add to database
     :param path_file:
@@ -65,9 +65,7 @@ async def import_contacts_via_json_file(path_file: str) -> None:
                 if and_query:
                     query.update({"$and": and_query})
 
-                contacts = contact_service.find(query)
-
-                if len(list(contacts)):
+                if await contact_service.count_async(query):
                     logger.info(
                         "contact (id:%s) is exist, same name(%s %s), email(%s, %s), phone(%s, %s), not import"
                         % (
@@ -81,7 +79,7 @@ async def import_contacts_via_json_file(path_file: str) -> None:
                         )
                     )
                     continue
-            doc = {}
+            doc: dict = {}
             logger.info(
                 "contact (id:%s) is insert successfully:" % str(item.get("contactId"))
             )
@@ -180,6 +178,8 @@ async def import_contacts_via_json_file(path_file: str) -> None:
             + ", number imported item: "
             + str(count_import)
         )
+
+    return docs
 
 
 @cli.command("contact:import")

@@ -19,23 +19,23 @@ from tests import TestCase
 class BelgaDPANewsMLTwoTestCase(TestCase):
     filename = "dpa_newsml_2_0_belga.xml"
 
-    def setUp(self):
-        super().setUp()
-        self._initialize_parser(self.filename)
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
+        await self._initialize_parser(self.filename)
 
-    def _initialize_parser(self, filename):
+    async def _initialize_parser(self, filename):
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", filename))
         provider = {"name": "test"}
         with open(fixture, "rb") as f:
             parser = BelgaDPANewsMLTwoFeedParser()
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_can_parse(self):
+    async def test_can_parse(self):
         self.assertTrue(BelgaDPANewsMLTwoFeedParser().can_parse(self.xml_root))
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item[0]
         self.assertEqual(item["guid"], "urn:newsml:dpa.com:20090101:190603-99-492251:3")
         self.assertEqual(item["uri"], "urn:newsml:dpa.com:20090101:190603-99-492251")
@@ -131,9 +131,9 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
         )
         self.assertEqual(item["body_html"], expected_body)
 
-    def test_new_mappings(self):
+    async def test_new_mappings(self):
         filename = "dpa_newsml_2_0_1_belga.xml"
-        self._initialize_parser(filename)
+        await self._initialize_parser(filename)
         item = self.item[0]
         self.assertEqual(item["guid"], "urn:newsml:dpa.com:20090101:240626-99-540037:6")
         self.assertEqual(item["version"], "6")
@@ -166,8 +166,8 @@ class BelgaDPANewsMLTwoTestCase(TestCase):
         self.assertEqual(item["extra"], {"city": "Berlin", "country": "Germany"})
         self.assertEqual(item["genre"], [{"name": "EXTRA"}])
 
-    def test_edNote_content(self):
+    async def test_edNote_content(self):
         filename = "3FB1C600A1AC5567.xml"
-        self._initialize_parser(filename)
+        await self._initialize_parser(filename)
         item = self.item[0]
         self.assertEqual(item["ednote"], "updated with a photo")

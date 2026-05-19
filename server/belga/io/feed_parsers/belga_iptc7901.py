@@ -165,7 +165,9 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     item["body_html"] = body[0]
             return item
         except Exception as ex:
-            raise await ParserError.IPTC7901ParserError(exception=ex, provider=provider).send_notifications()
+            raise await ParserError.IPTC7901ParserError(
+                exception=ex, provider=provider
+            ).send_notifications()
 
     async def parse_content_dpa(self, file_path, provider=None):
         try:
@@ -275,7 +277,9 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     continue
             return item
         except Exception as ex:
-            raise await ParserError.IPTC7901ParserError(exception=ex, provider=provider).send_notifications()
+            raise await ParserError.IPTC7901ParserError(
+                exception=ex, provider=provider
+            ).send_notifications()
 
     def check_mendwith(self, string, end_strings):
         for end_string in end_strings:

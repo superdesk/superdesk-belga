@@ -36,7 +36,9 @@ logger = logging.getLogger(__name__)
 
 
 async def _get_profile_id(label):
-    profile = await get_resource_service("content_types").find_one_async(req=None, label=label)
+    profile = await get_resource_service("content_types").find_one_async(
+        req=None, label=label
+    )
     if profile:
         return profile["_id"]
     return None

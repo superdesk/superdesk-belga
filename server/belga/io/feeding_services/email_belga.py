@@ -102,12 +102,16 @@ class EmailBelgaFeedingService(EmailFeedingService):
                 socket.setdefaulttimeout(get_config(int, "EMAIL_TIMEOUT", 10))
                 imap = imaplib.IMAP4_SSL(host=server, port=port)
             except (socket.gaierror, OSError) as e:
-                raise await IngestEmailError.emailHostError(exception=e, provider=provider).send_notifications()
+                raise await IngestEmailError.emailHostError(
+                    exception=e, provider=provider
+                ).send_notifications()
 
             try:
                 imap.login(config.get("user", None), config.get("password", None))
             except imaplib.IMAP4.error:
-                raise await IngestEmailError.emailLoginError(imaplib.IMAP4.error, provider).send_notifications()
+                raise await IngestEmailError.emailLoginError(
+                    imaplib.IMAP4.error, provider
+                ).send_notifications()
 
             try:
                 rv, data = imap.select(config.get("mailbox", None), readonly=False)

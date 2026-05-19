@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 async def update_package(item, **kwargs):
-    item = set_default_metadata(item, **kwargs)
+    item = await set_default_metadata(item, **kwargs)
 
     language = kwargs.get("desk", {}).get("desk_language", item.get("language"))
 

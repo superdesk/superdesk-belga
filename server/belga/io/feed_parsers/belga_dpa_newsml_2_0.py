@@ -141,7 +141,9 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     items.append(item)
             return items
         except Exception as ex:
-            raise await ParserError.newsmlTwoParserError(ex, provider).send_notifications()
+            raise await ParserError.newsmlTwoParserError(
+                ex, provider
+            ).send_notifications()
 
     def parse_header(self, tree):
         """Parse header element.
@@ -236,7 +238,9 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                         country_keyword = await self._get_country(code)
                         item.setdefault("subject", []).extend(country_keyword)
                         # country is cv
-                        item.setdefault("subject", []).extend(await self._get_countries(code))
+                        item.setdefault("subject", []).extend(
+                            await self._get_countries(code)
+                        )
                         break
 
     def parse_authors(self, meta, item):

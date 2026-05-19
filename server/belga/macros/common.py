@@ -6,7 +6,9 @@ async def get_cv_by_qcode(scheme: str, field: Optional[str] = None) -> dict:
     """
     Retrieve cv items by qcode for a given scheme.
     """
-    cvs = await get_resource_service("vocabularies").find_one_async(req=None, _id=scheme)
+    cvs = await get_resource_service("vocabularies").find_one_async(
+        req=None, _id=scheme
+    )
     if not cvs:
         return {}
 

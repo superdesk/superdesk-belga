@@ -208,10 +208,13 @@ class SpreadsheetFeedingService(FeedingService):
                     item.setdefault(
                         "event_contact_info", [_contact[superdesk.config.ID_FIELD]]
                     )
-                    await contact_service.patch_async(_contact[superdesk.config.ID_FIELD], contact)
+                    await contact_service.patch_async(
+                        _contact[superdesk.config.ID_FIELD], contact
+                    )
                 else:
                     item.setdefault(
-                        "event_contact_info", list(await contact_service.post_async([contact]))
+                        "event_contact_info",
+                        list(await contact_service.post_async([contact])),
                     )
 
             if location:
@@ -234,7 +237,9 @@ class SpreadsheetFeedingService(FeedingService):
                     await location_service.post_async(_location)
                     item["location"][0]["qcode"] = _location[0]["guid"]
 
-            old_item = await events_service.find_one_async(guid=item[GUID_FIELD], req=None)
+            old_item = await events_service.find_one_async(
+                guid=item[GUID_FIELD], req=None
+            )
             if not old_item:
                 if not status:
                     item.setdefault("firstcreated", datetime.now())

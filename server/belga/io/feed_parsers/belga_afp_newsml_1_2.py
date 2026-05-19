@@ -120,7 +120,9 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     country = element.attrib.get("Value")
                     item["extra"]["country"] = country
                     # country is cv
-                    item.setdefault("subject", []).extend(await self._get_countries(country))
+                    item.setdefault("subject", []).extend(
+                        await self._get_countries(country)
+                    )
                 if element.attrib.get("FormalName", "") == "City":
                     item["extra"]["city"] = element.attrib.get("Value")
 

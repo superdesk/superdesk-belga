@@ -1,61 +1,28 @@
-import os
-import unittest
-import requests
-from quart import Quart
-from superdesk.core import json
-from httmock import all_requests
-from unittest.mock import patch
-from belga.search_providers import BelgaImageV2SearchProvider, TIMEOUT
+import yarl
+from aioresponses import aioresponses
+
+from belga.search_providers import BelgaImageV2SearchProvider
+
+from .. import TestCase, mock
 
 
-def fixture(filename):
-    return os.path.join(os.path.dirname(__file__), "..", "fixtures", filename)
-
-
-@all_requests
-def search_mock(url, request):
-    if "o=1" in url.geturl():
-        with open(fixture("belga-video-search.json")) as _file:
-            return {"status_code": 200, "content": json.load(_file)}
-    return {"status_code": 400, "content": "Invalid request"}
-
-
-class VideoDetailResponse:
-    status_code = 200
-
-    def raise_for_status(self):
-        pass
-
-    def json(self):
-        with open(fixture("belga-video-by-id.json")) as _file:
-            return json.load(_file)
-
-
-class BelgaVideoTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = Quart(__name__)
-        self.app.config["BELGA_VIDEO_ENABLED"] = True
-        self.app.config["BELGA_IMAGE_LIMIT"] = "TODAY"
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-
-    def tearDown(self):
-        self.app_context.pop()
+class BelgaVideoTestCase(TestCase):
+    app_config: dict = {
+        **TestCase.app_config,
+        "BELGA_VIDEO_ENABLED": True,
+        "BELGA_IMAGE_LIMIT": "TODAY",
+    }
 
     def test_instance_v2(self):
         provider = BelgaImageV2SearchProvider(dict(config={"username": "test_apikey"}))
         self.assertEqual("Belga Image v2", provider.label)
         self.assertIsInstance(provider, BelgaImageV2SearchProvider)
 
-    @patch("belga.search_providers.session.get")
-    def test_find_v2_videos(self, session_get):
-        with open(fixture("belga-video-search.json")) as f:
-            data = json.load(f)
-
-        mock_response = unittest.mock.MagicMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = data
-        session_get.return_value = mock_response
+    @aioresponses()
+    async def test_find_v2_videos(self, http_mock):
+        mock.http(
+            http_mock, payload=mock.fixture("belga-video-search.json", as_json=True)
+        )
 
         query = {
             "size": 10,
@@ -71,32 +38,27 @@ class BelgaVideoTestCase(unittest.TestCase):
         params = {"objecttypes": "1"}  # Filter for videos
         provider = BelgaImageV2SearchProvider(dict(config={"username": "test_apikey"}))
 
-        items = provider.find(query, params)
+        items = await provider.find_async(query, params)
 
-        url = (
-            requests.Request(
-                "GET",
-                provider.base_url + "searchImages",
-                params={
+        url = str(
+            yarl.URL(provider.base_url + "searchImages").with_query(
+                {
                     "s": 0,
                     "l": 10,
                     "o": "1",
                     "t": "test AND video",
                     "p": "TODAY",
-                },
+                }
             )
-            .prepare()
-            .url
         )
 
-        session_get.assert_called_with(
+        http_mock.assert_called_with(
             url,
             headers={"X-Authorization": "test_apikey"},
-            timeout=TIMEOUT,
         )
 
-        self.assertEqual(100, items.count(with_limit_and_skip=False))
-        item = items[0]
+        self.assertEqual(100, await items.count(with_limit_and_skip=False))
+        item = await items.next()
         self.assertEqual("video", item["type"])
         self.assertEqual("usable", item["pubstatus"])
         self.assertEqual("urn:belga.be:picturepackmedia:123456789", item["_id"])
@@ -112,30 +74,24 @@ class BelgaVideoTestCase(unittest.TestCase):
         )
         self.assertEqual("video/mp4", renditions["original"]["mimetype"])
 
-    @patch("belga.search_providers.session.get")
-    def test_fetch_v2_video(self, session_get):
+    @aioresponses()
+    async def test_fetch_v2_video(self, http_mock):
         """Test fetching a single video by ID"""
         provider = BelgaImageV2SearchProvider(dict(config={"username": "test_apikey"}))
-        session_get.return_value = VideoDetailResponse()
-
-        item = provider.fetch("urn:belga.be:picturepackmedia:123456789")
-
-        url = (
-            requests.Request(
-                "GET",
-                provider.base_url + "getImageById",
-                params={
-                    "i": "urn:belga.be:picturepackmedia:123456789",
-                    "p": "TODAY",
-                },
-            )
-            .prepare()
-            .url
+        mock.http(
+            http_mock, payload=mock.fixture("belga-video-by-id.json", as_json=True)
         )
-        session_get.assert_called_with(
+
+        item = await provider.fetch_async("urn:belga.be:picturepackmedia:123456789")
+
+        url = str(
+            yarl.URL(provider.base_url + "getImageById").with_query(
+                {"i": "urn:belga.be:picturepackmedia:123456789", "p": "TODAY"}
+            )
+        )
+        http_mock.assert_called_with(
             url,
             headers={"X-Authorization": "test_apikey"},
-            timeout=TIMEOUT,
         )
 
         self.assertEqual("urn:belga.be:picturepackmedia:123456789", item["guid"])

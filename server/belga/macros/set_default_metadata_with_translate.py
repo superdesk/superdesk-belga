@@ -127,7 +127,10 @@ async def set_default_metadata_with_translate(item, **kwargs):
         internal_destination = kwargs.get("internal_destination", {})
         content_filter_id = internal_destination.get("filter", "")
         content_filter_service = ContentFiltersResource.get_service()
-        content_filter = await content_filter_service.find_by_id(content_filter_id)
+        if content_filter_id:
+            content_filter = await content_filter_service.find_by_id(content_filter_id)
+        else:
+            content_filter = None
 
         if content_filter:
             await PublishCache.init()

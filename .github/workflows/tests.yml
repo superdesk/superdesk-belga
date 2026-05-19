@@ -7,7 +7,7 @@ jobs:
   server:
     strategy:
       matrix:
-        python-version: ['3.10']
+        python-version: ['3.12']
     uses: superdesk/superdesk/.github/workflows/server.yml@develop
     with:
       python-version: ${{ matrix.python-version }}
@@ -15,7 +15,7 @@ jobs:
   pytest:
     strategy:
       matrix:
-        python-version: ['3.10']
+        python-version: ['3.12']
     uses: superdesk/superdesk/.github/workflows/pytest.yml@develop
     with:
       python-version:  ${{ matrix.python-version }}

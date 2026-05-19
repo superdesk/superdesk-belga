@@ -83,8 +83,8 @@ dataset = {
 class RssBelgaIngestServiceTest(TestCase):
     """Base class for RSSFeedingService tests."""
 
-    def setUpForChildren(self):
-        super().setUpForChildren()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         try:
             from belga.io.feeding_services.rss_belga import RSSBelgaFeedingService
         except ImportError:
@@ -97,7 +97,7 @@ class RssBelgaIngestServiceTest(TestCase):
 class RSSBelgaTestCase(RssBelgaIngestServiceTest):
     """Tests for the _create_item() method."""
 
-    def test_creates_item_from_given_data(self):
+    async def test_creates_item_from_given_data(self):
         self.maxDiff = None
         data = dataset
 

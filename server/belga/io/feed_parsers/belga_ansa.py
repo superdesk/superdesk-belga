@@ -138,7 +138,9 @@ class BelgaANSAFeedParser(NITFFeedParser):
             "sub_label": author_name,
         }
         # try to find an author in DB
-        user = await get_resource_service("users").find_one_async(req=None, username=author_name)
+        user = await get_resource_service("users").find_one_async(
+            req=None, username=author_name
+        )
         if user:
             author["_id"] = [
                 str(user["_id"]),
@@ -198,7 +200,9 @@ class BelgaANSAFeedParser(NITFFeedParser):
         return formatted_subjects
 
     async def _get_cv(self, _id: str) -> dict | None:
-        return await get_resource_service("vocabularies").find_one_async(req=None, _id=_id)
+        return await get_resource_service("vocabularies").find_one_async(
+            req=None, _id=_id
+        )
 
     def parse_content(self, xml):
         elements = []

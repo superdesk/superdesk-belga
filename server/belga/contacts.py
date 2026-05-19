@@ -20,6 +20,12 @@ BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
 class KeycloakAuth:
     """Handles Keycloak authentication and token management."""
 
+    endpoint: str
+    client_id: str
+    client_secret: str
+    _token: str | None
+    _token_expiry: datetime | None
+
     def __init__(self, endpoint: str, client_id: str, client_secret: str):
         self.endpoint = endpoint
         self.client_id = client_id
@@ -215,7 +221,7 @@ class BelgaContactsProxy(AsyncBaseService, AsyncHttpClientSessionMixin):
         http_client = await self.http_session()
         async with http_client.get(
             urljoin(self.base, f"contacts/{contact_id}"),
-            headers=await self._get_headers(http_client)
+            headers=await self._get_headers(http_client),
         ) as res:
             if res.status == 500:  # returns 500 on missing contact
                 return None

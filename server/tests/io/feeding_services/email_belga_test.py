@@ -24,35 +24,32 @@ from tests import TestCase
 class EmailBelgaIngestServiceTest(TestCase):
     filename = "email_attachment_belga.txt"
 
-    def setUp(self):
-        setup(context=self)
-        with self.app.app_context():
-            # mock one user:
-            user_service = UsersService("users", backend=superdesk.get_backend())
-            self.user_id = user_service.create(
-                [
-                    {
-                        "name": "user",
-                        "user_type": "administrator",
-                        "email": "asender@a.com.au",
-                    }
-                ]
-            )[0]
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
+        # mock one user:
+        user_service = UsersService("users", backend=superdesk.get_backend())
+        self.user_id = user_service.create(
+            [
+                {
+                    "name": "user",
+                    "user_type": "administrator",
+                    "email": "asender@a.com.au",
+                }
+            ]
+        )[0]
 
-            provider = {"name": "Test"}
-            dirname = os.path.dirname(os.path.realpath(__file__))
-            fixture = os.path.normpath(
-                os.path.join(dirname, "../fixtures", self.filename)
-            )
-            with open(fixture, mode="rb") as f:
-                data = [(1, f.read())]
-            parser = EMailRFC822FeedParser()
-            self.items = parser.parse(data, provider)
-            instance = EmailBelgaFeedingService()
+        provider = {"name": "Test"}
+        dirname = os.path.dirname(os.path.realpath(__file__))
+        fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
+        with open(fixture, mode="rb") as f:
+            data = [(1, f.read())]
+        parser = EMailRFC822FeedParser()
+        self.items = await parser.parse(data, provider)
+        instance = EmailBelgaFeedingService()
 
-            instance.save_attachment(data, self.items)
+        await instance.save_attachment(data, self.items)
 
-    def test_attachment(self):
+    async def test_attachment(self):
         self.maxDiff = None
         self.assertEqual(self.items[0]["ednote"], "The story has 1 attachment(s)")
         self.assertEqual(len(self.items[0]["attachments"]), 1)

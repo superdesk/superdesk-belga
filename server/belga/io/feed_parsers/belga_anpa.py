@@ -170,7 +170,9 @@ class BelgaANPAFeedParser(ANPAFeedParser):
             item["keywords"] = []
             return item
         except Exception as ex:
-            raise await ParserError.anpaParseFileError(file_path, ex).send_notifications()
+            raise await ParserError.anpaParseFileError(
+                file_path, ex
+            ).send_notifications()
 
 
 register_feed_parser(BelgaANPAFeedParser.NAME, BelgaANPAFeedParser())

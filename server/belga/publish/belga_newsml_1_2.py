@@ -216,7 +216,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         identification = SubElement(newsitem, "Identification")
         news_identifier = SubElement(identification, "NewsIdentifier")
-        SubElement(news_identifier, "ProviderId").text = get_config(str, "NEWSML_PROVIDER_ID")
+        SubElement(news_identifier, "ProviderId").text = get_config(
+            str, "NEWSML_PROVIDER_ID"
+        )
         SubElement(news_identifier, "DateId").text = self._get_formatted_datetime(
             self._current_item.get("firstcreated")
         )
@@ -756,7 +758,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         SubElement(newscomponent_2_level, "Role", {"FormalName": attachment["_role"]})
         self._format_newslines(newscomponent_2_level, item=attachment)
-        await self._format_administrative_metadata(newscomponent_2_level, item=attachment)
+        await self._format_administrative_metadata(
+            newscomponent_2_level, item=attachment
+        )
         self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
 
         for role, key in (("Title", "headline"), ("Body", "description_text")):
@@ -799,7 +803,8 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 "media": attachment["media"],
                 "mimetype": attachment["mimetype"],
                 "href": urljoin(
-                    get_config(str, "MEDIA_PREFIX") + "/", "{}".format(attachment["media"])
+                    get_config(str, "MEDIA_PREFIX") + "/",
+                    "{}".format(attachment["media"]),
                 ),
                 "belga-urn": "urn:www.belga.be:superdesk:{}:{}".format(
                     get_config(str, "OUTPUT_BELGA_URN_SUFFIX"), attachment["media"]
@@ -1041,9 +1046,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 "Property",
                 {
                     "FormalName": "Validator",
-                    "Value": (await self._get_author_info(str(item["version_creator"])))[
-                        "initials"
-                    ],
+                    "Value": (
+                        await self._get_author_info(str(item["version_creator"]))
+                    )["initials"],
                 },
             )
         elif item.get("administrative", {}).get("validator"):
@@ -1273,7 +1278,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         elif author_type is dict:
             author_info["role"] = author["_id"][1]
             try:
-                user = await anext(await self.users_service.find_async({"_id": author["_id"][0]}))
+                user = await anext(
+                    await self.users_service.find_async({"_id": author["_id"][0]})
+                )
             except StopAsyncIteration:
                 logger.warning(
                     "unknown user: {user_id}".format(user_id=author["_id"][0])
@@ -1284,13 +1291,17 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         elif author_type is str:
             author_id = author
             try:
-                user = await anext(await self.users_service.find_async({"_id": author_id}))
+                user = await anext(
+                    await self.users_service.find_async({"_id": author_id})
+                )
             except StopIteration:
                 logger.warning("unknown user: {user_id}".format(user_id=author_id))
             else:
                 if user.get("role"):
                     try:
-                        role = await anext(await self.roles_service.find_async({"_id": user["role"]}))
+                        role = await anext(
+                            await self.roles_service.find_async({"_id": user["role"]})
+                        )
                     except StopAsyncIteration:
                         logger.warning(
                             "unknown role: {role_id}".format(role_id=user["role"])
@@ -1420,7 +1431,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # fetch associated docs by _id
             if media_items_ids:
                 media_items += await (
-                    await self.archive_service.find_async({"_id": {"$in": media_items_ids}})
+                    await self.archive_service.find_async(
+                        {"_id": {"$in": media_items_ids}}
+                    )
                 ).to_list()
             # pictures
             used_ids = []
@@ -1507,7 +1520,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                             newsml_items_chain.append(newsml_item)
             # attachments
             attachments_ids = [i["attachment"] for i in sd_item.get("attachments", [])]
-            async for attachment in await self.attachments_service.find_async({"_id": {"$in": attachments_ids}}):
+            async for attachment in await self.attachments_service.find_async(
+                {"_id": {"$in": attachments_ids}}
+            ):
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(attachment)
                 newsml_item["_role"] = self.NEWSCOMPONENT2_ROLES.RELATED_DOCUMENT
@@ -1536,7 +1551,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # fetch associated docs by _id
             if rel_text_items_ids:
                 rel_text_items += await (
-                    await self.archive_service.find_async({"_id": {"$in": rel_text_items_ids}})
+                    await self.archive_service.find_async(
+                        {"_id": {"$in": rel_text_items_ids}}
+                    )
                 ).to_list()
             for rel_text_item in rel_text_items:
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}

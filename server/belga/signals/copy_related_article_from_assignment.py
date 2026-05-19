@@ -16,7 +16,9 @@ async def _get_associated_event_from_planning(planning: Planning) -> Optional[Ev
         return None
 
     try:
-        event = await get_resource_service("events").find_one_async(req=None, _id=event_id)
+        event = await get_resource_service("events").find_one_async(
+            req=None, _id=event_id
+        )
     except Exception:
         # Failed to retrieve the Event
         logger.exception("Exception raised while finding event")
@@ -106,7 +108,9 @@ async def on_assignment_start_working(
         return
 
     # 2. Get list of related items, based on language of the content item
-    related_items = await _get_related_items_from_planning(planning, item.get("language"))
+    related_items = await _get_related_items_from_planning(
+        planning, item.get("language")
+    )
     if not related_items:
         # No related items in the appropriate language attached, no need to continue
         return

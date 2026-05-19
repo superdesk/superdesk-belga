@@ -18,7 +18,9 @@ class BelgaNewsMLMixin:
 
     async def _get_country(self, country_code):
         if not self._countries:
-            cv = await get_resource_service("vocabularies").find_one_async(req=None, _id="country")
+            cv = await get_resource_service("vocabularies").find_one_async(
+                req=None, _id="country"
+            )
             self._countries = (cv or {}).get("items", [])
 
         return [
@@ -53,7 +55,9 @@ class BelgaNewsMLMixin:
         if belga_keyword:
             return belga_keyword
 
-        countries = await self._get_mapped_keywords(data.lower(), data.title(), "countries")
+        countries = await self._get_mapped_keywords(
+            data.lower(), data.title(), "countries"
+        )
         if countries:
             return countries + await self._get_country(countries[0]["qcode"])
 

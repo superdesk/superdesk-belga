@@ -29,6 +29,7 @@ from apps.search_providers.registry import registered_search_providers
 
 BELGA_TZ = "Europe/Brussels"
 logger = logging.getLogger(__name__)
+TIMEOUT = False
 
 
 def get_text(value, strip_html=True):
@@ -162,12 +163,13 @@ class BelgaImageSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
 
         return api_params
 
-    async def api_get(self, endpoint, params):
-        url = str(
-            yarl.URL("http://example.com/" + endpoint)
-            .with_query(params)
-            .relative()
+    def construct_url(self, endpoint, params) -> str:
+        return str(
+            yarl.URL("http://example.com/" + endpoint).with_query(params).relative()
         )
+
+    async def api_get(self, endpoint, params):
+        url = self.construct_url(endpoint, params)
 
         headers = self.auth_headers(url.replace("%2C", ","))  # decode spaces
         with timer(self.label):
@@ -361,7 +363,9 @@ class BelgaCoverageV2SearchProvider(
     GALLERY_URN = "urn:www.belga.be:picturepackgallery:{id}"
 
 
-class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, AsyncHttpClientSessionMixin):
+class Belga360ArchiveSearchProvider(
+    superdesk.SearchProvider, BelgaNewsMLMixin, AsyncHttpClientSessionMixin
+):
     GUID_PREFIX = "urn:belga.be:360archive:"
 
     label = "Belga 360 Archive"
@@ -382,13 +386,22 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
     def __init__(self, provider):
         super().__init__(provider)
         self.base_url = provider.get("config", {}).get("url") or self.base_url
-        self._countries = []
+        self._countries = None
+        self.content_types = None
 
     async def on_http_session_start(self, http_client: aiohttp.ClientSession):
         # No auth required, but we'll use this to populate the content types
+        await self._load_content_types()
+
+    async def _load_content_types(self):
+        if self.content_types is not None:
+            return
+
         self.content_types = {
             content_type["_id"]: content_type
-            async for content_type in await get_resource_service("content_types").get_all_async()
+            async for content_type in await get_resource_service(
+                "content_types"
+            ).get_all_async()
         }
 
     def url(self, resource):
@@ -460,13 +473,15 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
         api_params["searchText"] = self.get_search_text(query)
 
         data = await self.api_get(self.search_endpoint, api_params)
-        docs = [await self.format_list_item(item) for item in data[self.items_field]]
+        docs = [
+            await self.format_list_item(item) for item in data.get(self.items_field, [])
+        ]
 
         # SDBELGA-667
         if search_text := api_params.get("searchText"):
             self.set_highlight(search_text, docs)
 
-        return BelgaListCursor(docs, data[self.count_field])
+        return BelgaListCursor(docs, data.get(self.count_field, 0))
 
     async def get_detailed_info(self, newsObjectId, query):
         formatted_data = []
@@ -479,7 +494,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
             )
             return [await self.format_list_item(resp)]
 
-        detailed_resp = await self.api_get("archivenewsitems/" + str(resp["newsItemId"]), {})
+        detailed_resp = await self.api_get(
+            "archivenewsitems/" + str(resp["newsItemId"]), {}
+        )
         data = detailed_resp.get(self.items_field)
         if data:
             if str(data[0]["newsObjectId"]) == newsObjectId:
@@ -567,11 +584,18 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
         return datetime.fromtimestamp(date, utc)
 
     def _get_profile(self, profile):
+        print("GetProfile=")
+        print(profile)
+
+        # raise Exception(profile)
         label = profile.lower()
         if label == "short":
+            print("GetProfile=[short]")
             label = "text"
         if label not in self.content_types:
-            return
+            print("GetProfile=[<in_content_types>]")
+            return None
+        print("GetProfile=[<return>]")
         return label
 
     def get_type(self, assetType):
@@ -686,9 +710,9 @@ class Belga360ArchiveSearchProvider(superdesk.SearchProvider, BelgaNewsMLMixin, 
         if data.get("packages"):
             for package in data["packages"]:
                 key = package["newsService"] + "/" + package["newsProduct"]
-                serviceProduct = await get_resource_service("vocabularies").get_items_async(
-                    _id="services-products", qcode=key
-                )
+                serviceProduct = await get_resource_service(
+                    "vocabularies"
+                ).get_items_async(_id="services-products", qcode=key)
                 if serviceProduct:
                     subjects += serviceProduct
 
@@ -821,7 +845,7 @@ class BelgaPressSearchProvider(superdesk.SearchProvider, AsyncHttpClientSessionM
             # instead of monday of next week
             shift.pop("days")
         return {
-            "start": today.shift(**shift).format("YYYY-MM-DD"),
+            "start": today.shift(**shift).format("YYYY-MM-DD"),  # type: ignore[call-arg,arg-type]
             "end": today.format("YYYY-MM-DD"),
         }
 
@@ -885,7 +909,9 @@ async def get_service_by_id(provider_id):
     provider = await provide_service.find_one_async(req=None, _id=provider_id)
     if provider is None:
         # fallback to configured belga_coverage provider for old coverage ids
-        provider = await provide_service.find_one_async(req=None, search_provider="belga_coverage")
+        provider = await provide_service.find_one_async(
+            req=None, search_provider="belga_coverage"
+        )
 
     if provider:
         return registered_search_providers[provider["search_provider"]]["class"](

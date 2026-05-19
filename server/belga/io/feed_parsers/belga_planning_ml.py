@@ -23,7 +23,9 @@ class BelgaPlanningMLParser(PlanningMLParser):
         if not event_id:
             return item
 
-        event = await get_resource_service("events").find_one_async(req=None, _id=event_id)
+        event = await get_resource_service("events").find_one_async(
+            req=None, _id=event_id
+        )
         if event is None:
             return item
 

@@ -114,7 +114,9 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             return items
 
         except Exception as ex:
-            raise await ParserError.newsmlOneParserError(ex, provider).send_notifications()
+            raise await ParserError.newsmlOneParserError(
+                ex, provider
+            ).send_notifications()
 
     def parse_newsenvelop(self, envelop_el):
         """
@@ -457,7 +459,9 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 item, component_el.find("DescriptiveMetadata")
             )
         else:
-            await self.parse_descriptivemetadata(item, component_el.find("DescriptiveMetada"))
+            await self.parse_descriptivemetadata(
+                item, component_el.find("DescriptiveMetada")
+            )
 
         # parser ContentItem element
         await self.parse_contentitem(item, component_el.find("ContentItem"))
@@ -566,9 +570,13 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     country = element.attrib.get("Value")
                     item["extra"]["country"] = country
                     # country keywords is CV
-                    item.setdefault("subject", []).extend(await self._get_country(country))
+                    item.setdefault("subject", []).extend(
+                        await self._get_country(country)
+                    )
                     # country is cv
-                    item.setdefault("subject", []).extend(await self._get_countries(country))
+                    item.setdefault("subject", []).extend(
+                        await self._get_countries(country)
+                    )
                 if element.attrib.get("FormalName", "") == "City":
                     item["extra"]["city"] = element.attrib.get("Value")
                 if element.attrib.get("FormalName", "") == "CountryArea":
@@ -750,7 +758,9 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         return "<p>" + text + "</p>"
 
     async def _get_cv(self, _id: str) -> dict | None:
-        return await get_resource_service("vocabularies").find_one_async(req=None, _id=_id)
+        return await get_resource_service("vocabularies").find_one_async(
+            req=None, _id=_id
+        )
 
     def _add_genre(self, item, name, qcode=None):
         genre = dict(

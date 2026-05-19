@@ -1,9 +1,9 @@
-from unittest import TestCase
 from superdesk.flask import render_template
+from superdesk.tests import IsolatedAsyncioTestCase
 from app import get_app
 
 
-class AssignmentMailsTests(TestCase):
+class AssignmentMailsTests(IsolatedAsyncioTestCase):
     app = get_app()
     event = {
         "name": "Tech Expo 2024",
@@ -26,9 +26,9 @@ class AssignmentMailsTests(TestCase):
     }
     assignment = {"name": "New Product"}
 
-    def test_assignment_data(self):
-        with self.app.app_context():
-            rendered = render_template(
+    async def test_assignment_data(self):
+        async with self.app.app_context():
+            rendered = await render_template(
                 "assignment_details_email.html",
                 event=self.event,
                 assignment=self.assignment,

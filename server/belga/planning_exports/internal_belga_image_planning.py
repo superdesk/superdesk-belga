@@ -66,7 +66,9 @@ async def format_image_planning(
         links = []
 
         if planning.get("event_item"):
-            event_item = await event_service.find_one_async(req=None, _id=planning["event_item"])
+            event_item = await event_service.find_one_async(
+                req=None, _id=planning["event_item"]
+            )
             if event_item:
                 links = event_item.get("links", [])
                 if is_editorial_calendar(event_item):

@@ -71,7 +71,9 @@ class BelgaANPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             ):
                 for keyword in set(re.split("[-;]", subject["name"])):
                     # SDBELGA-713
-                    item.setdefault("subject", []).extend(await self._get_keywords(keyword))
+                    item.setdefault("subject", []).extend(
+                        await self._get_keywords(keyword)
+                    )
                 item["subject"].remove(subject)
                 item["subject"] = [
                     dict(i)

@@ -125,7 +125,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
             return self._items
         except Exception as ex:
-            raise await ParserError.newsmlOneParserError(ex, self._provider).send_notifications()
+            raise await ParserError.newsmlOneParserError(
+                ex, self._provider
+            ).send_notifications()
 
     def parse_newsenvelop(self, envelop_el):
         """
@@ -677,7 +679,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
                     "sub_label": author_name,
                 }
                 # try to find an author in DB
-                user = await get_resource_service("users").find_one_async(req=None, username=author_name)
+                user = await get_resource_service("users").find_one_async(
+                    req=None, username=author_name
+                )
                 if user:
                     author["_id"] = [
                         str(user["_id"]),
@@ -985,7 +989,9 @@ class BelgaNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
             file_service = FileFeedingService()
             # move processed attachments to the same folder with XML
             file_dir = os.path.dirname(file_dir)
-            await file_service.move_file(file_dir, "attachments/" + filename, self._provider)
+            await file_service.move_file(
+                file_dir, "attachments/" + filename, self._provider
+            )
 
 
 register_feed_parser(BelgaNewsMLOneFeedParser.NAME, BelgaNewsMLOneFeedParser())

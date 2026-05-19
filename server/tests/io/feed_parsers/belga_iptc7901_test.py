@@ -5,19 +5,20 @@ from tests import TestCase
 
 
 class BaseBelgaIPTC7901FeedParserTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {"name": "test"}
         parser = BelgaIPTC7901FeedParser()
         self.assertTrue(BelgaIPTC7901FeedParser().can_parse(fixture))
-        self.item = parser.parse(fixture, provider)
+        self.item = await parser.parse(fixture, provider)
 
 
 class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
     filename = "dpa.txt"
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item
         self.assertEqual(item["word_count"], 510)
         self.assertEqual(
@@ -102,7 +103,7 @@ class DPABelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
 class ATSBelgaFeedParserTestCase(BaseBelgaIPTC7901FeedParserTestCase):
     filename = "ats.txt"
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item
         self.assertEqual(item["slugline"], None)
         self.assertEqual(item["keywords"], [])

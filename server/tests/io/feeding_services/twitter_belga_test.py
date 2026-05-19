@@ -41,14 +41,15 @@ def iframely_mock(url, request):
 
 
 class TwitterBelgaServiceTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         provider = {"config": {"iframely_key": "abcdef", "embed_tweet": True}}
         with HTTMock(iframely_mock):
-            self.items = TwitterBelgaFeedingService().parse_twitter_belga(
-                items, provider
+            self.items = (
+                await TwitterBelgaFeedingService().parse_twitter_belga(items, provider)
             )[0]
 
-    def test_embed_content(self):
+    async def test_embed_content(self):
         item = self.items[0]
         self.assertEqual(item["source"], "twitter")
         self.assertEqual(

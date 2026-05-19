@@ -7,17 +7,20 @@ import belga  # noqa
 
 
 class TestCase(CoreTestCase):
-    def setUp(self):
+    app_config = {"OUTPUT_BELGA_URN_SUFFIX": "tst"}
+
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         # we need to prepopulate vocabularies to get qcodes
         voc_file = os.path.join(
             os.path.abspath(os.path.dirname(os.path.dirname(belga.__file__))),
             "data",
             "vocabularies.json",
         )
-        AppPopulateCommand().run(voc_file)
+        await AppPopulateCommand().run(voc_file)
 
-    def setUpForChildren(self):
-        super().setUpForChildren()
-
-        # belga related configs
-        self.app.config["OUTPUT_BELGA_URN_SUFFIX"] = "tst"
+    # def setUpForChildren(self):
+    #     super().setUpForChildren()
+    #
+    #     # belga related configs
+    #     self.app.config["OUTPUT_BELGA_URN_SUFFIX"] = "tst"

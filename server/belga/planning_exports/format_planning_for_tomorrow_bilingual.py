@@ -30,7 +30,9 @@ async def format_planning_for_tomorrow_bilingual(
         event_item = None
         event_links = []
         if planning.get("event_item"):
-            event_item = await event_service.find_one_async(req=None, _id=planning["event_item"])
+            event_item = await event_service.find_one_async(
+                req=None, _id=planning["event_item"]
+            )
             if event_item and is_editorial_calendar(event_item):
                 continue
             if event_item:
@@ -72,9 +74,13 @@ async def format_planning_for_tomorrow_bilingual(
         formatted_planning = {
             "subject": ",".join(get_subjects(planning, "nl")),
             "calendar": calendar,
-            "contacts": await get_formatted_contacts(event_item if event_item else planning),
+            "contacts": await get_formatted_contacts(
+                event_item if event_item else planning
+            ),
             "coverages": await get_coverages_bilingual(planning),
-            "location": await get_item_location(event_item if event_item else planning, "nl"),
+            "location": await get_item_location(
+                event_item if event_item else planning, "nl"
+            ),
             "links": event_links,
             "title_nl": title_nl,
             "title_fr": title_fr,

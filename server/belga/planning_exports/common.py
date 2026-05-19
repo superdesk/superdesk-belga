@@ -401,7 +401,9 @@ def is_editorial_calendar(item):
     return False
 
 
-async def get_advisory_weekday_date(planning_item, planning_service=None, event_service=None):
+async def get_advisory_weekday_date(
+    planning_item, planning_service=None, event_service=None
+):
     """Get weekday/date of planning, preferring linked event date."""
     if event_service is None:
         event_service = get_resource_service("events")
@@ -410,9 +412,13 @@ async def get_advisory_weekday_date(planning_item, planning_service=None, event_
 
     event_item = None
     if planning_item.get("event_item"):
-        event_item = await event_service.find_one_async(req=None, _id=planning_item["event_item"])
+        event_item = await event_service.find_one_async(
+            req=None, _id=planning_item["event_item"]
+        )
 
-    planning_item = await planning_service.find_one_async(req=None, _id=planning_item["_id"])
+    planning_item = await planning_service.find_one_async(
+        req=None, _id=planning_item["_id"]
+    )
     if not planning_item:
         return ""
 
@@ -475,7 +481,9 @@ async def get_coverages_bilingual(item, include_assignee=False):
             )
             if desk_id:
                 if desk_id not in desk_cache:
-                    desk_cache[desk_id] = await desk_service.find_one_async(req=None, _id=desk_id)
+                    desk_cache[desk_id] = await desk_service.find_one_async(
+                        req=None, _id=desk_id
+                    )
                 desk_item = desk_cache[desk_id]
                 if desk_item:
                     desk_name = desk_item.get("name", "")
@@ -616,7 +624,9 @@ async def format_bilingual_event_item(
         "subject": ",".join(get_subjects(event, "nl")),
         "calendar": calendar,
         "contacts": await get_formatted_contacts(event),
-        "coverages": await get_coverages_bilingual(event, include_assignee=include_assignee),
+        "coverages": await get_coverages_bilingual(
+            event, include_assignee=include_assignee
+        ),
         "location": await get_item_location(event, "nl"),
         "title_nl": event_nl.get("name") or event_nl.get("slugline") or "",
         "title_fr": event_fr.get("name") or event_fr.get("slugline") or "",

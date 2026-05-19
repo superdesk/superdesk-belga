@@ -1,52 +1,34 @@
-import os
 import hmac
 import hashlib
-import unittest
-import requests
+
+from aioresponses import aioresponses
+
 import superdesk
 
-from superdesk.core import json
-from httmock import all_requests, HTTMock
-from unittest.mock import patch
+from belga.search_providers import BelgaImageSearchProvider
 
-from belga.search_providers import BelgaImageSearchProvider, TIMEOUT
+from .. import TestCase, mock
 
 
-def fixture(filename):
-    return os.path.join(os.path.dirname(__file__), "..", "fixtures", filename)
-
-
-@all_requests
-def search_mock(url, request):
-    with open(fixture("belga-image-search.json")) as _file:
-        return _file.read()
-
-
-class DetailResponse:
-    status_code = 200
-
-    def raise_for_status(self):
-        pass
-
-    def json(self):
-        with open(fixture("belga-image-by-id.json")) as _file:
-            return json.load(_file)
-
-
-class BelgaImageTestCase(unittest.TestCase):
+class BelgaImageTestCase(TestCase):
     def test_instance(self):
         provider = BelgaImageSearchProvider(dict())
         self.assertEqual("Belga Image", provider.label)
         self.assertIsInstance(provider, superdesk.SearchProvider)
 
-    def test_find_items(self):
+    @aioresponses()
+    async def test_find_items(self, http_mock):
         query = {}
         provider = BelgaImageSearchProvider(dict())
-        with HTTMock(search_mock):
-            items = provider.find(query)
-        self.assertEqual(83681621, items.count(with_limit_and_skip=False))
 
-        item = items[0]
+        mock.http(
+            http_mock, payload=mock.fixture("belga-image-search.json", as_json=True)
+        )
+
+        cursor = await provider.find_async(query)
+        self.assertEqual(83681621, await cursor.count(with_limit_and_skip=False))
+
+        item = await cursor.next()
         self.assertEqual("picture", item["type"])
         self.assertEqual("usable", item["pubstatus"])
         self.assertEqual("urn:belga.be:image:143831778", item["_id"])
@@ -80,8 +62,8 @@ class BelgaImageTestCase(unittest.TestCase):
         self.assertEqual(4300, renditions["original"]["width"])
         self.assertEqual(2868, renditions["original"]["height"])
 
-    @patch("belga.search_providers.session.get")
-    def test_find_params(self, session_get):
+    @aioresponses()
+    async def test_find_params(self, http_mock):
         query = {
             "size": 20,
             "from": 10,
@@ -110,14 +92,14 @@ class BelgaImageTestCase(unittest.TestCase):
         }
 
         provider = BelgaImageSearchProvider(dict())
+        mock.http(http_mock, payload={"images": [], "nrImages": 0})
+        await provider.find_async(query, params)
 
-        provider.find(query, params)
-
-        url = (
-            requests.Request(
-                "GET",
-                provider.base_url + "searchImages",
-                params={
+        http_mock.assert_called_with(
+            provider.base_url
+            + provider.construct_url(
+                "searchImages",
+                {
                     "s": 10,
                     "l": 20,
                     "o": "0",
@@ -128,31 +110,22 @@ class BelgaImageTestCase(unittest.TestCase):
                     "p": "TODAY",
                     "t": "test AND query",
                 },
-            )
-            .prepare()
-            .url
+            ).lstrip("/"),
+            headers={},
         )
-        session_get.assert_called_with(url, headers={}, timeout=TIMEOUT)
 
-    @patch("belga.search_providers.session.get")
-    def test_fetch(self, session_get):
+    @aioresponses()
+    async def test_fetch(self, http_mock):
+        mock.http(
+            http_mock, payload=mock.fixture("belga-image-by-id.json", as_json=True)
+        )
         provider = BelgaImageSearchProvider(dict())
-        session_get.return_value = DetailResponse()
-
-        item = provider.fetch("urn:belga.be:image:143831778")
-
-        url = (
-            requests.Request(
-                "GET",
-                provider.base_url + "getImageById",
-                params={
-                    "i": "143831778",
-                },
-            )
-            .prepare()
-            .url
+        item = await provider.fetch_async("urn:belga.be:image:143831778")
+        http_mock.assert_called_with(
+            provider.base_url
+            + provider.construct_url("getImageById", {"i": "143831778"}).lstrip("/"),
+            headers={},
         )
-        session_get.assert_called_with(url, headers={}, timeout=TIMEOUT)
 
         self.assertEqual("urn:belga.be:image:143831778", item["guid"])
         self.assertEqual("Belloumi", item["byline"])

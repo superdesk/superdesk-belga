@@ -29,7 +29,9 @@ async def format_planning_for_tomorrow_bilingual_internal(
         event_item = None
         event_links = []
         if planning.get("event_item"):
-            event_item = await event_service.find_one_async(req=None, _id=planning["event_item"])
+            event_item = await event_service.find_one_async(
+                req=None, _id=planning["event_item"]
+            )
             if event_item:
                 event_links = event_item.get("links", [])
 
@@ -45,9 +47,13 @@ async def format_planning_for_tomorrow_bilingual_internal(
         formatted_planning = {
             "subject": ",".join(get_subjects(planning, "nl")),
             "calendar": calendar,
-            "contacts": await get_formatted_contacts(event_item if event_item else planning),
+            "contacts": await get_formatted_contacts(
+                event_item if event_item else planning
+            ),
             "coverages": await get_coverages_bilingual(planning, include_assignee=True),
-            "location": await get_item_location(event_item if event_item else planning, "nl"),
+            "location": await get_item_location(
+                event_item if event_item else planning, "nl"
+            ),
             "links": event_links,
             "title_nl": planning.get("name")
             or planning.get("slugline")

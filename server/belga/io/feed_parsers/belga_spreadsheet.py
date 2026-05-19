@@ -118,7 +118,9 @@ class BelgaSpreadsheetParser(FeedParser):
                 if is_updated in ("UPDATED", "ERROR"):
                     guid = values[index["_GUID"]]
                     # check if it's exists and guid is valid
-                    if not await superdesk.get_resource_service("events").find_one_async(guid=guid, req=None):
+                    if not await superdesk.get_resource_service(
+                        "events"
+                    ).find_one_async(guid=guid, req=None):
                         raise KeyError("GUID is not exists")
                 else:
                     guid = generate_guid(type=GUID_NEWSML)
