@@ -169,7 +169,6 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
         )
         self.assertEqual(
             [],
-            [],
             await _get_related_items_from_planning(
                 {
                     "related_events": [

@@ -137,7 +137,7 @@ async def set_default_metadata_with_translate(item, **kwargs):
             for subject in services_subjects:
                 temp_item = item.copy()
                 # Generate a unique ID for the temporary item,
-                # so result of checking temp item against the fillter is not re-used in subsequent checks
+                # so result of checking temp item against the filter is not re-used in subsequent checks
                 temp_item["item_id"] = generate_guid(type=GUID_TAG)
                 temp_item["subject"] = [subject]
 

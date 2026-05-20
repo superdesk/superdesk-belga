@@ -242,7 +242,6 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         }
 
     async def api_get(self, endpoint, params):
-        print("params", params)
         image_limit = get_config(str, "BELGA_IMAGE_LIMIT", "")
         if image_limit and not any([param in params for param in ["c", "h", "e"]]):
             # set limit when not doing any filtering
@@ -316,8 +315,6 @@ class BelgaCoverageSearchProvider(BelgaImageSearchProvider):
     count_field = "nrGalleries"
 
     def format_list_item(self, data):
-        if get_current_app().debug:
-            print(json.dumps(data, indent=2))
         guid = "%s%s" % (self.GUID_PREFIX, data["galleryId"])
         created = get_datetime(data["createDate"])
         thumbnail = data["iconThumbnailUrl"]
@@ -584,18 +581,11 @@ class Belga360ArchiveSearchProvider(
         return datetime.fromtimestamp(date, utc)
 
     def _get_profile(self, profile):
-        print("GetProfile=")
-        print(profile)
-
-        # raise Exception(profile)
         label = profile.lower()
         if label == "short":
-            print("GetProfile=[short]")
             label = "text"
         if label not in self.content_types:
-            print("GetProfile=[<in_content_types>]")
             return None
-        print("GetProfile=[<return>]")
         return label
 
     def get_type(self, assetType):
