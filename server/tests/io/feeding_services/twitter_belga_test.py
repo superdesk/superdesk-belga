@@ -1,10 +1,11 @@
 import datetime
 import json
+import re
 
-from httmock import HTTMock, urlmatch
+from aioresponses import aioresponses
 
 from belga.io.feeding_services.twitter_belga import TwitterBelgaFeedingService
-from tests import TestCase
+from tests import TestCase, mock
 
 
 items = [
@@ -21,35 +22,31 @@ items = [
     }
 ]
 
-
-@urlmatch(
-    scheme="https",
-    netloc="iframe.ly",
-    path="/api/oembed",
-    query="url=https://t.co/KBxMrf1zGk&api_key=abcdef",
+iframely_response_body = (
+    '<div class="iframely-embed" style="max-width: 640px;"><div class="i'
+    'framely-responsive" style="padding-bottom: 75.0131%;"><a href="https://www.faceb'
+    "ook.com/TomandJerry/photos/rpp.131583793581459/2759718637434615/?type=3&amp;thea"
+    'ter" data-iframely-url="//cdn.iframe.ly/api/iframe?url=https%3A%2F%2Ft.co%2FKBxM'
+    'rf1zGk&amp;key=7297b5377a04ff05f3378eb7d6e3cf0d"></a></div></div><script async s'
+    'rc="//cdn.iframe.ly/embed.js" charset="utf-8"></script>'
 )
-def iframely_mock(url, request):
-    body = (
-        '<div class="iframely-embed" style="max-width: 640px;"><div class="i'
-        'framely-responsive" style="padding-bottom: 75.0131%;"><a href="https://www.faceb'
-        "ook.com/TomandJerry/photos/rpp.131583793581459/2759718637434615/?type=3&amp;thea"
-        'ter" data-iframely-url="//cdn.iframe.ly/api/iframe?url=https%3A%2F%2Ft.co%2FKBxM'
-        'rf1zGk&amp;key=7297b5377a04ff05f3378eb7d6e3cf0d"></a></div></div><script async s'
-        'rc="//cdn.iframe.ly/embed.js" charset="utf-8"></script>'
-    )
-    return json.dumps({"html": body})
 
 
 class TwitterBelgaServiceTestCase(TestCase):
-    async def asyncSetUp(self):
-        await super().asyncSetUp()
-        provider = {"config": {"iframely_key": "abcdef", "embed_tweet": True}}
-        with HTTMock(iframely_mock):
-            self.items = (
-                await TwitterBelgaFeedingService().parse_twitter_belga(items, provider)
-            )[0]
+    @aioresponses()
+    async def test_embed_content(self, http_mock):
+        mock.http(
+            http_mock,
+            url=re.compile(r"^https://iframe\.ly/.*$"),
+            payload={"html": iframely_response_body},
+            status=200,
+        )
 
-    async def test_embed_content(self):
+        provider = {"config": {"iframely_key": "abcdef", "embed_tweet": True}}
+        self.items = (
+            await TwitterBelgaFeedingService().parse_twitter_belga(items, provider)
+        )[0]
+
         item = self.items[0]
         self.assertEqual(item["source"], "twitter")
         self.assertEqual(

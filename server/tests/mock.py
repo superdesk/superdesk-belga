@@ -37,7 +37,7 @@ def fixture(filename, as_json=False):
 
 def http(
     http_mock: aioresponses,
-    url: str | None = None,
+    url: str | re.Pattern[str] | None = None,
     method: str = "get",
     status: int = 200,
     payload: dict | bytes | str | None = None,

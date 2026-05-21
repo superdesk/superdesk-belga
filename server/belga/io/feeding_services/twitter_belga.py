@@ -8,9 +8,6 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 import re
-from datetime import datetime
-
-import requests
 
 import superdesk
 from superdesk.errors import IngestTwitterError, SuperdeskIngestError
@@ -20,6 +17,7 @@ from superdesk.io.registry import (
     register_feeding_service_parser,
 )
 from superdesk.metadata.item import GUID_FIELD
+from superdesk.core.web import AsyncHttpClientSessionMixin
 
 
 class IngestTwitterBelgaError(SuperdeskIngestError):
@@ -30,7 +28,7 @@ class IngestTwitterBelgaError(SuperdeskIngestError):
         return IngestTwitterBelgaError(6300, exception, provider)
 
 
-class TwitterBelgaFeedingService(TwitterFeedingService):
+class TwitterBelgaFeedingService(TwitterFeedingService, AsyncHttpClientSessionMixin):
     NAME = "twitter_belga"
 
     label = "Twitter Belga"
@@ -138,14 +136,16 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         """
         Get embed html from iframely service for provided url
         """
-        response = requests.get(
-            "https://iframe.ly/api/oembed?url={}&api_key={}".format(url, key)
-        )
-        content = response.json()
-        if response.status_code == 200:
-            return content.get("html", "")
-        elif response.status_code == 403:
-            raise await IngestTwitterBelgaError.TwitterInvalidIframelyKey().send_notifications()
+
+        http_client = await self.http_session()
+        url = "https://iframe.ly/api/oembed?url={}&api_key={}".format(url, key)
+        async with http_client.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data.get("html", "")
+            elif response.status == 403:
+                raise await IngestTwitterBelgaError.TwitterInvalidIframelyKey().send_notifications()
+
         # when turn off setting: On URL errors, don't repeat it as HTTP status (use code 200 instead)
         # iframely will return 417 response on URL error
         return ""
