@@ -1,7 +1,4 @@
 from superdesk import get_resource_service
-from superdesk.metadata.item import CONTENT_STATE
-from superdesk.utc import utcnow
-from datetime import timedelta
 
 TEXT = "TEXT"
 ALERT = "ALERT"
@@ -9,11 +6,11 @@ ALERT = "ALERT"
 DISTRIBUTION_ID = "distribution"
 
 
-def handle_update(sender, item, original, **kwargs):
+async def handle_update(item, original):
     profile_service = get_resource_service("content_types")
-    alert = profile_service.find_one(req=None, label=ALERT)
+    alert = await profile_service.find_one_async(req=None, label=ALERT)
     if alert and str(item.get("profile")) == str(alert["_id"]):
-        text = profile_service.find_one(req=None, label=TEXT)
+        text = await profile_service.find_one_async(req=None, label=TEXT)
         if text:
             item["profile"] = text["_id"]
             item["urgency"] = 3

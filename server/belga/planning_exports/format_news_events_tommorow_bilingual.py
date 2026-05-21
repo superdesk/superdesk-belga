@@ -7,7 +7,7 @@ from .common import (
 from typing import List, Dict, Any
 
 
-def format_event_for_tommorow_bilingual(
+async def format_event_for_tommorow_bilingual(
     event_data: List[Dict[str, Any]], locale: str
 ) -> Dict[str, Any]:
     """Format events into bilingual event list for advisory output"""
@@ -20,7 +20,7 @@ def format_event_for_tommorow_bilingual(
     for event in event_data:
         if is_editorial_calendar(event):
             continue
-        formatted_event = format_bilingual_event_item(event, locale)
+        formatted_event = await format_bilingual_event_item(event, locale)
         calendar = formatted_event["calendar"]
         calendar_groups.setdefault(calendar, []).append(formatted_event)
 

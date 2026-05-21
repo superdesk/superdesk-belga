@@ -101,18 +101,18 @@ class SpreadsheetFeedingService(FeedingService):
         },
     ]
 
-    def _test(self, provider):
-        worksheet = self._get_worksheet(provider)
+    async def _test(self, provider):
+        worksheet = await self._get_worksheet(provider)
         data = worksheet.get_all_values()
         BelgaSpreadsheetParser().parse_titles(data[0])
 
-    def _update(self, provider, update):
+    async def _update(self, provider, update):
         """Load items from google spreadsheet and insert (update) to events database
 
         If STATUS field is empty, create new item
         If STATUS field is UPDATED, update item
         """
-        worksheet = self._get_worksheet(provider)
+        worksheet = await self._get_worksheet(provider)
 
         # Get all values to avoid reaching read limit
         data = worksheet.get_all_values()
@@ -130,15 +130,15 @@ class SpreadsheetFeedingService(FeedingService):
         data[0] = titles  # pass to parser uses for looking up index
 
         parser = BelgaSpreadsheetParser()
-        items, cells_list = parser.parse(data, provider)
-        items = self._process_event_items(items, provider)
+        items, cells_list = await parser.parse(data, provider)
+        items = await self._process_event_items(items, provider)
         # add ingest item
         yield items
         # Update status for google sheet
         if cells_list:
             worksheet.update_cells(cells_list)
 
-    def _get_worksheet(self, provider):
+    async def _get_worksheet(self, provider):
         """Get worksheet from google spreadsheet
 
         :return: worksheet
@@ -162,30 +162,30 @@ class SpreadsheetFeedingService(FeedingService):
             spreadsheet = gc.open_by_url(url)
             permission = spreadsheet.list_permissions()[0]
             if permission["role"] != "writer":
-                raise IngestSpreadsheetError.SpreadsheetPermissionError()
+                raise await IngestSpreadsheetError.SpreadsheetPermissionError().send_notifications()
             worksheet = spreadsheet.worksheet(title)
             return worksheet
         except (json.decoder.JSONDecodeError, AttributeError, ValueError) as e:
             # both permission and credential raise Value error
             if e.args[0] == 15100:
-                raise IngestSpreadsheetError.SpreadsheetPermissionError()
-            raise IngestSpreadsheetError.SpreadsheetCredentialsError()
+                raise await IngestSpreadsheetError.SpreadsheetPermissionError().send_notifications()
+            raise await IngestSpreadsheetError.SpreadsheetCredentialsError().send_notifications()
         except gspread.exceptions.NoValidUrlKeyFound:
-            raise IngestApiError.apiNotFoundError()
+            raise await IngestApiError.apiNotFoundError().send_notifications()
         except gspread.exceptions.WorksheetNotFound:
-            raise IngestSpreadsheetError.WorksheetNotFoundError()
+            raise await IngestSpreadsheetError.WorksheetNotFoundError().send_notifications()
         except gspread.exceptions.APIError as e:
             error = e.response.json()["error"]
             response_code = error["code"]
             logger.error("Provider %s: %s", provider.get("name"), error["message"])
             if response_code == 403:
-                raise IngestSpreadsheetError.SpreadsheetPermissionError()
+                raise await IngestSpreadsheetError.SpreadsheetPermissionError().send_notifications()
             elif response_code == 429:
-                raise IngestSpreadsheetError.SpreadsheetQuotaLimitError()
+                raise await IngestSpreadsheetError.SpreadsheetQuotaLimitError().send_notifications()
             else:
-                raise IngestApiError.apiNotFoundError()
+                raise await IngestApiError.apiNotFoundError().send_notifications()
 
-    def _process_event_items(self, items, provider):
+    async def _process_event_items(self, items, provider):
         events_service = superdesk.get_resource_service("events")
         list_items = []
         for item in items:
@@ -194,7 +194,7 @@ class SpreadsheetFeedingService(FeedingService):
             if item.get("contact"):
                 contact = item.pop("contact")
                 contact_service = superdesk.get_resource_service("contacts")
-                _contact = contact_service.find_one(
+                _contact = await contact_service.find_one_async(
                     req=None,
                     **{
                         "first_name": contact["first_name"],
@@ -208,33 +208,38 @@ class SpreadsheetFeedingService(FeedingService):
                     item.setdefault(
                         "event_contact_info", [_contact[superdesk.config.ID_FIELD]]
                     )
-                    contact_service.patch(_contact[superdesk.config.ID_FIELD], contact)
+                    await contact_service.patch_async(
+                        _contact[superdesk.config.ID_FIELD], contact
+                    )
                 else:
                     item.setdefault(
-                        "event_contact_info", list(contact_service.post([contact]))
+                        "event_contact_info",
+                        list(await contact_service.post_async([contact])),
                     )
 
             if location:
                 location_service = superdesk.get_resource_service("locations")
-                saved_location = list(
-                    location_service.find(
+                saved_location = (
+                    await location_service.find_async(
                         {
                             "name": location[0]["name"],
                             "address.line": location[0]["address"]["line"],
                             "address.country": location[0]["address"]["country"],
                         }
                     )
-                )
+                ).to_list()
                 if saved_location and status == "UPDATED":
-                    location_service.patch(
+                    await location_service.patch_async(
                         saved_location[0][superdesk.config.ID_FIELD], location[0]
                     )
                 elif not saved_location:
                     _location = deepcopy(location)
-                    location_service.post(_location)
+                    await location_service.post_async(_location)
                     item["location"][0]["qcode"] = _location[0]["guid"]
 
-            old_item = events_service.find_one(guid=item[GUID_FIELD], req=None)
+            old_item = await events_service.find_one_async(
+                guid=item[GUID_FIELD], req=None
+            )
             if not old_item:
                 if not status:
                     item.setdefault("firstcreated", datetime.now())

@@ -52,7 +52,7 @@ class BelgaANPAFeedParser(ANPAFeedParser):
         except Exception:
             return False
 
-    def parse(self, file_path, provider=None):
+    async def parse(self, file_path, provider=None):
         try:
             item = {
                 ITEM_TYPE: CONTENT_TYPE.TEXT,
@@ -170,7 +170,9 @@ class BelgaANPAFeedParser(ANPAFeedParser):
             item["keywords"] = []
             return item
         except Exception as ex:
-            raise ParserError.anpaParseFileError(file_path, ex)
+            raise await ParserError.anpaParseFileError(
+                file_path, ex
+            ).send_notifications()
 
 
 register_feed_parser(BelgaANPAFeedParser.NAME, BelgaANPAFeedParser())

@@ -10,9 +10,10 @@ from .common import (
 from typing import List, Dict, Any
 from superdesk.utc import utc_to_local
 from superdesk import get_resource_service
+from planning.utils import get_related_event_links_for_planning
 
 
-def format_planning_for_tomorrow(
+async def format_planning_for_tomorrow(
     planning_data: List[Dict[str, Any]], locale: str
 ) -> List[Dict[str, Any]]:
     events_list: List[Dict[str, Any]] = []
@@ -30,13 +31,20 @@ def format_planning_for_tomorrow(
             elif isinstance(coverage, str):
                 cov_type = coverage.lower()
 
-            if cov_type in ["picture", "video"] and item.get("event_item"):
-                event_ids.add(item["event_item"])
+            if cov_type in ["picture", "video"]:
+                event_ids.update(
+                    [
+                        link["_id"]
+                        for link in get_related_event_links_for_planning(
+                            item, "primary"
+                        )
+                    ]
+                )
 
     # Fetch associated events
     events_service = get_resource_service("events")
     events = [
-        events_service.find_one(req=None, _id=event_id)
+        await events_service.find_one_async(req=None, _id=event_id)
         for event_id in event_ids
         if event_id
     ]
@@ -55,9 +63,9 @@ def format_planning_for_tomorrow(
         formatted_event = {
             "subject": ",".join(get_subjects(event, locale)),
             "calendars": calendar,
-            "contacts": get_formatted_contacts(event),
-            "coverages": get_coverages(event, locale),
-            "location": get_item_location(event, locale),
+            "contacts": await get_formatted_contacts(event),
+            "coverages": await get_coverages(event, locale),
+            "location": await get_item_location(event, locale),
             "links": event.get("links", []),
         }
         set_metadata(formatted_event, event, locale)

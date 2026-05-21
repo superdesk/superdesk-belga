@@ -16,12 +16,13 @@ from .. import TestCase
 class BelgaContactImportTestCase(TestCase):
     filename = "contacts.json"
 
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "./fixtures", self.filename))
-        self.items = import_contacts_via_json_file(fixture)
+        self.items = await import_contacts_via_json_file(fixture)
 
-    def test_import(self):
+    async def test_import(self):
         self.assertEqual(len(self.items), 2)
         item = self.items[0]
         self.assertEqual(item["schema"], {"is_active": True, "public": True})

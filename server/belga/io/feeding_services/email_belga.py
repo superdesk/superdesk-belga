@@ -12,7 +12,8 @@ import email
 import imaplib
 import io
 import logging
-from flask import current_app as app
+
+from superdesk.core import get_config, get_current_app
 from superdesk.media.media_operations import process_file_from_stream
 from superdesk.io.feeding_services import EmailFeedingService
 from superdesk.io.feed_parsers.rfc822 import EMailRFC822FeedParser
@@ -90,7 +91,7 @@ class EmailBelgaFeedingService(EmailFeedingService):
         },
     ]
 
-    def _update(self, provider, update, test=False):
+    async def _update(self, provider, update, test=False):
         config = provider.get("config", {})
         server = config.get("server", "")
         port = int(config.get("port", 993))
@@ -98,32 +99,36 @@ class EmailBelgaFeedingService(EmailFeedingService):
 
         try:
             try:
-                socket.setdefaulttimeout(app.config.get("EMAIL_TIMEOUT", 10))
+                socket.setdefaulttimeout(get_config(int, "EMAIL_TIMEOUT", 10))
                 imap = imaplib.IMAP4_SSL(host=server, port=port)
             except (socket.gaierror, OSError) as e:
-                raise IngestEmailError.emailHostError(exception=e, provider=provider)
+                raise await IngestEmailError.emailHostError(
+                    exception=e, provider=provider
+                ).send_notifications()
 
             try:
                 imap.login(config.get("user", None), config.get("password", None))
             except imaplib.IMAP4.error:
-                raise IngestEmailError.emailLoginError(imaplib.IMAP4.error, provider)
+                raise await IngestEmailError.emailLoginError(
+                    imaplib.IMAP4.error, provider
+                ).send_notifications()
 
             try:
                 rv, data = imap.select(config.get("mailbox", None), readonly=False)
                 if rv != "OK":
-                    raise IngestEmailError.emailMailboxError()
+                    raise await IngestEmailError.emailMailboxError().send_notifications()
                 try:
                     rv, data = imap.search(None, config.get("filter", "(UNSEEN)"))
                     if rv != "OK":
-                        raise IngestEmailError.emailFilterError()
+                        raise await IngestEmailError.emailFilterError().send_notifications()
                     for num in data[0].split():
                         rv, data = imap.fetch(num, "(RFC822)")
                         if rv == "OK" and not test:
                             try:
-                                parser = self.get_feed_parser(provider, data)
-                                item = parser.parse(data, provider)
+                                parser = await self.get_feed_parser(provider, data)
+                                item = await parser.parse(data, provider)
                                 if config.get("attachment"):
-                                    self.save_attachment(data, item)
+                                    await self.save_attachment(data, item)
                                 new_items.append(item)
                                 rv, data = imap.store(num, "+FLAGS", "\\Seen")
                             except IngestEmailError:
@@ -132,18 +137,19 @@ class EmailBelgaFeedingService(EmailFeedingService):
                     imap.close()
             finally:
                 imap.logout()
-        except IngestEmailError:
-            raise
+        except IngestEmailError as ex:
+            raise await ex.send_notifications()
         except Exception as ex:
-            raise IngestEmailError.emailError(ex, provider)
+            raise await IngestEmailError.emailError(ex, provider).send_notifications()
         return new_items
 
-    def save_attachment(self, data, items):
+    async def save_attachment(self, data, items):
         """
         Given a data email for getting stream of attachment.
 
         """
         attachments = []
+        app = get_current_app()
         for response_part in data:
             if isinstance(response_part, tuple):
                 msg = email.message_from_bytes(response_part[1])
@@ -173,7 +179,7 @@ class EmailBelgaFeedingService(EmailFeedingService):
                             )
                             try:
                                 attachment_service = get_resource_service("attachments")
-                                ids = attachment_service.post(
+                                ids = await attachment_service.post_async(
                                     [
                                         {
                                             "media": media_id,

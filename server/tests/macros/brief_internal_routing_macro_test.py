@@ -62,7 +62,8 @@ class MacroMetadataTestCase(unittest.TestCase):
 
 
 class BriefInternalRoutingMacroTestCase(tests.TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.profiles = self.app.data.insert(
             "content_types",
             [
@@ -72,7 +73,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         )
         self.now = utcnow()
 
-    def test_callback(self):
+    async def test_callback(self):
         # Test when BELGA source is already present in the item
         item = {
             "_id": "foo",
@@ -97,7 +98,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         }
 
         with self.assertRaises(StopDuplication):
-            macro.callback(item)
+            await macro.callback(item)
 
         # test metadata
         self.assertEqual(self.profiles[0], item["profile"])
@@ -156,7 +157,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         }
 
         with self.assertRaises(StopDuplication):
-            macro.callback(item2)
+            await macro.callback(item2)
 
         self.assertIn(
             {
@@ -214,7 +215,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         self.assertEqual("foo bar", published["headline"])
         self.assertEqual("<p>foo</p>", published["body_html"])
 
-    def test_publish_scheduled(self):
+    async def test_publish_scheduled(self):
         item = {
             "_id": "foo",
             "guid": "foo",
@@ -232,7 +233,7 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         }
 
         with self.assertRaises(StopDuplication):
-            macro.callback(item)
+            await macro.callback(item)
 
         published = self.app.data.find_one(
             "published", req=None, original_id=item["_id"]
@@ -240,19 +241,19 @@ class BriefInternalRoutingMacroTestCase(tests.TestCase):
         schedule = published[SCHEDULE_SETTINGS]["utc_publish_schedule"]
         self.assertLessEqual(self.now + timedelta(minutes=45), schedule)
 
-    def test_filtering(self):
+    async def test_filtering(self):
         item = {}
         with self.assertRaises(StopDuplication):
-            macro.callback(item)
+            await macro.callback(item)
         self.assertEqual({}, item)
 
         item["profile"] = self.profiles[0]
         with self.assertRaises(StopDuplication):
-            macro.callback(item)
+            await macro.callback(item)
         self.assertEqual(1, len(item.keys()))
 
         item["profile"] = self.profiles[1]
         item["body_html"] = "<p>foo</p>" * 500
         with self.assertRaises(StopDuplication):
-            macro.callback(item)
+            await macro.callback(item)
         self.assertEqual(2, len(item.keys()))

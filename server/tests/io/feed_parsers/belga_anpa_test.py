@@ -1,28 +1,28 @@
 import os
 
 import settings
-from superdesk import config
 
 from belga.io.feed_parsers.belga_anpa import BelgaANPAFeedParser
 from tests import TestCase
 
 
 class BaseBelgaANPAFeedParserTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         for key in dir(settings):
             if key.isupper():
-                setattr(config, key, getattr(settings, key))
+                setattr(self.app.config, key, getattr(settings, key))
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {"name": "test"}
         parser = BelgaANPAFeedParser()
-        self.item = parser.parse(fixture, provider)
+        self.item = await parser.parse(fixture, provider)
 
 
 class KyodoBelgaFeedParserTestCase(BaseBelgaANPAFeedParserTestCase):
     filename = "kyodo.txt"
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item
         self.assertEqual(item["language"], "en")
         self.assertEqual(item["slugline"], None)

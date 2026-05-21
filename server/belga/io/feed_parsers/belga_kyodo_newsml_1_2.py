@@ -22,8 +22,8 @@ class BelgaKyodoNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         return xml.tag == "NewsML"
 
     # SDBELGA - 693
-    def parse(self, xml, provider=None):
-        items = super().parse(xml, provider)
+    async def parse(self, xml, provider=None):
+        items = await super().parse(xml, provider)
         location_el = xml.find(
             "NewsItem/NewsComponent/ContentItem/DataContent/nitf/body/body.head/dateline/location"
         )

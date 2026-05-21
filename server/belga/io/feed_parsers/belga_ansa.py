@@ -14,9 +14,7 @@ from superdesk.io.feed_parsers.nitf import NITFFeedParser
 from lxml import etree
 from superdesk.io.iptc import subject_codes
 from superdesk import get_resource_service
-import pytz
 from superdesk.utc import local_to_utc
-import arrow
 
 
 class BelgaANSAFeedParser(NITFFeedParser):
@@ -46,17 +44,17 @@ class BelgaANSAFeedParser(NITFFeedParser):
     def can_parse(self, xml):
         return xml.tag.endswith("nitf")
 
-    def parse(self, xml, provider=None):
+    async def parse(self, xml, provider=None):
         # removes unwanted comments
         uncommented_xml = etree.fromstring(
             etree.tostring(xml, encoding="unicode"),
             parser=etree.XMLParser(remove_comments=True),
         )
-        item = super().parse(uncommented_xml, provider)
-        self.meta_parse(uncommented_xml, item)
+        item = await super().parse(uncommented_xml, provider)
+        await self.meta_parse(uncommented_xml, item)
         return item
 
-    def meta_parse(self, xml, item):
+    async def meta_parse(self, xml, item):
         """
         Mapped meta tag items
         """
@@ -66,10 +64,10 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
         # author and writer
         author_elem = xml.find("head/meta[@name='author']")
-        self.parse_author(author_elem, item)
+        await self.parse_author(author_elem, item)
 
         writer_elem = xml.find("head/meta[@name='writer']")
-        self.parse_author(writer_elem, item)
+        await self.parse_author(writer_elem, item)
 
         # keywords
         keywords_elem = xml.find("head/meta[@name='keyword']")
@@ -93,7 +91,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
         # IPTC subject
         subjects = xml.findall("head/meta[@name='category_iptc']")
         subjects += xml.findall("head/meta[@name='category']")
-        item["subject"] = self.parse_subjects(subjects)
+        item["subject"] = await self.parse_subjects(subjects)
 
         # Service - Products
         product_elem = xml.find("head/meta[@name='product-id']")
@@ -127,7 +125,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
         # body_html
         item["body_html"] = self.parse_content(xml).strip()
 
-    def parse_author(self, author_elem, item):
+    async def parse_author(self, author_elem, item):
         """
         Parse author/writer fields
         """
@@ -140,7 +138,9 @@ class BelgaANSAFeedParser(NITFFeedParser):
             "sub_label": author_name,
         }
         # try to find an author in DB
-        user = get_resource_service("users").find_one(req=None, username=author_name)
+        user = await get_resource_service("users").find_one_async(
+            req=None, username=author_name
+        )
         if user:
             author["_id"] = [
                 str(user["_id"]),
@@ -166,7 +166,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
         priority = priority_elem.attrib.get("content", "")
         return self.PRIORITY_TABLE[value[priority]]
 
-    def parse_subjects(self, subjects):
+    async def parse_subjects(self, subjects):
         """
         Function for Mapping IPTC Subject
         """
@@ -178,7 +178,7 @@ class BelgaANSAFeedParser(NITFFeedParser):
                     return False
             return True
 
-        iptcsc_cv = self._get_cv("iptc_subject_codes")
+        iptcsc_cv = await self._get_cv("iptc_subject_codes")
         for subject in subjects:
             content = subject.attrib.get("content")
             for item in iptcsc_cv.get("items", []):
@@ -199,8 +199,10 @@ class BelgaANSAFeedParser(NITFFeedParser):
 
         return formatted_subjects
 
-    def _get_cv(self, _id):
-        return get_resource_service("vocabularies").find_one(req=None, _id=_id)
+    async def _get_cv(self, _id: str) -> dict | None:
+        return await get_resource_service("vocabularies").find_one_async(
+            req=None, _id=_id
+        )
 
     def parse_content(self, xml):
         elements = []

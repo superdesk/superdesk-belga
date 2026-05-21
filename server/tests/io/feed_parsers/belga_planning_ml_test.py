@@ -20,12 +20,12 @@ class BelgaPlanningMLTestCase(TestCase):
     def load(self, _file):
         return lxml.etree.parse(_file)
 
-    def parse(self):
+    async def parse(self):
         xml = self.fixture()
-        self.item = self.parser.parse(xml.getroot(), {"name": "test"})[0]
+        self.item = (await self.parser.parse(xml.getroot(), {"name": "test"}))[0]
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         event_start = datetime.datetime.fromisoformat("2025-05-05T22:00:00+00:00")
         self.event = {
             "_id": "urn:event:123",
@@ -43,14 +43,16 @@ class BelgaPlanningMLTestCase(TestCase):
 
         # Store the linked Event so the parser can retrieve it during ingest
         self.app.data.insert("events", [self.event])
-        self.parse()
+        await self.parse()
 
-    def test_parser(self):
+    async def test_parser(self):
         assert self.item is not None
         assert len(self.item["coverages"]) == 2
         assert self.item["item_class"] == "plinat:newscoverage"
         assert self.item["planning_date"].isoformat() == "2025-05-05T22:00:00+00:00"
-        assert self.item["event_item"] == "urn:event:123"
+        assert self.item["related_events"] == [
+            {"_id": "urn:event:123", "link_type": "primary"}
+        ]
 
         assert self.item["coverages"][0]["planning"]["internal_note"] == "John"
         assert self.item["coverages"][0]["planning"]["ednote"] == "Planned coverage"
@@ -70,7 +72,7 @@ class BelgaPlanningMLTestCase(TestCase):
             "label": "On merit",
         }
 
-    def test_event_metadata_inherited(self):
+    async def test_event_metadata_inherited(self):
         assert self.item["languages"] == ["fr", "nl", "en"]
         assert self.item["language"] == "fr"
         assert self.item["name"] == "Event Name"

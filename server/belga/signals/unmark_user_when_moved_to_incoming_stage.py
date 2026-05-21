@@ -6,7 +6,7 @@ from superdesk import get_resource_service
 logger = logging.getLogger(__name__)
 
 
-def unmark_user(sender, item, original):
+async def unmark_user(item, original):
     marked_for_user = item.get("marked_for_user", original.get("marked_for_user"))
     if not marked_for_user:
         logger.debug("mark for user is empty")
@@ -14,7 +14,7 @@ def unmark_user(sender, item, original):
 
     try:
         new_stage = item["task"]["stage"]
-        desk = get_resource_service("desks").find_one(
+        desk = await get_resource_service("desks").find_one_async(
             req=None, _id=item["task"]["desk"]
         )
         if desk["incoming_stage"] == new_stage:

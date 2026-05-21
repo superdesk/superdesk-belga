@@ -7,20 +7,20 @@ from tests import TestCase
 class BelgaSTTTestCase(TestCase):
     filename = "stt_belga.xml"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {"name": "test"}
         with open(fixture, "rb") as f:
             parser = BelgaSTTFeedParser()
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_can_parse(self):
+    async def test_can_parse(self):
         self.assertTrue(BelgaSTTFeedParser().can_parse(self.xml_root))
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item[0]
         item["subject"].sort(key=lambda i: i["scheme"])
         expected_subjects = [

@@ -47,16 +47,16 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         credit = {"name": "ATS", "qcode": "ATS", "scheme": "sources"}
         item.setdefault("subject", []).append(credit)
 
-    def parse_contentitem(self, item, content_el):
+    async def parse_contentitem(self, item, content_el):
         if content_el is None:
             return
 
-        super().parse_contentitem(item, content_el)
+        await super().parse_contentitem(item, content_el)
         element = content_el.find("Comment")
         if element is not None and element.get("FormalName") == "Editorial Note":
             item["ednote"] = element.text
 
-    def parse_newscomponent(self, item, newscomponent_el):
+    async def parse_newscomponent(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
 
@@ -90,12 +90,12 @@ class BelgaATSNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
         :param component_el:
         :return:
         """
-        super().parse_newscomponent(item, newscomponent_el)
+        await super().parse_newscomponent(item, newscomponent_el)
         second_newscomponent_el = newscomponent_el.find("NewsComponent")
         if second_newscomponent_el is not None:
             content_el = second_newscomponent_el.find("ContentItem")
             if content_el is not None:
-                self.parse_contentitem(item, content_el)
+                await self.parse_contentitem(item, content_el)
         return item
 
 

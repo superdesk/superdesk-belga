@@ -22,13 +22,13 @@ from lxml.etree import SubElement
 from lxml.html.clean import Cleaner
 from eve.utils import config
 from eve.utils import ParsedRequest
-from flask import current_app as app
 
 import superdesk
+from superdesk.core import get_config, get_current_app
 from superdesk.etree import parse_html, to_string
 from superdesk import text_utils
+from superdesk.publish_async.utils import generate_sequence_number
 from apps.archive.common import get_utc_schedule
-from superdesk.errors import FormatterError
 from superdesk.metadata.item import (
     CONTENT_TYPE,
     EMBARGO,
@@ -42,39 +42,6 @@ from superdesk.publish.formatters.newsml_g2_formatter import XML_LANG
 from ..search_providers import get_service_by_id, get_provider_by_guid
 
 logger = logging.getLogger(__name__)
-
-
-def generate_sequence_number(subscriber):
-    """
-    Generate a publish sequence number.
-    Function is used to mock this part when you call formatter directly from the python script during development.
-    Example:
-        ```
-        from unittest import mock
-        from app import get_app
-        from belga.publish import belga_newsml_1_2
-
-        app = get_app()
-        with app.app_context():
-            article = app.data.find_one(
-                'archive',
-                req=None,
-                _id='urn:newsml:localhost:5000:...'
-            )
-            article['state'] = 'published'
-            with mock.patch.object(belga_newsml_1_2, 'generate_sequence_number') as gen_seq_num_mock:
-                gen_seq_num_mock.return_value = 1
-                result = belga_newsml_1_2.BelgaNewsML12Formatter().format(
-                    article=article,
-                    subscriber={}
-                )
-            with open('/path/to/output/result.xml', 'w') as f:
-                f.write(result[0][1])
-            ```
-    """
-    return superdesk.get_resource_service("subscribers").generate_sequence_number(
-        subscriber
-    )
 
 
 class NewsComponent2Roles(NamedTuple):
@@ -123,7 +90,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
     name = "Belga News ML 1.2"
     type = "belganewsml12"
 
-    def format(self, article, subscriber, codes=None):
+    async def format(self, article, subscriber, codes=None):
         """
         Create output in Belga NewsML 1.2 format
 
@@ -145,13 +112,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self.attachments_service = superdesk.get_resource_service("attachments")
             self._belga_coverage_field_ids = [
                 i["_id"]
-                for i in self.vocabularies_service.find(
+                async for i in await self.vocabularies_service.find_async(
                     {"custom_field_type": "belga.coverage"}
                 )
             ]
 
             # original/initial item
-            items_chain = self.archive_service.get_items_chain(article)
+            items_chain = await self.archive_service.get_items_chain(article)
             self._original_item = items_chain[0]
             # the actual item which was selected for publishing in the UI.
             # just fetched doc from the db (the one in `items_chain`) is used instead of `article` to avoid
@@ -166,12 +133,12 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 self._current_item = article
 
             # items chain in context of Belga NewsML
-            self._newsml_items_chain = self._get_newsml_items_chain(items_chain)
+            self._newsml_items_chain = await self._get_newsml_items_chain(items_chain)
             # `NewsItemId` and `Duid` must always use guid of original item
             # SDBELGA-348
             self._duid = self._original_item[GUID_FIELD]
 
-            self._tz = pytz.timezone(superdesk.app.config["DEFAULT_TIMEZONE"])
+            self._tz = pytz.timezone(get_config(str, "DEFAULT_TIMEZONE"))
             self._string_now = self._get_formatted_datetime(
                 self._current_item["firstpublished"]
             )
@@ -179,7 +146,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             self._newsml = etree.Element("NewsML")
             self._format_catalog()
             self._format_newsenvelope()
-            self._format_newsitem()
+            await self._format_newsitem()
 
             xml_string = (
                 self.XML_ROOT
@@ -188,12 +155,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     self._newsml, pretty_print=True, encoding=self.ENCODING
                 ).decode(self.ENCODING)
             )
-            pub_seq_num = generate_sequence_number(subscriber)
+            pub_seq_num = await generate_sequence_number(subscriber)
 
             return [(pub_seq_num, xml_string)]
         except Exception as ex:
+            if hasattr(ex, "send_notifications"):
+                await ex.send_notifications()
             raise
-            raise FormatterError.newml12FormatterError(ex, subscriber)
 
     def can_format(self, format_type, item):
         """
@@ -232,13 +200,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newsenvelope, "NewsService", {"FormalName": ""})
         SubElement(newsenvelope, "NewsProduct", {"FormalName": ""})
 
-    def _format_newsitem(self):
+    async def _format_newsitem(self):
         """Creates `<NewsItem>` and all internal elements and adds it to `<NewsML>`."""
 
         newsitem = SubElement(self._newsml, "NewsItem")
         self._format_identification(newsitem)
         self._format_newsmanagement(newsitem)
-        self._format_newscomponent_1_level(newsitem)
+        await self._format_newscomponent_1_level(newsitem)
 
     def _format_identification(self, newsitem):
         """
@@ -248,9 +216,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         identification = SubElement(newsitem, "Identification")
         news_identifier = SubElement(identification, "NewsIdentifier")
-        SubElement(news_identifier, "ProviderId").text = app.config[
-            "NEWSML_PROVIDER_ID"
-        ]
+        SubElement(news_identifier, "ProviderId").text = get_config(
+            str, "NEWSML_PROVIDER_ID"
+        )
         SubElement(news_identifier, "DateId").text = self._get_formatted_datetime(
             self._current_item.get("firstcreated")
         )
@@ -298,7 +266,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 {"FormalName": self._current_item.get("pubstatus", "").upper()},
             )
 
-    def _format_newscomponent_1_level(self, newsitem):
+    async def _format_newscomponent_1_level(self, newsitem):
         """
         Creates the `<NewsComponent>` element and adds it to `<NewsItem>`.
         :param Element newsitem: NewsItem
@@ -315,9 +283,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         descriptivemetadata = SubElement(newscomponent_1_level, "DescriptiveMetadata")
         SubElement(descriptivemetadata, "Genre", {"FormalName": ""})
 
-        self._format_newscomponent_2_level(newscomponent_1_level)
+        await self._format_newscomponent_2_level(newscomponent_1_level)
 
-    def _format_newscomponent_2_level(self, newscomponent_1_level):
+    async def _format_newscomponent_2_level(self, newscomponent_1_level):
         """
         Creates the `<NewsComponent>`(s) of a 2nd level and appends them to `newscomponent_1_level`.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -335,9 +303,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         for item in self._newsml_items_chain:
             _format = ROLE_FORMATTER_MAP.get(item["_role"], self._format_text)
-            _format(newscomponent_1_level, item)
+            await _format(newscomponent_1_level, item)
 
-    def _format_text(self, newscomponent_1_level, item):
+    async def _format_text(self, newscomponent_1_level, item):
         """
         Creates a `<NewsComponent>` of a 2nd level with information related to content profile.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -365,13 +333,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=item)
         # AdministrativeMetadata
-        self._format_administrative_metadata(newscomponent_2_level, item=item)
+        await self._format_administrative_metadata(newscomponent_2_level, item=item)
         # DescriptiveMetadata
         self._format_descriptive_metadata(newscomponent_2_level, item=item)
         # NewsComponent 3rd level
         self._format_newscomponent_3_level(newscomponent_2_level, item=item)
 
-    def _format_related_text_item(self, newscomponent_1_level, item):
+    async def _format_related_text_item(self, newscomponent_1_level, item):
         """
         Creates a `<NewsComponent>` of a 2nd level with associated related text item.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -390,13 +358,13 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=item)
         # AdministrativeMetadata
-        self._format_administrative_metadata(newscomponent_2_level, item=item)
+        await self._format_administrative_metadata(newscomponent_2_level, item=item)
         # DescriptiveMetadata
         self._format_descriptive_metadata(newscomponent_2_level, item=item)
         # NewsComponent 3rd level
         self._format_newscomponent_3_level(newscomponent_2_level, item=item)
 
-    def _format_url(self, newscomponent_1_level, item_url):
+    async def _format_url(self, newscomponent_1_level, item_url):
         """
         Creates a `NewsComponent`(s) of a 2nd level with belga url item.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -415,7 +383,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newslines, "HeadLine").text = item_url.get("description")
         SubElement(newslines, "CopyrightLine").text = item_url.get("copyrightholder")
         SubElement(newslines, "CreditLine").text = self.DEFAULT_CREDITLINE
-        self._format_administrative_metadata(newscomponent_2_level, item=item_url)
+        await self._format_administrative_metadata(newscomponent_2_level, item=item_url)
         self._format_descriptive_metadata(newscomponent_2_level, item=item_url)
 
         for role, key in (("Title", "description"), ("Locator", "url")):
@@ -444,7 +412,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 {"FormalName": "maxCharCount", "Value": "0"},
             )
 
-    def _format_picture(self, newscomponent_1_level, picture):
+    async def _format_picture(self, newscomponent_1_level, picture):
         """
         Creates a `<NewsComponent>` of a 2nd level with associated picture data.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -472,7 +440,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         # NewsLines
         self._format_newslines(newscomponent_2_level, item=picture)
         # AdministrativeMetadata
-        self._format_administrative_metadata(newscomponent_2_level, item=picture)
+        await self._format_administrative_metadata(newscomponent_2_level, item=picture)
         self._format_descriptive_metadata(newscomponent_2_level, item=picture)
 
         for role, key in (("Title", "headline"), ("Caption", "description_text")):
@@ -545,7 +513,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 newscomponent_3_level, rendition=picture["renditions"][key]
             )
 
-    def _format_coverage(self, newscomponent_1_level, coverage):
+    async def _format_coverage(self, newscomponent_1_level, coverage):
         """
         Creates a `<NewsComponent>` of a 2nd level with associated graphic item's data
         or with data from `belga.coverage` field.
@@ -561,7 +529,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_2_level.attrib[XML_LANG] = coverage.get("language")
         SubElement(newscomponent_2_level, "Role", {"FormalName": coverage["_role"]})
         self._format_newslines(newscomponent_2_level, item=coverage)
-        self._format_administrative_metadata(newscomponent_2_level, item=coverage)
+        await self._format_administrative_metadata(newscomponent_2_level, item=coverage)
         self._format_descriptive_metadata(newscomponent_2_level, item=coverage)
 
         for role, key in (("Title", "headline"), ("Caption", "description_text")):
@@ -604,7 +572,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_3_level, rendition=coverage["renditions"]["original"]
         )
 
-    def _format_audio(self, newscomponent_1_level, audio):
+    async def _format_audio(self, newscomponent_1_level, audio):
         """
         Creates a `<NewsComponent>` of a 2nd level with associated audio data.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -620,7 +588,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_2_level.attrib[XML_LANG] = audio.get("language")
         SubElement(newscomponent_2_level, "Role", {"FormalName": audio["_role"]})
         self._format_newslines(newscomponent_2_level, item=audio)
-        self._format_administrative_metadata(newscomponent_2_level, item=audio)
+        await self._format_administrative_metadata(newscomponent_2_level, item=audio)
         self._format_descriptive_metadata(newscomponent_2_level, item=audio)
 
         for role, key in (("Title", "headline"), ("Body", "description_text")):
@@ -664,7 +632,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_3_level, rendition=audio["renditions"]["original"]
         )
 
-    def _format_video(self, newscomponent_1_level, video):
+    async def _format_video(self, newscomponent_1_level, video):
         """
         Creates a `<NewsComponent>` of a 2nd level with associated video data.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -680,7 +648,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             newscomponent_2_level.attrib[XML_LANG] = video.get("language")
         SubElement(newscomponent_2_level, "Role", {"FormalName": video["_role"]})
         self._format_newslines(newscomponent_2_level, item=video)
-        self._format_administrative_metadata(newscomponent_2_level, item=video)
+        await self._format_administrative_metadata(newscomponent_2_level, item=video)
         self._format_descriptive_metadata(newscomponent_2_level, item=video)
 
         for role, key in (("Title", "headline"), ("Body", "description_text")):
@@ -768,7 +736,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 newscomponent_3_level, rendition=video["renditions"][key]
             )
 
-    def _format_attachment(self, newscomponent_1_level, attachment):
+    async def _format_attachment(self, newscomponent_1_level, attachment):
         """
         Creates a `<NewsComponent>` of a 2nd level with file attached to the item.
         :param Element newscomponent_1_level: NewsComponent of 1st level
@@ -790,7 +758,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         SubElement(newscomponent_2_level, "Role", {"FormalName": attachment["_role"]})
         self._format_newslines(newscomponent_2_level, item=attachment)
-        self._format_administrative_metadata(newscomponent_2_level, item=attachment)
+        await self._format_administrative_metadata(
+            newscomponent_2_level, item=attachment
+        )
         self._format_descriptive_metadata(newscomponent_2_level, item=attachment)
 
         for role, key in (("Title", "headline"), ("Body", "description_text")):
@@ -833,10 +803,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 "media": attachment["media"],
                 "mimetype": attachment["mimetype"],
                 "href": urljoin(
-                    app.config["MEDIA_PREFIX"] + "/", "{}".format(attachment["media"])
+                    get_config(str, "MEDIA_PREFIX") + "/",
+                    "{}".format(attachment["media"]),
                 ),
                 "belga-urn": "urn:www.belga.be:superdesk:{}:{}".format(
-                    app.config["OUTPUT_BELGA_URN_SUFFIX"], attachment["media"]
+                    get_config(str, "OUTPUT_BELGA_URN_SUFFIX"), attachment["media"]
                 ),
             },
         )
@@ -868,7 +839,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             # the rest are internaly uploaded media: pictures, video and audio
             elif "media" in rendition:
                 rendition["belga-urn"] = "urn:www.belga.be:superdesk:{}:{}".format(
-                    app.config["OUTPUT_BELGA_URN_SUFFIX"], rendition["media"]
+                    get_config(str, "OUTPUT_BELGA_URN_SUFFIX"), rendition["media"]
                 )
 
     def _format_media_contentitem(self, newscomponent_3_level, rendition):
@@ -945,7 +916,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         characteristics = SubElement(contentitem, "Characteristics")
 
         if rendition.get("media"):
-            media = app.media.get(str(rendition["media"]))
+            media = get_current_app().media.get(str(rendition["media"]))
             length = media.length if media.length else media.metadata.get("length")
             SubElement(characteristics, "SizeInBytes").text = str(length)
         if rendition.get("width"):
@@ -1032,7 +1003,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         SubElement(newsline, "NewsLineType", {"FormalName": item.get("line_type", "")})
         SubElement(newsline, "NewsLineText").text = item.get("line_text")
 
-    def _format_administrative_metadata(self, newscomponent_2_level, item):
+    async def _format_administrative_metadata(self, newscomponent_2_level, item):
         """
         Creates the `<AdministrativeMetadata>` element and add it to `newscomponent_2_level`
         :param Element newscomponent_2_level: NewsComponent of 2nd level
@@ -1056,7 +1027,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         else:
             authors = item.get("authors", tuple())
         for author in authors:
-            author = self._get_author_info(author)
+            author = await self._get_author_info(author)
             SubElement(
                 creator,
                 "Party",
@@ -1075,9 +1046,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 "Property",
                 {
                     "FormalName": "Validator",
-                    "Value": self._get_author_info(str(item["version_creator"]))[
-                        "initials"
-                    ],
+                    "Value": (
+                        await self._get_author_info(str(item["version_creator"]))
+                    )["initials"],
                 },
             )
         elif item.get("administrative", {}).get("validator"):
@@ -1295,7 +1266,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     {"FormalName": "maxCharCount", "Value": "0"},
                 )
 
-    def _get_author_info(self, author):
+    async def _get_author_info(self, author):
         author_info = {"initials": "", "role": ""}
         author_type = type(author)
 
@@ -1307,8 +1278,10 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         elif author_type is dict:
             author_info["role"] = author["_id"][1]
             try:
-                user = next(self.users_service.find({"_id": author["_id"][0]}))
-            except StopIteration:
+                user = await anext(
+                    await self.users_service.find_async({"_id": author["_id"][0]})
+                )
+            except StopAsyncIteration:
                 logger.warning(
                     "unknown user: {user_id}".format(user_id=author["_id"][0])
                 )
@@ -1318,14 +1291,18 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         elif author_type is str:
             author_id = author
             try:
-                user = next(self.users_service.find({"_id": author_id}))
+                user = await anext(
+                    await self.users_service.find_async({"_id": author_id})
+                )
             except StopIteration:
                 logger.warning("unknown user: {user_id}".format(user_id=author_id))
             else:
                 if user.get("role"):
                     try:
-                        role = next(self.roles_service.find({"_id": user["role"]}))
-                    except StopIteration:
+                        role = await anext(
+                            await self.roles_service.find_async({"_id": user["role"]})
+                        )
+                    except StopAsyncIteration:
                         logger.warning(
                             "unknown role: {role_id}".format(role_id=user["role"])
                         )
@@ -1343,19 +1320,19 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
 
         return _datetime.astimezone(self._tz).strftime(self.DATETIME_FORMAT)
 
-    def _get_content_profile_name(self, item):
+    async def _get_content_profile_name(self, item):
         if item.get("profile") in self.SD_CP_NAME_ROLE_MAP:
             return self.SD_CP_NAME_ROLE_MAP[item.get("profile")]
 
         req = ParsedRequest()
         req.args = {}
         req.projection = '{"label": 1}'
-        content_type = self.content_types_service.find_one(
+        content_type = await self.content_types_service.find_one_async(
             req=req, _id=item.get("profile")
         )
         return content_type["label"].capitalize()
 
-    def _get_newsml_items_chain(self, items_chain):
+    async def _get_newsml_items_chain(self, items_chain):
         """
         Get the whole items chain in context of Belga NewsML.
         Entities which are treated as a standalone items (NewsComponent 2nd level) in Belga NewsML:
@@ -1410,7 +1387,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                 sd_item["_role"] = self.SD_MEDIA_TYPE_ROLE_MAP[sd_item[ITEM_TYPE]]
             except KeyError:
                 # for text items `Role` is defined by content profile name
-                sd_item["_role"] = self._get_content_profile_name(sd_item)
+                sd_item["_role"] = await self._get_content_profile_name(sd_item)
             newsml_items_chain.append(sd_item)
 
             sd_item_associations = sd_item.get("associations", {})
@@ -1453,9 +1430,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # fetch associated docs by _id
             if media_items_ids:
-                media_items += list(
-                    self.archive_service.find({"_id": {"$in": media_items_ids}})
-                )
+                media_items += await (
+                    await self.archive_service.find_async(
+                        {"_id": {"$in": media_items_ids}}
+                    )
+                ).to_list()
             # pictures
             used_ids = []
             for picture in [
@@ -1518,7 +1497,7 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                     for belga_item_id in sd_item_extra[field_id].split(";"):
                         provider_id = belga_item_id.split(":")[-2]
                         gallery_id = belga_item_id.split(":")[-1]
-                        belga_cov_search_provider = get_service_by_id(provider_id)
+                        belga_cov_search_provider = await get_service_by_id(provider_id)
                         try:
                             data = belga_cov_search_provider.proxy(
                                 "getGalleryById", {"i": gallery_id}
@@ -1541,10 +1520,9 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
                             newsml_items_chain.append(newsml_item)
             # attachments
             attachments_ids = [i["attachment"] for i in sd_item.get("attachments", [])]
-            attachments = list(
-                self.attachments_service.find({"_id": {"$in": attachments_ids}})
-            )
-            for attachment in attachments:
+            async for attachment in await self.attachments_service.find_async(
+                {"_id": {"$in": attachments_ids}}
+            ):
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(attachment)
                 newsml_item["_role"] = self.NEWSCOMPONENT2_ROLES.RELATED_DOCUMENT
@@ -1572,9 +1550,11 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             ]
             # fetch associated docs by _id
             if rel_text_items_ids:
-                rel_text_items += list(
-                    self.archive_service.find({"_id": {"$in": rel_text_items_ids}})
-                )
+                rel_text_items += await (
+                    await self.archive_service.find_async(
+                        {"_id": {"$in": rel_text_items_ids}}
+                    )
+                ).to_list()
             for rel_text_item in rel_text_items:
                 newsml_item = {k: v for k, v in sd_item.items() if k in KEYS_TO_INHERIT}
                 newsml_item.update(rel_text_item)

@@ -13,7 +13,7 @@ import os
 import pytz
 import datetime
 from io import BytesIO
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, AsyncMock
 from lxml import etree
 
 from superdesk import get_resource_service
@@ -24,8 +24,8 @@ from tests import TestCase
 class BelgaNewsMLOneTestCase(TestCase):
     filename = "belga_newsml_1_2.xml"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
 
         self.users = [
             {"username": "DWM", "display_name": "DWM", "sign_off": "DWM"},
@@ -39,17 +39,17 @@ class BelgaNewsMLOneTestCase(TestCase):
         with open(fixture, "rb") as f:
             parser = BelgaNewsMLOneFeedParser()
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_can_parse(self):
+    async def test_can_parse(self):
         self.assertTrue(BelgaNewsMLOneFeedParser().can_parse(self.xml_root))
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item[0]
         self.assertEqual(item["administrative"]["foreign_id"], "BIN118")
         self.assertEqual(item["administrative"]["validation_date"], "20190129T133356")
         self.assertEqual(item["administrative"]["validator"], "dwm")
-        self.assertEquals(
+        self.assertEqual(
             item["authors"],
             [
                 {
@@ -172,8 +172,8 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
     filename = "belga_remote_newsml_1_2.xml"
     media_file = "belga_remote_newsml_1_2.jpeg"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.users = [{"username": "COR360", "display_name": "John Doe"}]
         get_resource_service("users").create(self.users)
         dirname = os.path.dirname(os.path.realpath(__file__))
@@ -187,15 +187,15 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
         }
         parser = BelgaNewsMLOneFeedParser()
         with open(media_fixture, "rb") as f:
-            parser._get_file = MagicMock(return_value=BytesIO(f.read()))
+            parser._get_file = AsyncMock(return_value=BytesIO(f.read()))
         with open(fixture, "rb") as f:
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_can_parse(self):
+    async def test_can_parse(self):
         self.assertTrue(BelgaNewsMLOneFeedParser().can_parse(self.xml_root))
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item[0]
         self.assertEqual(item["provider_id"], "belga.be")
         self.assertEqual(item["date_id"], "20190603T160217")
@@ -319,8 +319,8 @@ class BelgaRemoteNewsMLOneTestCase(TestCase):
 class BelgaNewsMLOneVideoIngestTestCase(TestCase):
     filename = "belga_newsml_1_2_video.xml"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {
@@ -334,13 +334,13 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
             with open(media_path, "rb") as f:
                 return BytesIO(f.read())
 
-        parser._get_file = MagicMock(side_effect=get_file_side_effect)
+        parser._get_file = AsyncMock(side_effect=get_file_side_effect)
 
         with open(fixture, "rb") as f:
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_video_ingest(self):
+    async def test_video_ingest(self):
         item = self.item[0]
 
         self.assertEqual(
@@ -435,8 +435,8 @@ class BelgaNewsMLOneVideoIngestTestCase(TestCase):
 class BelgaNewsMLOneAudioIngestTestCase1(TestCase):
     filename = "belga_newsml_1_2_audio.xml"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {
@@ -450,13 +450,13 @@ class BelgaNewsMLOneAudioIngestTestCase1(TestCase):
             with open(media_path, "rb") as f:
                 return BytesIO(f.read())
 
-        parser._get_file = MagicMock(side_effect=get_file_side_effect)
+        parser._get_file = AsyncMock(side_effect=get_file_side_effect)
 
         with open(fixture, "rb") as f:
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_audio_ingest(self):
+    async def test_audio_ingest(self):
         item = self.item[0]
 
         self.assertIn("href", item["renditions"]["original"])
@@ -467,8 +467,8 @@ class BelgaNewsMLOneAudioIngestTestCase1(TestCase):
 class BelgaNewsMLOneAudioIngestTestCase2(TestCase):
     filename = "belga_newsml_1_2_audio2.xml"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {
@@ -482,13 +482,13 @@ class BelgaNewsMLOneAudioIngestTestCase2(TestCase):
             with open(media_path, "rb") as f:
                 return BytesIO(f.read())
 
-        parser._get_file = MagicMock(side_effect=get_file_side_effect)
+        parser._get_file = AsyncMock(side_effect=get_file_side_effect)
 
         with open(fixture, "rb") as f:
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_audio_ingest(self):
+    async def test_audio_ingest(self):
         item = self.item[0]
 
         self.assertEqual(len(self.item), 4)

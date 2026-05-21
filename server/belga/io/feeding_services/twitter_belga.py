@@ -8,9 +8,6 @@
 # AUTHORS and LICENSE files distributed with this source code, or
 # at https://www.sourcefabric.org/superdesk/license
 import re
-from datetime import datetime
-
-import requests
 
 import superdesk
 from superdesk.errors import IngestTwitterError, SuperdeskIngestError
@@ -20,6 +17,7 @@ from superdesk.io.registry import (
     register_feeding_service_parser,
 )
 from superdesk.metadata.item import GUID_FIELD
+from superdesk.core.web import AsyncHttpClientSessionMixin
 
 
 class IngestTwitterBelgaError(SuperdeskIngestError):
@@ -30,7 +28,7 @@ class IngestTwitterBelgaError(SuperdeskIngestError):
         return IngestTwitterBelgaError(6300, exception, provider)
 
 
-class TwitterBelgaFeedingService(TwitterFeedingService):
+class TwitterBelgaFeedingService(TwitterFeedingService, AsyncHttpClientSessionMixin):
     NAME = "twitter_belga"
 
     label = "Twitter Belga"
@@ -95,17 +93,17 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         },
     ]
 
-    def _test(self, provider):
-        super()._update(provider, None, test=True)
+    async def _test(self, provider):
+        await super()._update(provider, None, test=True)
         config = provider.get("config", {})
         key = config.get("iframely_key")
-        self._create_embed("https://iframely.com", key)
+        await self._create_embed("https://iframely.com", key)
 
-    def _update(self, provider, update, test=False):
-        items = super()._update(provider, update, test)[0]
-        return self.parse_twitter_belga(items, provider)
+    async def _update(self, provider, update, test=False):
+        items = await super()._update(provider, update, test)
+        return await self.parse_twitter_belga(items, provider)
 
-    def parse_twitter_belga(self, items, provider):
+    async def parse_twitter_belga(self, items, provider):
         config = provider.get("config", {})
         key = config.get("iframely_key")
         embed = config.get("embed_tweet")
@@ -113,7 +111,7 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
         # get all guid of old items
         old_guid = [
             item[GUID_FIELD]
-            for item in ingest_service.find(
+            async for item in await ingest_service.find_async(
                 {GUID_FIELD: {"$in": [item[GUID_FIELD] for item in items]}}
             )
         ]
@@ -127,25 +125,27 @@ class TwitterBelgaFeedingService(TwitterFeedingService):
                     item.get("body_html", ""),
                 )
                 for url in set(urls):
-                    embed_content = self._create_embed(url, key)
+                    embed_content = await self._create_embed(url, key)
                     if embed_content:
                         item["body_html"] += "<!-- EMBED START Twitter -->"
                         item["body_html"] += embed_content
                         item["body_html"] += "<!-- EMBED END Twitter -->"
         return [items]
 
-    def _create_embed(self, url, key):
+    async def _create_embed(self, url, key):
         """
         Get embed html from iframely service for provided url
         """
-        response = requests.get(
-            "https://iframe.ly/api/oembed?url={}&api_key={}".format(url, key)
-        )
-        content = response.json()
-        if response.status_code == 200:
-            return content.get("html", "")
-        elif response.status_code == 403:
-            raise IngestTwitterBelgaError.TwitterInvalidIframelyKey()
+
+        http_client = await self.http_session()
+        url = "https://iframe.ly/api/oembed?url={}&api_key={}".format(url, key)
+        async with http_client.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data.get("html", "")
+            elif response.status == 403:
+                raise await IngestTwitterBelgaError.TwitterInvalidIframelyKey().send_notifications()
+
         # when turn off setting: On URL errors, don't repeat it as HTTP status (use code 200 instead)
         # iframely will return 417 response on URL error
         return ""

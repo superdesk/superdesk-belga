@@ -1,14 +1,16 @@
 import os
 from typing import TypedDict
-import requests
+import aiohttp
 import logging
 
 import superdesk
 
-from flask import json
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
-from superdesk.utils import ListCursor
+from superdesk.core import json
+from superdesk.core.web import AsyncHttpClientSessionMixin
+from superdesk.factory.app import SuperdeskApp
+from superdesk.eve_async import AsyncBaseService, AsyncListCursor
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +20,12 @@ BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
 class KeycloakAuth:
     """Handles Keycloak authentication and token management."""
 
+    endpoint: str
+    client_id: str
+    client_secret: str
+    _token: str | None
+    _token_expiry: datetime | None
+
     def __init__(self, endpoint: str, client_id: str, client_secret: str):
         self.endpoint = endpoint
         self.client_id = client_id
@@ -25,29 +33,30 @@ class KeycloakAuth:
         self._token = None
         self._token_expiry = None
 
-    def get_token(self) -> str:
+    async def get_token(self, http_client: aiohttp.ClientSession) -> str:
         """Get a valid access token"""
         if (
             not self._token
             or not self._token_expiry
             or datetime.now() >= self._token_expiry
         ):
-            self._fetch_new_token()
+            await self._fetch_new_token(http_client)
 
         assert self._token is not None, "Access token was not fetched"
         return self._token
 
-    def _fetch_new_token(self):
+    async def _fetch_new_token(self, http_client: aiohttp.ClientSession):
         """Fetch new token from Keycloak."""
         data = {
             "grant_type": "client_credentials",
             "client_id": self.client_id,
             "client_secret": self.client_secret,
         }
-        response = requests.post(self.endpoint, data=data, verify=False)
-        response.raise_for_status()
 
-        token_data = response.json()
+        async with http_client.post(self.endpoint, data=data) as response:
+            response.raise_for_status()
+            token_data = await response.json()
+
         self._token = token_data["access_token"]
         # Set expiry 5 minutes before actual expiry to be safe
         self._token_expiry = datetime.now() + timedelta(
@@ -152,13 +161,13 @@ def parse_contact(contact) -> Contact:
     return parsed
 
 
-class BelgaContactsProxy(superdesk.Service):
+class BelgaContactsProxy(AsyncBaseService, AsyncHttpClientSessionMixin):
+    # Disable SSL verification for the entire session
+    http_verify_ssl = False
 
     def __init__(self, url):
         self.base = url
         self.count = 50
-        self.timeout = 30
-        self.session = requests.Session()
 
         # Initialize Keycloak auth
         self.auth = KeycloakAuth(
@@ -167,11 +176,11 @@ class BelgaContactsProxy(superdesk.Service):
             client_secret=os.environ.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
         )
 
-    def _get_headers(self):
+    async def _get_headers(self, http_client: aiohttp.ClientSession):
         """Get request headers with auth token."""
-        return {"Authorization": f"Bearer {self.auth.get_token()}"}
+        return {"Authorization": f"Bearer {await self.auth.get_token(http_client)}"}
 
-    def get(self, req, lookup):
+    async def get_async(self, req, lookup):
         if req.args.get("source"):
             source = json.loads(req.args.get("source"))
             if (
@@ -186,20 +195,19 @@ class BelgaContactsProxy(superdesk.Service):
         page = int(req.args.get("page", 1)) - 1
 
         params = {"searchText": req.args.get("q", ""), "count": size, "offset": page}
-        res = self.session.get(
+        http_client = await self.http_session()
+        async with http_client.get(
             urljoin(self.base, "contacts"),
             params=params,
-            headers=self._get_headers(),
-            verify=False,
-            timeout=self.timeout,
-        )
-        res.raise_for_status()
+            headers=await self._get_headers(http_client),
+        ) as res:
+            res.raise_for_status()
+            data = await res.json()
 
-        data = res.json()
         contacts = [parse_contact(c) for c in data.get("contacts", [])]
-        return ListCursor(contacts)
+        return AsyncListCursor(contacts)
 
-    def find_one(self, req, **lookup):
+    async def find_one_async(self, req, **lookup):
         _id = str(lookup.get("_id"))
         if not _id:
             return None
@@ -210,34 +218,35 @@ class BelgaContactsProxy(superdesk.Service):
             else _id
         )
 
-        res = self.session.get(
+        http_client = await self.http_session()
+        async with http_client.get(
             urljoin(self.base, f"contacts/{contact_id}"),
-            headers=self._get_headers(),
-            verify=False,
-            timeout=self.timeout,
-        )
-        if res.status_code == 500:  # returns 500 on missing contact
-            return None
-        res.raise_for_status()
-        data = res.json()
+            headers=await self._get_headers(http_client),
+        ) as res:
+            if res.status == 500:  # returns 500 on missing contact
+                return None
+
+            res.raise_for_status()
+            data = await res.json()
+
         return parse_contact(data)
 
-    def search(self, source):
+    async def search_async(self, source):
         try:
             _ids = source["query"]["bool"]["must"]["terms"]["_id"]
         except (KeyError, TypeError):
             _ids = []
-        return self.search_ids(_ids)
+        return await self.search_ids(_ids)
 
-    def search_ids(self, _ids):
+    async def search_ids(self, _ids):
         contacts = []
         for _id in _ids:
-            contact = self.find_one(None, _id=_id)
+            contact = await self.find_one_async(None, _id=_id)
             if contact:
                 contacts.append(contact)
-        return ListCursor(contacts)
+        return AsyncListCursor(contacts)
 
-    def post(self, docs, **kwargs):
+    async def post_async(self, docs, **kwargs):
         for doc in docs:
             if doc.get("_id"):  # linking contacts during ingest
                 doc["_id"] = format_id(doc["_id"])
@@ -245,37 +254,38 @@ class BelgaContactsProxy(superdesk.Service):
                 raise NotImplementedError("Creating new contacts is not supported.")
 
 
-def init_app(_app):
-    if os.environ.get("BELGA_CONTACTS_URL"):
-        # Add required environment variables
-        required_vars = [
-            "BELGA_CONTACTS_URL",
-            "BELGA_KEYCLOAK_ENDPOINT",
-            "BELGA_KEYCLOAK_CLIENT_ID",
-            "BELGA_KEYCLOAK_CLIENT_SECRET",
-        ]
-        missing = [var for var in required_vars if not os.environ.get(var)]
-        if missing:
-            logger.warning(
-                "External contacts feature disabled. Missing environment variables: %s",
-                ", ".join(missing),
-            )
-            return
+def init_app(app: SuperdeskApp):
+    if not os.environ.get("BELGA_CONTACTS_URL"):
+        return
 
-        superdesk.resources["contacts"].service = BelgaContactsProxy(
-            os.environ["BELGA_CONTACTS_URL"]
+    # Add required environment variables
+    required_vars = [
+        "BELGA_CONTACTS_URL",
+        "BELGA_KEYCLOAK_ENDPOINT",
+        "BELGA_KEYCLOAK_CLIENT_ID",
+        "BELGA_KEYCLOAK_CLIENT_SECRET",
+    ]
+    missing = [var for var in required_vars if not os.environ.get(var)]
+    if missing:
+        logger.warning(
+            "External contacts feature disabled. Missing environment variables: %s",
+            ", ".join(missing),
         )
-        _app.client_config.update(
-            {
-                "external_contacts": {
-                    "create_url": os.environ.get(
-                        "BELGA_CONTACTS_CREATE_URL",
-                        "http://contact-bos.staging.belga.be/contacts/addContact",
-                    ),
-                    "edit_url": os.environ.get(
-                        "BELGA_CONTACTS_EDIT_URL",
-                        "http://contact-bos.staging.belga.be/contacts/editContact",
-                    ),
-                }
+        return
+
+    belga_contacts_service = BelgaContactsProxy(os.environ["BELGA_CONTACTS_URL"])
+    superdesk.resources["contacts"].service = belga_contacts_service
+    app.client_config.update(
+        {
+            "external_contacts": {
+                "create_url": os.environ.get(
+                    "BELGA_CONTACTS_CREATE_URL",
+                    "http://contact-bos.staging.belga.be/contacts/addContact",
+                ),
+                "edit_url": os.environ.get(
+                    "BELGA_CONTACTS_EDIT_URL",
+                    "http://contact-bos.staging.belga.be/contacts/editContact",
+                ),
             }
-        )
+        }
+    )

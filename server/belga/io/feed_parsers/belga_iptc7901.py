@@ -69,13 +69,13 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         except Exception:
             return False
 
-    def parse(self, file_path, provider=None):
+    async def parse(self, file_path, provider=None):
         item = {}
         _type = BelgaIPTC7901FeedParser.txt_type
         if _type == "dpa":
-            item = self.parse_content_dpa(file_path, provider)
+            item = await self.parse_content_dpa(file_path, provider)
         if _type == "ats":
-            item = self.parse_content_ats(file_path, provider)
+            item = await self.parse_content_ats(file_path, provider)
         # Slugline and keywords is epmty
         item["slugline"] = None
         item["keywords"] = []
@@ -104,7 +104,7 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
         item[ITEM_TYPE] = CONTENT_TYPE.TEXT
         return item
 
-    def parse_content_ats(self, file_path, provider=None):
+    async def parse_content_ats(self, file_path, provider=None):
         try:
             item = {
                 ITEM_TYPE: CONTENT_TYPE.TEXT,
@@ -165,9 +165,11 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     item["body_html"] = body[0]
             return item
         except Exception as ex:
-            raise ParserError.IPTC7901ParserError(exception=ex, provider=provider)
+            raise await ParserError.IPTC7901ParserError(
+                exception=ex, provider=provider
+            ).send_notifications()
 
-    def parse_content_dpa(self, file_path, provider=None):
+    async def parse_content_dpa(self, file_path, provider=None):
         try:
             item = {
                 ITEM_TYPE: CONTENT_TYPE.TEXT,
@@ -275,7 +277,9 @@ class BelgaIPTC7901FeedParser(DPAIPTC7901FeedParser):
                     continue
             return item
         except Exception as ex:
-            raise ParserError.IPTC7901ParserError(exception=ex, provider=provider)
+            raise await ParserError.IPTC7901ParserError(
+                exception=ex, provider=provider
+            ).send_notifications()
 
     def check_mendwith(self, string, end_strings):
         for end_string in end_strings:

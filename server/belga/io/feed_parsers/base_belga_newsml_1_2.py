@@ -11,8 +11,6 @@
 import itertools
 import html
 import datetime
-from flask.globals import g
-import superdesk
 
 from superdesk.errors import ParserError
 from superdesk.etree import etree
@@ -31,7 +29,7 @@ class SkipItemException(Exception):
 class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
     """Base Feed Parser for NewsML format, specific AFP, ANP, .. Belga xml."""
 
-    def parse(self, xml, provider=None):
+    async def parse(self, xml, provider=None):
         """
         Parser content the xml newsml file to json object.
 
@@ -74,7 +72,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             for newsitem_el in l_newsitem_el:
                 try:
                     item = item_envelop.copy()
-                    self.parse_newsitem(item, newsitem_el)
+                    await self.parse_newsitem(item, newsitem_el)
                     # add product is NEWS/GENERAL, if product is empty
                     if not [
                         it
@@ -116,7 +114,9 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
             return items
 
         except Exception as ex:
-            raise ParserError.newsmlOneParserError(ex, provider)
+            raise await ParserError.newsmlOneParserError(
+                ex, provider
+            ).send_notifications()
 
     def parse_newsenvelop(self, envelop_el):
         """
@@ -167,7 +167,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
         return item
 
-    def parse_newsitem(self, item, newsitem_el):
+    async def parse_newsitem(self, item, newsitem_el):
         """
         Function parser Newsitem element.
 
@@ -216,7 +216,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         # Parser NewsComponent element
         component_parent = newsitem_el.find("NewsComponent")
         if component_parent is not None:
-            self.parse_newscomponent(item, component_parent)
+            await self.parse_newscomponent(item, component_parent)
 
     def parse_identification(self, item, indent_el):
         """
@@ -333,7 +333,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     else:
                         item["associated_with"]["type"] = [data]
 
-    def parse_newscomponent(self, item, component_el):
+    async def parse_newscomponent(self, item, component_el):
         """
             Function parser NewsComponent in NewsItem element.
 
@@ -455,14 +455,16 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
 
         # parser DescriptiveMetadata element
         if component_el.find("DescriptiveMetadata") is not None:
-            self.parse_descriptivemetadata(
+            await self.parse_descriptivemetadata(
                 item, component_el.find("DescriptiveMetadata")
             )
         else:
-            self.parse_descriptivemetadata(item, component_el.find("DescriptiveMetada"))
+            await self.parse_descriptivemetadata(
+                item, component_el.find("DescriptiveMetada")
+            )
 
         # parser ContentItem element
-        self.parse_contentitem(item, component_el.find("ContentItem"))
+        await self.parse_contentitem(item, component_el.find("ContentItem"))
 
         # parser item_keywords element
         keywords = component_el.find("item_keywords")
@@ -474,7 +476,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                 for element in [e for e in elements if e.text]:
                     item["keywords"].append(element.text)
 
-    def parse_descriptivemetadata(self, item, descript_el):
+    async def parse_descriptivemetadata(self, item, descript_el):
         """
         Function parser DescriptiveMetadata in NewsComponent element.
 
@@ -530,7 +532,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         subjects = descript_el.findall("SubjectCode/SubjectDetail")
         subjects += descript_el.findall("SubjectCode/SubjectMatter")
         subjects += descript_el.findall("SubjectCode/Subject")
-        item.setdefault("subject", []).extend(self.format_subjects(subjects))
+        item.setdefault("subject", []).extend(await self.format_subjects(subjects))
         for subject in subjects:
             if subject.get("cat"):
                 category = {"qcode": subject.get("cat")}
@@ -568,9 +570,13 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     country = element.attrib.get("Value")
                     item["extra"]["country"] = country
                     # country keywords is CV
-                    item.setdefault("subject", []).extend(self._get_country(country))
+                    item.setdefault("subject", []).extend(
+                        await self._get_country(country)
+                    )
                     # country is cv
-                    item.setdefault("subject", []).extend(self._get_countries(country))
+                    item.setdefault("subject", []).extend(
+                        await self._get_countries(country)
+                    )
                 if element.attrib.get("FormalName", "") == "City":
                     item["extra"]["city"] = element.attrib.get("Value")
                 if element.attrib.get("FormalName", "") == "CountryArea":
@@ -601,9 +607,9 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     item["keywords"] = [data]
 
                 # store data in original_metadata and belga-keyword CV
-                item.setdefault("subject", []).extend(self._get_keywords(data))
+                item.setdefault("subject", []).extend(await self._get_keywords(data))
 
-    def parse_contentitem(self, item, content_el):
+    async def parse_contentitem(self, item, content_el):
         """
         Function parser DescriptiveMetadata in NewsComponent element.
 
@@ -704,7 +710,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         except ValueError:
             return None
 
-    def format_subjects(self, subjects):
+    async def format_subjects(self, subjects):
         """Map the ingested Subject Codes to their corresponding names as per IPTC Specification.
 
         :param subjects: list of dicts where each dict gives the category the article is mapped to.
@@ -720,7 +726,7 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
                     return False
             return True
 
-        iptcsc_cv = self._get_cv("iptc_subject_codes")
+        iptcsc_cv = await self._get_cv("iptc_subject_codes")
         for subject in subjects:
             formal_name = subject.get("FormalName")
             for item in iptcsc_cv.get("items", []):
@@ -751,8 +757,8 @@ class BaseBelgaNewsMLOneFeedParser(BelgaNewsMLMixin, NewsMLOneFeedParser):
         text = " ".join(text.split())
         return "<p>" + text + "</p>"
 
-    def _get_cv(self, _id):
-        return superdesk.get_resource_service("vocabularies").find_one(
+    async def _get_cv(self, _id: str) -> dict | None:
+        return await get_resource_service("vocabularies").find_one_async(
             req=None, _id=_id
         )
 

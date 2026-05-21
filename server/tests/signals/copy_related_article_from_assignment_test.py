@@ -3,20 +3,20 @@ from copy import deepcopy
 from bson import ObjectId
 
 from superdesk import get_resource_service
-from superdesk.tests import TestCase
 from superdesk.utc import utcnow
 from apps.search_providers.proxy import PROXY_ENDPOINT
 
 from planning.types import EventRelatedItem
 
 from belga.signals.copy_related_article_from_assignment import (
-    _get_associated_event_from_planning,
     _get_related_content_field_to_use,
     _get_related_items_from_planning,
     _get_event_related_item_from_search_proxy,
     on_assignment_start_working,
 )
 from belga.search_providers import Belga360ArchiveSearchProvider
+
+from .. import TestCase
 
 
 def mock_raise_exception(*args, **kwargs):
@@ -112,30 +112,6 @@ def mock_search_provider_fetch(guid: str):
 
 
 class CopyRelatedArticleFromAssignmentTestCase(TestCase):
-    def test_get_associated_event_from_planning(self):
-        self.assertIsNone(_get_associated_event_from_planning({}))
-        self.assertIsNone(
-            _get_associated_event_from_planning({"event_item": "non_existing_id"})
-        )
-
-        # Make sure exception(s) raised while fetching the Event is caught
-        events_service = get_resource_service("events")
-        with mock.patch.object(
-            events_service, "find_one", side_effect=mock_raise_exception
-        ) as mock_find_one:
-            event = _get_associated_event_from_planning(
-                {"event_item": "event_raising_an_error"}
-            )
-            self.assertEqual(mock_find_one.call_count, 1)
-            self.assertIsNone(event)
-
-        test_event = deepcopy(TEST_EVENTS[0])
-        self.app.data.insert("events", [test_event])
-        self.assertEqual(
-            test_event,
-            _get_associated_event_from_planning({"event_item": test_event["_id"]}),
-        )
-
     def test_get_related_content_field_to_use(self):
         self.assertEqual(
             "belga_related_articles",
@@ -176,44 +152,80 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
             ),
         )
 
-    def test_get_related_items_from_planning(self):
+    async def test_get_related_items_from_planning(self):
         test_events = deepcopy(TEST_EVENTS)
         self.app.data.insert("events", test_events)
 
         self.assertEqual(
-            [], _get_related_items_from_planning({"event_item": "non_existing_id"})
-        )
-        self.assertEqual(
-            [], _get_related_items_from_planning({"event_item": test_events[0]})
-        )
-        self.assertEqual(
-            test_events[1]["related_items"],
-            _get_related_items_from_planning({"event_item": test_events[1]["_id"]}),
-        )
-        self.assertEqual(
-            [test_events[1]["related_items"][0]],
-            _get_related_items_from_planning(
-                {"event_item": test_events[1]["_id"]}, "en"
-            ),
-        )
-        self.assertEqual(
-            [test_events[1]["related_items"][1]],
-            _get_related_items_from_planning(
-                {"event_item": test_events[1]["_id"]}, "de"
+            [],
+            await _get_related_items_from_planning(
+                {
+                    "_id": "p1",
+                    "related_events": [
+                        {"_id": "non_existing_id", "link_type": "primary"}
+                    ],
+                }
             ),
         )
         self.assertEqual(
             [],
-            _get_related_items_from_planning(
-                {"event_item": test_events[1]["_id"]}, "fr"
+            await _get_related_items_from_planning(
+                {
+                    "related_events": [
+                        {"_id": test_events[0]["_id"], "link_type": "primary"}
+                    ]
+                }
+            ),
+        )
+        self.assertEqual(
+            test_events[1]["related_items"],
+            await _get_related_items_from_planning(
+                {
+                    "related_events": [
+                        {"_id": test_events[1]["_id"], "link_type": "primary"}
+                    ]
+                }
+            ),
+        )
+        self.assertEqual(
+            [test_events[1]["related_items"][0]],
+            await _get_related_items_from_planning(
+                {
+                    "related_events": [
+                        {"_id": test_events[1]["_id"], "link_type": "primary"}
+                    ]
+                },
+                "en",
+            ),
+        )
+        self.assertEqual(
+            [test_events[1]["related_items"][1]],
+            await _get_related_items_from_planning(
+                {
+                    "related_events": [
+                        {"_id": test_events[1]["_id"], "link_type": "primary"}
+                    ]
+                },
+                "de",
+            ),
+        )
+        self.assertEqual(
+            [],
+            await _get_related_items_from_planning(
+                {
+                    "related_events": [
+                        {"_id": test_events[1]["_id"], "link_type": "primary"}
+                    ]
+                },
+                "fr",
             ),
         )
 
-    def test_get_event_related_item_from_search_proxy(self):
+    async def test_get_event_related_item_from_search_proxy(self):
         # Test validating required arguments returns ``None``
-        self.assertIsNone(_get_event_related_item_from_search_proxy({}))
+        self.assertIsNone(await _get_event_related_item_from_search_proxy({}))
         self.assertIsNone(
-            _get_event_related_item_from_search_proxy(
+            await _get_event_related_item_from_search_proxy(
                 {"search_provider": str(ObjectId())}
             )
         )
@@ -233,9 +245,9 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
             ],
         )
         with mock.patch.object(
-            search_proxy_service, "fetch", side_effect=mock_raise_exception
+            search_proxy_service, "fetch_async", side_effect=mock_raise_exception
         ) as mock_fetch:
-            external_item = _get_event_related_item_from_search_proxy(
+            external_item = await _get_event_related_item_from_search_proxy(
                 {
                     "search_provider": str(ObjectId()),
                     "guid": "non_existing",
@@ -244,9 +256,11 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
             self.assertEqual(mock_fetch.call_count, 1)
             self.assertIsNone(external_item)
         with mock.patch.object(
-            Belga360ArchiveSearchProvider, "fetch", side_effect=mock_raise_exception
+            Belga360ArchiveSearchProvider,
+            "fetch_async",
+            side_effect=mock_raise_exception,
         ) as mock_fetch:
-            external_item = _get_event_related_item_from_search_proxy(
+            external_item = await _get_event_related_item_from_search_proxy(
                 {
                     "search_provider": str(SEARCH_PROVIDER_ID),
                     "guid": "non_existing",
@@ -256,11 +270,13 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
             self.assertIsNone(external_item)
 
         with mock.patch.object(
-            Belga360ArchiveSearchProvider, "fetch", return_value=TEST_EXTERNAL_ITEMS[0]
+            Belga360ArchiveSearchProvider,
+            "fetch_async",
+            return_value=TEST_EXTERNAL_ITEMS[0],
         ):
             self.assertEqual(
                 TEST_EXTERNAL_ITEMS[0],
-                _get_event_related_item_from_search_proxy(
+                await _get_event_related_item_from_search_proxy(
                     {
                         "search_provider": str(SEARCH_PROVIDER_ID),
                         "guid": "item-en-1",
@@ -268,10 +284,7 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
                 ),
             )
 
-    @mock.patch.object(
-        Belga360ArchiveSearchProvider, "fetch", side_effect=mock_search_provider_fetch
-    )
-    def test_on_assignment_start_working(self, _mock_fetch):
+    async def test_on_assignment_start_working(self):
         test_events = deepcopy(TEST_EVENTS)
         self.app.data.insert("events", test_events)
         self.app.data.insert(
@@ -290,7 +303,9 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
         content_profile = {
             "schema": {"belga_related_articles": {"type": "related_content"}}
         }
-        planning = {"event_item": test_events[0]["_id"]}
+        planning = {
+            "related_events": [{"_id": test_events[0]["_id"], "link_type": "primary"}]
+        }
         item = {}
         kwargs = dict(
             assignment={},
@@ -298,33 +313,48 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
             item={},
             content_profile=content_profile,
         )
-        on_assignment_start_working(None, **kwargs)
-        self.assertIsNone(item.get("associations"))
 
-        kwargs["planning"] = {"event_item": test_events[1]["_id"]}
-        kwargs["item"] = item = {}
-        on_assignment_start_working(None, **kwargs)
-        self.assertEqual(
-            item["associations"]["belga_related_articles--1"], TEST_EXTERNAL_ITEMS[0]
-        )
-        self.assertEqual(
-            item["associations"]["belga_related_articles--2"], TEST_EXTERNAL_ITEMS[1]
-        )
+        with mock.patch.object(
+            Belga360ArchiveSearchProvider,
+            "fetch_async",
+            side_effect=mock_search_provider_fetch,
+        ):
+            await on_assignment_start_working(**kwargs)
+            self.assertIsNone(item.get("associations"))
 
-        kwargs["item"] = item = {"language": "en"}
-        on_assignment_start_working(None, **kwargs)
-        self.assertEqual(
-            item["associations"]["belga_related_articles--1"], TEST_EXTERNAL_ITEMS[0]
-        )
-        self.assertIsNone(item["associations"].get("belga_related_articles--2"))
+            kwargs["planning"] = {
+                "related_events": [
+                    {"_id": test_events[1]["_id"], "link_type": "primary"}
+                ]
+            }
+            kwargs["item"] = item = {}
+            await on_assignment_start_working(**kwargs)
 
-        kwargs["item"] = item = {"language": "de"}
-        on_assignment_start_working(None, **kwargs)
-        self.assertEqual(
-            item["associations"]["belga_related_articles--1"], TEST_EXTERNAL_ITEMS[1]
-        )
-        self.assertIsNone(item["associations"].get("belga_related_articles--2"))
+            self.assertEqual(
+                item["associations"]["belga_related_articles--1"],
+                TEST_EXTERNAL_ITEMS[0],
+            )
+            self.assertEqual(
+                item["associations"]["belga_related_articles--2"],
+                TEST_EXTERNAL_ITEMS[1],
+            )
 
-        kwargs["item"] = item = {"language": "fr"}
-        on_assignment_start_working(None, **kwargs)
-        self.assertIsNone(item.get("associations"))
+            kwargs["item"] = item = {"language": "en"}
+            await on_assignment_start_working(**kwargs)
+            self.assertEqual(
+                item["associations"]["belga_related_articles--1"],
+                TEST_EXTERNAL_ITEMS[0],
+            )
+            self.assertIsNone(item["associations"].get("belga_related_articles--2"))
+
+            kwargs["item"] = item = {"language": "de"}
+            await on_assignment_start_working(**kwargs)
+            self.assertEqual(
+                item["associations"]["belga_related_articles--1"],
+                TEST_EXTERNAL_ITEMS[1],
+            )
+            self.assertIsNone(item["associations"].get("belga_related_articles--2"))
+
+            kwargs["item"] = item = {"language": "fr"}
+            await on_assignment_start_working(**kwargs)
+            self.assertIsNone(item.get("associations"))

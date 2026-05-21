@@ -16,13 +16,12 @@ class BelgaNewsMLMixin:
         super().__init__(*args, **kwargs)
         self._countries = []
 
-    def _get_country(self, country_code):
+    async def _get_country(self, country_code):
         if not self._countries:
-            self._countries = (
-                get_resource_service("vocabularies")
-                .find_one(req=None, _id="country")
-                .get("items", [])
+            cv = await get_resource_service("vocabularies").find_one_async(
+                req=None, _id="country"
             )
+            self._countries = (cv or {}).get("items", [])
 
         return [
             {
@@ -36,34 +35,36 @@ class BelgaNewsMLMixin:
             and c.get("is_active")
         ]
 
-    def _get_countries(self, country_code):
+    async def _get_countries(self, country_code):
         if not country_code:
             return []
 
-        countries = get_resource_service("vocabularies").get_items(
+        countries = await get_resource_service("vocabularies").get_items_async(
             _id="countries", qcode=country_code.lower()
         )
 
         return countries
 
-    def _get_keywords(self, data):
+    async def _get_keywords(self, data):
         if not data:
             return []
 
-        belga_keyword = self._get_mapped_keywords(
+        belga_keyword = await self._get_mapped_keywords(
             data.upper(), data.upper(), "belga-keywords"
         )
         if belga_keyword:
             return belga_keyword
 
-        countries = self._get_mapped_keywords(data.lower(), data.title(), "countries")
+        countries = await self._get_mapped_keywords(
+            data.lower(), data.title(), "countries"
+        )
         if countries:
-            return countries + self._get_country(countries[0]["qcode"])
+            return countries + await self._get_country(countries[0]["qcode"])
 
         return [{"name": data, "qcode": data, "scheme": "original-metadata"}]
 
-    def _get_mapped_keywords(self, _key, _translation_key, _id_name):
-        _all_keywords = get_resource_service("vocabularies").find_one(
+    async def _get_mapped_keywords(self, _key, _translation_key, _id_name):
+        _all_keywords = await get_resource_service("vocabularies").find_one_async(
             req=None, _id=_id_name
         )
         if not _all_keywords:

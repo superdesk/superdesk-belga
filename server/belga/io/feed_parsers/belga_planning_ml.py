@@ -1,12 +1,12 @@
 import datetime
 
-from superdesk import get_resource_service
 from superdesk.utc import local_to_utc
 from superdesk.io.registry import register_feed_parser
 from planning.feed_parsers.superdesk_planning_xml import (
     PlanningMLParser,
     get_coverage_status_from_cv,
 )
+from planning.utils import get_related_event_items_for_planning_async
 
 
 class BelgaPlanningMLParser(PlanningMLParser):
@@ -17,14 +17,19 @@ class BelgaPlanningMLParser(PlanningMLParser):
         "definition_short": "description_text",
     }
 
-    def parse_item(self, tree, original):
-        item = super().parse_item(tree, original)
-        event_id = (item or {}).get("event_item")
-        if not event_id:
+    async def parse_item(self, tree, original):
+        item = await super().parse_item(tree, original)
+        if not item:
             return item
 
-        event = get_resource_service("events").find_one(req=None, _id=event_id)
-        if event is None:
+        try:
+            event = (await get_related_event_items_for_planning_async(item, "primary"))[
+                0
+            ]
+        except IndexError:
+            event = None
+
+        if not event:
             return item
 
         self._apply_event_metadata(item, event)
@@ -108,16 +113,16 @@ class BelgaPlanningMLParser(PlanningMLParser):
             pass
         raise ValueError(f"Invalid datetime format: {string}")
 
-    def parse_news_coverage_set(self, tree, item, original):
+    async def parse_news_coverage_set(self, tree, item, original):
         item.setdefault("firstcreated", item["versioncreated"])
-        return super().parse_news_coverage_set(tree, item, original)
+        return await super().parse_news_coverage_set(tree, item, original)
 
-    def get_coverage_details(self, news_coverage_elt, item, original):
+    async def get_coverage_details(self, news_coverage_elt, item, original):
         if news_coverage_elt.get("id") is None:
             news_coverage_elt.set(
                 "id", f"{item['guid']}-cov-{len(item.get('coverages', [])) + 1}"
             )
-        coverage = super().get_coverage_details(news_coverage_elt, item, original)
+        coverage = await super().get_coverage_details(news_coverage_elt, item, original)
         if coverage and coverage.get("planning"):
             if coverage["planning"].get("news_coverage_status"):
                 coverage["news_coverage_status"] = coverage["planning"].pop(
@@ -169,7 +174,9 @@ class BelgaPlanningMLParser(PlanningMLParser):
         meta = tree.find(self.qname("itemMeta"))
         for link in meta.findall(self.qname("link")):
             if link.get("rel") == "irel:associatedWith":
-                item["event_item"] = link.get("residref")
+                item["related_events"] = [
+                    {"_id": link.get("residref"), "link_type": "primary"}
+                ]
                 break
 
 

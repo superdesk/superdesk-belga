@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 SUBJECT_SCHEMES = ("services-products", "distribution")
 
 
-def get_default_content_template(item, **kwargs):
+async def get_default_content_template(item, **kwargs):
     if "dest_desk_id" in kwargs:
         desk = None
         desk_id = kwargs["dest_desk_id"]
@@ -31,7 +31,7 @@ def get_default_content_template(item, **kwargs):
         return
 
     if desk is None:
-        desk = get_resource_service("desks").find_one(req=None, _id=desk_id)
+        desk = await get_resource_service("desks").find_one_async(req=None, _id=desk_id)
     if not desk:
         logger.warning('Can\'t find desk with id "{desk_id}"'.format(desk_id=desk_id))
         return
@@ -44,7 +44,7 @@ def get_default_content_template(item, **kwargs):
             )
         )
         return
-    content_template = get_resource_service("content_templates").find_one(
+    content_template = await get_resource_service("content_templates").find_one_async(
         req=None, _id=content_template_id
     )
     if not content_template:
@@ -58,7 +58,7 @@ def get_default_content_template(item, **kwargs):
     return content_template
 
 
-def set_default_metadata(item, **kwargs):
+async def set_default_metadata(item, **kwargs):
     """Replace some metadata from default content template
 
     The following metadata: ``Packages (services-products)``, ``News Services``, ``News
@@ -66,7 +66,7 @@ def set_default_metadata(item, **kwargs):
     replaced (or created if they don't already exist) by the value set in desk's default
     content template
     """
-    content_template = get_default_content_template(item, **kwargs)
+    content_template = await get_default_content_template(item, **kwargs)
     if not content_template:
         return
 

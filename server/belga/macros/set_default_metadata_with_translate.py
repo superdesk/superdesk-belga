@@ -12,6 +12,11 @@ from copy import deepcopy
 from .common import get_cv_by_qcode
 from superdesk import get_resource_service
 from superdesk.errors import StopDuplication
+from superdesk.types import ContentFiltersResource
+from superdesk.publish_async.publish_cache import PublishCache
+from superdesk.publish_async.utils import item_matches_content_filter
+from superdesk.metadata.utils import generate_guid
+from superdesk.metadata.item import GUID_TAG
 from apps.archive.common import ITEM_DUPLICATE
 from .set_default_metadata import get_default_content_template, set_default_metadata
 from .update_translation_metadata_macro import update_translation_metadata_macro
@@ -29,7 +34,7 @@ def _map_eco_package_subject(original_item):
     return None
 
 
-def _preserve_eco_package(original_item, new_item):
+async def _preserve_eco_package(original_item, new_item):
     """Preserve and map ECO package subject from original_item to new_item using CV."""
 
     mapped_qcode = _map_eco_package_subject(original_item)
@@ -37,7 +42,7 @@ def _preserve_eco_package(original_item, new_item):
     if not mapped_qcode:
         return
 
-    vocab_item = get_cv_by_qcode("services-products").get(mapped_qcode)
+    vocab_item = (await get_cv_by_qcode("services-products")).get(mapped_qcode)
 
     if not vocab_item:
         return
@@ -54,7 +59,7 @@ def _preserve_eco_package(original_item, new_item):
     new_item["subject"].append(vocab_item)
 
 
-def set_belga_keywords(item):
+async def set_belga_keywords(item):
     """This field is used to set belga keyword field with the value "Brief" upon translation"""
     subjects = item.setdefault("subject", [])
 
@@ -68,7 +73,7 @@ def set_belga_keywords(item):
         return
 
     # get Belga keywords
-    belga_keywords = get_resource_service("vocabularies").find_one(
+    belga_keywords = await get_resource_service("vocabularies").find_one_async(
         req=None, _id="belga-keywords"
     )
 
@@ -95,7 +100,7 @@ def set_belga_keywords(item):
     return item
 
 
-def set_default_metadata_with_translate(item, **kwargs):
+async def set_default_metadata_with_translate(item, **kwargs):
     """Replace some metadata from default content template and set translation id
 
     This macro is the same as "Set Default Metadata" + adding a translation
@@ -103,7 +108,7 @@ def set_default_metadata_with_translate(item, **kwargs):
     """
     archive_service = get_resource_service("archive")
     move_service = get_resource_service("move")
-    original_item = archive_service.find_one(None, _id=item["_id"])
+    original_item = await archive_service.find_one_async(None, _id=item["_id"])
 
     desk_id = kwargs.get("dest_desk_id")
     if not desk_id:
@@ -121,19 +126,22 @@ def set_default_metadata_with_translate(item, **kwargs):
         ]
         internal_destination = kwargs.get("internal_destination", {})
         content_filter_id = internal_destination.get("filter", "")
-        content_filter_service = get_resource_service("content_filters")
-        content_filter = content_filter_service.find_one(
-            req=None, _id=content_filter_id
-        )
+        content_filter_service = ContentFiltersResource.get_service()
+        if content_filter_id:
+            content_filter = await content_filter_service.find_by_id(content_filter_id)
+        else:
+            content_filter = None
 
         if content_filter:
+            await PublishCache.init()
             for subject in services_subjects:
                 temp_item = item.copy()
+                # Generate a unique ID for the temporary item,
+                # so result of checking temp item against the filter is not re-used in subsequent checks
+                temp_item["item_id"] = generate_guid(type=GUID_TAG)
                 temp_item["subject"] = [subject]
 
-                if content_filter_service.does_match(
-                    content_filter, temp_item, cache=False
-                ):
+                if item_matches_content_filter(temp_item, content_filter):
                     # Use the first matching subject for translation
                     original_item["subject"] = [subject]
                     break
@@ -141,50 +149,50 @@ def set_default_metadata_with_translate(item, **kwargs):
                 raise StopDuplication()
 
     # we first do the translation, we need destination language for that
-    content_template = get_default_content_template(item, **kwargs)
+    content_template = await get_default_content_template(item, **kwargs)
     template_language = content_template["data"].get("language")
     if not template_language:
         logger.warning("no language set in default content template")
-        new_id = archive_service.duplicate_item(
+        new_id = await archive_service.duplicate_item(
             original_doc=original_item, operation=ITEM_DUPLICATE
         )
     elif template_language == original_item.get("language"):
-        new_id = archive_service.duplicate_item(
+        new_id = await archive_service.duplicate_item(
             original_doc=original_item, operation=ITEM_DUPLICATE
         )
     else:
         new_item = deepcopy(original_item)
         new_item["language"] = template_language
         translate_service = get_resource_service("translate")
-        new_id = translate_service.create([new_item])[0]
+        new_id = (await translate_service.create_async([new_item]))[0]
 
     # translation/duplication is done, we now move the item to the new desk
     dest = {"task": {"desk": desk_id, "stage": stage_id}}
-    move_service.move_content(new_id, dest)
+    await move_service.move_content(new_id, dest)
 
     # and now we apply the update
-    new_item = archive_service.find_one(req=None, _id=new_id)
+    new_item = await archive_service.find_one_async(req=None, _id=new_id)
 
     # set overwrite_keywords to True to overwrite the keywords.
     if "overwrite_keywords" not in kwargs:
         kwargs["overwrite_keywords"] = False
 
-    set_default_metadata(new_item, **kwargs)
+    await set_default_metadata(new_item, **kwargs)
 
     # preserve original ECO package mapping
-    _preserve_eco_package(original_item, new_item)
+    await _preserve_eco_package(original_item, new_item)
 
     # untoggle coming up
     if new_item.get("extra", {}).get("DueBy"):
         del new_item["extra"]["DueBy"]
 
     # Set the "Belga Keywords" field with the value "Brief" upon translation
-    set_belga_keywords(new_item)
+    await set_belga_keywords(new_item)
 
     # Change the correspondent author role to editor on translation
-    update_translation_metadata_macro(new_item)
+    await update_translation_metadata_macro(new_item)
 
-    archive_service.put(new_id, new_item)
+    await archive_service.put_async(new_id, new_item)
 
     # no need for further treatment, we stop here internal_destinations workflow
     raise StopDuplication()

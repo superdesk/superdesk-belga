@@ -3,7 +3,7 @@ from belga.macros.add_specific_package import update_package
 
 
 class AddSpecificPackage(TestCase):
-    def test_add_specific_package_macro(self):
+    async def test_add_specific_package_macro(self):
         self.app.data.insert(
             "desks",
             [
@@ -83,7 +83,7 @@ class AddSpecificPackage(TestCase):
             "source": "politic",
         }
 
-        update_package(item, desk=dest_desk)
+        await update_package(item, desk=dest_desk)
         self.assertIn(
             {
                 "name": "EXT/ECO",

@@ -11,9 +11,10 @@ from .common import (
 )
 from typing import List, Dict, Any
 from superdesk import get_resource_service
+from planning.utils import get_related_event_items_for_planning_async
 
 
-def format_planning_for_tomorrow_bilingual(
+async def format_planning_for_tomorrow_bilingual(
     planning_data: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
     """Format planning items into bilingual advisory output"""
@@ -22,19 +23,25 @@ def format_planning_for_tomorrow_bilingual(
 
     weekday_date = ""
     if planning_data:
-        weekday_date = get_advisory_weekday_date(planning_data[0])
+        weekday_date = await get_advisory_weekday_date(planning_data[0])
 
     # Process each planning
     for planning in planning_data:
         # Fetch linked event
-        event_item = None
         event_links = []
-        if planning.get("event_item"):
-            event_item = event_service.find_one(req=None, _id=planning["event_item"])
-            if event_item and is_editorial_calendar(event_item):
+
+        try:
+            event_item = (
+                await get_related_event_items_for_planning_async(planning, "primary")
+            )[0]
+        except (TypeError, IndexError):
+            event_item = None
+
+        if event_item:
+            if is_editorial_calendar(event_item):
                 continue
-            if event_item:
-                event_links = event_item.get("links", [])
+
+            event_links = event_item.get("links", [])
 
         planning_nl = planning.copy()
         planning_fr = planning.copy()
@@ -72,9 +79,13 @@ def format_planning_for_tomorrow_bilingual(
         formatted_planning = {
             "subject": ",".join(get_subjects(planning, "nl")),
             "calendar": calendar,
-            "contacts": get_formatted_contacts(event_item if event_item else planning),
-            "coverages": get_coverages_bilingual(planning),
-            "location": get_item_location(event_item if event_item else planning, "nl"),
+            "contacts": await get_formatted_contacts(
+                event_item if event_item else planning
+            ),
+            "coverages": await get_coverages_bilingual(planning),
+            "location": await get_item_location(
+                event_item if event_item else planning, "nl"
+            ),
             "links": event_links,
             "title_nl": title_nl,
             "title_fr": title_fr,

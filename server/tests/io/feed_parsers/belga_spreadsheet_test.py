@@ -124,15 +124,16 @@ data = [
 
 
 class BelgaSpreadsheetsTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         provider = {"name": "test"}
         self.parser = BelgaSpreadsheetParser()
-        self.items, self.error = self.parser.parse(data, provider)
+        self.items, self.error = await self.parser.parse(data, provider)
 
-    def test_can_parse(self):
+    async def test_can_parse(self):
         self.assertTrue(self.parser.can_parse(data[0]))
 
-    def test_content(self):
+    async def test_content(self):
         item = self.items[0]
         self.assertEqual(item["name"], "Event 1")
         self.assertEqual(item["slugline"], "Slugline1")
@@ -191,7 +192,7 @@ class BelgaSpreadsheetsTestCase(TestCase):
             },
         )
 
-    def test_all_day(self):
+    async def test_all_day(self):
         item = self.items[1]
         self.assertDictEqual(
             item["dates"],
@@ -202,7 +203,7 @@ class BelgaSpreadsheetsTestCase(TestCase):
             },
         )
 
-    def test_error(self):
+    async def test_error(self):
         error = [c.value for c in self.error[6:]]  # ignore first 6 non-error cells
         self.assertListEqual(
             error,

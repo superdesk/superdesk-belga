@@ -9,7 +9,7 @@ from belga.planning_exports.common import (
 
 
 class GetItemLocationTests(TestCase):
-    def test_no_index_error_when_address_lines_missing(self):
+    async def test_no_index_error_when_address_lines_missing(self):
         """Address line missing/empty should not raise and still return parts."""
         event = {
             "language": "en",
@@ -26,12 +26,12 @@ class GetItemLocationTests(TestCase):
             ],
         }
 
-        result = get_item_location(event, locale="en")
+        result = await get_item_location(event, locale="en")
 
         self.assertIsInstance(result, str)
         self.assertEqual(result, "Brussels, Brussels, Belgium")
 
-    def test_location_with_empty_line_and_area(self):
+    async def test_location_with_empty_line_and_area(self):
         """Handles empty address.line with area/postal code present."""
         event = {
             "language": "en",
@@ -52,14 +52,14 @@ class GetItemLocationTests(TestCase):
             ],
         }
 
-        result = get_item_location(event, locale="en")
+        result = await get_item_location(event, locale="en")
 
         self.assertIsInstance(result, str)
         self.assertEqual(result, "Brussel, 1000 Brussel, Belgium")
 
 
 class GetPlanningDisplayTimesTests(TestCase):
-    def test_prefers_event_dates_when_present(self):
+    async def test_prefers_event_dates_when_present(self):
         planning = {
             "planning_date": datetime(2024, 4, 23, 10, 0, tzinfo=timezone.utc),
             "coverages": [
@@ -86,7 +86,7 @@ class GetPlanningDisplayTimesTests(TestCase):
         self.assertEqual(result_time, expected["time"])
         self.assertEqual(result_display, expected["display_time"])
 
-    def test_falls_back_to_coverage_scheduled_when_no_event(self):
+    async def test_falls_back_to_coverage_scheduled_when_no_event(self):
         planning = {
             "planning_date": datetime(2024, 4, 23, 10, 0, tzinfo=timezone.utc),
             "coverages": [
@@ -113,7 +113,9 @@ class GetPlanningDisplayTimesTests(TestCase):
         self.assertEqual(result_time, expected["time"])
         self.assertEqual(result_display, expected["display_time"])
 
-    def test_falls_back_to_planning_date_when_no_event_and_no_coverage_scheduled(self):
+    async def test_falls_back_to_planning_date_when_no_event_and_no_coverage_scheduled(
+        self,
+    ):
         planning = {
             "planning_date": datetime(2024, 4, 23, 13, 30, tzinfo=timezone.utc),
             "coverages": [],

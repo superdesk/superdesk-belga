@@ -11,9 +11,10 @@
 
 import copy
 
-from flask import json
 from pathlib import Path
 from distutils.util import strtobool
+
+from superdesk.core import json
 from superdesk.default_settings import (
     DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES,
     env,

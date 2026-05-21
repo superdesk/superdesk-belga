@@ -1,9 +1,11 @@
-from superdesk.tests import TestCase
 from belga.signals.update import handle_update, ALERT, TEXT, handle_coming_up_field
+
+from .. import TestCase
 
 
 class UpdateAlertTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.profiles = self.app.data.insert(
             "content_types",
             [
@@ -13,18 +15,18 @@ class UpdateAlertTestCase(TestCase):
             ],
         )
 
-    def test_update_alert(self):
+    async def test_update_alert(self):
         item = {}
         orig = {}
-        handle_update(None, item, orig)
+        await handle_update(item, orig)
         self.assertIsNone(item.get("profile"))
 
         item["profile"] = self.profiles[0]
-        handle_update(None, item, orig)
+        await handle_update(item, orig)
         self.assertEqual(self.profiles[0], item["profile"])
 
         item["profile"] = self.profiles[1]
-        handle_update(None, item, orig)
+        await handle_update(item, orig)
         self.assertEqual(self.profiles[2], item["profile"])
         self.assertEqual(3, item["urgency"])
         self.assertIn(

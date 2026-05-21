@@ -18,7 +18,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
     SUPPORTED_ASSET_TYPES = ("TIP",)
 
-    def parse_newsitem(self, newsitem_el):
+    async def parse_newsitem(self, newsitem_el):
         """
         Parse Newsitem element.
 
@@ -66,7 +66,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
                 # NewsComponent
                 try:
-                    self.parse_newscomponent(item, news_component_2)
+                    await self.parse_newscomponent(item, news_component_2)
                 except SkipItemException:
                     continue
 
@@ -75,7 +75,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
                 self._items.append(item)
 
-    def parse_newscomponent(self, item, newscomponent_el):
+    async def parse_newscomponent(self, item, newscomponent_el):
         """
         Parse NewsComponent in NewsItem element.
 
@@ -130,15 +130,15 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
 
         # NewsLines
         newslines_el = newscomponent_el.find("NewsLines")
-        self.parse_newslines(item, newslines_el)
+        await self.parse_newslines(item, newslines_el)
 
         # AdministrativeMetadata
         admin_el = newscomponent_el.find("AdministrativeMetadata")
-        self.parse_administrativemetadata(item, admin_el)
+        await self.parse_administrativemetadata(item, admin_el)
 
         # DescriptiveMetadata
         descript_el = newscomponent_el.find("DescriptiveMetadata")
-        self.parse_descriptivemetadata(item, descript_el)
+        await self.parse_descriptivemetadata(item, descript_el)
 
         # get 3rd level NewsComponent
         # body_html, headline, abstract
@@ -172,7 +172,7 @@ class BelgaTipNewsMLOneFeedParser(BelgaNewsMLOneFeedParser):
             item["body_html"] = item.get("headline")
         return item
 
-    def parse_newslines(self, item, newslines_el):
+    async def parse_newslines(self, item, newslines_el):
         """Parse NewsLines in 2nd level NewsComponent element."""
         if newslines_el is None:
             return

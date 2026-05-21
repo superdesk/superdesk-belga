@@ -12,7 +12,6 @@ import pytz
 import logging
 import itertools
 import dateutil.parser
-from xml.etree import ElementTree
 
 from superdesk import etree as sd_etree
 from superdesk.io.feed_parsers.newsml_2_0 import NewsMLTwoFeedParser
@@ -21,7 +20,6 @@ from superdesk.errors import ParserError
 from superdesk.metadata.item import CONTENT_TYPE
 
 from .belga_newsml_mixin import BelgaNewsMLMixin
-from superdesk import get_resource_service
 
 logger = logging.getLogger(__name__)
 NS = {
@@ -52,13 +50,13 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
     def can_parse(self, xml):
         return xml.tag.endswith("newsMessage")
 
-    def parse(self, xml, provider=None):
+    async def parse(self, xml, provider=None):
         self.root = xml
         items = []
         try:
             for item_set in xml.findall(self.qname("itemSet")):
                 for item_tree in item_set:
-                    item = self.parse_item(item_tree)
+                    item = await self.parse_item(item_tree)
                     try:
                         published = item_tree.xpath(
                             ".//xhtml:body/xhtml:header/"
@@ -143,7 +141,9 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                     items.append(item)
             return items
         except Exception as ex:
-            raise ParserError.newsmlTwoParserError(ex, provider)
+            raise await ParserError.newsmlTwoParserError(
+                ex, provider
+            ).send_notifications()
 
     def parse_header(self, tree):
         """Parse header element.
@@ -183,8 +183,8 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
             and edNote.text
         )
 
-    def parse_content_meta(self, tree, item):
-        meta = super().parse_content_meta(tree, item)
+    async def parse_content_meta(self, tree, item):
+        meta = await super().parse_content_meta(tree, item)
         elem = meta.find(self.qname("dateline"))
         if elem is not None:
             self.set_dateline(item, text=elem.text)
@@ -200,10 +200,10 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
         for elem in meta.findall(self.qname("keyword")):
             data = elem.text.strip()
             # store data in original_metadata and belga-keyword CV
-            item.setdefault("subject", []).extend(self._get_keywords(data))
+            item.setdefault("subject", []).extend(await self._get_keywords(data))
         return meta
 
-    def parse_content_subject(self, tree, item):
+    async def parse_content_subject(self, tree, item):
         """Parse subj type subjects into subject list."""
         item["subject"] = []
         item["extra"] = {}
@@ -212,7 +212,7 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
             if sub_type == "dpatype:dpasubject":
                 same_as_elts = subject_elt.findall(self.qname("sameAs"))
                 for same_as_elt in same_as_elts:
-                    subject_data = self._get_data_subject(same_as_elt)
+                    subject_data = await self._get_data_subject(same_as_elt)
                     if subject_data:
                         item.setdefault("subject", []).append(subject_data)
                         break
@@ -235,17 +235,19 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                         else ""
                     )
                     if len(code) == 3:
-                        country_keyword = self._get_country(code)
+                        country_keyword = await self._get_country(code)
                         item.setdefault("subject", []).extend(country_keyword)
                         # country is cv
-                        item.setdefault("subject", []).extend(self._get_countries(code))
+                        item.setdefault("subject", []).extend(
+                            await self._get_countries(code)
+                        )
                         break
 
     def parse_authors(self, meta, item):
         item["authors"] = []
         return
 
-    def _get_data_subject(self, subject_elt):
+    async def _get_data_subject(self, subject_elt):
         qcode_parts = subject_elt.get("qcode", "").split(":")
         if len(qcode_parts) == 2 and qcode_parts[0] in self.SUBJ_QCODE_PREFIXES:
             scheme = self.SUBJ_QCODE_PREFIXES[qcode_parts[0]]
@@ -254,7 +256,7 @@ class BelgaDPANewsMLTwoFeedParser(BelgaNewsMLMixin, NewsMLTwoFeedParser):
                 name_elt = subject_elt.find(self.qname("name"))
                 name = name_elt.text if name_elt is not None and name_elt.text else ""
                 try:
-                    name = self.getVocabulary(scheme, qcode_parts[1], name)
+                    name = await self.getVocabulary(scheme, qcode_parts[1], name)
                     subject_data = {
                         "qcode": qcode_parts[1],
                         "name": name,

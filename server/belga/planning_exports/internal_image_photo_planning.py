@@ -4,8 +4,8 @@ from .internal_belga_image_planning import (
 )
 
 
-def format_internal_image_photo_planning(items):
-    return format_image_planning(
+async def format_internal_image_photo_planning(items):
+    return await format_image_planning(
         planning_data=items,
         allowed_coverage_types={"picture"},
         title_prefix="Belga Image Photo Planning",

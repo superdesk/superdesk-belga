@@ -3,7 +3,7 @@ from belga.macros.set_default_metadata import set_default_metadata
 
 
 class SetDefaultMetadataTestCase(TestCase):
-    def test_set_default_metadata(self):
+    async def test_set_default_metadata(self):
         self.app.data.insert(
             "desks",
             [
@@ -60,7 +60,7 @@ class SetDefaultMetadataTestCase(TestCase):
             "state": "ingested",
         }
 
-        set_default_metadata(item, dest_desk_id="desk_1")
+        await set_default_metadata(item, dest_desk_id="desk_1")
         self.assertEqual(item.get("keywords"), ["some", "keyword"])
         self.assertEqual(item.get("language"), "en")
         # packages

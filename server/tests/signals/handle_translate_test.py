@@ -1,11 +1,11 @@
 from copy import deepcopy
 
 import superdesk
-from superdesk.tests import TestCase
+from .. import TestCase
 
 
 class HandleTranslateSignalTestCase(TestCase):
-    def test_duplicate_signals(self):
+    async def test_duplicate_signals(self):
         archive_service = superdesk.get_resource_service("archive")
         original_item = {
             "_id": "original-fr",
@@ -110,16 +110,16 @@ class HandleTranslateSignalTestCase(TestCase):
                 },
             },
         }
-        archive_service.create([original_item])
-        original_item = archive_service.find_one(None, _id="original-fr")
+        await archive_service.create_async([original_item])
+        original_item = await archive_service.find_one_async(None, _id="original-fr")
 
         translate_item = deepcopy(original_item)
         translate_item["language"] = "nl"
-        translate_guid = archive_service.duplicate_item(
+        translate_guid = await archive_service.duplicate_item(
             translate_item, operation="translate"
         )
 
-        translate_item = archive_service.find_one(None, guid=translate_guid)
+        translate_item = await archive_service.find_one_async(None, guid=translate_guid)
 
         # ensure that there are no belga-360 and videos in associations
         assert "belga-related-video--1" not in translate_item["associations"]

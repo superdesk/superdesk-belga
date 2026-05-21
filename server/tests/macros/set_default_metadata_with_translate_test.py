@@ -2,24 +2,28 @@ from bson import ObjectId
 from unittest.mock import patch
 from tests.mock import resources
 from superdesk import get_resource_service
-from superdesk.tests import TestCase
+
+# from superdesk.tests import TestCase
+from superdesk.tests import utils as test_utils
 from superdesk.errors import StopDuplication
 from belga.macros.set_default_metadata_with_translate import (
     set_default_metadata_with_translate,
 )
 
+from .. import TestCase
+
 
 class SetDefaultMetadataWithTranslateTestCase(TestCase):
-    def test_no_destination_data(self):
+    async def test_no_destination_data(self):
         item = {
             "headline": "test headline",
             "slugine": "test slugline",
             "keywords": ["foo", "bar"],
         }
         self.app.data.insert("archive", [item])
-        self.assertIsNone(set_default_metadata_with_translate(item))
+        self.assertIsNone(await set_default_metadata_with_translate(item))
 
-    def test_no_template_language(self):
+    async def test_no_template_language(self):
         self.app.data.insert(
             "desks",
             [
@@ -91,13 +95,12 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "keywords": ["foo", "bar"],
         }
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+            )
         archive_service = get_resource_service("archive")
         new_item = archive_service.find_one(
             req=None,
@@ -105,7 +108,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         )
         self.assertNotIn("translated_from", new_item)
 
-    def test_duplicate(self):
+    async def test_duplicate(self):
         self.app.data.insert(
             "desks",
             [
@@ -179,13 +182,12 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "language": "en",
         }
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+            )
 
         archive_service = get_resource_service("archive")
         new_item = archive_service.find_one(
@@ -194,7 +196,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         )
         self.assertNotIn("translated_from", new_item)
 
-    def test_translate(self):
+    async def test_translate(self):
         self.app.data.insert(
             "desks",
             [
@@ -268,13 +270,12 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "language": "fr",
         }
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+            )
         archive_service = get_resource_service("archive")
         new_item = archive_service.find_one(
             req=None,
@@ -282,7 +283,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         )
         self.assertEqual(new_item["translated_from"], item["guid"])
 
-    def test_keywords_not_to_overwrite(self):
+    async def test_keywords_not_to_overwrite(self):
         self.app.data.insert(
             "desks",
             [
@@ -343,14 +344,13 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "language": "fr",
         }
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-            overwrite_keywords=False,
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+                overwrite_keywords=False,
+            )
         archive_service = get_resource_service("archive")
         new_item = archive_service.find_one(
             req=None,
@@ -360,7 +360,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         self.assertEqual(["foo", "bar"], new_item["keywords"])
 
-    def test_keywords_to_overwrite(self):
+    async def test_keywords_to_overwrite(self):
         self.app.data.insert(
             "desks",
             [
@@ -421,14 +421,13 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "language": "fr",
         }
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-            overwrite_keywords=True,
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+                overwrite_keywords=True,
+            )
         archive_service = get_resource_service("archive")
         new_item = archive_service.find_one(
             req=None,
@@ -437,7 +436,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         self.assertEqual(["some", "keyword"], new_item["keywords"])
 
-    def test_belga_keywords(self):
+    async def test_belga_keywords(self):
         self.app.data.insert(
             "desks",
             [
@@ -463,36 +462,6 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
                     "working_stage": False,
                     "is_visible": True,
                     "desk": ObjectId("5d385f17fe985ec5e1a78b49"),
-                }
-            ],
-        )
-        self.app.data.insert(
-            "vocabularies",
-            [
-                {
-                    "_id": "belga-keywords",
-                    "display_name": "Belga Keywords",
-                    "type": "manageable",
-                    "selection_type": "multi selection",
-                    "unique_field": "qcode",
-                    "schema": {"name": {}, "qcode": {}, "translations": {}},
-                    "service": {"all": 1},
-                    "items": [
-                        {
-                            "name": "BRIEF",
-                            "qcode": "BRIEF",
-                            "is_active": True,
-                            "translations": {"name": {"nl": "BRIEF", "fr": "BRIEF"}},
-                        },
-                        {
-                            "name": "PREVIEW",
-                            "qcode": "PREVIEW",
-                            "is_active": True,
-                            "translations": {
-                                "name": {"nl": "VOORBERICHT", "fr": "AVANT-PAPIER"}
-                            },
-                        },
-                    ],
                 }
             ],
         )
@@ -536,13 +505,12 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "language": "fr",
         }
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
+                dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
+            )
         archive_service = get_resource_service("archive")
         new_item = archive_service.find_one(
             req=None,
@@ -551,21 +519,30 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         self.assertEqual(item["subject"], new_item["subject"])
 
-    def test_duplicate_item(self):
+    async def test_duplicate_item(self):
         # SDBELGA-538
 
-        self.app.data.insert(
+        ids = dict(
+            filter_conditions=[ObjectId(), ObjectId()],
+            content_filters=[ObjectId(), ObjectId()],
+            desks=[ObjectId(), ObjectId()],
+            stages=[ObjectId(), ObjectId()],
+            content_templates=[ObjectId(), ObjectId()],
+            destination=[ObjectId(), ObjectId()],
+        )
+
+        await test_utils.post_items(
             "filter_conditions",
             [
                 {
-                    "_id": ObjectId("6d385f17fe985ec5e1a78b49"),
+                    "_id": ids["filter_conditions"][0],
                     "operator": "in",
                     "field": "services-products",
                     "value": "BIN/ALG",
                     "name": "Bin/alg filter_c",
                 },
                 {
-                    "_id": ObjectId("7d385f17fe985ec5e1a78b49"),
+                    "_id": ids["filter_conditions"][1],
                     "operator": "in",
                     "field": "services-products",
                     "value": "BIN/ECO",
@@ -575,38 +552,38 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         )
         content_filter = [
             {
-                "_id": 1,
+                "_id": ids["content_filters"][0],
                 "name": "Bin/ALG Filter",
                 "content_filter": [
-                    {"expression": {"fc": [ObjectId("6d385f17fe985ec5e1a78b49")]}}
+                    {"expression": {"fc": [ids["filter_conditions"][0]]}}
                 ],
             },
             {
-                "_id": 2,
+                "_id": ids["content_filters"][1],
                 "name": "Bin/ECO Filter",
                 "content_filter": [
-                    {"expression": {"fc": [ObjectId("7d385f17fe985ec5e1a78b49")]}}
+                    {"expression": {"fc": [ids["filter_conditions"][1]]}}
                 ],
             },
         ]
-        self.app.data.insert("content_filters", content_filter)
+        await test_utils.post_items("content_filters", content_filter)
 
         self.app.data.insert(
             "desks",
             [
                 {
-                    "_id": ObjectId("5d385f17fe985ec5e1a78b49"),
+                    "_id": ids["desks"][0],
                     "name": "Politic Desk",
                     "default_content_profile": "belga_text-1",
-                    "default_content_template": "content_template_1",
+                    "default_content_template": ids["content_templates"][0],
                     "desk_language": "fr",
                     "source": "politic",
                 },
                 {
-                    "_id": ObjectId("5d385f17fe985ec5e1a78b40"),
+                    "_id": ids["desks"][1],
                     "name": "Sports Desk",
                     "default_content_profile": "belga_text-2",
-                    "default_content_template": "content_template_2",
+                    "default_content_template": ids["content_templates"][1],
                     "desk_language": "en",
                     "source": "sports",
                 },
@@ -616,24 +593,24 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "stages",
             [
                 {
-                    "_id": ObjectId("5d385f17fe985ec5e1a88b49"),
+                    "_id": ids["stages"][0],
                     "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 1,
                     "content_expiry": None,
                     "working_stage": False,
                     "is_visible": True,
-                    "desk": ObjectId("5d385f17fe985ec5e1a78b49"),
+                    "desk": ids["desks"][0],
                 },
                 {
-                    "_id": ObjectId("5d385f17fe985ec5e1a89b49"),
+                    "_id": ids["stages"][1],
                     "name": "Incoming Stage 2",
                     "default_incoming": True,
                     "desk_order": 2,
                     "content_expiry": None,
                     "working_stage": False,
                     "is_visible": True,
-                    "desk": ObjectId("5d385f17fe985ec5e1a78b40"),
+                    "desk": ids["desks"][1],
                 },
             ],
         )
@@ -642,7 +619,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             "content_templates",
             [
                 {
-                    "_id": "content_template_1",
+                    "_id": ids["content_templates"][0],
                     "template_name": "belga text one",
                     "is_public": True,
                     "data": {
@@ -658,7 +635,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
                     "template_type": "create",
                 },
                 {
-                    "_id": "content_template_2",
+                    "_id": ids["content_templates"][1],
                     "template_name": "belga text two",
                     "is_public": True,
                     "data": {
@@ -678,19 +655,19 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         destination = [
             {
-                "_id": "desti_1",
+                "_id": ids["destination"][0],
                 "is_active": True,
                 "name": "BIN/ALG",
-                "filter": "1",
+                "filter": ids["content_filters"][0],
                 "desk": "123",
                 "stage": "213",
                 "macro": "Set Default Metadata With Translate",
             },
             {
-                "_id": "desti_2",
+                "_id": ids["destination"][1],
                 "is_active": True,
                 "name": "BIN/ECO",
-                "filter": "2",
+                "filter": ids["content_filters"][0],
                 "desk": "456",
                 "stage": "214",
                 "macro": "Set Default Metadata With Translate",
@@ -724,16 +701,15 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
         }
 
         self.app.data.insert("archive", [item])
-        self.assertRaises(
-            StopDuplication,
-            set_default_metadata_with_translate,
-            item,
-            dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
-            dest_stage_id=ObjectId("5d385f17fe985ec5e1a88b49"),
-            internal_destination=destination[0],
-        )
+        with self.assertRaises(StopDuplication):
+            await set_default_metadata_with_translate(
+                item,
+                dest_desk_id=ids["desks"][0],
+                dest_stage_id=ids["stages"][0],
+                internal_destination=destination[0],
+            )
 
-    def test_preserve_btl_to_ext_eco_package(self):
+    async def test_preserve_btl_to_ext_eco_package(self):
         # SDBELGA-720
 
         self.app.data.insert(
@@ -802,7 +778,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         with patch.dict("superdesk.resources", resources):
             with self.assertRaises(StopDuplication):
-                set_default_metadata_with_translate(
+                await set_default_metadata_with_translate(
                     item,
                     dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
                     dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
@@ -818,7 +794,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             self.assertEqual(len(services), 1)
             self.assertEqual(services[0]["qcode"], "EXT/ECO")
 
-    def test_preserve_ext_to_btl_eco_package(self):
+    async def test_preserve_ext_to_btl_eco_package(self):
 
         self.app.data.insert(
             "desks",
@@ -886,7 +862,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         with patch.dict("superdesk.resources", resources):
             with self.assertRaises(StopDuplication):
-                set_default_metadata_with_translate(
+                await set_default_metadata_with_translate(
                     item,
                     dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
                     dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
@@ -902,7 +878,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
             self.assertEqual(len(services), 1)
             self.assertEqual(services[0]["qcode"], "BTL/ECO")
 
-    def test_removes_old_eco_and_adds_mapped(self):
+    async def test_removes_old_eco_and_adds_mapped(self):
         self.app.data.insert(
             "desks",
             [
@@ -973,7 +949,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         with patch.dict("superdesk.resources", resources):
             with self.assertRaises(StopDuplication):
-                set_default_metadata_with_translate(
+                await set_default_metadata_with_translate(
                     item,
                     dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
                     dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),
@@ -1000,8 +976,10 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
                 "BTL/ECO", eco_subjects, msg="BTL/ECO should have been removed."
             )
 
-    def test_should_fallback_to_second_subject_if_first_does_not_match_filter(self):
-        self.app.data.insert(
+    async def test_should_fallback_to_second_subject_if_first_does_not_match_filter(
+        self,
+    ):
+        await test_utils.post_items(
             "filter_conditions",
             [
                 {
@@ -1016,7 +994,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         filter_id = ObjectId("7d385f17fe985ec5e1a78b50")
 
-        self.app.data.insert(
+        await test_utils.post_items(
             "content_filters",
             [
                 {
@@ -1116,7 +1094,7 @@ class SetDefaultMetadataWithTranslateTestCase(TestCase):
 
         with patch.dict("superdesk.resources", resources):
             with self.assertRaises(StopDuplication):
-                set_default_metadata_with_translate(
+                await set_default_metadata_with_translate(
                     item,
                     dest_desk_id=ObjectId("5d385f17fe985ec5e1a78b49"),
                     dest_stage_id=ObjectId("5d385f31fe985ec67a0ca583"),

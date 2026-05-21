@@ -19,20 +19,20 @@ from tests import TestCase
 class BelgaANPNewsMLOneTestCase(TestCase):
     filename = "anp_belga.xml"
 
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         dirname = os.path.dirname(os.path.realpath(__file__))
         fixture = os.path.normpath(os.path.join(dirname, "../fixtures", self.filename))
         provider = {"name": "test"}
         with open(fixture, "rb") as f:
             parser = BelgaANPNewsMLOneFeedParser()
             self.xml_root = etree.parse(f).getroot()
-            self.item = parser.parse(self.xml_root, provider)
+            self.item = await parser.parse(self.xml_root, provider)
 
-    def test_can_parse(self):
+    async def test_can_parse(self):
         self.assertTrue(BelgaANPNewsMLOneFeedParser().can_parse(self.xml_root))
 
-    def test_content(self):
+    async def test_content(self):
         item = self.item[0]
         self.assertEqual(item["ingest_provider_sequence"], "20181210123731041")
         item["subject"].sort(key=lambda i: i["scheme"])
@@ -142,7 +142,7 @@ class BelgaANPNewsMLOneTestCase(TestCase):
         )
         self.assertEqual(item["body_html"], expected_body)
 
-    def test_extract_city_from_body(self):
+    async def test_extract_city_from_body(self):
         item = {
             "body_html": "NL<p>San Mateo (ANP) - FNV kondigt werkonderbrekingen aan bij PostNL,"
         }
