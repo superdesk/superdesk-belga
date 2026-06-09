@@ -152,6 +152,10 @@ class BelgaAFPNewsMLOneTestCase(TestCase):
             " février. </p>\n<p>asl/tib/pid/cac</p>\n\n"
         )
         self.assertEqual(item["body_html"], expected_body)
+        self.assertEqual(
+            item["ednote"],
+            "attention revoici liste corrigée, sans mention de l'absence de Lo Celso",
+        )
 
     def test_empty_headline(self):
         news_lines = self.xml_root.find("NewsItem/NewsComponent/NewsLines")

@@ -73,7 +73,29 @@ class BelgaAFPNewsMLOneFeedParser(BaseBelgaNewsMLOneFeedParser):
 
         if item.get("urgency") == 4:
             item["urgency"] = 3
+
+        advisory_line = self._get_advisory_line(newsitem_el)
+        if advisory_line:
+            item["ednote"] = advisory_line
         return item
+
+    def _get_advisory_line(self, newsitem_el):
+        """Return the text of the ``AdvisoryLine`` NewsLine, if any.
+
+        Example:
+
+            <NewsLine>
+                <NewsLineType FormalName="AdvisoryLine"/>
+                <NewsLineText xml:lang="fr">attention revoici liste corrigée</NewsLineText>
+            </NewsLine>
+        """
+        for news_line in newsitem_el.findall("NewsComponent/NewsLines/NewsLine"):
+            line_type = news_line.find("NewsLineType")
+            if line_type is not None and line_type.get("FormalName") == "AdvisoryLine":
+                line_text = news_line.find("NewsLineText")
+                if line_text is not None and line_text.text:
+                    return " ".join(line_text.text.split())
+        return None
 
     def parse_descriptivemetadata(self, item, descript_el):
         """
