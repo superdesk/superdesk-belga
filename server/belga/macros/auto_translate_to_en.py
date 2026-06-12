@@ -159,11 +159,10 @@ def translate_item(item):
 def auto_translate_to_en(item, **kwargs):
     try:
         translate_item(item)
-    except Exception as exc:
-        logger.error(
-            "Auto translate to en failed for item %s: %s",
+    except Exception:
+        logger.exception(
+            "Auto translate to en failed for item %s",
             item.get("guid", "unknown"),
-            exc,
         )
 
     map_packages(item)

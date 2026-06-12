@@ -10,13 +10,9 @@
 
 """Wrapper around the Belga AI translate endpoint."""
 
-import logging
-
 import flask
 import requests
 import superdesk
-
-logger = logging.getLogger(__name__)
 
 TRANSLATE_PATH = "toolkit/translate"
 DEFAULT_TARGET_LANGUAGE = "en"
