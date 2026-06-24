@@ -44,6 +44,11 @@ function getCoverageDueDate(
         coverageTime.set('hour', 20);
         coverageTime.set('minute', 0);
         coverageTime.set('second', 0);
+    } else if (eventItem && eventItem._time_to_be_confirmed) {
+        coverageTime = moment(eventItem.dates?.end);
+        coverageTime.set('hour', 20);
+        coverageTime.set('minute', 0);
+        coverageTime.set('second', 0);
     } else if (eventItem) {
         coverageTime = moment(eventItem.dates?.end);
         coverageTime.add(1, 'hour');
