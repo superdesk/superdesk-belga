@@ -41,10 +41,10 @@ function getCoverageDueDate(
     const eventTimezone = eventItem?.dates?.tz;
     const startInEventTimezone = eventItem?.dates?.start && eventTimezone ?
         timeUtils.getDateInRemoteTimeZone(eventItem.dates.start, eventTimezone) :
-        moment(eventItem?.dates?.start);
+        moment(planningItem?.planning_date);
     const endInEventTimezone = eventItem?.dates?.end && eventTimezone ?
         timeUtils.getDateInRemoteTimeZone(eventItem.dates.end, eventTimezone) :
-        moment(eventItem?.dates?.end);
+        moment(planningItem?.planning_date);
     const isAllDayEvent = eventItem?.dates?.all_day || (
         !!eventItem?.dates?.start &&
         !!eventItem?.dates?.end &&
