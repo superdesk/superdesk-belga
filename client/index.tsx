@@ -11,7 +11,7 @@ import belgaPress from './belga/belgapress';
 import moment from 'moment';
 import {IEventItem, IPlanningItem} from 'superdesk-planning/client/interfaces';
 import {setCoverageDueDateStrategy} from 'superdesk-planning/client/configure';
-import {eventUtils} from 'superdesk-planning/client/utils';
+import {eventUtils, timeUtils} from 'superdesk-planning/client/utils';
 
 class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
@@ -38,23 +38,35 @@ function getCoverageDueDate(
     eventItem?: IEventItem,
 ): moment.Moment | null {
     let coverageTime: moment.Moment | null = null;
+    const eventTimezone = eventItem?.dates?.tz;
+    const startInEventTimezone = eventItem?.dates?.start && eventTimezone ?
+        timeUtils.getDateInRemoteTimeZone(eventItem.dates.start, eventTimezone) :
+        moment(eventItem?.dates?.start);
+    const endInEventTimezone = eventItem?.dates?.end && eventTimezone ?
+        timeUtils.getDateInRemoteTimeZone(eventItem.dates.end, eventTimezone) :
+        moment(eventItem?.dates?.end);
+    const isAllDayEvent = eventItem?.dates?.all_day || (
+        !!eventItem?.dates?.start &&
+        !!eventItem?.dates?.end &&
+        eventUtils.isEventAllDay(startInEventTimezone, endInEventTimezone, true)
+    );
 
-    if (eventItem && eventUtils.isEventAllDay(eventItem.dates?.start, eventItem.dates?.end, true)) {
-        coverageTime = moment(eventItem.dates?.end);
+    if (eventItem && isAllDayEvent) {
+        coverageTime = endInEventTimezone.clone();
         coverageTime.set('hour', 20);
         coverageTime.set('minute', 0);
         coverageTime.set('second', 0);
     } else if (eventItem && eventItem._time_to_be_confirmed) {
-        coverageTime = moment(eventItem.dates?.end);
+        coverageTime = endInEventTimezone.clone();
         coverageTime.set('hour', 20);
         coverageTime.set('minute', 0);
         coverageTime.set('second', 0);
     } else if (eventItem) {
-        coverageTime = moment(eventItem.dates?.end);
+        coverageTime = endInEventTimezone.clone();
         coverageTime.add(1, 'hour');
-        if (eventItem.dates?.end && !coverageTime.isSame(eventItem.dates?.end, 'day')) {
+        if (eventItem.dates?.end && !coverageTime.isSame(endInEventTimezone, 'day')) {
             // make sure we're not going into the next day
-            coverageTime = moment(eventItem.dates?.end);
+            coverageTime = endInEventTimezone.clone();
         }
     } else if (planningItem) {
         coverageTime = moment(planningItem.planning_date);
