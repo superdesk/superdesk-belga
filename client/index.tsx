@@ -8,10 +8,8 @@ import {AvatarContentText} from 'superdesk-ui-framework';
 import belgaImage from './belga/image';
 import belga360Archive from './belga/360archive';
 import belgaPress from './belga/belgapress';
-import moment from 'moment';
-import {IEventItem, IPlanningItem} from 'superdesk-planning/client/interfaces';
 import {setCoverageDueDateStrategy} from 'superdesk-planning/client/configure';
-import {eventUtils, timeUtils} from 'superdesk-planning/client/utils';
+import {getCoverageDueDate} from './utils/coverageDueDate';
 
 class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
@@ -32,48 +30,6 @@ class UserAvatar extends React.PureComponent<{user: Partial<IUser>}> {
  * Offset is needed because belga ai sometimes doesn't respect the maxCharacter length and outputs 4/5 more characters.
  */
 const MAX_CHARACTER_OFFSET = 10;
-
-function getCoverageDueDate(
-    planningItem: IPlanningItem,
-    eventItem?: IEventItem,
-): moment.Moment | null {
-    let coverageTime: moment.Moment | null = null;
-    const eventTimezone = eventItem?.dates?.tz;
-    const startInEventTimezone = eventItem?.dates?.start && eventTimezone ?
-        timeUtils.getDateInRemoteTimeZone(eventItem.dates.start, eventTimezone) :
-        moment(planningItem?.planning_date);
-    const endInEventTimezone = eventItem?.dates?.end && eventTimezone ?
-        timeUtils.getDateInRemoteTimeZone(eventItem.dates.end, eventTimezone) :
-        moment(planningItem?.planning_date);
-    const isAllDayEvent = eventItem?.dates?.all_day || (
-        !!eventItem?.dates?.start &&
-        !!eventItem?.dates?.end &&
-        eventUtils.isEventAllDay(startInEventTimezone, endInEventTimezone, true)
-    );
-
-    if (eventItem && isAllDayEvent) {
-        coverageTime = endInEventTimezone.clone();
-        coverageTime.set('hour', 20);
-        coverageTime.set('minute', 0);
-        coverageTime.set('second', 0);
-    } else if (eventItem && eventItem._time_to_be_confirmed) {
-        coverageTime = endInEventTimezone.clone();
-        coverageTime.set('hour', 20);
-        coverageTime.set('minute', 0);
-        coverageTime.set('second', 0);
-    } else if (eventItem) {
-        coverageTime = endInEventTimezone.clone();
-        coverageTime.add(1, 'hour');
-        if (eventItem.dates?.end && !coverageTime.isSame(endInEventTimezone, 'day')) {
-            // make sure we're not going into the next day
-            coverageTime = endInEventTimezone.clone();
-        }
-    } else if (planningItem) {
-        coverageTime = moment(planningItem.planning_date);
-    }
-
-    return coverageTime;
-}
 
 setCoverageDueDateStrategy(getCoverageDueDate);
 

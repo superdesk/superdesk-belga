@@ -7,11 +7,15 @@
         "superdesk-planning": "github:superdesk/superdesk-planning#release/2.11"
     },
     "devDependencies": {
-        "@superdesk/build-tools": "^1.2.0"
+        "@superdesk/build-tools": "^1.2.0",
+        "@types/jest": "^30.0.0",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.4.11"
     },
     "scripts": {
         "build": "npx --no-install @superdesk/build-tools build-root-repo ./",
-        "start": "grunt server"
+        "start": "grunt server",
+        "test": "jest"
     },
     "volta": {
         "node": "22.22.0"
