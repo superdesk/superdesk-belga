@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "superdesk.text_checkers.spellcheckers.leuven_dutch",
     "belga.planning_exports",
     "belga.contacts",
+    "belga.belgapress",
 ]
 
 SECRET_KEY = env("SECRET_KEY", "")
@@ -357,6 +358,11 @@ TIME_FORMAT_SHORT = "%H:%M"
 DATE_FORMAT_SHORT = "%d/%m/%Y"
 
 BELGA_AI_URL = env("BELGA_AI_URL")
+
+BELGA_PRESS_URL = env("BELGA_PRESS_URL")
+BELGA_KEYCLOAK_ENDPOINT = env("BELGA_KEYCLOAK_ENDPOINT")
+BELGA_KEYCLOAK_CLIENT_ID = env("BELGA_KEYCLOAK_CLIENT_ID")
+BELGA_KEYCLOAK_CLIENT_SECRET = env("BELGA_KEYCLOAK_CLIENT_SECRET")
 
 BELGA_VIDEO_ENABLED = strtobool(env("BELGA_VIDEO_ENABLED", "False"))
 START_OF_WEEK = 1

@@ -61,7 +61,7 @@ Start Working: {{ client_url }}/#/workspace/assignments?assignment={{ assignment
         Related Articles:
         {% for item in event.get('related_items', []) %}
             {{ item.get('headline') or item.get('slugline', "") }}
-            Url: https://www.belgabox.be/belgabox/fo/detail?contentType=news&targetSide=Right&id={{ item.guid.split(':')[-1] }}&parentId={{ item.guid.split(':')[-1] }}&isArchive=true
+            Url: {{ item.guid|belgapress_share_url }}
         {% endfor %}
     {% endif %}
 {% endif %}
