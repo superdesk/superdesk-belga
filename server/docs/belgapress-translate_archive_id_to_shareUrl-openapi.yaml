@@ -1,0 +1,26 @@
+openapi: "3.1.0"
+info:
+  title: "belgapress API"
+  description: "belgapress API"
+  version: "1.0.0"
+servers:
+  - url: "https://belgapress"
+paths:
+  /belgapress/api/internal/newsobjects/share:
+    get:
+      summary: "GET belgapress/api/internal/newsobjects/share"
+      operationId: "getShareUrlFromArch360Id"
+      parameters:
+        - name: "archiveId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
