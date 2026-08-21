@@ -61,7 +61,7 @@ def get_share_url(guid: str) -> str:
         res.raise_for_status()
         return res.json()
     except (requests.RequestException, ValueError, KeyError) as err:
-        logger.error("Could not fetch share url for %s: %s", guid, err)
+        logger.exception("Could not fetch share url for %s: %s", guid, err)
         return BELGABOX_URL.format(id=archive_id)
 
 

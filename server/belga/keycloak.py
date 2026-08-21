@@ -32,12 +32,12 @@ class KeycloakAuth:
             "client_id": self.client_id,
             "client_secret": self.client_secret,
         }
-        response = requests.post(self.endpoint, data=data, verify=False)
+        response = requests.post(self.endpoint, data=data, verify=False, timeout=10)
         response.raise_for_status()
 
         token_data = response.json()
         self._token = token_data["access_token"]
         # Set expiry 5 minutes before actual expiry to be safe
         self._token_expiry = datetime.now() + timedelta(
-            seconds=token_data["expires_in"] - 300
+            seconds=max(token_data["expires_in"] - 300, 0)
         )
