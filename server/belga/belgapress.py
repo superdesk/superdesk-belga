@@ -37,9 +37,9 @@ def _get_auth() -> KeycloakAuth:
     global _auth
     if _auth is None:
         _auth = KeycloakAuth(
-            endpoint=app.config["BELGA_KEYCLOAK_ENDPOINT"],
-            client_id=app.config["BELGA_KEYCLOAK_CLIENT_ID"],
-            client_secret=app.config["BELGA_KEYCLOAK_CLIENT_SECRET"],
+            endpoint=app.config["BELGAPRESS_KEYCLOAK_ENDPOINT"],
+            client_id=app.config["BELGAPRESS_KEYCLOAK_CLIENT_ID"],
+            client_secret=app.config["BELGAPRESS_KEYCLOAK_CLIENT_SECRET"],
         )
     return _auth
 

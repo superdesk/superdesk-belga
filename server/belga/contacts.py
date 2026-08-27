@@ -5,7 +5,7 @@ import logging
 
 import superdesk
 
-from flask import json
+from flask import current_app as app, json
 from datetime import datetime
 from urllib.parse import urljoin
 from superdesk.utils import ListCursor
@@ -124,9 +124,9 @@ class BelgaContactsProxy(superdesk.Service):
 
         # Initialize Keycloak auth
         self.auth = KeycloakAuth(
-            endpoint=os.environ.get("BELGA_KEYCLOAK_ENDPOINT"),
-            client_id=os.environ.get("BELGA_KEYCLOAK_CLIENT_ID"),
-            client_secret=os.environ.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
+            endpoint=app.config["BELGA_KEYCLOAK_ENDPOINT"],
+            client_id=app.config["BELGA_KEYCLOAK_CLIENT_ID"],
+            client_secret=app.config["BELGA_KEYCLOAK_CLIENT_SECRET"],
         )
 
     def _get_headers(self):
