@@ -5,7 +5,7 @@ import logging
 
 import superdesk
 
-from flask import current_app as app, json
+from flask import json
 from datetime import datetime
 from urllib.parse import urljoin
 from superdesk.utils import ListCursor
