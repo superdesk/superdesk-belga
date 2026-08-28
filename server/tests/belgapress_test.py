@@ -21,9 +21,16 @@ class BelgaPressShareUrlTestCase(TestCase):
         belgapress._auth = None
         belgapress._session = None
         self.app.config["BELGA_PRESS_URL"] = "https://belgapress"
-        self.app.config["BELGA_KEYCLOAK_ENDPOINT"] = "https://keycloak/token"
-        self.app.config["BELGA_KEYCLOAK_CLIENT_ID"] = "client"
-        self.app.config["BELGA_KEYCLOAK_CLIENT_SECRET"] = "secret"
+        self.app.config["BELGAPRESS_KEYCLOAK_ENDPOINT"] = "https://keycloak/token"
+        self.app.config["BELGAPRESS_KEYCLOAK_CLIENT_ID"] = "client"
+        self.app.config["BELGAPRESS_KEYCLOAK_CLIENT_SECRET"] = "secret"
+
+    def test_auth_uses_belgapress_credentials(self):
+        auth = belgapress._get_auth()
+
+        self.assertEqual("https://keycloak/token", auth.endpoint)
+        self.assertEqual("client", auth.client_id)
+        self.assertEqual("secret", auth.client_secret)
 
     def test_filter_is_registered(self):
         self.assertEqual(
