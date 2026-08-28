@@ -116,7 +116,9 @@ def parse_contact(contact) -> Contact:
 
 class BelgaContactsProxy(superdesk.Service):
 
-    def __init__(self, url):
+    def __init__(
+        self, url, keycloak_endpoint, keycloak_client_id, keycloak_client_secret
+    ):
         self.base = url
         self.count = 50
         self.timeout = 30
@@ -124,9 +126,9 @@ class BelgaContactsProxy(superdesk.Service):
 
         # Initialize Keycloak auth
         self.auth = KeycloakAuth(
-            endpoint=app.config["BELGA_KEYCLOAK_ENDPOINT"],
-            client_id=app.config["BELGA_KEYCLOAK_CLIENT_ID"],
-            client_secret=app.config["BELGA_KEYCLOAK_CLIENT_SECRET"],
+            endpoint=keycloak_endpoint,
+            client_id=keycloak_client_id,
+            client_secret=keycloak_client_secret,
         )
 
     def _get_headers(self):
@@ -225,7 +227,10 @@ def init_app(_app):
             return
 
         superdesk.resources["contacts"].service = BelgaContactsProxy(
-            os.environ["BELGA_CONTACTS_URL"]
+            os.environ["BELGA_CONTACTS_URL"],
+            _app.config["BELGA_KEYCLOAK_ENDPOINT"],
+            _app.config["BELGA_KEYCLOAK_CLIENT_ID"],
+            _app.config["BELGA_KEYCLOAK_CLIENT_SECRET"],
         )
         _app.client_config.update(
             {
