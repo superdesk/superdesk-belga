@@ -6,4 +6,4 @@ pymongo==4.9.2
 
 git+https://github.com/superdesk/superdesk-analytics.git@develop#egg=superdesk-analytics
 git+https://github.com/superdesk/superdesk-core.git@develop#egg=superdesk-core
-git+https://github.com/superdesk/superdesk-planning.git@develop#egg=superdesk-planning
+git+https://github.com/petrjasek/superdesk-planning.git@feat-coverage-inline-create#egg=superdesk-planning
