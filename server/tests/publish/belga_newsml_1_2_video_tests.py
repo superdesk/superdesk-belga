@@ -418,3 +418,36 @@ class BelgaNewsML12FormatterVideoTest(TestCase):
             'NewsComponent/Role[@FormalName="Thumbnail"]/ancestor::NewsComponent/ContentItem/MimeType'
         )[0]
         self.assertEqual(mimetype.attrib["FormalName"], "image/jpg")
+
+
+class BelgaNewsML12FormatterExternalVideoUrnTest(TestCase):
+    """Video fetched from Belga's search provider (`urn:belga.be:picturepackmedia:...`) must get a belga-urn."""
+
+    def test_set_belga_urn_for_external_video(self):
+        video = {
+            "guid": "urn:belga.be:picturepackmedia:186485094",
+            "type": "video",
+            "renditions": {
+                "thumbnail": {"href": "https://cdn.example.com/thumb.jpeg"},
+                "viewImage": {"href": "https://cdn.example.com/preview.jpeg"},
+                "original": {"href": "https://cdn.example.com/video.mp4"},
+            },
+        }
+
+        formatter = BelgaNewsML12Formatter()
+        formatter._set_belga_urn(video)
+
+        self.assertEqual(
+            video["renditions"]["original"]["belga-urn"],
+            "urn:www.belga.be:picturepackvideostore:186485094:full",
+        )
+        self.assertEqual(video["renditions"]["original"]["filename"], "186485094.mp4")
+        self.assertEqual(
+            video["renditions"]["thumbnail"]["belga-urn"],
+            "urn:www.belga.be:picturepackvideostore:186485094:thumbnail",
+        )
+        self.assertEqual(video["renditions"]["thumbnail"]["filename"], "186485094.jpeg")
+        self.assertEqual(
+            video["renditions"]["viewImage"]["belga-urn"],
+            "urn:www.belga.be:picturepackvideostore:186485094:preview",
+        )
