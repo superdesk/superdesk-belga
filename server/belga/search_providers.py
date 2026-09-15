@@ -215,6 +215,9 @@ class BelgaImageSearchProvider(superdesk.SearchProvider):
 class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
     GUID_PREFIX = "urn:belga.be:picturepackimage:"
     IMAGE_URN = "urn:www.belga.be:picturepackstore:{id}:{rendition}:true"
+    # videos returned by this provider use a different guid prefix and urn scheme
+    VIDEO_GUID_PREFIX = "urn:belga.be:picturepackmedia:"
+    VIDEO_URN = "urn:www.belga.be:picturepackvideostore:{id}:{rendition}"
 
     label = "Belga Image v2"
     base_url = "https://belga-websvc.picturepack.com/belgaimage-api/"
@@ -891,6 +894,11 @@ _image_coverage_providers = [
 def get_provider_by_guid(guid):
     for provider in _image_coverage_providers:
         if provider.GUID_PREFIX in guid:
+            return provider
+        if (
+            getattr(provider, "VIDEO_GUID_PREFIX", None)
+            and provider.VIDEO_GUID_PREFIX in guid
+        ):
             return provider
 
 
