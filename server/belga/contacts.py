@@ -189,7 +189,7 @@ class BelgaContactsProxy(AsyncBaseService, AsyncHttpClientSessionMixin):
                 and source["query"]["terms"].get("_id")
             ):
                 _ids = source["query"]["terms"]["_id"]
-                return self.search_ids(_ids)
+                return await self.search_ids(_ids)
 
         size = int(req.args.get("max_results", self.count))
         page = int(req.args.get("page", 1)) - 1
