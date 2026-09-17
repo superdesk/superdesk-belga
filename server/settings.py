@@ -12,13 +12,13 @@
 import copy
 
 from pathlib import Path
-from distutils.util import strtobool
 
 from superdesk.core import json
 from superdesk.default_settings import (
     DEFAULT_GENRE_VALUE_FOR_MANUAL_ARTICLES,
     env,
     MODULES,
+    strtobool,
 )
 
 ABS_PATH = str(Path(__file__).resolve().parent)
@@ -372,4 +372,3 @@ AMAZON_MEDIA_ID_TIME_PREFIX = "none"
 
 # It will expand/unfold Event's planning-related items in the Planning Combined view
 PLANNING_EXPAND_RELATED_PLANNINGS = True
-
