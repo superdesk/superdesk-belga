@@ -121,6 +121,7 @@ class HandleTranslateSignalTestCase(TestCase):
 
         translate_item = archive_service.find_one(None, guid=translate_guid)
 
-        # ensure that there are no belga-360 and videos in associations
-        assert "belga-related-video--1" not in translate_item["associations"]
-        assert "belga_related_articles--0" not in translate_item["associations"]
+        # ensure that all associations are retained on translation
+        assert "editor_0" in translate_item["associations"]
+        assert "belga_related_articles--0" in translate_item["associations"]
+        assert "belga-related-video--1" in translate_item["associations"]
