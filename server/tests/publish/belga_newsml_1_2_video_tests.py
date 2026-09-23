@@ -437,17 +437,20 @@ class BelgaNewsML12FormatterExternalVideoUrnTest(TestCase):
         formatter = BelgaNewsML12Formatter()
         formatter._set_belga_urn(video)
 
+        # the clip itself uses the video store urn, without the trailing `:true`/`:false` flag
         self.assertEqual(
             video["renditions"]["original"]["belga-urn"],
             "urn:www.belga.be:picturepackvideostore:186485094:full",
         )
         self.assertEqual(video["renditions"]["original"]["filename"], "186485094.mp4")
+        # still images associated with a video use the image store urn with a `:false` flag
         self.assertEqual(
             video["renditions"]["thumbnail"]["belga-urn"],
-            "urn:www.belga.be:picturepackvideostore:186485094:thumbnail",
+            "urn:www.belga.be:picturepackstore:186485094:thumbnail:false",
         )
         self.assertEqual(video["renditions"]["thumbnail"]["filename"], "186485094.jpeg")
         self.assertEqual(
             video["renditions"]["viewImage"]["belga-urn"],
-            "urn:www.belga.be:picturepackvideostore:186485094:preview",
+            "urn:www.belga.be:picturepackstore:186485094:preview:false",
         )
+        self.assertEqual(video["renditions"]["viewImage"]["filename"], "186485094.jpeg")

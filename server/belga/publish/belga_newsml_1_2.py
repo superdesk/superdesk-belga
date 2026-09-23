@@ -856,11 +856,18 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
             if provider and not hasattr(provider, "GALLERY_URN"):
                 if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
                     belga_id = media_item[GUID_FIELD].split(":")[-1]
-                    urn_template = (
-                        provider.VIDEO_URN
-                        if is_video and hasattr(provider, "VIDEO_URN")
-                        else provider.IMAGE_URN
-                    )
+                    if (
+                        is_video
+                        and key == "original"
+                        and hasattr(provider, "VIDEO_URN")
+                    ):
+                        # the video clip itself
+                        urn_template = provider.VIDEO_URN
+                    elif is_video and hasattr(provider, "VIDEO_IMAGE_URN"):
+                        # still images (thumbnail/preview) associated with the video
+                        urn_template = provider.VIDEO_IMAGE_URN
+                    else:
+                        urn_template = provider.IMAGE_URN
                     rendition["belga-urn"] = urn_template.format(
                         id=belga_id,
                         rendition=self.SD_BELGA_IMAGE_RENDITIONS_MAP[key],
