@@ -850,16 +850,30 @@ class BelgaNewsML12Formatter(NewsML12Formatter):
         :type media_item: dict
         """
         provider = get_provider_by_guid(media_item.get(GUID_FIELD, ""))
+        is_video = media_item.get(ITEM_TYPE) == CONTENT_TYPE.VIDEO
         for key, rendition in media_item.get("renditions", {}).items():
-            # rendition is from Belga image search provider
+            # rendition is from Belga image/video search provider
             if provider and not hasattr(provider, "GALLERY_URN"):
                 if key in self.SD_BELGA_IMAGE_RENDITIONS_MAP:
                     belga_id = media_item[GUID_FIELD].split(":")[-1]
-                    rendition["belga-urn"] = provider.IMAGE_URN.format(
+                    if (
+                        is_video
+                        and key == "original"
+                        and hasattr(provider, "VIDEO_URN")
+                    ):
+                        # the video clip itself
+                        urn_template = provider.VIDEO_URN
+                    elif is_video and hasattr(provider, "VIDEO_IMAGE_URN"):
+                        # still images (thumbnail/preview) associated with the video
+                        urn_template = provider.VIDEO_IMAGE_URN
+                    else:
+                        urn_template = provider.IMAGE_URN
+                    rendition["belga-urn"] = urn_template.format(
                         id=belga_id,
                         rendition=self.SD_BELGA_IMAGE_RENDITIONS_MAP[key],
                     )
-                    rendition["filename"] = "{}.jpeg".format(belga_id)
+                    ext = "mp4" if is_video and key == "original" else "jpeg"
+                    rendition["filename"] = "{}.{}".format(belga_id, ext)
             # rendition is from Belga coverage search provider
             elif provider:
                 belga_id = media_item[GUID_FIELD].split(":")[-1]

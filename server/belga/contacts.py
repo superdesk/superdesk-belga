@@ -6,53 +6,15 @@ import logging
 import superdesk
 
 from flask import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from urllib.parse import urljoin
 from superdesk.utils import ListCursor
+
+from .keycloak import KeycloakAuth
 
 logger = logging.getLogger(__name__)
 
 BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
-
-
-class KeycloakAuth:
-    """Handles Keycloak authentication and token management."""
-
-    def __init__(self, endpoint: str, client_id: str, client_secret: str):
-        self.endpoint = endpoint
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self._token = None
-        self._token_expiry = None
-
-    def get_token(self) -> str:
-        """Get a valid access token"""
-        if (
-            not self._token
-            or not self._token_expiry
-            or datetime.now() >= self._token_expiry
-        ):
-            self._fetch_new_token()
-
-        assert self._token is not None, "Access token was not fetched"
-        return self._token
-
-    def _fetch_new_token(self):
-        """Fetch new token from Keycloak."""
-        data = {
-            "grant_type": "client_credentials",
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
-        }
-        response = requests.post(self.endpoint, data=data, verify=False)
-        response.raise_for_status()
-
-        token_data = response.json()
-        self._token = token_data["access_token"]
-        # Set expiry 5 minutes before actual expiry to be safe
-        self._token_expiry = datetime.now() + timedelta(
-            seconds=token_data["expires_in"] - 300
-        )
 
 
 class Contact(TypedDict, total=False):
@@ -154,7 +116,9 @@ def parse_contact(contact) -> Contact:
 
 class BelgaContactsProxy(superdesk.Service):
 
-    def __init__(self, url):
+    def __init__(
+        self, url, keycloak_endpoint, keycloak_client_id, keycloak_client_secret
+    ):
         self.base = url
         self.count = 50
         self.timeout = 30
@@ -162,9 +126,9 @@ class BelgaContactsProxy(superdesk.Service):
 
         # Initialize Keycloak auth
         self.auth = KeycloakAuth(
-            endpoint=os.environ.get("BELGA_KEYCLOAK_ENDPOINT"),
-            client_id=os.environ.get("BELGA_KEYCLOAK_CLIENT_ID"),
-            client_secret=os.environ.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
+            endpoint=keycloak_endpoint,
+            client_id=keycloak_client_id,
+            client_secret=keycloak_client_secret,
         )
 
     def _get_headers(self):
@@ -263,7 +227,10 @@ def init_app(_app):
             return
 
         superdesk.resources["contacts"].service = BelgaContactsProxy(
-            os.environ["BELGA_CONTACTS_URL"]
+            os.environ["BELGA_CONTACTS_URL"],
+            _app.config["BELGA_KEYCLOAK_ENDPOINT"],
+            _app.config["BELGA_KEYCLOAK_CLIENT_ID"],
+            _app.config["BELGA_KEYCLOAK_CLIENT_SECRET"],
         )
         _app.client_config.update(
             {
