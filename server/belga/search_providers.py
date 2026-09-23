@@ -218,6 +218,8 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
     # videos returned by this provider use a different guid prefix and urn scheme
     VIDEO_GUID_PREFIX = "urn:belga.be:picturepackmedia:"
     VIDEO_URN = "urn:www.belga.be:picturepackvideostore:{id}:{rendition}"
+    # still images (thumbnail/preview) associated with a video use `:false` instead of `:true`
+    VIDEO_IMAGE_URN = "urn:www.belga.be:picturepackstore:{id}:{rendition}:false"
 
     label = "Belga Image v2"
     base_url = "https://belga-websvc.picturepack.com/belgaimage-api/"
