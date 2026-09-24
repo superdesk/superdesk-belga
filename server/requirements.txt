@@ -186,9 +186,7 @@ oauthlib==3.3.1
 orderly-set==5.5.0
     # via deepdiff
 packaging==26.2
-    # via
-    #   gunicorn
-    #   kombu
+    # via kombu
 pillow==11.2.1
     # via
     #   reportlab
@@ -216,7 +214,7 @@ pymongo==3.11.4
     #   eve
     #   mongolock
     #   superdesk-core
-pyparsing==3.3.2
+pyparsing==3.3.3
     # via
     #   -r requirements.in
     #   httplib2
