@@ -15,6 +15,6 @@
         "@superdesk/build-tools": "^1.0.19"
     },
     "volta": {
-        "node": "22.22.0"
+        "node": "22.23.3"
     }
 }
