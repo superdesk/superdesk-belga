@@ -237,7 +237,6 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         }
 
     def api_get(self, endpoint, params):
-        print("params", params)
         if app.config.get("BELGA_IMAGE_LIMIT") and not any(
             [param in params for param in ["c", "h", "e"]]
         ):
@@ -255,13 +254,10 @@ class BelgaImageV2SearchProvider(BelgaImageSearchProvider):
         """Extend base parameter parsing with video support."""
         api_params = super().parse_search_params(query, params)
 
-        if app.config.get("BELGA_VIDEO_ENABLED", False):
-            if params and params.get("objecttypes"):
-                api_params["o"] = params["objecttypes"]
-            else:
-                api_params["o"] = "0"
+        if params and params.get("objecttypes"):
+            api_params["o"] = params["objecttypes"]
         else:
-            api_params["o"] = "0"
+            api_params.pop("o", None)
 
         return api_params
 
