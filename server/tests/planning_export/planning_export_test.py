@@ -1408,6 +1408,321 @@ class PlanningExportTests(TestCase):
             "All-day event should not show time",
         )
 
+    async def test_bilingual_events_with_coverages_advisory_export_tomorrow(self):
+        """Test the bilingual events advisory template with various scenarios"""
+        test_contact_id = ObjectId()
+        test_contact = {
+            "_id": test_contact_id,
+            "first_name": "John",
+            "last_name": "Doe",
+            "organisation": "Test Org",
+            "job_title": "Media Contact",
+            "contact_email": ["jdoe@test.org"],
+            "contact_phone": [{"number": "123456789", "public": True}],
+            "mobile": [{"number": "987654321", "public": True}],
+            "website": "test.org",
+        }
+        self.app.data.insert("contacts", [test_contact])
+        desk_nl = ObjectId()
+        desk_fr = ObjectId()
+        test_desks = [
+            {"_id": desk_nl, "desk_language": "nl", "name": "Test Desk NL"},
+            {"_id": desk_fr, "desk_language": "fr", "name": "Test Desk FR"},
+        ]
+        self.app.data.remove(
+            "desks", {"name": {"$in": ["Test Desk NL", "Test Desk FR"]}}
+        )
+        self.app.data.insert("desks", test_desks)
+
+        event_1_id = f"event_1_{ObjectId()}"
+        event_2_id = f"event_2_{ObjectId()}"
+        event_3_id = f"event_3_{ObjectId()}"
+
+        bilingual_events = [
+            {
+                "_id": event_1_id,
+                "name": "Test Event NL",
+                "slugline": "test-event-nl",
+                "definition_long": "Dutch description of the event",
+                "dates": {
+                    "start": datetime.datetime(
+                        2024, 4, 22, 9, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2024, 4, 22, 17, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [{"qcode": "general", "name": "General"}],
+                "location": [
+                    {
+                        "name": "Brussels",
+                        "address": {"city": "Brussels", "country": "Belgium"},
+                    }
+                ],
+                "links": ["http://test-event.com"],
+                "event_contact_info": [str(test_contact_id)],
+                "translations": [
+                    {"field": "name", "language": "fr", "value": "Test Event FR"},
+                    {
+                        "field": "definition_long",
+                        "language": "fr",
+                        "value": "French description of the event",
+                    },
+                ],
+                "coverages": [
+                    {
+                        "coverage_id": "cov1",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    },
+                    {
+                        "coverage_id": "cov2",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
+                    },
+                    {
+                        "coverage_id": "cov3",
+                        "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    },
+                ],
+            },
+            {
+                "_id": event_2_id,
+                "name": "All Day Event NL",
+                "slugline": "all-day-event",
+                "definition_long": "This is an all-day event in Dutch",
+                "dates": {
+                    "start": datetime.datetime(
+                        2024, 4, 22, 0, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2024, 4, 22, 23, 59, 59, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [{"qcode": "politics", "name": "Politics"}],
+                "location": [
+                    {
+                        "name": "Brussels",
+                        "address": {"city": "Brussels", "country": "Belgium"},
+                    }
+                ],
+                "links": ["http://allday-event.com"],
+                "event_contact_info": [str(test_contact_id)],
+                "translations": [
+                    {
+                        "field": "name",
+                        "language": "fr",
+                        "value": "All Day Event FR",
+                    },
+                    {
+                        "field": "definition_long",
+                        "language": "fr",
+                        "value": "This is an all-day event in French",
+                    },
+                ],
+                "coverages": [
+                    {
+                        "coverage_id": "cov4",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    },
+                ],
+            },
+            {
+                "_id": event_3_id,
+                "name": "Single Language Event",
+                "slugline": "single-language",
+                "definition_long": "Event with only one language",
+                "dates": {
+                    "start": datetime.datetime(
+                        2024, 4, 22, 14, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2024, 4, 22, 16, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [{"qcode": "economy", "name": "Economy"}],
+                "location": [
+                    {
+                        "name": "Antwerp",
+                        "address": {"city": "Antwerp", "country": "Belgium"},
+                    }
+                ],
+                "links": ["http://single-event.com"],
+                "event_contact_info": [str(test_contact_id)],
+                # No translations - should fall back to default language
+                "coverages": [
+                    {
+                        "coverage_id": "cov5",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    },
+                    {
+                        "coverage_id": "cov6",
+                        "planning": {"g2_content_type": "video"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
+                    },
+                ],
+            },
+        ]
+
+        await test_utils.post_items("events", bilingual_events)
+
+        bilingual_data = await render_template(
+            "archived/bilingual_news_events_tommorrow.html",
+            items=bilingual_events,
+            app=self.app,
+        )
+
+        self.assertIn(
+            "<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen",
+            bilingual_data,
+            "Dutch introduction should be present",
+        )
+        self.assertIn(
+            "<h2>Voici l'agenda Belga des événements belges et internationaux",
+            bilingual_data,
+            "French introduction should be present",
+        )
+
+        self.assertIn(
+            "<h3>General</h3>",
+            bilingual_data,
+            "General calendar section should be present",
+        )
+        self.assertIn(
+            "<h3>Politics</h3>",
+            bilingual_data,
+            "Politics calendar section should be present",
+        )
+        self.assertIn(
+            "<h3>Economy</h3>",
+            bilingual_data,
+            "Economy calendar section should be present",
+        )
+
+        self.assertIn(
+            "<p>Test Event NL</p>", bilingual_data, "Dutch title should be present"
+        )
+        self.assertIn(
+            "<p>Test Event FR</p>", bilingual_data, "French title should be present"
+        )
+        self.assertIn(
+            "<p>Dutch description of the event</p>",
+            bilingual_data,
+            "Dutch description should be present",
+        )
+        self.assertIn(
+            "<p>French description of the event</p>",
+            bilingual_data,
+            "French description should be present",
+        )
+
+        self.assertIn(
+            "<p>All Day Event NL</p>",
+            bilingual_data,
+            "All-day Dutch title should be present",
+        )
+        self.assertIn(
+            "<p>All Day Event FR</p>",
+            bilingual_data,
+            "All-day French title should be present",
+        )
+        self.assertNotIn(
+            "00:00 - 23:59",
+            bilingual_data,
+            "All-day events should not show 00:00-23:59 time",
+        )
+
+        self.assertIn(
+            "11:00 - 19:00",
+            bilingual_data,
+            "Regular events should show specific time range",
+        )
+        self.assertIn(
+            "16:00 - 18:00",
+            bilingual_data,
+            "Afternoon events should show correct time range",
+        )
+
+        self.assertIn(
+            "Test Org - John Doe - Media Contact - jdoe@test.org - 123456789 - 987654321 - test.org",
+            bilingual_data,
+            "Contact information should be present",
+        )
+
+        self.assertIn(
+            "Brussels, Belgium",
+            bilingual_data,
+            "Location information should be present",
+        )
+        self.assertIn(
+            "Antwerp, Belgium",
+            bilingual_data,
+            "Second location should be present",
+        )
+
+        self.assertIn(
+            'href="http://test-event.com"',
+            bilingual_data,
+            "Event links should be present",
+        )
+        self.assertIn(
+            'href="http://allday-event.com"',
+            bilingual_data,
+            "All-day event links should be present",
+        )
+
+        general_index = bilingual_data.find("<h3>General</h3>")
+        politics_index = bilingual_data.find("<h3>Politics</h3>")
+        economy_index = bilingual_data.find("<h3>Economy</h3>")
+
+        self.assertLess(
+            general_index, politics_index, "General should come before Politics"
+        )
+        self.assertLess(
+            politics_index, economy_index, "Politics should come before Economy"
+        )
+
+        politics_section = bilingual_data.split("<h3>Politics</h3>")[1].split("<h3>")[0]
+        self.assertNotIn(
+            "00:00 - 23:59",
+            politics_section,
+            "All-day event should not show time",
+        )
+
     async def test_internal_bilingual_events_advisory_export_tomorrow(self):
         """Test the internal bilingual events advisory template with usernames and full desk names"""
         user_nl_id = ObjectId()
@@ -1652,6 +1967,245 @@ class PlanningExportTests(TestCase):
             planning_3_id,
         ]
         bilingual_events[1]["planning_ids"] = [planning_4_id]
+
+        internal_data = await render_template(
+            "archived/internal_bilingual_news_events_tomorrow.html",
+            items=bilingual_events,
+            app=self.app,
+        )
+
+        self.assertIn(
+            f"<p>BELGA TEXT N (PLANNED) BY TEST DESK NL {timestamp}</p>",
+            internal_data,
+            "Dutch text coverage should show full desk name in UPPERCASE when no direct user",
+        )
+        self.assertIn(
+            f"<p>BELGA TEXT F (ON MERIT) BY TEST DESK FR {timestamp}</p>",
+            internal_data,
+            "French text coverage should show full desk name in UPPERCASE when no direct user",
+        )
+        self.assertIn(
+            f"<p>BELGA PICTURE (PLANNED) BY PICTURE DESK {timestamp}</p>",
+            internal_data,
+            "Picture coverage should show full desk name in UPPERCASE when no direct user",
+        )
+        self.assertIn(
+            "<p>BELGA TEXT N (PLANNED) BY RNL</p>",
+            internal_data,
+            "Direct user assignment should show username",
+        )
+        self.assertIn(
+            "<p>BELGA VIDEO (ON MERIT) BY PHOTO</p>",
+            internal_data,
+            "Video coverage with direct user assignment should show username",
+        )
+
+        self.assertIn(
+            "<h2>Dit is de Belga-agenda van de Belgische en internationale gebeurtenissen",
+            internal_data,
+            "Dutch introduction should be present",
+        )
+        self.assertIn(
+            "<h2>Voici l'agenda Belga des événements belges et internationaux",
+            internal_data,
+            "French introduction should be present",
+        )
+
+    async def test_internal_bilingual_event_with_coverages_advisory_export_tomorrow(self):
+        """Test the internal bilingual events advisory template with usernames and full desk names"""
+        user_nl_id = ObjectId()
+        user_fr_id = ObjectId()
+        user_picture_id = ObjectId()
+
+        timestamp = str(int(datetime.datetime.now().timestamp()))[-6:]
+        test_users = [
+            {
+                "_id": user_nl_id,
+                "username": f"reporternl_{timestamp}",
+                "sign_off": "RNL",
+                "display_name": "Reporter NL",
+                "email": f"reporter.nl_{timestamp}@test.com",
+            },
+            {
+                "_id": user_fr_id,
+                "username": f"reporterfr_{timestamp}",
+                "sign_off": "RFR",
+                "display_name": "Reporter FR",
+                "email": f"reporter.fr_{timestamp}@test.com",
+            },
+            {
+                "_id": user_picture_id,
+                "username": f"photographer_{timestamp}",
+                "sign_off": "PHOTO",
+                "display_name": "Photographer",
+                "email": f"photo_{timestamp}@test.com",
+            },
+        ]
+
+        self.app.data.insert("users", test_users)
+
+        desk_nl = ObjectId()
+        desk_fr = ObjectId()
+        desk_picture = ObjectId()
+
+        test_desks = [
+            {
+                "_id": desk_nl,
+                "desk_language": "nl",
+                "name": f"Test Desk NL {timestamp}",
+                "members": [{"user": user_nl_id}],
+            },
+            {
+                "_id": desk_fr,
+                "desk_language": "fr",
+                "name": f"Test Desk FR {timestamp}",
+                "members": [{"user": user_fr_id}],
+            },
+            {
+                "_id": desk_picture,
+                "desk_language": "nl",
+                "name": f"Picture Desk {timestamp}",
+                "members": [{"user": user_picture_id}],
+            },
+        ]
+        self.app.data.remove(
+            "desks",
+            {
+                "name": {
+                    "$in": [
+                        f"Test Desk NL {timestamp}",
+                        f"Test Desk FR {timestamp}",
+                        f"Picture Desk {timestamp}",
+                    ]
+                }
+            },
+        )
+        self.app.data.insert("desks", test_desks)
+
+        event_1_id = f"event_1_{ObjectId()}"
+        event_2_id = f"event_2_{ObjectId()}"
+
+        bilingual_events = [
+            {
+                "_id": event_1_id,
+                "name": "Test Event with User Assignment",
+                "slugline": "test-event-users",
+                "definition_long": "Event with user assignments",
+                "dates": {
+                    "start": datetime.datetime(
+                        2024, 4, 22, 9, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2024, 4, 22, 17, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [{"qcode": "general", "name": "General"}],
+                "location": [
+                    {
+                        "name": "Brussels",
+                        "address": {"city": "Brussels", "country": "Belgium"},
+                    }
+                ],
+                "translations": [
+                    {
+                        "field": "name",
+                        "language": "fr",
+                        "value": "Test Event FR avec utilisateurs",
+                    },
+                    {
+                        "field": "definition_long",
+                        "language": "fr",
+                        "value": "Événement avec assignation d'utilisateurs",
+                    },
+                ],
+                "coverages": [
+                    {
+                        "coverage_id": "cov1",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    },
+                    {
+                        "coverage_id": "cov2",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
+                    },
+                    {
+                        "coverage_id": "cov3",
+                        "planning": {"g2_content_type": "picture"},
+                        "assigned_to": {"desk": desk_picture},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    }
+                ],
+            },
+            {
+                "_id": event_2_id,
+                "name": "Event with Direct User Assignment",
+                "slugline": "direct-user-event",
+                "definition_long": "Event with direct user assignment in coverage",
+                "dates": {
+                    "start": datetime.datetime(
+                        2024, 4, 22, 14, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "end": datetime.datetime(
+                        2024, 4, 22, 16, 0, 0, tzinfo=datetime.timezone.utc
+                    ),
+                    "tz": "Europe/Brussels",
+                },
+                "calendars": [{"qcode": "politics", "name": "Politics"}],
+                "location": [
+                    {
+                        "name": "Brussels",
+                        "address": {"city": "Brussels", "country": "Belgium"},
+                    }
+                ],
+                "translations": [
+                    {
+                        "field": "name",
+                        "language": "fr",
+                        "value": "Événement avec assignation directe",
+                    },
+                ],
+                "coverages": [
+                    {
+                        "coverage_id": "cov4",
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"user": user_nl_id, "desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
+                    },
+                    {
+                        "coverage_id": "cov5",
+                        "planning": {"g2_content_type": "video"},
+                        "assigned_to": {"user": user_picture_id},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
+                    },
+                ]
+            },
+        ]
+
+        await test_utils.post_items("events", bilingual_events)
 
         internal_data = await render_template(
             "archived/internal_bilingual_news_events_tomorrow.html",
