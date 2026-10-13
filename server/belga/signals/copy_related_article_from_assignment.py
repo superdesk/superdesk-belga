@@ -3,7 +3,8 @@ import logging
 
 from superdesk import get_resource_service
 from apps.search_providers.proxy import PROXY_ENDPOINT
-from planning.types import Planning, Assignment, EventRelatedItem
+
+from planning.types import Planning, Assignment, EventRelatedItem, PlanningItemType
 from planning.utils import get_related_event_items_for_planning_async
 
 
@@ -32,15 +33,21 @@ def _get_related_content_field_to_use(content_profile: Dict[str, Any]) -> Option
     return related_content_field
 
 
-async def _get_related_items_from_planning(
+async def _get_related_items_from_planning_or_event(
     planning: Planning, language: Optional[str] = None
 ) -> List[EventRelatedItem]:
 
-    try:
-        event = (await get_related_event_items_for_planning_async(planning, "primary"))[
-            0
-        ]
-    except (TypeError, IndexError):
+    item_type = planning.get("type")
+    if item_type == PlanningItemType.EVENT:
+        event = planning
+    elif item_type == PlanningItemType.PLANNING:
+        try:
+            event = (
+                await get_related_event_items_for_planning_async(planning, "primary")
+            )[0]
+        except (TypeError, IndexError):
+            event = None
+    else:
         event = None
 
     if not event:
@@ -93,7 +100,7 @@ async def on_assignment_start_working(
         return
 
     # 2. Get list of related items, based on language of the content item
-    related_items = await _get_related_items_from_planning(
+    related_items = await _get_related_items_from_planning_or_event(
         planning, item.get("language")
     )
     if not related_items:

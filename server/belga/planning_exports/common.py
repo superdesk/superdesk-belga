@@ -7,6 +7,7 @@ from superdesk.core import get_config
 from typing import Union as _Union
 from datetime import date as _date_type, datetime as _datetime_type
 
+from planning.types import PlanningItemType
 from planning.utils import get_related_event_items_for_planning_async
 
 ADVISORY_TIMEZONE = "Europe/Brussels"
@@ -403,26 +404,31 @@ def is_editorial_calendar(item):
     return False
 
 
-async def get_advisory_weekday_date(
-    planning_item, planning_service=None, event_service=None
-):
+async def get_advisory_weekday_date(planning_item):
     """Get weekday/date of planning, preferring linked event date."""
-    if event_service is None:
-        event_service = get_resource_service("events")
-    if planning_service is None:
-        planning_service = get_resource_service("planning")
+    planning_service = get_resource_service("planning")
 
-    try:
-        event_item = (
-            await get_related_event_items_for_planning_async(planning_item, "primary")
-        )[0]
-    except (TypeError, IndexError):
-        event_item = None
+    item_type = planning_item.get("type")
+    if item_type == PlanningItemType.EVENT:
+        event_item = planning_item
+        planning_item = None
+    elif item_type == PlanningItemType.PLANNING:
+        planning_item = await planning_service.find_one_async(
+            req=None, _id=planning_item["_id"]
+        )
+        if not planning_item:
+            return ""
 
-    planning_item = await planning_service.find_one_async(
-        req=None, _id=planning_item["_id"]
-    )
-    if not planning_item:
+        try:
+            event_item = (
+                await get_related_event_items_for_planning_async(
+                    planning_item, "primary"
+                )
+            )[0]
+        except (TypeError, IndexError):
+            event_item = None
+    else:
+        # Unsupported item type
         return ""
 
     scheduled, _, tz = get_planning_schedule_info(planning_item, event_item)
@@ -549,20 +555,29 @@ def sort_calendar_groups(calendar_groups):
 
 
 def get_planning_schedule_info(
-    planning,
-    event_item=None,
-    fallback_to_planning_if_event_dates_missing=True,
+    planning: dict | None = None, event_item: dict | None = None
 ):
     """Get schedule info for planning exports.
 
     Returns a tuple: (scheduled, display_dates, tz)
     - If event_item has dates.start, event dates are used.
-    - If event_item exists without dates.start, fallback behavior is configurable.
+    - If event_item exists without dates.start.
     - Otherwise, falls back to coverage scheduled / planning_date.
     """
-    event_dates = (event_item or {}).get("dates") or {}
+    if planning is None:
+        planning = {}
+    if event_item is None:
+        event_item = {}
+
+    if not planning and not event_item:
+        return (
+            None,
+            {"start": None, "end": None, "tz": ADVISORY_TIMEZONE},
+            ADVISORY_TIMEZONE,
+        )
 
     if event_item:
+        event_dates = event_item.get("dates") or {}
         tz = event_dates.get("tz") or ADVISORY_TIMEZONE
         event_start = event_dates.get("start")
         if event_start:
@@ -575,9 +590,6 @@ def get_planning_schedule_info(
                 },
                 tz,
             )
-
-        if not fallback_to_planning_if_event_dates_missing:
-            return None, {"start": None, "end": None, "tz": tz}, tz
 
     scheduled = planning.get("planning_date")
     for coverage in planning.get("coverages", []):
