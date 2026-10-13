@@ -2011,7 +2011,9 @@ class PlanningExportTests(TestCase):
             "French introduction should be present",
         )
 
-    async def test_internal_bilingual_event_with_coverages_advisory_export_tomorrow(self):
+    async def test_internal_bilingual_event_with_coverages_advisory_export_tomorrow(
+        self,
+    ):
         """Test the internal bilingual events advisory template with usernames and full desk names"""
         user_nl_id = ObjectId()
         user_fr_id = ObjectId()
@@ -2149,7 +2151,7 @@ class PlanningExportTests(TestCase):
                             "name": "coverage intended",
                             "label": "Planned",
                         },
-                    }
+                    },
                 ],
             },
             {
@@ -2201,7 +2203,7 @@ class PlanningExportTests(TestCase):
                             "label": "On merit",
                         },
                     },
-                ]
+                ],
             },
         ]
 
