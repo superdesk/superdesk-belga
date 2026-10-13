@@ -3,6 +3,8 @@ import datetime
 
 import lxml.etree
 
+from superdesk.tests import utils as test_utils
+
 from belga.io.feed_parsers.belga_planning_ml import BelgaPlanningMLParser
 from tests import TestCase
 
@@ -30,7 +32,10 @@ class BelgaPlanningMLTestCase(TestCase):
         self.event = {
             "_id": "urn:event:123",
             "type": "event",
-            "dates": {"start": event_start},
+            "dates": {
+                "start": event_start,
+                "end": event_start + datetime.timedelta(hours=2),
+            },
             "language": "en",
             "languages": ["fr", "nl"],
             "name": "Event Name",
@@ -42,7 +47,7 @@ class BelgaPlanningMLTestCase(TestCase):
         }
 
         # Store the linked Event so the parser can retrieve it during ingest
-        self.app.data.insert("events", [self.event])
+        await test_utils.post_items("events", [self.event])
         await self.parse()
 
     async def test_parser(self):

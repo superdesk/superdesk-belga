@@ -1,8 +1,12 @@
 import datetime
 import json
-from superdesk.flask import render_template
-from app import get_app
+
 from bson import ObjectId
+
+from superdesk.flask import render_template
+from superdesk.tests import utils as test_utils
+
+from app import get_app
 from belga.planning_exports.format_news_events_tommorow_bilingual import (
     format_event_for_tommorow_bilingual,
 )
@@ -253,7 +257,7 @@ class PlanningExportTests(TestCase):
                 "5ab491271d41c88e98ad9336",
                 "6618415a1704a42950a4eb62",
             ],
-            "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
+            "planning_ids": ["planning_6618415a1704a42950a4eb64"],
         },
         {
             "calendars": [{"is_active": True, "name": "(7) Sports", "qcode": "sports"}],
@@ -289,7 +293,7 @@ class PlanningExportTests(TestCase):
                     "location": {"lon": -74.0060152, "lat": 40.7127281},
                 }
             ],
-            "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
+            "planning_ids": ["planning_6618415a1704a42950a4eb64"],
         },
         {
             "calendars": [
@@ -325,7 +329,7 @@ class PlanningExportTests(TestCase):
                     "location": {"lon": -74.0060152, "lat": 40.7127281},
                 }
             ],
-            "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
+            "planning_ids": ["planning_6618415a1704a42950a4eb64"],
         },
         {
             "calendars": [
@@ -347,12 +351,29 @@ class PlanningExportTests(TestCase):
                 "5ab491271d41c88e98ad9336",
                 "6618415a1704a42950a4eb62",
             ],
-            "planning_ids": [ObjectId("6618415a1704a42950a4eb64")],
+            "planning_ids": ["planning_6618415a1704a42950a4eb64"],
         },
     ]
 
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
+        desk_id = ObjectId()
+        self.app.data.insert(
+            "desks", [{"_id": desk_id, "desk_language": "nl", "name": "Test Desk"}]
+        )
+        user_id = ObjectId()
+        self.app.data.insert(
+            "users",
+            [
+                {
+                    "_id": user_id,
+                    "username": "planninernl",
+                    "sign_off": "PNL",
+                    "display_name": "Planning NL",
+                    "email": "planning.nl@test.com",
+                }
+            ],
+        )
         contact = [
             {
                 "_id": ObjectId("5ab491271d41c88e98ad9336"),
@@ -399,8 +420,9 @@ class PlanningExportTests(TestCase):
         self.app.data.insert("contacts", contact)
         planning_item = [
             {
-                "_id": ObjectId("6618415a1704a42950a4eb64"),
+                "_id": "planning_6618415a1704a42950a4eb64",
                 "type": "planning",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov1",
@@ -417,8 +439,8 @@ class PlanningExportTests(TestCase):
                             "label": "On merit",
                         },
                         "assigned_to": {
-                            "user": "59f7f0881d41c88cab3f2a99",
-                            "desk": "desk1",
+                            "user": user_id,
+                            "desk": desk_id,
                             "state": "in_progress",
                         },
                     },
@@ -437,15 +459,15 @@ class PlanningExportTests(TestCase):
                             "label": "Planned",
                         },
                         "assigned_to": {
-                            "user": "59f7f0881d41c88cab3f2a99",
-                            "desk": "desk1",
+                            "user": user_id,
+                            "desk": desk_id,
                             "state": "in_progress",
                         },
                     },
                 ],
             }
         ]
-        self.app.data.insert("planning", planning_item)
+        await test_utils.post_items("planning", planning_item)
         location = [
             {
                 "_id": ObjectId("6694ed90bc490974d1ad3454"),
@@ -514,13 +536,6 @@ class PlanningExportTests(TestCase):
             },
         ]
         self.app.data.insert("locations", location)
-
-    # def tearDown(self):
-    #     # Clean up all documents in the contacts collection after each test
-    #     with self.app.app_context():
-    #         self.app.data.remove("contacts", {})
-    #         self.app.data.remove("planning", {})
-    #         self.app.data.remove("locations", {})
 
     async def test_export_week(self):
         events = self.events_for_week
@@ -779,24 +794,30 @@ class PlanningExportTests(TestCase):
         )
 
     async def test_planning_advisory_export_tomorrow(self):
-        self.app.data.insert("events", self.events_for_tommorow)
+        await test_utils.post_items("events", self.events_for_tommorow)
 
         # Insert plannings linked to those events
         planning_items = []
         for ev in self.events_for_tommorow:
             planning_items.append(
                 {
-                    "_id": ObjectId(),
+                    "_id": f"planning_{ObjectId()}",
                     "type": "planning",
                     "slugline": f"planning for {ev['name']}",
                     "description_text": "planning desc",
                     "dates": ev["dates"],
-                    "location": ev.get("location", {"name": "Unknown", "country": ""}),
+                    "location": ev.get(
+                        "location", [{"name": "Unknown", "country": ""}]
+                    ),
                     "links": ev.get("links", []),
                     "coverages": [
                         {
                             "planning": {"g2_content_type": "picture"},
-                            "news_coverage_status": {"label": "Planned"},
+                            "news_coverage_status": {
+                                "qcode": "ncostat:int",
+                                "name": "coverage intended",
+                                "label": "Planned",
+                            },
                         }
                     ],
                     "related_events": [
@@ -809,7 +830,7 @@ class PlanningExportTests(TestCase):
                     "language": "en",
                 }
             )
-        self.app.data.insert("planning", planning_items)
+        await test_utils.post_items("planning", planning_items)
 
         dutch_data = await render_template(
             "archived/dutch_planning_advisory_tomorrow.html",
@@ -890,15 +911,12 @@ class PlanningExportTests(TestCase):
             {"_id": desk_nl, "desk_language": "nl", "name": "Test Desk NL"},
             {"_id": desk_fr, "desk_language": "fr", "name": "Test Desk FR"},
         ]
-        self.app.data.remove(
-            "desks", {"name": {"$in": ["Test Desk NL", "Test Desk FR"]}}
-        )
         self.app.data.insert("desks", test_desks)
 
         # Planning items
-        planning_1_id = ObjectId()
-        planning_2_id = ObjectId()
-        planning_3_id = ObjectId()
+        planning_1_id = f"planning_1_{ObjectId()}"
+        planning_2_id = f"planning_2_{ObjectId()}"
+        planning_3_id = f"planning_3_{ObjectId()}"
 
         planning_items = [
             {
@@ -907,11 +925,17 @@ class PlanningExportTests(TestCase):
                 "slugline": "planning-dutch-text",
                 "name": "Test Event NL",
                 "description_text": "Dutch description of the event",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text", "desk": desk_nl},
-                        "news_coverage_status": {"label": "Planned"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
                 "related_events": None,
@@ -922,11 +946,17 @@ class PlanningExportTests(TestCase):
                 "slugline": "planning-french-text",
                 "name": "Test Event FR",
                 "description_text": "French description of the event",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text", "desk": desk_fr},
-                        "news_coverage_status": {"label": "On Merit"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On Merit",
+                        },
                     }
                 ],
                 "related_events": None,
@@ -937,18 +967,23 @@ class PlanningExportTests(TestCase):
                 "slugline": "planning-picture",
                 "name": "Picture Event",
                 "description_text": "Picture coverage description",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov2",
                         "planning": {"g2_content_type": "picture"},
-                        "news_coverage_status": {"label": "Planned"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
                 "related_events": None,
             },
         ]
 
-        self.app.data.insert("planning", planning_items)
+        await test_utils.post_items("planning", planning_items)
 
         bilingual_data = await render_template(
             "bilingual_planning_advisory_tomorrow.html",
@@ -972,22 +1007,6 @@ class PlanningExportTests(TestCase):
             bilingual_data,
             "French description should be present",
         )
-        self.assertIn(
-            "<p>BELGA TEXT N (PLANNED)</p>",
-            bilingual_data,
-            "Dutch text coverage should be tagged as TEXT N",
-        )
-        self.assertIn(
-            "<p>BELGA TEXT F (ON MERIT)</p>",
-            bilingual_data,
-            "French text coverage should be tagged as TEXT F",
-        )
-        self.assertIn(
-            "<p>BELGA PICTURE (PLANNED)</p>",
-            bilingual_data,
-            "Picture coverage should not have language tag",
-        )
-
         self.assertIn(
             "<p>BELGA TEXT N (PLANNED)</p>",
             bilingual_data,
@@ -1030,9 +1049,9 @@ class PlanningExportTests(TestCase):
         )
         self.app.data.insert("desks", test_desks)
 
-        event_1_id = ObjectId()
-        event_2_id = ObjectId()
-        event_3_id = ObjectId()
+        event_1_id = f"event_1_{ObjectId()}"
+        event_2_id = f"event_2_{ObjectId()}"
+        event_3_id = f"event_3_{ObjectId()}"
 
         bilingual_events = [
             {
@@ -1130,13 +1149,13 @@ class PlanningExportTests(TestCase):
             },
         ]
 
-        self.app.data.insert("events", bilingual_events)
+        await test_utils.post_items("events", bilingual_events)
 
-        planning_1_id = ObjectId()
-        planning_2_id = ObjectId()
-        planning_3_id = ObjectId()
-        planning_4_id = ObjectId()
-        planning_5_id = ObjectId()
+        planning_1_id = f"planning_1_{ObjectId()}"
+        planning_2_id = f"planning_2_{ObjectId()}"
+        planning_3_id = f"planning_3_{ObjectId()}"
+        planning_4_id = f"planning_4_{ObjectId()}"
+        planning_5_id = f"planning_5_{ObjectId()}"
 
         planning_items = [
             {
@@ -1148,11 +1167,13 @@ class PlanningExportTests(TestCase):
                 "coverages": [
                     {
                         "coverage_id": "cov1",
-                        "planning": {
-                            "g2_content_type": "text",
-                            "desk": desk_nl,
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
                         },
-                        "news_coverage_status": {"label": "Planned"},
                     }
                 ],
                 "related_events": [{"_id": event_1_id, "link_type": "primary"}],
@@ -1166,11 +1187,13 @@ class PlanningExportTests(TestCase):
                 "coverages": [
                     {
                         "coverage_id": "cov2",
-                        "planning": {
-                            "g2_content_type": "text",
-                            "desk": desk_fr,
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
                         },
-                        "news_coverage_status": {"label": "On Merit"},
                     }
                 ],
                 "related_events": [{"_id": event_1_id, "link_type": "primary"}],
@@ -1185,7 +1208,11 @@ class PlanningExportTests(TestCase):
                     {
                         "coverage_id": "cov3",
                         "planning": {"g2_content_type": "picture"},
-                        "news_coverage_status": {"label": "Planned"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
                 "related_events": [{"_id": event_1_id, "link_type": "primary"}],
@@ -1199,11 +1226,13 @@ class PlanningExportTests(TestCase):
                 "coverages": [
                     {
                         "coverage_id": "cov4",
-                        "planning": {
-                            "g2_content_type": "text",
-                            "desk": desk_nl,
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
                         },
-                        "news_coverage_status": {"label": "Planned"},
                     }
                 ],
                 "related_events": [{"_id": event_2_id, "link_type": "primary"}],
@@ -1217,43 +1246,43 @@ class PlanningExportTests(TestCase):
                 "coverages": [
                     {
                         "coverage_id": "cov5",
-                        "planning": {
-                            "g2_content_type": "text",
-                            "desk": desk_nl,
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
                         },
-                        "news_coverage_status": {"label": "Planned"},
                     },
                     {
                         "coverage_id": "cov6",
                         "planning": {"g2_content_type": "video"},
-                        "news_coverage_status": {"label": "On Merit"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
                     },
                 ],
                 "related_events": [{"_id": event_3_id, "link_type": "primary"}],
             },
         ]
 
-        self.app.data.insert("planning", planning_items)
-
-        self.app.data.update(
+        await test_utils.post_items("planning", planning_items)
+        await test_utils.patch_item(
             "events",
             event_1_id,
             {"planning_ids": [planning_1_id, planning_2_id, planning_3_id]},
-            bilingual_events[0],
         )
-
-        self.app.data.update(
+        await test_utils.patch_item(
             "events",
             event_2_id,
             {"planning_ids": [planning_4_id]},
-            bilingual_events[1],
         )
-
-        self.app.data.update(
+        await test_utils.patch_item(
             "events",
             event_3_id,
             {"planning_ids": [planning_5_id]},
-            bilingual_events[2],
         )
 
         bilingual_data = await render_template(
@@ -1450,8 +1479,8 @@ class PlanningExportTests(TestCase):
         )
         self.app.data.insert("desks", test_desks)
 
-        event_1_id = ObjectId()
-        event_2_id = ObjectId()
+        event_1_id = f"event_1_{ObjectId()}"
+        event_2_id = f"event_2_{ObjectId()}"
 
         bilingual_events = [
             {
@@ -1519,23 +1548,29 @@ class PlanningExportTests(TestCase):
             },
         ]
 
-        self.app.data.insert("events", bilingual_events)
+        await test_utils.post_items("events", bilingual_events)
 
-        planning_1_id = ObjectId()
-        planning_2_id = ObjectId()
-        planning_3_id = ObjectId()
-        planning_4_id = ObjectId()
+        planning_1_id = f"planning_1_{ObjectId()}"
+        planning_2_id = f"planning_2_{ObjectId()}"
+        planning_3_id = f"planning_3_{ObjectId()}"
+        planning_4_id = f"planning_4_{ObjectId()}"
 
         planning_items = [
             {
                 "_id": planning_1_id,
                 "type": "planning",
                 "slugline": "planning-desk-nl",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text", "desk": desk_nl},
-                        "news_coverage_status": {"label": "Planned"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
                 "related_events": [{"_id": event_1_id, "link_type": "primary"}],
@@ -1544,11 +1579,17 @@ class PlanningExportTests(TestCase):
                 "_id": planning_2_id,
                 "type": "planning",
                 "slugline": "planning-desk-fr",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov2",
-                        "planning": {"g2_content_type": "text", "desk": desk_fr},
-                        "news_coverage_status": {"label": "On Merit"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
                     }
                 ],
                 "related_events": [{"_id": event_1_id, "link_type": "primary"}],
@@ -1557,14 +1598,17 @@ class PlanningExportTests(TestCase):
                 "_id": planning_3_id,
                 "type": "planning",
                 "slugline": "planning-picture-desk",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov3",
-                        "planning": {
-                            "g2_content_type": "picture",
-                            "desk": desk_picture,
+                        "planning": {"g2_content_type": "picture"},
+                        "assigned_to": {"desk": desk_picture},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
                         },
-                        "news_coverage_status": {"label": "Planned"},
                     }
                 ],
                 "related_events": [{"_id": event_1_id, "link_type": "primary"}],
@@ -1573,25 +1617,34 @@ class PlanningExportTests(TestCase):
                 "_id": planning_4_id,
                 "type": "planning",
                 "slugline": "planning-direct-user",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov4",
-                        "planning": {"g2_content_type": "text", "desk": desk_nl},
-                        "assigned_to": {"user": user_nl_id},
-                        "news_coverage_status": {"label": "Planned"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"user": user_nl_id, "desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     },
                     {
                         "coverage_id": "cov5",
                         "planning": {"g2_content_type": "video"},
                         "assigned_to": {"user": user_picture_id},
-                        "news_coverage_status": {"label": "On Merit"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
                     },
                 ],
                 "related_events": [{"_id": event_2_id, "link_type": "primary"}],
             },
         ]
 
-        self.app.data.insert("planning", planning_items)
+        await test_utils.post_items("planning", planning_items)
 
         bilingual_events[0]["planning_ids"] = [
             planning_1_id,
@@ -1714,9 +1767,9 @@ class PlanningExportTests(TestCase):
         )
         self.app.data.insert("desks", test_desks)
 
-        planning_1_id = ObjectId()
-        planning_2_id = ObjectId()
-        planning_3_id = ObjectId()
+        planning_1_id = f"planning_1_{ObjectId()}"
+        planning_2_id = f"planning_2_{ObjectId()}"
+        planning_3_id = f"planning_3_{ObjectId()}"
 
         planning_items = [
             {
@@ -1725,16 +1778,27 @@ class PlanningExportTests(TestCase):
                 "slugline": "internal-planning-nl",
                 "name": "Internal Planning NL",
                 "description_text": "Dutch planning with user assignments",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text", "desk": desk_nl},
-                        "news_coverage_status": {"label": "Planned"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     },
                     {
                         "coverage_id": "cov2",
-                        "planning": {"g2_content_type": "text", "desk": desk_fr},
-                        "news_coverage_status": {"label": "On Merit"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
                     },
                 ],
                 "related_events": None,
@@ -1745,20 +1809,27 @@ class PlanningExportTests(TestCase):
                 "slugline": "internal-planning-mixed",
                 "name": "Internal Planning Mixed",
                 "description_text": "Planning with mixed coverage types",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov3",
-                        "planning": {"g2_content_type": "picture", "desk": desk_nl},
-                        "news_coverage_status": {"label": "Planned"},
+                        "planning": {"g2_content_type": "picture"},
+                        "assigned_to": {"desk": desk_nl},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     },
                     {
                         "coverage_id": "cov4",
-                        "planning": {
-                            "g2_content_type": "video",
-                            "desk": desk_video,
+                        "planning": {"g2_content_type": "video"},
+                        "assigned_to": {"user": user_video_id, "desk": desk_video},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
                         },
-                        "assigned_to": {"user": user_video_id},
-                        "news_coverage_status": {"label": "Planned"},
                     },
                 ],
                 "related_events": None,
@@ -1769,19 +1840,24 @@ class PlanningExportTests(TestCase):
                 "slugline": "internal-planning-fr",
                 "name": "Internal Planning FR",
                 "description_text": "French planning with direct user assignment",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov5",
-                        "planning": {"g2_content_type": "text", "desk": desk_fr},
-                        "assigned_to": {"user": user_fr_id},
-                        "news_coverage_status": {"label": "On Merit"},
+                        "planning": {"g2_content_type": "text"},
+                        "assigned_to": {"user": user_fr_id, "desk": desk_fr},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:notdec",
+                            "name": "coverage not decided yet",
+                            "label": "On merit",
+                        },
                     }
                 ],
                 "related_events": None,
             },
         ]
 
-        self.app.data.insert("planning", planning_items)
+        await test_utils.post_items("planning", planning_items)
 
         internal_data = await render_template(
             "internal_bilingual_planning_advisory_tomorrow.html",
@@ -1833,7 +1909,7 @@ class PlanningExportTests(TestCase):
         """
         events = [
             {
-                "_id": ObjectId(),
+                "_id": f"event_1_{ObjectId()}",
                 "name": "Later event",
                 "dates": {
                     "start": datetime.datetime(
@@ -1850,7 +1926,7 @@ class PlanningExportTests(TestCase):
                 "event_contact_info": [],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"event_2_{ObjectId()}",
                 "name": "Earlier event",
                 "dates": {
                     "start": datetime.datetime(
@@ -1885,7 +1961,7 @@ class PlanningExportTests(TestCase):
         """
         events = [
             {
-                "_id": ObjectId(),
+                "_id": f"event_1_{ObjectId()}",
                 "name": "Later event (internal)",
                 "dates": {
                     "start": datetime.datetime(
@@ -1902,7 +1978,7 @@ class PlanningExportTests(TestCase):
                 "event_contact_info": [],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"event_2_{ObjectId()}",
                 "name": "Earlier event (internal)",
                 "dates": {
                     "start": datetime.datetime(
@@ -1938,7 +2014,7 @@ class PlanningExportTests(TestCase):
           * Use French translations for the title (so FR name is not missing)
           * Render header date without leading zero, based on scheduled date
         """
-        planning_id = ObjectId()
+        planning_id = f"planning_1_{ObjectId()}"
         scheduled = datetime.datetime(2025, 11, 5, 10, 0, tzinfo=datetime.timezone.utc)
 
         planning_item = {
@@ -1946,6 +2022,7 @@ class PlanningExportTests(TestCase):
             "type": "planning",
             "name": "Base EN name",
             "description_text": "Base EN description",
+            "planning_date": scheduled,
             "translations": [
                 {"field": "name", "language": "nl", "value": "Naam NL"},
                 {"field": "name", "language": "fr", "value": "Nom FR"},
@@ -1967,13 +2044,17 @@ class PlanningExportTests(TestCase):
                         "g2_content_type": "text",
                         "scheduled": scheduled,
                     },
-                    "news_coverage_status": {"label": "Planned"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                 }
             ],
             "related_events": None,
         }
 
-        self.app.data.insert("planning", [planning_item])
+        await test_utils.post_items("planning", [planning_item])
 
         formatted = await format_planning_for_tomorrow_bilingual_internal(
             [planning_item]
@@ -2033,7 +2114,7 @@ class PlanningExportTests(TestCase):
             2025, 1, 10, 22, 59, 59, tzinfo=datetime.timezone.utc
         )
         all_day_event = {
-            "_id": ObjectId(),
+            "_id": f"event_1_{ObjectId()}",
             "name": "All Day Festival",
             "definition_long": "All day long",
             "dates": {
@@ -2041,7 +2122,7 @@ class PlanningExportTests(TestCase):
                 "end": all_day_end,
                 "tz": "Europe/Brussels",
             },
-            "calendars": [{"qcode": "general"}],
+            "calendars": [{"qcode": "general", "name": "General"}],
             "location": [
                 {
                     "name": "Brussels",
@@ -2057,7 +2138,7 @@ class PlanningExportTests(TestCase):
         )
         timed_end = datetime.datetime(2025, 1, 10, 16, 0, tzinfo=datetime.timezone.utc)
         timed_event = {
-            "_id": ObjectId(),
+            "_id": f"event_2_{ObjectId()}",
             "name": "Timed Briefing",
             "definition_long": "Happens in the afternoon",
             "dates": {
@@ -2065,7 +2146,7 @@ class PlanningExportTests(TestCase):
                 "end": timed_end,
                 "tz": "Europe/Brussels",
             },
-            "calendars": [{"qcode": "general"}],
+            "calendars": [{"qcode": "general", "name": "General"}],
             "location": [
                 {
                     "name": "Brussels",
@@ -2076,7 +2157,7 @@ class PlanningExportTests(TestCase):
             "planning_ids": [],
         }
 
-        self.app.data.insert("events", [all_day_event, timed_event])
+        await test_utils.post_items("events", [all_day_event, timed_event])
 
         events_html = await render_template(
             "archived/bilingual_news_events_tommorrow.html",
@@ -2098,7 +2179,7 @@ class PlanningExportTests(TestCase):
     async def test_bilingual_events_excludes_editorial_calendar(self):
         """Events with Editorial calendar must be excluded"""
         editorial_event = {
-            "_id": ObjectId(),
+            "_id": f"event_1_{ObjectId()}",
             "name": "Editorial Event",
             "definition_long": "Should never appear",
             "dates": {
@@ -2120,7 +2201,7 @@ class PlanningExportTests(TestCase):
         }
 
         normal_event = {
-            "_id": ObjectId(),
+            "_id": f"event_2_{ObjectId()}",
             "name": "Public Event",
             "definition_long": "Should appear",
             "dates": {
@@ -2149,10 +2230,11 @@ class PlanningExportTests(TestCase):
 
     async def test_bilingual_planning_excludes_editorial_event_link(self):
         """Planning linked to Editorial events must be excluded"""
-        editorial_event_id = ObjectId()
-        public_event_id = ObjectId()
+        editorial_event_id = f"event_1_{ObjectId()}"
+        public_event_id = f"event_2_{ObjectId()}"
 
-        self.app.data.insert(
+        # self.app.data.insert(
+        await test_utils.post_items(
             "events",
             [
                 {
@@ -2188,36 +2270,46 @@ class PlanningExportTests(TestCase):
 
         planning_items = [
             {
-                "_id": ObjectId(),
+                "_id": f"planning_1_{ObjectId()}",
                 "type": "planning",
                 "name": "Planning Editorial",
                 "description_text": "Should not appear",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov-editorial-1",
                         "planning": {"g2_content_type": "text"},
-                        "news_coverage_status": {"label": "Planned"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
                 "related_events": [{"_id": editorial_event_id, "link_type": "primary"}],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"planning_2_{ObjectId()}",
                 "type": "planning",
                 "name": "Planning Public",
                 "description_text": "Should appear",
+                "planning_date": "2029-10-12T14:00:00+0000",
                 "coverages": [
                     {
                         "coverage_id": "cov-public-1",
                         "planning": {"g2_content_type": "text"},
-                        "news_coverage_status": {"label": "Planned"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
                 "related_events": [{"_id": public_event_id, "link_type": "primary"}],
             },
         ]
 
-        self.app.data.insert("planning", planning_items)
+        await test_utils.post_items("planning", planning_items)
 
         html = await render_template(
             "bilingual_planning_advisory_tomorrow.html",
@@ -2231,8 +2323,8 @@ class PlanningExportTests(TestCase):
 
     async def test_belga_image_photo_planning_renders_picture_only(self):
         """Belga Image Photo Planning renders picture coverage and excludes text/video."""
-        event_id = ObjectId()
-        planning_id = ObjectId()
+        event_id = f"event_1_{ObjectId()}"
+        planning_id = f"planning_1_{ObjectId()}"
         user_id = ObjectId()
 
         user = {
@@ -2269,29 +2361,42 @@ class PlanningExportTests(TestCase):
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "text"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                 },
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "picture"},
-                    "news_coverage_status": {"label": "Planned"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                     "assigned_to": {"user": user_id},
                 },
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                 },
             ],
             "related_events": [{"_id": event_id, "link_type": "primary"}],
         }
 
-        self.app.data.insert("events", [event])
-        self.app.data.insert("planning", [planning])
+        await test_utils.post_items("events", [event])
+        await test_utils.post_items("planning", [planning])
 
-        self.app.data.update(
+        await test_utils.patch_item(
             "events",
             event_id,
             {"planning_ids": [planning_id]},
-            event,
         )
 
         html = await render_template(
@@ -2310,8 +2415,8 @@ class PlanningExportTests(TestCase):
 
     async def test_belga_image_video_planning_renders_video_only(self):
         """Belga Image Video Planning renders video coverage and excludes picture/text."""
-        event_id = ObjectId()
-        planning_id = ObjectId()
+        event_id = f"event_1_{ObjectId()}"
+        planning_id = f"planning_1_{ObjectId()}"
         user_id = ObjectId()
 
         user = {
@@ -2348,26 +2453,33 @@ class PlanningExportTests(TestCase):
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "picture"},
-                    "news_coverage_status": {"label": "Planned"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                 },
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
-                    "news_coverage_status": {"label": "On Merit"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:notdec",
+                        "name": "coverage not decided yet",
+                        "label": "On merit",
+                    },
                     "assigned_to": {"user": user_id},
                 },
             ],
             "related_events": [{"_id": event_id, "link_type": "primary"}],
         }
 
-        self.app.data.insert("events", [event])
-        self.app.data.insert("planning", [planning])
+        await test_utils.post_items("events", [event])
+        await test_utils.post_items("planning", [planning])
 
-        self.app.data.update(
+        await test_utils.patch_item(
             "events",
             event_id,
             {"planning_ids": [planning_id]},
-            event,
         )
 
         html = await render_template(
@@ -2395,10 +2507,10 @@ class PlanningExportTests(TestCase):
         }
         self.app.data.insert("users", [user])
 
-        event1_id = ObjectId()
-        planning1_id = ObjectId()
-        event2_id = ObjectId()
-        planning2_id = ObjectId()
+        event1_id = f"event_1_{ObjectId()}"
+        planning1_id = f"planning_1_{ObjectId()}"
+        event2_id = f"event_2_{ObjectId()}"
+        planning2_id = f"planning_2_{ObjectId()}"
 
         event1 = {
             "_id": event1_id,
@@ -2427,6 +2539,11 @@ class PlanningExportTests(TestCase):
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
                     "assigned_to": {"user": user_id},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                 },
             ],
             "related_events": [{"_id": event1_id, "link_type": "primary"}],
@@ -2459,25 +2576,28 @@ class PlanningExportTests(TestCase):
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
                     "assigned_to": {"user": user_id},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
                 },
             ],
             "related_events": [{"_id": event2_id, "link_type": "primary"}],
         }
 
-        self.app.data.insert("events", [event1, event2])
-        self.app.data.insert("planning", [planning1, planning2])
+        await test_utils.post_items("events", [event1, event2])
+        await test_utils.post_items("planning", [planning1, planning2])
 
-        self.app.data.update(
+        await test_utils.patch_item(
             "events",
             event1_id,
             {"planning_ids": [planning1_id]},
-            event1,
         )
-        self.app.data.update(
+        await test_utils.patch_item(
             "events",
             event2_id,
             {"planning_ids": [planning2_id]},
-            event2,
         )
 
         html = await render_template(
@@ -2495,40 +2615,55 @@ class PlanningExportTests(TestCase):
         )
 
     async def test_belga_image_photo_planning_event_ids_json(self):
-        photo_event_id = ObjectId()
-        video_event_id = ObjectId()
+        photo_event_id = f"event_1_{ObjectId()}"
+        video_event_id = f"event_2_{ObjectId()}"
 
         planning_items = [
             {
-                "_id": ObjectId(),
+                "_id": f"planning_1_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": photo_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"planning_2_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": photo_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"planning_3_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": video_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "video"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
@@ -2545,29 +2680,39 @@ class PlanningExportTests(TestCase):
         self.assertEqual(json.loads(output), [str(photo_event_id)])
 
     async def test_belga_image_video_planning_event_ids_json(self):
-        video_event_id = ObjectId()
-        photo_event_id = ObjectId()
+        video_event_id = f"event_1_{ObjectId()}"
+        photo_event_id = f"event_2_{ObjectId()}"
 
         planning_items = [
             {
-                "_id": ObjectId(),
+                "_id": f"planning_1_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": video_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "video"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"planning_2_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": photo_event_id, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
@@ -2584,60 +2729,80 @@ class PlanningExportTests(TestCase):
         self.assertEqual(json.loads(output), [str(video_event_id)])
 
     async def test_internal_bilingual_planning_advisory_tomorrow_event_ids_json(self):
-        event_id_1 = ObjectId()
-        event_id_2 = ObjectId()
-        event_id_internal = ObjectId()
+        event_id_1 = f"event_1_{ObjectId()}"
+        event_id_2 = f"event_2_{ObjectId()}"
+        event_id_internal = f"event_3_{ObjectId()}"
 
         planning_items = [
             {
-                "_id": ObjectId(),
+                "_id": f"planning_1_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": event_id_1, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "text"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             # Duplicate event reference - should be deduplicated
             {
-                "_id": ObjectId(),
+                "_id": f"planning_2_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": event_id_1, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "picture"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             {
-                "_id": ObjectId(),
+                "_id": f"planning_3_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": event_id_2, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "video"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             # Event with internal Calendar set must still be delivered
             {
-                "_id": ObjectId(),
+                "_id": f"planning_4_{ObjectId()}",
                 "type": "planning",
                 "related_events": [{"_id": event_id_internal, "link_type": "primary"}],
                 "coverages": [
                     {
                         "coverage_id": ObjectId(),
                         "planning": {"g2_content_type": "text"},
+                        "news_coverage_status": {
+                            "qcode": "ncostat:int",
+                            "name": "coverage intended",
+                            "label": "Planned",
+                        },
                     }
                 ],
             },
             # Planning item without an event_item should be skipped
             {
-                "_id": ObjectId(),
+                "_id": f"planning_5_{ObjectId()}",
                 "type": "planning",
                 "coverages": [],
             },

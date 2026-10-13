@@ -217,7 +217,9 @@ async def get_filtered_coverages(item, planning_service, desk_service, allowed_t
             desk_name = ""
             username = ""
 
-            desk_id = planning_info.get("desk")
+            desk_id = planning_info.get("desk") or coverage.get("assigned_to", {}).get(
+                "desk"
+            )
             if desk_id:
                 desk = await desk_service.find_one_async(req=None, _id=desk_id)
                 if desk:
