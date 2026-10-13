@@ -413,7 +413,7 @@ class CopyRelatedArticleFromAssignmentTestCase(TestCase):
         kwargs = dict(
             assignment={},
             planning=event,
-            item={},
+            item=item,
             content_profile=content_profile,
         )
         with mock.patch.object(
