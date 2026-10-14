@@ -537,7 +537,7 @@ class Belga360ArchiveSearchProvider(
         http_client = await self.http_session()
         async with http_client.get(self.url(endpoint), params=params) as resp:
             resp.raise_for_status()
-            return await resp.json()
+            return await resp.json(content_type=None)
 
     def _get_belga_date(self, date):
         try:

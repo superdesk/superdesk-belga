@@ -229,6 +229,15 @@ class Belga360ArchiveTestCase(TestCase):
 
         self.assertEqual("urn:belga.be:360archive:39670442", item["guid"])
 
+    @aioresponses()
+    async def test_api_get_with_incorrect_content_type(self, http_mock):
+        url = self.provider.base_url + self.provider.search_endpoint
+        http_mock.get(url, payload={"newsObjects": []}, content_type="text/plain")
+
+        result = await self.provider.api_get(self.provider.search_endpoint, {})
+
+        self.assertEqual({"newsObjects": []}, result)
+
     async def test_get_periods(self):
         arrow.now = MagicMock(return_value=arrow.get("2020-02-14"))
         day_period = self.provider._get_period("day")
