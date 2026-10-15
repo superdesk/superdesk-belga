@@ -386,10 +386,6 @@ class Belga360ArchiveSearchProvider(
         self._countries = None
         self.content_types = None
 
-    async def on_http_session_start(self, http_client: aiohttp.ClientSession):
-        # No auth required, but we'll use this to populate the content types
-        await self._load_content_types()
-
     async def _load_content_types(self):
         if self.content_types is not None:
             return
@@ -584,7 +580,7 @@ class Belga360ArchiveSearchProvider(
         label = profile.lower()
         if label == "short":
             label = "text"
-        if label not in self.content_types:
+        if self.content_types is None or label not in self.content_types:
             return None
         return label
 
@@ -592,6 +588,8 @@ class Belga360ArchiveSearchProvider(
         return assetType.lower() if assetType.lower() in MEDIA_TYPES else "text"
 
     async def format_list_item(self, data):
+        await self._load_content_types()
+
         guid = "%s%d" % (self.GUID_PREFIX, data["newsObjectId"])
         formatted_data = {
             "type": self.get_type(data.get("assetType", "text")),

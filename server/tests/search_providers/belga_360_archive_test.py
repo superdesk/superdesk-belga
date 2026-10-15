@@ -26,7 +26,6 @@ class Belga360ArchiveTestCase(TestCase):
         await super().asyncSetUp()
         self.provider = Belga360ArchiveSearchProvider(dict())
         self.app.data.insert("content_types", [{"_id": "text", "label": "text"}])
-        await self.provider._load_content_types()
         self.query = {
             "size": 50,
             "from": 50,
@@ -42,6 +41,11 @@ class Belga360ArchiveTestCase(TestCase):
     def test_instance(self):
         self.assertEqual("Belga 360 Archive", self.provider.label)
         self.assertIsInstance(self.provider, superdesk.SearchProvider)
+
+    def test_get_profile_when_content_types_are_unavailable(self):
+        self.provider.content_types = None
+
+        self.assertIsNone(self.provider._get_profile("Short"))
 
     @aioresponses()
     async def test_find_params(self, http_mock):
@@ -68,6 +72,7 @@ class Belga360ArchiveTestCase(TestCase):
         )
 
     async def test_format_list_item(self):
+        self.assertIsNone(self.provider.content_types)
         item = await self.provider.format_list_item(get_belga360_item()[0])
         guid = "urn:belga.be:360archive:39670442"
         self.assertEqual(item["type"], "text")
