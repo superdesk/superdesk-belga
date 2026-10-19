@@ -16,7 +16,10 @@ export const getEventDateContext = (eventItem?: IEventItem, planningItem?: IPlan
         !!eventItem?.dates?.all_day ||
         (!!eventItem?.dates?.start &&
             !!eventItem?.dates?.end &&
-            eventUtils.isEventAllDay(start, end, true));
+            eventUtils.isEventAllDay({
+                ...eventItem,
+                dates: {...eventItem.dates, start, end},
+            }));
 
     return {start, end, isAllDay};
 };

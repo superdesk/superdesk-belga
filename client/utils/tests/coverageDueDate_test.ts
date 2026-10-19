@@ -1,11 +1,21 @@
 import moment from 'moment-timezone';
+import {IEventItem, IPlanningItem} from 'superdesk-planning/client/interfaces';
 import {getEventDateContext, getCoverageDueDate} from '../coverageDueDate';
 
 jest.mock('superdesk-planning/client/utils', () => ({
     eventUtils: {
-        isEventAllDay: (start: moment.Moment, end: moment.Moment) =>
-            start.hour() === 0 && start.minute() === 0 &&
-            end.hour() === 23 && end.minute() === 59,
+        isEventAllDay: (item: IEventItem): boolean => {
+            if (item.dates?.all_day === true) {
+                return true;
+            }
+
+            const start = moment(item.dates?.start);
+            const end = moment(item.dates?.end);
+
+            return start.isSame(end, 'day') &&
+                start.isSame(start.clone().startOf('day'), 'minute') &&
+                end.isSame(end.clone().endOf('day'), 'minute');
+        },
     },
     timeUtils: {
         getDateInRemoteTimeZone: (date: moment.MomentInput, tz: string) =>
@@ -60,6 +70,36 @@ describe('coverageDueDate', () => {
         const result = getCoverageDueDate(planning, event);
 
         expect(result?.format()).toBe(moment.tz('2026-07-01T20:00:00', tz).format());
+    });
+
+    it.each(timezones)('infers all-day dates in $name timezone without an all_day flag', ({tz}) => {
+        const event = {
+            dates: {
+                start: utc('2026-07-01T00:00:00', tz),
+                end: utc('2026-07-01T23:59:00', tz),
+                tz,
+            },
+        } as IEventItem;
+        const planning = {planning_date: utc('2026-07-01T00:00:00', tz)} as IPlanningItem;
+
+        expect(getEventDateContext(event).isAllDay).toBe(true);
+        expect(getCoverageDueDate(planning, event)?.format())
+            .toBe(moment.tz('2026-07-01T20:00:00', tz).format());
+    });
+
+    it.each(timezones)('does not infer a multi-day event as all-day in $name timezone', ({tz}) => {
+        const event = {
+            dates: {
+                start: utc('2026-07-01T00:00:00', tz),
+                end: utc('2026-07-02T23:59:00', tz),
+                tz,
+            },
+        } as IEventItem;
+        const planning = {planning_date: utc('2026-07-01T00:00:00', tz)} as IPlanningItem;
+
+        expect(getEventDateContext(event).isAllDay).toBe(false);
+        expect(getCoverageDueDate(planning, event)?.format())
+            .toBe(moment.tz('2026-07-02T23:59:00', tz).format());
     });
 
     it.each(timezones)('sets timed event to end + 1 hour on the same day in $name timezone', ({tz}) => {
