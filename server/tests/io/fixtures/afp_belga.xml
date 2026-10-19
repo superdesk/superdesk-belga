@@ -43,6 +43,12 @@
 <NewsLineType FormalName="ProductLine"/>
 <NewsLineText xml:lang="fr">(Croquis d'audience+Photo+Video)</NewsLineText>
 </NewsLine>
+<NewsLine>
+<NewsLineType FormalName="AdvisoryLine"/>
+<NewsLineText xml:lang="fr">attention revoici liste corrigée, sans mention de l'absence de Lo
+Celso
+</NewsLineText>
+</NewsLine>
 </NewsLines>
 <AdministrativeMetadata>
 <Provider>

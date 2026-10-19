@@ -10,6 +10,7 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import copy
+import os
 
 from pathlib import Path
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "superdesk.text_checkers.spellcheckers.leuven_dutch",
     "belga.planning_exports",
     "belga.contacts",
+    "belga.belgapress",
 ]
 
 MODULES.append("planning")
@@ -362,6 +364,20 @@ DATE_FORMAT_SHORT = "%d/%m/%Y"
 
 BELGA_AI_URL = env("BELGA_AI_URL")
 
+BELGA_PRESS_URL = env("BELGA_PRESS_URL")
+BELGA_KEYCLOAK_ENDPOINT = env("BELGA_KEYCLOAK_ENDPOINT", None)
+BELGA_KEYCLOAK_CLIENT_ID = env("BELGA_KEYCLOAK_CLIENT_ID", None)
+BELGA_KEYCLOAK_CLIENT_SECRET = env("BELGA_KEYCLOAK_CLIENT_SECRET", None)
+BELGAPRESS_KEYCLOAK_ENDPOINT = (
+    env("BELGAPRESS_KEYCLOAK_ENDPOINT", None) or BELGA_KEYCLOAK_ENDPOINT
+)
+BELGAPRESS_KEYCLOAK_CLIENT_ID = (
+    env("BELGAPRESS_KEYCLOAK_CLIENT_ID", None) or BELGA_KEYCLOAK_CLIENT_ID
+)
+BELGAPRESS_KEYCLOAK_CLIENT_SECRET = (
+    env("BELGAPRESS_KEYCLOAK_CLIENT_SECRET", None) or BELGA_KEYCLOAK_CLIENT_SECRET
+)
+
 BELGA_VIDEO_ENABLED = strtobool(env("BELGA_VIDEO_ENABLED", "False"))
 START_OF_WEEK = 1
 
@@ -372,3 +388,5 @@ AMAZON_MEDIA_ID_TIME_PREFIX = "none"
 
 # It will expand/unfold Event's planning-related items in the Planning Combined view
 PLANNING_EXPAND_RELATED_PLANNINGS = True
+
+ANALYTICS_ENABLE_SCHEDULED_REPORTS = True

@@ -76,7 +76,7 @@
         {% for item in event.get('related_items', []) %}
             <li>
                 {{ item.get('headline') or item.get('slugline', "") }}<br>
-                <p><strong>Url:</strong> <a href="https://www.belgabox.be/belgabox/fo/detail?contentType=news&targetSide=Right&id={{ item.guid.split(':')[-1] }}&parentId={{ item.guid.split(':')[-1] }}&isArchive=true">View Article</a></p>
+                <p><strong>Url:</strong> <a href="{{ item.guid|belgapress_share_url }}">View Article</a></p>
             </li>
         {% endfor %}
         </ul>

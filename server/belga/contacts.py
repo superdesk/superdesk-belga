@@ -5,63 +5,18 @@ import logging
 
 import superdesk
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from urllib.parse import urljoin
 from superdesk.core import json
 from superdesk.core.web import AsyncHttpClientSessionMixin
 from superdesk.factory.app import SuperdeskApp
 from superdesk.eve_async import AsyncBaseService, AsyncListCursor
 
+from .keycloak import AsyncKeycloakAuth
+
 logger = logging.getLogger(__name__)
 
 BELGA_CONTACTS_PREFIX = "urn:belga:contact:"
-
-
-class KeycloakAuth:
-    """Handles Keycloak authentication and token management."""
-
-    endpoint: str
-    client_id: str
-    client_secret: str
-    _token: str | None
-    _token_expiry: datetime | None
-
-    def __init__(self, endpoint: str, client_id: str, client_secret: str):
-        self.endpoint = endpoint
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self._token = None
-        self._token_expiry = None
-
-    async def get_token(self, http_client: aiohttp.ClientSession) -> str:
-        """Get a valid access token"""
-        if (
-            not self._token
-            or not self._token_expiry
-            or datetime.now() >= self._token_expiry
-        ):
-            await self._fetch_new_token(http_client)
-
-        assert self._token is not None, "Access token was not fetched"
-        return self._token
-
-    async def _fetch_new_token(self, http_client: aiohttp.ClientSession):
-        """Fetch new token from Keycloak."""
-        data = {
-            "grant_type": "client_credentials",
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
-        }
-
-        async with http_client.post(self.endpoint, data=data) as response:
-            response.raise_for_status()
-            token_data = await response.json()
-
-        self._token = token_data["access_token"]
-        # Set expiry 5 minutes before actual expiry to be safe
-        self._token_expiry = datetime.now() + timedelta(
-            seconds=token_data["expires_in"] - 300
-        )
 
 
 class Contact(TypedDict, total=False):
@@ -165,15 +120,17 @@ class BelgaContactsProxy(AsyncBaseService, AsyncHttpClientSessionMixin):
     # Disable SSL verification for the entire session
     http_verify_ssl = False
 
-    def __init__(self, url):
+    def __init__(
+        self, url, keycloak_endpoint, keycloak_client_id, keycloak_client_secret
+    ):
         self.base = url
         self.count = 50
 
         # Initialize Keycloak auth
-        self.auth = KeycloakAuth(
-            endpoint=os.environ.get("BELGA_KEYCLOAK_ENDPOINT"),
-            client_id=os.environ.get("BELGA_KEYCLOAK_CLIENT_ID"),
-            client_secret=os.environ.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
+        self.auth = AsyncKeycloakAuth(
+            endpoint=keycloak_endpoint,
+            client_id=keycloak_client_id,
+            client_secret=keycloak_client_secret,
         )
 
     async def _get_headers(self, http_client: aiohttp.ClientSession):
@@ -255,17 +212,15 @@ class BelgaContactsProxy(AsyncBaseService, AsyncHttpClientSessionMixin):
 
 
 def init_app(app: SuperdeskApp):
-    if not os.environ.get("BELGA_CONTACTS_URL"):
-        return
-
-    # Add required environment variables
-    required_vars = [
-        "BELGA_CONTACTS_URL",
-        "BELGA_KEYCLOAK_ENDPOINT",
-        "BELGA_KEYCLOAK_CLIENT_ID",
-        "BELGA_KEYCLOAK_CLIENT_SECRET",
-    ]
-    missing = [var for var in required_vars if not os.environ.get(var)]
+    required_values = {
+        "BELGA_CONTACTS_URL": os.environ.get("BELGA_CONTACTS_URL"),
+        "BELGA_KEYCLOAK_ENDPOINT": app.config.get("BELGA_KEYCLOAK_ENDPOINT"),
+        "BELGA_KEYCLOAK_CLIENT_ID": app.config.get("BELGA_KEYCLOAK_CLIENT_ID"),
+        "BELGA_KEYCLOAK_CLIENT_SECRET": app.config.get(
+            "BELGA_KEYCLOAK_CLIENT_SECRET"
+        ),
+    }
+    missing = [name for name, value in required_values.items() if not value]
     if missing:
         logger.warning(
             "External contacts feature disabled. Missing environment variables: %s",
@@ -273,7 +228,12 @@ def init_app(app: SuperdeskApp):
         )
         return
 
-    belga_contacts_service = BelgaContactsProxy(os.environ["BELGA_CONTACTS_URL"])
+    belga_contacts_service = BelgaContactsProxy(
+        required_values["BELGA_CONTACTS_URL"],
+        required_values["BELGA_KEYCLOAK_ENDPOINT"],
+        required_values["BELGA_KEYCLOAK_CLIENT_ID"],
+        required_values["BELGA_KEYCLOAK_CLIENT_SECRET"],
+    )
     superdesk.resources["contacts"].service = belga_contacts_service
     app.client_config.update(
         {
