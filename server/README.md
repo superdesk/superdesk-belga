@@ -12,6 +12,14 @@ We support python version 3.3+.
 Other requirements are mongodb server and elasticsearch instance.
 Both can be configured via environment variables (see [settings.py](./settings.py)).
 
+### Assignment email article links
+
+The `belgapress_share_url` Jinja filter resolves related article links using
+asynchronous BelgaPress and Keycloak requests. Resolved links (including BelgaBox
+fallbacks on errors) are cached within the app context, so rendering HTML and
+plain-text emails does not repeat the lookup. When `BELGA_PRESS_URL` is unset,
+the filter uses BelgaBox links without making HTTP requests.
+
 ## Installation
 
 Using virtualenv is recommended for installing python requirements. So once activated, run:
