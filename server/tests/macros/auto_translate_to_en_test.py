@@ -107,13 +107,13 @@ class AutoTranslateToEnMacroTestCase(unittest.TestCase):
 
 
 class MapPackagesTestCase(TestCase):
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.app.data.insert("vocabularies", [SERVICES_PRODUCTS_CV, COUNTRY_CV])
 
-    def test_bin_maps_to_news_general_and_belgium(self):
+    async def test_bin_maps_to_news_general_and_belgium(self):
         item = {"subject": [_services_product("BIN/ALG", "BIN")]}
-        macro.map_packages(item)
+        await macro.map_packages(item)
 
         services = [s for s in item["subject"] if s["scheme"] == "services-products"]
         countries = [s for s in item["subject"] if s["scheme"] == "country"]
@@ -122,47 +122,47 @@ class MapPackagesTestCase(TestCase):
         self.assertEqual(len(countries), 1)
         self.assertEqual(countries[0]["qcode"], "country_bel")
 
-    def test_ext_maps_to_economy_without_country(self):
+    async def test_ext_maps_to_economy_without_country(self):
         item = {"subject": [_services_product("EXT/ECO", "EXT")]}
-        macro.map_packages(item)
+        await macro.map_packages(item)
 
         services = [s for s in item["subject"] if s["scheme"] == "services-products"]
         countries = [s for s in item["subject"] if s["scheme"] == "country"]
         self.assertEqual(services[0]["qcode"], "NEWS/ECONOMY")
         self.assertEqual(countries, [])
 
-    def test_sports_exception(self):
+    async def test_sports_exception(self):
         item = {"subject": [_services_product("SPN/GEN", "SPN")]}
-        macro.map_packages(item)
+        await macro.map_packages(item)
 
         services = [s for s in item["subject"] if s["scheme"] == "services-products"]
         countries = [s for s in item["subject"] if s["scheme"] == "country"]
         self.assertEqual(services[0]["qcode"], "NEWS/SPORTS")
         self.assertEqual(countries, [])
 
-    def test_int_sets_belgium(self):
+    async def test_int_sets_belgium(self):
         item = {"subject": [_services_product("INT/POL", "INT")]}
-        macro.map_packages(item)
+        await macro.map_packages(item)
 
         services = [s for s in item["subject"] if s["scheme"] == "services-products"]
         countries = [s for s in item["subject"] if s["scheme"] == "country"]
         self.assertEqual(services[0]["qcode"], "NEWS/POLITICS")
         self.assertEqual(countries[0]["qcode"], "country_bel")
 
-    def test_no_services_products_is_noop(self):
+    async def test_no_services_products_is_noop(self):
         item = {"subject": [{"qcode": "BRIEF", "scheme": "belga-keywords"}]}
-        macro.map_packages(item)
+        await macro.map_packages(item)
         self.assertEqual(
             item["subject"], [{"qcode": "BRIEF", "scheme": "belga-keywords"}]
         )
 
 
 class AutoTranslateToEnTestCase(TestCase):
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.app.data.insert("vocabularies", [SERVICES_PRODUCTS_CV, COUNTRY_CV])
 
-    def test_translates_and_maps(self):
+    async def test_translates_and_maps(self):
         item = {
             "guid": "guid-1",
             "language": "fr",
@@ -174,7 +174,7 @@ class AutoTranslateToEnTestCase(TestCase):
         with patch.object(
             macro, "translate_text", side_effect=_fake_translate
         ) as translate:
-            macro.auto_translate_to_en(item)
+            await macro.auto_translate_to_en(item)
 
         self.assertEqual(translate.call_count, 1)
         combined = translate.call_args[0][0]
@@ -190,7 +190,7 @@ class AutoTranslateToEnTestCase(TestCase):
         services = [s for s in item["subject"] if s["scheme"] == "services-products"]
         self.assertEqual(services[0]["qcode"], "NEWS/ECONOMY")
 
-    def test_headline_only_is_stripped(self):
+    async def test_headline_only_is_stripped(self):
         item = {
             "guid": "guid-3",
             "language": "fr",
@@ -199,12 +199,12 @@ class AutoTranslateToEnTestCase(TestCase):
         }
 
         with patch.object(macro, "translate_text", side_effect=_fake_translate):
-            macro.auto_translate_to_en(item)
+            await macro.auto_translate_to_en(item)
 
         self.assertEqual(item["headline"], "EN Bonjour le monde")
         self.assertNotIn("<", item["headline"])
 
-    def test_body_with_its_own_h1_is_preserved(self):
+    async def test_body_with_its_own_h1_is_preserved(self):
         item = {
             "guid": "guid-5",
             "language": "fr",
@@ -214,13 +214,13 @@ class AutoTranslateToEnTestCase(TestCase):
         }
 
         with patch.object(macro, "translate_text", side_effect=_fake_translate):
-            macro.auto_translate_to_en(item)
+            await macro.auto_translate_to_en(item)
 
         self.assertEqual(item["headline"], "EN Bonjour")
         self.assertIn("EN Titre du corps", item["body_html"])
         self.assertIn("<h1>", item["body_html"])
 
-    def test_falls_back_to_separate_calls_when_marker_lost(self):
+    async def test_falls_back_to_separate_calls_when_marker_lost(self):
         item = {
             "guid": "guid-4",
             "language": "fr",
@@ -238,14 +238,14 @@ class AutoTranslateToEnTestCase(TestCase):
             return _fake_translate(text, target_language)
 
         with patch.object(macro, "translate_text", side_effect=fake):
-            macro.auto_translate_to_en(item)
+            await macro.auto_translate_to_en(item)
 
         self.assertEqual(len(calls), 3)
         self.assertEqual(item["headline"], "EN Bonjour")
         self.assertNotIn("<", item["headline"])
         self.assertIn("<p>", item["body_html"])
 
-    def test_translation_failure_still_maps_packages(self):
+    async def test_translation_failure_still_maps_packages(self):
         item = {
             "guid": "guid-2",
             "language": "nl",
@@ -259,7 +259,7 @@ class AutoTranslateToEnTestCase(TestCase):
             "translate_text",
             side_effect=RuntimeError("endpoint unreachable"),
         ):
-            macro.auto_translate_to_en(item)
+            await macro.auto_translate_to_en(item)
 
         self.assertEqual(item["headline"], "Hallo")
         services = [s for s in item["subject"] if s["scheme"] == "services-products"]
@@ -269,8 +269,8 @@ class AutoTranslateToEnTestCase(TestCase):
 
 
 class BelgaAiTranslateTestCase(TestCase):
-    def setUp(self):
-        super().setUp()
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         self.app.config["BELGA_AI_URL"] = "http://belga-ai.test/api/"
 
     def _mock_response(self, payload):

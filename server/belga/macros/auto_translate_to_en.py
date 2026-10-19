@@ -61,8 +61,8 @@ def _map_package_qcode(source_qcode):
     return FALLBACK_PACKAGE, service
 
 
-def _set_belgium_country(item):
-    belgium = get_cv_by_qcode(COUNTRY).get(BELGIUM_QCODE)
+async def _set_belgium_country(item):
+    belgium = (await get_cv_by_qcode(COUNTRY)).get(BELGIUM_QCODE)
     if not belgium:
         logger.warning("country CV value '%s' not found", BELGIUM_QCODE)
         return
@@ -71,7 +71,7 @@ def _set_belgium_country(item):
     item["subject"].append(belgium)
 
 
-def map_packages(item):
+async def map_packages(item):
     """Remap the services-products package and set countries keywords."""
     subject = item.setdefault("subject", [])
     services_products = [s for s in subject if s.get("scheme") == SERVICES_PRODUCTS]
@@ -81,7 +81,7 @@ def map_packages(item):
     source_qcode = services_products[0].get("qcode", "")
     mapped_qcode, service = _map_package_qcode(source_qcode)
 
-    mapped_subject = get_cv_by_qcode(SERVICES_PRODUCTS).get(mapped_qcode)
+    mapped_subject = (await get_cv_by_qcode(SERVICES_PRODUCTS)).get(mapped_qcode)
     if not mapped_subject:
         logger.warning("services-products CV value '%s' not found", mapped_qcode)
         return
@@ -90,7 +90,7 @@ def map_packages(item):
     item["subject"].append(mapped_subject)
 
     if service in BELGIUM_SERVICES:
-        _set_belgium_country(item)
+        await _set_belgium_country(item)
 
 
 def _strip_markup(value):
@@ -156,7 +156,7 @@ def translate_item(item):
     generate_fields(item, FIELDS, force=True, reload=True)
 
 
-def auto_translate_to_en(item, **kwargs):
+async def auto_translate_to_en(item, **kwargs):
     try:
         translate_item(item)
     except Exception:
@@ -165,7 +165,7 @@ def auto_translate_to_en(item, **kwargs):
             extra={"guid": item.get("guid", "unknown")},
         )
 
-    map_packages(item)
+    await map_packages(item)
     return item
 
 

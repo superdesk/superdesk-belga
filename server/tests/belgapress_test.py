@@ -17,7 +17,8 @@ def get_response(json_data):
 
 
 class BelgaPressShareUrlTestCase(TestCase):
-    def setUp(self):
+    async def asyncSetUp(self):
+        await super().asyncSetUp()
         belgapress._auth = None
         belgapress._session = None
         self.app.config["BELGA_PRESS_URL"] = "https://belgapress"
