@@ -11,8 +11,8 @@ class KeycloakAuth:
         self.endpoint = endpoint
         self.client_id = client_id
         self.client_secret = client_secret
-        self._token = None
-        self._token_expiry = None
+        self._token: str | None = None
+        self._token_expiry: datetime | None = None
 
     def get_token(self) -> str:
         """Get a valid access token"""
@@ -51,8 +51,8 @@ class AsyncKeycloakAuth:
         self.endpoint = endpoint
         self.client_id = client_id
         self.client_secret = client_secret
-        self._token = None
-        self._token_expiry = None
+        self._token: str | None = None
+        self._token_expiry: datetime | None = None
 
     async def get_token(self, http_client: aiohttp.ClientSession) -> str:
         """Get a valid access token."""

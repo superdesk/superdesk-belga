@@ -216,9 +216,7 @@ def init_app(app: SuperdeskApp):
         "BELGA_CONTACTS_URL": os.environ.get("BELGA_CONTACTS_URL"),
         "BELGA_KEYCLOAK_ENDPOINT": app.config.get("BELGA_KEYCLOAK_ENDPOINT"),
         "BELGA_KEYCLOAK_CLIENT_ID": app.config.get("BELGA_KEYCLOAK_CLIENT_ID"),
-        "BELGA_KEYCLOAK_CLIENT_SECRET": app.config.get(
-            "BELGA_KEYCLOAK_CLIENT_SECRET"
-        ),
+        "BELGA_KEYCLOAK_CLIENT_SECRET": app.config.get("BELGA_KEYCLOAK_CLIENT_SECRET"),
     }
     missing = [name for name, value in required_values.items() if not value]
     if missing:
