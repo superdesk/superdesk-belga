@@ -260,7 +260,7 @@ pyjwt==2.13.0
     # via superdesk-core
 pymemcache==4.0.0
     # via superdesk-core
-pymongo==4.9.2
+pymongo==4.15.5
     # via
     #   -r requirements.in
     #   eve
