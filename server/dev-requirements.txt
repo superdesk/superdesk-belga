@@ -8,5 +8,5 @@ pytest==9.1.1
 types-click==7.1.8
 types-Flask==1.1.6
 types-MarkupSafe==1.1.10
-aioresponses==0.7.8
+aioresponses==0.7.9
 aiomoto[sqs]==0.5.7
