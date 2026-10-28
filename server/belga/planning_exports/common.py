@@ -8,6 +8,8 @@ from typing import Union as _Union
 from datetime import date as _date_type, datetime as _datetime_type
 
 from planning.types import PlanningItemType
+from planning.types.unified import RelatedEventLinkType
+from planning.unified.common import get_related_planning_for_events
 from planning.utils import get_related_event_items_for_planning_async
 
 ADVISORY_TIMEZONE = "Europe/Brussels"
@@ -446,95 +448,126 @@ async def get_advisory_weekday_date(planning_item):
     return ""
 
 
+async def get_item_coverages(item) -> List[Dict[str, Any]]:
+    """Get the stored coverages of an item.
+
+    For events, returns the event's own coverages plus those of its primary
+    linked planning items, without duplicates. For planning items, returns
+    the planning item's coverages.
+    """
+    planning_service = get_resource_service("planning")
+    stored_item = await planning_service.find_one_async(req=None, _id=item.get("_id"))
+    coverage_items = [stored_item] if stored_item else []
+
+    planning_ids = [
+        pid for pid in item.get("planning_ids") or [] if pid != item.get("_id")
+    ]
+    if (stored_item or item).get("type") == PlanningItemType.EVENT:
+        async for planning in await get_related_planning_for_events(
+            [item["_id"]], RelatedEventLinkType.PRIMARY
+        ):
+            if planning.id not in planning_ids:
+                planning_ids.append(planning.id)
+
+    for planning_id in planning_ids:
+        planning_item = await planning_service.find_one_async(req=None, _id=planning_id)
+        if planning_item:
+            coverage_items.append(planning_item)
+
+    coverages = []
+    coverage_ids = set()
+    for coverage_item in coverage_items:
+        for coverage in coverage_item.get("coverages") or []:
+            if not isinstance(coverage, dict):
+                continue
+            coverage_id = coverage.get("coverage_id")
+            if coverage_id and coverage_id in coverage_ids:
+                continue
+            coverage_ids.add(coverage_id)
+            coverages.append(coverage)
+
+    return coverages
+
+
 async def get_coverages_bilingual(item, include_assignee=False):
     """Get coverages formatted for bilingual output.
 
-    Works for both event items (uses planning_ids field) and planning items
-    (falls back to _id). If include_assignee=True, appends BY <USER/DESK>
-    to the display string and includes username/desk_name in the result.
+    Works for both event and planning items, see get_item_coverages.
+    If include_assignee=True, appends BY <USER/DESK> to the display string
+    and includes username/desk_name in the result.
     """
-    planning_service = get_resource_service("planning")
     desk_service = get_resource_service("desks")
     user_service = get_resource_service("users") if include_assignee else None
     lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "N"}
-    planning_ids = item.get("planning_ids") or [item.get("_id")]
     formatted_coverages = []
     desk_cache = {}
     user_cache = {}
 
-    for planning_id in planning_ids:
-        planning_item = await planning_service.find_one_async(req=None, _id=planning_id)
-        if not planning_item:
-            continue
+    for coverage in await get_item_coverages(item):
+        planning_info = coverage.get("planning") or {}
+        cov_type = (
+            planning_info.get("g2_content_type")
+            or coverage.get("g2_content_type")
+            or ""
+        ).lower()
+        cov_status = (
+            (coverage.get("news_coverage_status") or {}).get("label") or "ON MERIT"
+        ).upper()
 
-        for coverage in planning_item.get("coverages", []):
-            if not isinstance(coverage, dict):
-                continue
-
-            planning_info = coverage.get("planning") or {}
-            cov_type = (
-                planning_info.get("g2_content_type")
-                or coverage.get("g2_content_type")
-                or ""
-            ).lower()
-            cov_status = (
-                coverage.get("news_coverage_status", {}).get("label") or "ON MERIT"
-            ).upper()
-
-            desk_language_code = "N"
-            desk_name = ""
-            desk_id = (
-                planning_info.get("desk")
-                or coverage.get("assigned_to", {}).get("desk")
-                or item.get("task", {}).get("desk")
-            )
-            if desk_id:
-                if desk_id not in desk_cache:
-                    desk_cache[desk_id] = await desk_service.find_one_async(
-                        req=None, _id=desk_id
+        desk_language_code = "N"
+        desk_name = ""
+        desk_id = (
+            planning_info.get("desk")
+            or (coverage.get("assigned_to") or {}).get("desk")
+            or (item.get("task") or {}).get("desk")
+        )
+        if desk_id:
+            if desk_id not in desk_cache:
+                desk_cache[desk_id] = await desk_service.find_one_async(
+                    req=None, _id=desk_id
+                )
+            desk_item = desk_cache[desk_id]
+            if desk_item:
+                desk_name = desk_item.get("name", "")
+                if desk_item.get("desk_language"):
+                    desk_language_code = lang_map.get(
+                        desk_item["desk_language"].lower(), "N"
                     )
-                desk_item = desk_cache[desk_id]
-                if desk_item:
-                    desk_name = desk_item.get("name", "")
-                    if desk_item.get("desk_language"):
-                        desk_language_code = lang_map.get(
-                            desk_item["desk_language"].lower(), "N"
-                        )
 
-            coverage_display = format_coverage_label(
-                cov_type, desk_language_code, cov_status
-            )
+        coverage_display = format_coverage_label(
+            cov_type, desk_language_code, cov_status
+        )
 
-            username = ""
-            if include_assignee:
-                assigned_user_id = coverage.get("assigned_to", {}).get("user")
-                if assigned_user_id and user_service:
-                    if assigned_user_id not in user_cache:
-                        user_item = await user_service.find_one_async(
-                            req=None, _id=assigned_user_id
-                        )
-                        user_cache[assigned_user_id] = (
-                            (user_item.get("sign_off") or user_item.get("username"))
-                            if user_item
-                            else ""
-                        )
-                    username = user_cache[assigned_user_id]
-                if username:
-                    coverage_display = f"{coverage_display} BY {username.upper()}"
-                elif desk_name:
-                    coverage_display = f"{coverage_display} BY {desk_name.upper()}"
+        username = ""
+        if include_assignee:
+            assigned_user_id = (coverage.get("assigned_to") or {}).get("user")
+            if assigned_user_id and user_service:
+                if assigned_user_id not in user_cache:
+                    user_item = await user_service.find_one_async(
+                        req=None, _id=assigned_user_id
+                    )
+                    user_cache[assigned_user_id] = (
+                        (user_item.get("sign_off") or user_item.get("username"))
+                        if user_item
+                        else ""
+                    )
+                username = user_cache[assigned_user_id]
+            if username:
+                coverage_display = f"{coverage_display} BY {username.upper()}"
+            elif desk_name:
+                coverage_display = f"{coverage_display} BY {desk_name.upper()}"
 
-            entry = {
-                "display": coverage_display,
-                "type": cov_type,
-                "status": cov_status,
-                "language": desk_language_code,
-            }
-            if include_assignee:
-                entry["username"] = username
-                entry["desk_name"] = desk_name
+        entry = {
+            "display": coverage_display,
+            "type": cov_type,
+            "status": cov_status,
+            "language": desk_language_code,
+        }
+        if include_assignee:
+            entry["username"] = username
+            entry["desk_name"] = desk_name
 
-            formatted_coverages.append(entry)
+        formatted_coverages.append(entry)
 
     return formatted_coverages
 

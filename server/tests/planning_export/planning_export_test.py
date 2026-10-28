@@ -1,5 +1,6 @@
 import datetime
 import json
+from unittest import mock
 
 from bson import ObjectId
 
@@ -889,140 +890,6 @@ class PlanningExportTests(TestCase):
             dutch_data,
         )
 
-    async def test_bilingual_planning_advisory_export_tomorrow(self):
-        """Test the bilingual planning advisory template using only planning data"""
-        test_contact_id = ObjectId()
-        test_contact = {
-            "_id": test_contact_id,
-            "first_name": "John",
-            "last_name": "Doe",
-            "organisation": "Test Org",
-            "job_title": "Media Contact",
-            "contact_email": ["jdoe@test.org"],
-            "contact_phone": [{"number": "123456789", "public": True}],
-            "mobile": [{"number": "987654321", "public": True}],
-            "website": "test.org",
-        }
-        self.app.data.insert("contacts", [test_contact])
-        desk_nl = ObjectId()
-        desk_fr = ObjectId()
-
-        test_desks = [
-            {"_id": desk_nl, "desk_language": "nl", "name": "Test Desk NL"},
-            {"_id": desk_fr, "desk_language": "fr", "name": "Test Desk FR"},
-        ]
-        self.app.data.insert("desks", test_desks)
-
-        # Planning items
-        planning_1_id = f"planning_1_{ObjectId()}"
-        planning_2_id = f"planning_2_{ObjectId()}"
-        planning_3_id = f"planning_3_{ObjectId()}"
-
-        planning_items = [
-            {
-                "_id": planning_1_id,
-                "type": "planning",
-                "slugline": "planning-dutch-text",
-                "name": "Test Event NL",
-                "description_text": "Dutch description of the event",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text"},
-                        "assigned_to": {"desk": desk_nl},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    }
-                ],
-                "related_events": None,
-            },
-            {
-                "_id": planning_2_id,
-                "type": "planning",
-                "slugline": "planning-french-text",
-                "name": "Test Event FR",
-                "description_text": "French description of the event",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text"},
-                        "assigned_to": {"desk": desk_fr},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:notdec",
-                            "name": "coverage not decided yet",
-                            "label": "On Merit",
-                        },
-                    }
-                ],
-                "related_events": None,
-            },
-            {
-                "_id": planning_3_id,
-                "type": "planning",
-                "slugline": "planning-picture",
-                "name": "Picture Event",
-                "description_text": "Picture coverage description",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov2",
-                        "planning": {"g2_content_type": "picture"},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    }
-                ],
-                "related_events": None,
-            },
-        ]
-
-        await test_utils.post_items("planning", planning_items)
-
-        bilingual_data = await render_template(
-            "bilingual_planning_advisory_tomorrow.html",
-            items=planning_items,
-            app=self.app,
-        )
-
-        self.assertIn(
-            "<p>Test Event NL</p>", bilingual_data, "Dutch title should be present"
-        )
-        self.assertIn(
-            "<p>Test Event FR</p>", bilingual_data, "French title should be present"
-        )
-        self.assertIn(
-            "<p>Dutch description of the event</p>",
-            bilingual_data,
-            "Dutch description should be present",
-        )
-        self.assertIn(
-            "<p>French description of the event</p>",
-            bilingual_data,
-            "French description should be present",
-        )
-        self.assertIn(
-            "<p>BELGA TEXT N (PLANNED)</p>",
-            bilingual_data,
-            "Dutch text coverage should be tagged as TEXT N",
-        )
-        self.assertIn(
-            "<p>BELGA TEXT F (ON MERIT)</p>",
-            bilingual_data,
-            "French text coverage should be tagged as TEXT F",
-        )
-        self.assertIn(
-            "<p>BELGA PICTURE (PLANNED)</p>",
-            bilingual_data,
-            "Picture coverage should not have language tag",
-        )
-
     async def test_bilingual_events_advisory_export_tomorrow(self):
         """Test the bilingual events advisory template with various scenarios"""
         test_contact_id = ObjectId()
@@ -1286,7 +1153,7 @@ class PlanningExportTests(TestCase):
         )
 
         bilingual_data = await render_template(
-            "archived/bilingual_news_events_tommorrow.html",
+            "bilingual_planning_advisory_tomorrow.html",
             items=bilingual_events,
             app=self.app,
         )
@@ -1601,7 +1468,7 @@ class PlanningExportTests(TestCase):
         await test_utils.post_items("events", bilingual_events)
 
         bilingual_data = await render_template(
-            "archived/bilingual_news_events_tommorrow.html",
+            "bilingual_planning_advisory_tomorrow.html",
             items=bilingual_events,
             app=self.app,
         )
@@ -1969,7 +1836,7 @@ class PlanningExportTests(TestCase):
         bilingual_events[1]["planning_ids"] = [planning_4_id]
 
         internal_data = await render_template(
-            "archived/internal_bilingual_news_events_tomorrow.html",
+            "internal_bilingual_planning_advisory_tomorrow.html",
             items=bilingual_events,
             app=self.app,
         )
@@ -2210,7 +2077,7 @@ class PlanningExportTests(TestCase):
         await test_utils.post_items("events", bilingual_events)
 
         internal_data = await render_template(
-            "archived/internal_bilingual_news_events_tomorrow.html",
+            "internal_bilingual_planning_advisory_tomorrow.html",
             items=bilingual_events,
             app=self.app,
         )
@@ -2250,212 +2117,6 @@ class PlanningExportTests(TestCase):
             "<h2>Voici l'agenda Belga des événements belges et internationaux",
             internal_data,
             "French introduction should be present",
-        )
-
-    async def test_internal_bilingual_planning_advisory_export_tomorrow(self):
-        """Test the internal bilingual planning advisory template with usernames and desk names"""
-        user_nl_id = ObjectId()
-        user_fr_id = ObjectId()
-        user_video_id = ObjectId()
-
-        timestamp = str(int(datetime.datetime.now().timestamp()))[-6:]
-        test_users = [
-            {
-                "_id": user_nl_id,
-                "username": f"plannernl_{timestamp}",
-                "sign_off": "PNL",
-                "display_name": "Planner NL",
-                "email": f"planner.nl_{timestamp}@test.com",
-            },
-            {
-                "_id": user_fr_id,
-                "username": f"plannerfr_{timestamp}",
-                "sign_off": "PFR",
-                "display_name": "Planner FR",
-                "email": f"planner.fr_{timestamp}@test.com",
-            },
-            {
-                "_id": user_video_id,
-                "username": f"videographer_{timestamp}",
-                "sign_off": "VIDEO",
-                "display_name": "Videographer",
-                "email": f"video_{timestamp}@test.com",
-            },
-        ]
-
-        self.app.data.insert("users", test_users)
-
-        desk_nl = ObjectId()
-        desk_fr = ObjectId()
-        desk_video = ObjectId()
-
-        test_desks = [
-            {
-                "_id": desk_nl,
-                "desk_language": "nl",
-                "name": f"Planning Desk NL {timestamp}",
-                "members": [{"user": user_nl_id}],
-            },
-            {
-                "_id": desk_fr,
-                "desk_language": "fr",
-                "name": f"Planning Desk FR {timestamp}",
-                "members": [{"user": user_fr_id}],
-            },
-            {
-                "_id": desk_video,
-                "desk_language": "nl",
-                "name": f"Video Desk {timestamp}",
-                "members": [{"user": user_video_id}],
-            },
-        ]
-        self.app.data.remove(
-            "desks",
-            {
-                "name": {
-                    "$in": [
-                        f"Planning Desk NL {timestamp}",
-                        f"Planning Desk FR {timestamp}",
-                        f"Video Desk {timestamp}",
-                    ]
-                }
-            },
-        )
-        self.app.data.insert("desks", test_desks)
-
-        planning_1_id = f"planning_1_{ObjectId()}"
-        planning_2_id = f"planning_2_{ObjectId()}"
-        planning_3_id = f"planning_3_{ObjectId()}"
-
-        planning_items = [
-            {
-                "_id": planning_1_id,
-                "type": "planning",
-                "slugline": "internal-planning-nl",
-                "name": "Internal Planning NL",
-                "description_text": "Dutch planning with user assignments",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov1",
-                        "planning": {"g2_content_type": "text"},
-                        "assigned_to": {"desk": desk_nl},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    },
-                    {
-                        "coverage_id": "cov2",
-                        "planning": {"g2_content_type": "text"},
-                        "assigned_to": {"desk": desk_fr},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:notdec",
-                            "name": "coverage not decided yet",
-                            "label": "On merit",
-                        },
-                    },
-                ],
-                "related_events": None,
-            },
-            {
-                "_id": planning_2_id,
-                "type": "planning",
-                "slugline": "internal-planning-mixed",
-                "name": "Internal Planning Mixed",
-                "description_text": "Planning with mixed coverage types",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov3",
-                        "planning": {"g2_content_type": "picture"},
-                        "assigned_to": {"desk": desk_nl},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    },
-                    {
-                        "coverage_id": "cov4",
-                        "planning": {"g2_content_type": "video"},
-                        "assigned_to": {"user": user_video_id, "desk": desk_video},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    },
-                ],
-                "related_events": None,
-            },
-            {
-                "_id": planning_3_id,
-                "type": "planning",
-                "slugline": "internal-planning-fr",
-                "name": "Internal Planning FR",
-                "description_text": "French planning with direct user assignment",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov5",
-                        "planning": {"g2_content_type": "text"},
-                        "assigned_to": {"user": user_fr_id, "desk": desk_fr},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:notdec",
-                            "name": "coverage not decided yet",
-                            "label": "On merit",
-                        },
-                    }
-                ],
-                "related_events": None,
-            },
-        ]
-
-        await test_utils.post_items("planning", planning_items)
-
-        internal_data = await render_template(
-            "internal_bilingual_planning_advisory_tomorrow.html",
-            items=planning_items,
-            app=self.app,
-        )
-
-        self.assertIn(
-            f"<p>BELGA TEXT N (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
-            internal_data,
-            "Dutch text coverage should show full desk name in UPPERCASE when no direct user",
-        )
-        self.assertIn(
-            f"<p>BELGA TEXT F (ON MERIT) BY PLANNING DESK FR {timestamp}</p>",
-            internal_data,
-            "French text coverage should show full desk name in UPPERCASE when no direct user",
-        )
-        self.assertIn(
-            f"<p>BELGA PICTURE (PLANNED) BY PLANNING DESK NL {timestamp}</p>",
-            internal_data,
-            "Picture coverage should show full desk name in UPPERCASE when no direct user",
-        )
-        self.assertIn(
-            "<p>BELGA VIDEO (PLANNED) BY VIDEO</p>",
-            internal_data,
-            "Video coverage with direct user assignment should show username",
-        )
-        self.assertIn(
-            "<p>BELGA TEXT F (ON MERIT) BY PFR</p>",
-            internal_data,
-            "French text with direct user assignment should show username",
-        )
-
-        self.assertIn(
-            "<p>Internal Planning NL</p>",
-            internal_data,
-            "Dutch planning title should be present",
-        )
-        self.assertIn(
-            "<p>Internal Planning FR</p>",
-            internal_data,
-            "French planning title should be present",
         )
 
     async def test_bilingual_events_header_uses_earliest_date_no_leading_zero(self):
@@ -2716,7 +2377,7 @@ class PlanningExportTests(TestCase):
         await test_utils.post_items("events", [all_day_event, timed_event])
 
         events_html = await render_template(
-            "archived/bilingual_news_events_tommorrow.html",
+            "bilingual_planning_advisory_tomorrow.html",
             items=[all_day_event, timed_event],
             app=self.app,
         )
@@ -2776,7 +2437,7 @@ class PlanningExportTests(TestCase):
         }
 
         html = await render_template(
-            "archived/bilingual_news_events_tommorrow.html",
+            "bilingual_planning_advisory_tomorrow.html",
             items=[editorial_event, normal_event],
             app=self.app,
         )
@@ -2784,103 +2445,8 @@ class PlanningExportTests(TestCase):
         self.assertNotIn("Editorial Event", html)
         self.assertIn("Public Event", html)
 
-    async def test_bilingual_planning_excludes_editorial_event_link(self):
-        """Planning linked to Editorial events must be excluded"""
-        editorial_event_id = f"event_1_{ObjectId()}"
-        public_event_id = f"event_2_{ObjectId()}"
-
-        # self.app.data.insert(
-        await test_utils.post_items(
-            "events",
-            [
-                {
-                    "_id": editorial_event_id,
-                    "name": "Editorial Event",
-                    "dates": {
-                        "start": datetime.datetime(
-                            2025, 1, 10, 10, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "end": datetime.datetime(
-                            2025, 1, 10, 12, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "tz": "Europe/Brussels",
-                    },
-                    "calendars": [{"qcode": "Editorial", "name": "(I) Editorial"}],
-                },
-                {
-                    "_id": public_event_id,
-                    "name": "Public Event",
-                    "dates": {
-                        "start": datetime.datetime(
-                            2025, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "end": datetime.datetime(
-                            2025, 1, 10, 16, 0, tzinfo=datetime.timezone.utc
-                        ),
-                        "tz": "Europe/Brussels",
-                    },
-                    "calendars": [{"qcode": "General", "name": "(1) General"}],
-                },
-            ],
-        )
-
-        planning_items = [
-            {
-                "_id": f"planning_1_{ObjectId()}",
-                "type": "planning",
-                "name": "Planning Editorial",
-                "description_text": "Should not appear",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov-editorial-1",
-                        "planning": {"g2_content_type": "text"},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    }
-                ],
-                "related_events": [{"_id": editorial_event_id, "link_type": "primary"}],
-            },
-            {
-                "_id": f"planning_2_{ObjectId()}",
-                "type": "planning",
-                "name": "Planning Public",
-                "description_text": "Should appear",
-                "planning_date": "2029-10-12T14:00:00+0000",
-                "coverages": [
-                    {
-                        "coverage_id": "cov-public-1",
-                        "planning": {"g2_content_type": "text"},
-                        "news_coverage_status": {
-                            "qcode": "ncostat:int",
-                            "name": "coverage intended",
-                            "label": "Planned",
-                        },
-                    }
-                ],
-                "related_events": [{"_id": public_event_id, "link_type": "primary"}],
-            },
-        ]
-
-        await test_utils.post_items("planning", planning_items)
-
-        html = await render_template(
-            "bilingual_planning_advisory_tomorrow.html",
-            items=planning_items,
-            app=self.app,
-        )
-
-        self.assertNotIn("Planning Editorial", html)
-        self.assertNotIn("Editorial Event", html)
-        self.assertIn("Public Event", html)
-
     async def test_belga_image_photo_planning_renders_picture_only(self):
-        """Belga Image Photo Planning renders picture coverage and excludes text/video."""
-        event_id = f"event_1_{ObjectId()}"
-        planning_id = f"planning_1_{ObjectId()}"
+        """Belga Image Photo Planning renders the event's picture coverage only."""
         user_id = ObjectId()
 
         user = {
@@ -2891,8 +2457,9 @@ class PlanningExportTests(TestCase):
         self.app.data.insert("users", [user])
 
         event = {
-            "_id": event_id,
+            "_id": f"event_1_{ObjectId()}",
             "name": "Sports Photo Event",
+            "definition_long": "Event description",
             "dates": {
                 "start": datetime.datetime(
                     2026, 1, 9, 9, 0, tzinfo=datetime.timezone.utc
@@ -2903,16 +2470,6 @@ class PlanningExportTests(TestCase):
                 "tz": "Europe/Brussels",
             },
             "calendars": [{"qcode": "Sports", "name": "(7) Sports"}],
-        }
-
-        planning = {
-            "_id": planning_id,
-            "type": "planning",
-            "planning_date": datetime.datetime(
-                2026, 1, 9, 9, 0, tzinfo=datetime.timezone.utc
-            ),
-            "name": "Sports Photo Event",
-            "description_text": "Planning description",
             "coverages": [
                 {
                     "coverage_id": ObjectId(),
@@ -2943,36 +2500,53 @@ class PlanningExportTests(TestCase):
                     },
                 },
             ],
-            "related_events": [{"_id": event_id, "link_type": "primary"}],
         }
 
-        await test_utils.post_items("events", [event])
-        await test_utils.post_items("planning", [planning])
+        editorial_event = {
+            "_id": f"event_2_{ObjectId()}",
+            "name": "Editorial Photo Event",
+            "dates": {
+                "start": datetime.datetime(
+                    2026, 1, 9, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+                "end": datetime.datetime(
+                    2026, 1, 9, 11, 0, tzinfo=datetime.timezone.utc
+                ),
+                "tz": "Europe/Brussels",
+            },
+            "calendars": [{"qcode": "Editorial", "name": "(I) Editorial"}],
+            "coverages": [
+                {
+                    "coverage_id": ObjectId(),
+                    "planning": {"g2_content_type": "picture"},
+                    "news_coverage_status": {
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
+                    },
+                },
+            ],
+        }
 
-        await test_utils.patch_item(
-            "events",
-            event_id,
-            {"planning_ids": [planning_id]},
-        )
+        await test_utils.post_items("events", [event, editorial_event])
 
         html = await render_template(
             "internal_image_photo_planning.html",
-            items=[planning],
+            items=[event, editorial_event],
             app=self.app,
         )
 
         self.assertIn("<h1>Belga Image Photo Planning", html)
         self.assertIn("<b>Sports Photo Event</b>", html)
+        self.assertNotIn("Editorial Photo Event", html)
         self.assertNotIn("TEXT", html)
         self.assertNotIn("VIDEO", html)
         self.assertNotIn("BELGA PICTURE", html)
         self.assertIn(user["sign_off"], html)
-        self.assertNotIn(planning["description_text"], html)
+        self.assertNotIn(event["definition_long"], html)
 
     async def test_belga_image_video_planning_renders_video_only(self):
-        """Belga Image Video Planning renders video coverage and excludes picture/text."""
-        event_id = f"event_1_{ObjectId()}"
-        planning_id = f"planning_1_{ObjectId()}"
+        """Belga Image Video Planning renders video coverage of linked planning items."""
         user_id = ObjectId()
 
         user = {
@@ -2982,9 +2556,11 @@ class PlanningExportTests(TestCase):
         }
         self.app.data.insert("users", [user])
 
+        event_id = f"event_1_{ObjectId()}"
         event = {
             "_id": event_id,
             "name": "Video Event",
+            "definition_long": "Video event description",
             "dates": {
                 "start": datetime.datetime(
                     2026, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
@@ -2998,13 +2574,12 @@ class PlanningExportTests(TestCase):
         }
 
         planning = {
-            "_id": planning_id,
+            "_id": f"planning_1_{ObjectId()}",
             "type": "planning",
             "planning_date": datetime.datetime(
                 2026, 1, 10, 14, 0, tzinfo=datetime.timezone.utc
             ),
-            "name": "Video Event",
-            "description_text": "Video planning description",
+            "name": "Linked Planning Item",
             "coverages": [
                 {
                     "coverage_id": ObjectId(),
@@ -3019,9 +2594,9 @@ class PlanningExportTests(TestCase):
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
                     "news_coverage_status": {
-                        "qcode": "ncostat:notdec",
-                        "name": "coverage not decided yet",
-                        "label": "On merit",
+                        "qcode": "ncostat:int",
+                        "name": "coverage intended",
+                        "label": "Planned",
                     },
                     "assigned_to": {"user": user_id},
                 },
@@ -3032,25 +2607,73 @@ class PlanningExportTests(TestCase):
         await test_utils.post_items("events", [event])
         await test_utils.post_items("planning", [planning])
 
-        await test_utils.patch_item(
-            "events",
-            event_id,
-            {"planning_ids": [planning_id]},
-        )
-
         html = await render_template(
             "internal_image_video_planning.html",
-            items=[planning],
+            items=[event],
             app=self.app,
         )
 
         self.assertIn("<h1>Belga Image Video Planning", html)
         self.assertIn("<b>Video Event</b>", html)
+        self.assertNotIn("Linked Planning Item", html)
         self.assertNotIn("PICTURE", html)
         self.assertNotIn("TEXT", html)
         self.assertNotIn("BELGA VIDEO", html)
         self.assertIn(user["sign_off"], html)
-        self.assertNotIn(planning["description_text"], html)
+        self.assertNotIn(event["definition_long"], html)
+
+    async def test_event_export_with_unassigned_coverage(self):
+        """Event coverages stored with assigned_to None render without errors."""
+        event = {
+            "_id": f"event_1_{ObjectId()}",
+            "name": "Unassigned Event",
+            "dates": {
+                "start": datetime.datetime(
+                    2026, 1, 12, 9, 0, tzinfo=datetime.timezone.utc
+                ),
+                "end": datetime.datetime(
+                    2026, 1, 12, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+                "tz": "Europe/Brussels",
+            },
+            "calendars": [{"qcode": "general", "name": "General"}],
+            "coverages": [
+                {
+                    "coverage_id": ObjectId(),
+                    "planning": {"g2_content_type": "video"},
+                    "assigned_to": None,
+                    "news_coverage_status": {
+                        "qcode": "ncostat:notdec",
+                        "name": "coverage not decided yet",
+                        "label": "On merit",
+                    },
+                },
+            ],
+        }
+
+        # The test data layer drops None values on insert, so serve the
+        # coverages as stored by the planning service
+        with mock.patch(
+            "belga.planning_exports.common.get_item_coverages",
+            return_value=event["coverages"],
+        ), mock.patch(
+            "belga.planning_exports.internal_belga_image_planning.get_item_coverages",
+            return_value=event["coverages"],
+        ):
+            internal_html = await render_template(
+                "internal_bilingual_planning_advisory_tomorrow.html",
+                items=[event],
+                app=self.app,
+            )
+            video_html = await render_template(
+                "internal_image_video_planning.html",
+                items=[event],
+                app=self.app,
+            )
+
+        self.assertIn("<p>BELGA VIDEO (ON MERIT)</p>", internal_html)
+        self.assertIn("<b>Unassigned Event</b>", video_html)
+        self.assertIn("<p>ON MERIT</p>", video_html)
 
     async def test_belga_image_video_planning_chronological_order(self):
         """Belga Image Video Planning lists events chronologically by day."""
@@ -3063,13 +2686,8 @@ class PlanningExportTests(TestCase):
         }
         self.app.data.insert("users", [user])
 
-        event1_id = f"event_1_{ObjectId()}"
-        planning1_id = f"planning_1_{ObjectId()}"
-        event2_id = f"event_2_{ObjectId()}"
-        planning2_id = f"planning_2_{ObjectId()}"
-
-        event1 = {
-            "_id": event1_id,
+        later_event = {
+            "_id": f"event_1_{ObjectId()}",
             "name": "Later Event",
             "dates": {
                 "start": datetime.datetime(
@@ -3081,32 +2699,22 @@ class PlanningExportTests(TestCase):
                 "tz": "Europe/Brussels",
             },
             "calendars": [{"qcode": "Sports", "name": "(7) Sports"}],
-        }
-
-        planning1 = {
-            "_id": planning1_id,
-            "type": "planning",
-            "planning_date": datetime.datetime(
-                2026, 1, 10, 16, 0, tzinfo=datetime.timezone.utc
-            ),
-            "name": "Later Event",
             "coverages": [
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
-                    "assigned_to": {"user": user_id},
                     "news_coverage_status": {
                         "qcode": "ncostat:int",
                         "name": "coverage intended",
                         "label": "Planned",
                     },
+                    "assigned_to": {"user": user_id},
                 },
             ],
-            "related_events": [{"_id": event1_id, "link_type": "primary"}],
         }
 
-        event2 = {
-            "_id": event2_id,
+        earlier_event = {
+            "_id": f"event_2_{ObjectId()}",
             "name": "Earlier Event",
             "dates": {
                 "start": datetime.datetime(
@@ -3118,47 +2726,25 @@ class PlanningExportTests(TestCase):
                 "tz": "Europe/Brussels",
             },
             "calendars": [{"qcode": "General", "name": "(1) General"}],
-        }
-
-        planning2 = {
-            "_id": planning2_id,
-            "type": "planning",
-            "planning_date": datetime.datetime(
-                2026, 1, 10, 10, 0, tzinfo=datetime.timezone.utc
-            ),
-            "name": "Earlier Event",
             "coverages": [
                 {
                     "coverage_id": ObjectId(),
                     "planning": {"g2_content_type": "video"},
-                    "assigned_to": {"user": user_id},
                     "news_coverage_status": {
                         "qcode": "ncostat:int",
                         "name": "coverage intended",
                         "label": "Planned",
                     },
+                    "assigned_to": {"user": user_id},
                 },
             ],
-            "related_events": [{"_id": event2_id, "link_type": "primary"}],
         }
 
-        await test_utils.post_items("events", [event1, event2])
-        await test_utils.post_items("planning", [planning1, planning2])
-
-        await test_utils.patch_item(
-            "events",
-            event1_id,
-            {"planning_ids": [planning1_id]},
-        )
-        await test_utils.patch_item(
-            "events",
-            event2_id,
-            {"planning_ids": [planning2_id]},
-        )
+        await test_utils.post_items("events", [later_event, earlier_event])
 
         html = await render_template(
             "internal_image_video_planning.html",
-            items=[planning1, planning2],
+            items=[later_event, earlier_event],
             app=self.app,
         )
 
