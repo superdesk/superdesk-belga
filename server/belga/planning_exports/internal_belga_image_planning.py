@@ -5,14 +5,11 @@ from markupsafe import Markup
 from superdesk.utc import utc_to_local
 from superdesk.core import json
 from superdesk import get_resource_service
-from planning.utils import (
-    get_related_event_ids_for_planning,
-    get_related_event_items_for_planning_async,
-)
+from planning.utils import get_related_event_ids_for_planning
 
 from .common import (
-    get_formatted_contacts,
     get_item_location,
+    get_item_coverages,
     set_event_translations_value,
     ADVISORY_TIMEZONE,
     format_advisory_weekday_date,
@@ -52,45 +49,35 @@ def format_image_planning_event_ids_json(
 
 
 async def format_image_planning(
-    planning_data: List[Dict[str, Any]],
+    event_data: List[Dict[str, Any]],
     allowed_coverage_types: set,
     title_prefix: str,
     group_by_calendar: bool = True,
     sports_first: bool = False,
 ) -> Dict[str, Any]:
 
-    planning_service = get_resource_service("planning")
     desk_service = get_resource_service("desks")
-    event_service = get_resource_service("events")
 
     days: Dict[date, Dict[str, Any]] = {}
 
-    for planning in planning_data:
-        event_item = None
-        links = []
-
-        for event_item in await get_related_event_items_for_planning_async(
-            planning, "primary"
-        ):
-            links.extend(event_item.get("links", []))
-            if is_editorial_calendar(event_item):
-                continue
+    for event in event_data:
+        if is_editorial_calendar(event):
+            continue
 
         calendar = ""
-        if event_item and event_item.get("calendars"):
-            calendar = event_item["calendars"][0]["qcode"].capitalize()
+        if event.get("calendars"):
+            calendar = event["calendars"][0]["qcode"].capitalize()
             if sports_first and calendar != "Sports":
                 calendar = "General"
 
-        planning_nl = planning.copy()
-        planning_fr = planning.copy()
-        set_event_translations_value(planning_nl, "nl")
-        set_event_translations_value(planning_fr, "fr")
+        event_nl = event.copy()
+        event_fr = event.copy()
+        set_event_translations_value(event_nl, "nl")
+        set_event_translations_value(event_fr, "fr")
 
-        contacts = await get_formatted_contacts(event_item if event_item else planning)
-        location = await get_item_location(event_item if event_item else planning, "nl")
+        location = await get_item_location(event, "nl")
 
-        scheduled, display_dates, tz = get_planning_schedule_info(planning, event_item)
+        scheduled, display_dates, tz = get_planning_schedule_info(event_item=event)
 
         if not scheduled:
             continue
@@ -104,38 +91,34 @@ async def format_image_planning(
                 continue
         day_date = local_dt.date()
 
+        times = get_display_times(display_dates, default_tz=ADVISORY_TIMEZONE)
+
+        formatted_event = {
+            "calendar": calendar,
+            "scheduled": scheduled,
+            "time": times.get("time", ""),
+            "display_time": times.get("display_time", ""),
+            "location": location,
+            "links": event.get("links") or [],
+            "title_nl": event_nl.get("name") or event_nl.get("slugline") or "",
+            "title_fr": event_fr.get("name") or event_fr.get("slugline") or "",
+            "coverages": await get_filtered_coverages(
+                event,
+                desk_service,
+                allowed_coverage_types,
+            ),
+        }
+
+        if not formatted_event["coverages"]:
+            continue
+
         if day_date not in days:
             days[day_date] = {
                 "label": format_advisory_weekday_date(local_dt),
                 "calendars": {},
             }
 
-        times = get_display_times(display_dates, default_tz=ADVISORY_TIMEZONE)
-
-        event = {
-            "calendar": calendar,
-            "scheduled": scheduled,
-            "time": times.get("time", ""),
-            "display_time": times.get("display_time", ""),
-            "location": location,
-            "links": links,
-            "contacts": contacts,
-            "title_nl": planning.get("name") or planning.get("slugline") or "",
-            "title_fr": planning_fr.get("name") or planning_fr.get("slugline") or "",
-            "description_nl": (planning_nl.get("description_text") or "").rstrip(),
-            "description_fr": (planning_fr.get("description_text") or "").rstrip(),
-            "coverages": await get_filtered_coverages(
-                planning,
-                planning_service,
-                desk_service,
-                allowed_coverage_types,
-            ),
-        }
-
-        if not event["coverages"]:
-            continue
-
-        days[day_date]["calendars"].setdefault(calendar, []).append(event)
+        days[day_date]["calendars"].setdefault(calendar, []).append(formatted_event)
 
     ordered_days = sorted(days.keys())
 
@@ -188,57 +171,40 @@ def has_allowed_coverage(coverages, allowed_types) -> bool:
     return False
 
 
-async def get_filtered_coverages(item, planning_service, desk_service, allowed_types):
+async def get_filtered_coverages(item, desk_service, allowed_types):
     user_service = get_resource_service("users")
     formatted = []
 
-    planning_ids = item.get("planning_ids") or [item.get("_id")]
+    async for coverage in get_item_coverages(item):
+        cov_type = coverage.planning.g2_content_type.lower()
 
-    for pid in planning_ids:
-        planning_item = await planning_service.find_one_async(req=None, _id=pid)
-        if not planning_item:
+        if cov_type not in allowed_types:
             continue
 
-        for coverage in planning_item.get("coverages", []):
-            planning_info = coverage.get("planning") or {}
-            cov_type = (
-                planning_info.get("g2_content_type")
-                or coverage.get("g2_content_type")
-                or ""
-            ).lower()
+        cov_status = coverage.news_coverage_status.label.upper()
+        desk_name = ""
+        username = ""
 
-            if cov_type not in allowed_types:
-                continue
+        desk_id = coverage.assigned_to.desk if coverage.assigned_to else None
+        if desk_id:
+            desk = await desk_service.find_one_async(req=None, _id=desk_id)
+            if desk:
+                desk_name = desk.get("name", "")
 
-            cov_status = (
-                coverage.get("news_coverage_status", {}).get("label") or "ON MERIT"
-            ).upper()
+        user_id = coverage.assigned_to.user if coverage.assigned_to else None
+        if user_id:
+            user = await user_service.find_one_async(req=None, _id=user_id)
+            if user:
+                username = user.get("sign_off") or user.get("username")
 
-            desk_name = ""
-            username = ""
+        if username:
+            display = username.upper()
+        elif desk_name:
+            display = desk_name.upper()
+        else:
+            display = cov_status
 
-            desk_id = planning_info.get("desk") or (
-                coverage.get("assigned_to") or {}
-            ).get("desk")
-            if desk_id:
-                desk = await desk_service.find_one_async(req=None, _id=desk_id)
-                if desk:
-                    desk_name = desk.get("name", "")
-
-            user_id = coverage.get("assigned_to", {}).get("user")
-            if user_id:
-                user = await user_service.find_one_async(req=None, _id=user_id)
-                if user:
-                    username = user.get("sign_off") or user.get("username")
-
-            if username:
-                display = username.upper()
-            elif desk_name:
-                display = desk_name.upper()
-            else:
-                display = cov_status
-
-            formatted.append({"display": display})
+        formatted.append({"display": display})
 
     return formatted
 
