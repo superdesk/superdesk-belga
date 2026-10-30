@@ -175,33 +175,23 @@ async def get_filtered_coverages(item, desk_service, allowed_types):
     user_service = get_resource_service("users")
     formatted = []
 
-    for coverage in await get_item_coverages(item):
-        planning_info = coverage.get("planning") or {}
-        cov_type = (
-            planning_info.get("g2_content_type")
-            or coverage.get("g2_content_type")
-            or ""
-        ).lower()
+    async for coverage in get_item_coverages(item):
+        cov_type = coverage.planning.g2_content_type.lower()
 
         if cov_type not in allowed_types:
             continue
 
-        cov_status = (
-            (coverage.get("news_coverage_status") or {}).get("label") or "ON MERIT"
-        ).upper()
-
+        cov_status = coverage.news_coverage_status.label.upper()
         desk_name = ""
         username = ""
 
-        desk_id = planning_info.get("desk") or (coverage.get("assigned_to") or {}).get(
-            "desk"
-        )
+        desk_id = coverage.assigned_to.desk if coverage.assigned_to else None
         if desk_id:
             desk = await desk_service.find_one_async(req=None, _id=desk_id)
             if desk:
                 desk_name = desk.get("name", "")
 
-        user_id = (coverage.get("assigned_to") or {}).get("user")
+        user_id = coverage.assigned_to.user if coverage.assigned_to else None
         if user_id:
             user = await user_service.find_one_async(req=None, _id=user_id)
             if user:

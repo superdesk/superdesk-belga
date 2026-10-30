@@ -1,17 +1,22 @@
-from superdesk.utc import utc_to_local
+from typing import List, Dict, Any, TypedDict, Union as _Union
+from collections.abc import AsyncGenerator
+from datetime import date as _date_type, datetime as _datetime_type
+import logging
 
-from typing import List, Dict, Any, TypedDict
 from babel.dates import format_date
+from bson import ObjectId
+
 from superdesk import get_resource_service
 from superdesk.core import get_config
-from typing import Union as _Union
-from datetime import date as _date_type, datetime as _datetime_type
+from superdesk.utc import utc_to_local
 
-from planning.types import PlanningItemType
+from planning.types import PlanningItemType, UnifiedPlanningResource, CoverageItem
 from planning.types.unified import RelatedEventLinkType
 from planning.unified.common import get_related_planning_for_events
 from planning.utils import get_related_event_items_for_planning_async
 
+
+logger = logging.getLogger(__name__)
 ADVISORY_TIMEZONE = "Europe/Brussels"
 COVERAGE_PREFIX = "BELGA"
 
@@ -448,48 +453,50 @@ async def get_advisory_weekday_date(planning_item):
     return ""
 
 
-async def get_item_coverages(item) -> List[Dict[str, Any]]:
+async def get_item_coverages(item: dict) -> AsyncGenerator[CoverageItem, None]:
     """Get the stored coverages of an item.
 
     For events, returns the event's own coverages plus those of its primary
     linked planning items, without duplicates. For planning items, returns
     the planning item's coverages.
     """
-    planning_service = get_resource_service("planning")
-    stored_item = await planning_service.find_one_async(req=None, _id=item.get("_id"))
-    coverage_items = [stored_item] if stored_item else []
 
-    planning_ids = [
-        pid for pid in item.get("planning_ids") or [] if pid != item.get("_id")
-    ]
-    if (stored_item or item).get("type") == PlanningItemType.EVENT:
-        async for planning in await get_related_planning_for_events(
-            [item["_id"]], RelatedEventLinkType.PRIMARY
-        ):
-            if planning.id not in planning_ids:
-                planning_ids.append(planning.id)
+    item_id: str | None = item.get("_id")
+    if not item_id:
+        logger.warning("Unable to find item coverages, item has no ID")
+        return
 
-    for planning_id in planning_ids:
-        planning_item = await planning_service.find_one_async(req=None, _id=planning_id)
-        if planning_item:
-            coverage_items.append(planning_item)
+    planning_service = UnifiedPlanningResource.get_service()
+    stored_item = await planning_service.find_by_id(item_id)
+    if not stored_item:
+        logger.warning(
+            "Unable to find item coverages, item not found", extra={"item_id": item_id}
+        )
+        return
 
-    coverages = []
-    coverage_ids = set()
-    for coverage_item in coverage_items:
-        for coverage in coverage_item.get("coverages") or []:
-            if not isinstance(coverage, dict):
+    coverage_ids: set[str] = set()
+    for coverage in stored_item.coverages or []:
+        if coverage.coverage_id in coverage_ids:
+            continue
+        coverage_ids.add(coverage.coverage_id)
+        yield coverage
+
+    if stored_item.item_type == PlanningItemType.PLANNING:
+        return
+
+    async for planning_item in await get_related_planning_for_events(
+        [item["_id"]], RelatedEventLinkType.PRIMARY
+    ):
+        for coverage in planning_item.coverages or []:
+            if coverage.coverage_id in coverage_ids:
                 continue
-            coverage_id = coverage.get("coverage_id")
-            if coverage_id and coverage_id in coverage_ids:
-                continue
-            coverage_ids.add(coverage_id)
-            coverages.append(coverage)
-
-    return coverages
+            coverage_ids.add(coverage.coverage_id)
+            yield coverage
 
 
-async def get_coverages_bilingual(item, include_assignee=False):
+async def get_coverages_bilingual(
+    item: dict, include_assignee: bool = False
+) -> list[dict]:
     """Get coverages formatted for bilingual output.
 
     Works for both event and planning items, see get_item_coverages.
@@ -499,27 +506,21 @@ async def get_coverages_bilingual(item, include_assignee=False):
     desk_service = get_resource_service("desks")
     user_service = get_resource_service("users") if include_assignee else None
     lang_map = {"nl": "N", "n": "N", "fr": "F", "f": "F", "de": "N"}
-    formatted_coverages = []
-    desk_cache = {}
-    user_cache = {}
+    formatted_coverages: list[dict] = []
+    desk_cache: dict[ObjectId, dict] = {}
+    user_cache: dict[ObjectId, str] = {}
 
-    for coverage in await get_item_coverages(item):
-        planning_info = coverage.get("planning") or {}
-        cov_type = (
-            planning_info.get("g2_content_type")
-            or coverage.get("g2_content_type")
-            or ""
-        ).lower()
-        cov_status = (
-            (coverage.get("news_coverage_status") or {}).get("label") or "ON MERIT"
-        ).upper()
+    async for coverage in get_item_coverages(item):
+        cov_type = coverage.planning.g2_content_type.lower()
+        cov_status = coverage.news_coverage_status.label.upper()
 
         desk_language_code = "N"
         desk_name = ""
+        item_desk = (item.get("task") or {}).get("desk")
         desk_id = (
-            planning_info.get("desk")
-            or (coverage.get("assigned_to") or {}).get("desk")
-            or (item.get("task") or {}).get("desk")
+            coverage.assigned_to.desk or item_desk
+            if coverage.assigned_to
+            else item_desk
         )
         if desk_id:
             if desk_id not in desk_cache:
@@ -540,7 +541,9 @@ async def get_coverages_bilingual(item, include_assignee=False):
 
         username = ""
         if include_assignee:
-            assigned_user_id = (coverage.get("assigned_to") or {}).get("user")
+            assigned_user_id = (
+                coverage.assigned_to.user if coverage.assigned_to else None
+            )
             if assigned_user_id and user_service:
                 if assigned_user_id not in user_cache:
                     user_item = await user_service.find_one_async(

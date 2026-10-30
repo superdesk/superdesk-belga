@@ -8,6 +8,9 @@ from superdesk.flask import render_template
 from superdesk.tests import utils as test_utils
 
 from app import get_app
+
+from planning.types import CoverageItem
+
 from belga.planning_exports.format_news_events_tommorow_bilingual import (
     format_event_for_tommorow_bilingual,
 )
@@ -2624,23 +2627,23 @@ class PlanningExportTests(TestCase):
 
     async def test_event_export_with_unassigned_coverage(self):
         """Event coverages stored with assigned_to None render without errors."""
+        start_date = datetime.datetime(2026, 1, 12, 9, 0, tzinfo=datetime.timezone.utc)
         event = {
             "_id": f"event_1_{ObjectId()}",
             "name": "Unassigned Event",
             "dates": {
-                "start": datetime.datetime(
-                    2026, 1, 12, 9, 0, tzinfo=datetime.timezone.utc
-                ),
-                "end": datetime.datetime(
-                    2026, 1, 12, 10, 0, tzinfo=datetime.timezone.utc
-                ),
+                "start": start_date,
+                "end": start_date + datetime.timedelta(hours=1),
                 "tz": "Europe/Brussels",
             },
             "calendars": [{"qcode": "general", "name": "General"}],
             "coverages": [
                 {
                     "coverage_id": ObjectId(),
-                    "planning": {"g2_content_type": "video"},
+                    "planning": {
+                        "g2_content_type": "video",
+                        "scheduled": start_date + datetime.timedelta(hours=1),
+                    },
                     "assigned_to": None,
                     "news_coverage_status": {
                         "qcode": "ncostat:notdec",
@@ -2651,27 +2654,34 @@ class PlanningExportTests(TestCase):
             ],
         }
 
+        async def yield_coverages(item: dict):
+            for coverage in item.get("coverages") or []:
+                yield CoverageItem.from_dict(coverage)
+
         # The test data layer drops None values on insert, so serve the
         # coverages as stored by the planning service
         with mock.patch(
             "belga.planning_exports.common.get_item_coverages",
-            return_value=event["coverages"],
-        ), mock.patch(
-            "belga.planning_exports.internal_belga_image_planning.get_item_coverages",
-            return_value=event["coverages"],
+            side_effect=yield_coverages,
         ):
             internal_html = await render_template(
                 "internal_bilingual_planning_advisory_tomorrow.html",
                 items=[event],
                 app=self.app,
             )
+
+        self.assertIn("<p>BELGA VIDEO (ON MERIT)</p>", internal_html)
+
+        with mock.patch(
+            "belga.planning_exports.internal_belga_image_planning.get_item_coverages",
+            side_effect=yield_coverages,
+        ):
             video_html = await render_template(
                 "internal_image_video_planning.html",
                 items=[event],
                 app=self.app,
             )
 
-        self.assertIn("<p>BELGA VIDEO (ON MERIT)</p>", internal_html)
         self.assertIn("<b>Unassigned Event</b>", video_html)
         self.assertIn("<p>ON MERIT</p>", video_html)
 
