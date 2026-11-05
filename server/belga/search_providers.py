@@ -402,13 +402,46 @@ class Belga360ArchiveSearchProvider(
     def url(self, resource):
         return urljoin(self.base_url, resource.lstrip("/"))
 
-    def get_search_text(self, query):
-        try:
-            searchText = query["query"]["filtered"]["query"]["query_string"]["query"]
-        except KeyError:
-            searchText = ""
+    def get_search_text(self, query: dict | list[dict] | Any) -> str:
+        # 1. A list of clauses is provided (e.g. from must/filter/should arrays)
+        if isinstance(query, list):
+            for item in query:
+                if result := self.get_search_text(item):
+                    return result
+        if not isinstance(query, dict):
+            return ""
 
-        return searchText
+        # 2. Check top-level `query` wrapper
+        try:
+            if result := self.get_search_text(query["query"]):
+                return result
+        except (KeyError, TypeError):
+            pass
+
+        # 3. Check for a direct `query_string` to be a dict
+        try:
+            if result := query["query_string"]["query"].strip():
+                return result
+        except (KeyError, TypeError):
+            pass
+
+        # 4. Check for Elasticsearch v2 "filtered" queries (query.filtered.query / filter)
+        for sub_key in {"query", "filter"}:
+            try:
+                if result := self.get_search_text(query["filtered"][sub_key]):
+                    return result
+            except (KeyError, TypeError):
+                pass
+
+        # 5. Check `bool` queries (must, filter, should, must_not)
+        for clause in {"must", "filter"}:
+            try:
+                if result := self.get_search_text(query["bool"][clause]):
+                    return result
+            except (KeyError, TypeError):
+                pass
+
+        return ""
 
     def set_highlight(self, search_text, docs):
         search_text = "|".join(re.escape(term.strip()) for term in search_text.split())
@@ -444,6 +477,8 @@ class Belga360ArchiveSearchProvider(
 
             api_params["assetType"] = " OR ".join(
                 [key for key, values in params["types"].items() if values]
+                if params.get("types")
+                else [_type for _type in self.default_params]
             )
 
             if params.get("credits"):
@@ -465,7 +500,8 @@ class Belga360ArchiveSearchProvider(
                 [_type for _type in self.default_params]
             )
 
-        api_params["searchText"] = self.get_search_text(query)
+        if search_text := self.get_search_text(query):
+            api_params["searchText"] = search_text
 
         data = await self.api_get(self.search_endpoint, api_params)
         docs = [
@@ -473,7 +509,7 @@ class Belga360ArchiveSearchProvider(
         ]
 
         # SDBELGA-667
-        if search_text := api_params.get("searchText"):
+        if search_text:
             self.set_highlight(search_text, docs)
 
         return BelgaListCursor(docs, data.get(self.count_field, 0))

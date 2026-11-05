@@ -352,3 +352,51 @@ class Belga360ArchiveTestCase(TestCase):
                 ]
             },
         )
+
+    async def test_search_text_using_bool_query(self):
+        # Test invalid query returns empty string
+        self.assertEqual("", self.provider.get_search_text({}))
+
+        # Test bool.must=query_string
+        self.assertEqual(
+            "Test 1",
+            self.provider.get_search_text(
+                {"query": {"bool": {"must": {"query_string": {"query": "Test 1"}}}}}
+            ),
+        )
+
+        # Test bool.must=[query_string]
+        self.assertEqual(
+            "Test 2",
+            self.provider.get_search_text(
+                {"query": {"bool": {"must": [{"query_string": {"query": "Test 2"}}]}}}
+            ),
+        )
+
+        # Test bool.filter=query_string
+        self.assertEqual(
+            "Test 3",
+            self.provider.get_search_text(
+                {"query": {"bool": {"filter": {"query_string": {"query": "Test 3"}}}}}
+            ),
+        )
+
+        # Test bool.filter=[query_string]
+        self.assertEqual(
+            "Test 4",
+            self.provider.get_search_text(
+                {"query": {"bool": {"filter": [{"query_string": {"query": "Test 4"}}]}}}
+            ),
+        )
+
+        # Test filtered.query=query_string
+        self.assertEqual(
+            "Test 5",
+            self.provider.get_search_text(
+                {
+                    "query": {
+                        "filtered": {"query": {"query_string": {"query": "Test 5"}}}
+                    }
+                }
+            ),
+        )
