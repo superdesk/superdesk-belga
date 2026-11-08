@@ -41,6 +41,7 @@ MOCK_IMAGES = [
         "author": "Jane Smith",
         "credit": "BELGA",
         "source": "BELGA",
+        "smallUrl": "https://3.t.cdn.belga.be/belgaimage:143831779:thumb.jpg",
         "thumbnailUrl": "https://3.t.cdn.belga.be/belgaimage:143831779:thumb.jpg",
         "ThumbnailURL": "https://3.t.cdn.belga.be/belgaimage:143831779:thumb.jpg",
         "previewUrl": "https://3.t.cdn.belga.be/belgaimage:143831779:preview.jpg",
@@ -241,7 +242,7 @@ async def search_images():
 @app.route("/belgaimage-api/getImageById", methods=["GET"])
 async def get_image_by_id():
     """Endpoint for BelgaImageSearchProvider & BelgaImageV2SearchProvider fetch_async."""
-    image_id_str = str(request.args.get("i", ""))
+    image_id_str = str(request.args.get("i", "")).rsplit(":", 1)[-1]
     for item in MOCK_IMAGES:
         if (
             str(item.get("imageId")) == image_id_str
