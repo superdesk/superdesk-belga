@@ -174,5 +174,17 @@ module.exports = function(grunt) {
                 },
             },
         },
+        planning: {
+            event_list_item: {
+                // Location is shown in the second line only
+                firstLine: [
+                    {fieldId: 'slugline'},
+                    {fieldId: 'internalnote'},
+                    {fieldId: 'name'},
+                    {fieldId: 'calendars'},
+                    {fieldId: 'event_datetime', position: 'end'},
+                ],
+            },
+        },
     };
 };
