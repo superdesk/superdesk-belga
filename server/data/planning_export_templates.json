@@ -47,9 +47,9 @@
   },
   {
     "_id": "bilingual_planning_advisory_tomorrow",
-    "init_version": 4,
+    "init_version": 5,
     "name": "bilingual_planning_advisory_tomorrow",
-    "type": "planning",
+    "type": "event",
     "data": {
       "body_html_template": "bilingual_planning_advisory_tomorrow.html"
     },
@@ -65,9 +65,9 @@
   },
   {
     "_id": "internal_bilingual_planning_advisory_tomorrow",
-    "init_version": 2,
+    "init_version": 3,
     "name": "internal_bilingual_planning_advisory_tomorrow",
-    "type": "planning",
+    "type": "event",
     "data": {
       "body_html_template": "internal_bilingual_planning_advisory_tomorrow.html"
     },
@@ -75,9 +75,9 @@
   },
   {
     "_id": "internal_image_photo_planning",
-    "init_version": 1,
+    "init_version": 2,
     "name": "internal_image_photo_planning",
-    "type": "planning",
+    "type": "event",
     "data": {
       "body_html_template": "internal_image_photo_planning.html"
     },
@@ -85,9 +85,9 @@
   },
   {
     "_id": "internal_image_video_planning",
-    "init_version": 1,
+    "init_version": 2,
     "name": "internal_image_video_planning",
-    "type": "planning",
+    "type": "event",
     "data": {
       "body_html_template": "internal_image_video_planning.html"
     },
