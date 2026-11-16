@@ -3,6 +3,6 @@ gspread==6.2.1
 oauth2client==4.1.3
 pyparsing<3.4
 
-git+https://github.com/superdesk/superdesk-analytics.git@develop#egg=superdesk-analytics
-git+https://github.com/superdesk/superdesk-core.git@develop#egg=superdesk-core
-git+https://github.com/superdesk/superdesk-planning.git@feature/unified#egg=superdesk-planning
+git+https://github.com/superdesk/superdesk-analytics.git@release/3.7#egg=superdesk-analytics
+git+https://github.com/superdesk/superdesk-core.git@release/3.7#egg=superdesk-core
+git+https://github.com/superdesk/superdesk-planning.git@release/3.7#egg=superdesk-planning
