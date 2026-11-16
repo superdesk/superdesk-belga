@@ -41,19 +41,36 @@ const utc = (localTime: string, tz: string) =>
 
 describe('coverageDueDate', () => {
     it.each(timezones)('sets all-day event to 20:00 on the event day in $name timezone', ({tz}) => {
+        // All-day Events are stored as UTC midnight of their day
         const event: any = {
             dates: {
-                start: utc('2026-07-01T00:00:00', tz),
-                end: utc('2026-07-01T23:59:00', tz),
+                start: '2026-07-01T00:00:00+0000',
+                end: '2026-07-01T00:00:00+0000',
                 tz,
                 all_day: true,
             },
         };
-        const planning: any = {planning_date: utc('2026-07-01T00:00:00', tz)};
+        const planning: any = {planning_date: '2026-07-01T00:00:00+0000'};
 
         const result = getCoverageDueDate(planning, event);
 
         expect(result?.format()).toBe(moment.tz('2026-07-01T20:00:00', tz).format());
+    });
+
+    it.each(timezones)('sets multi-day all-day event to 20:00 on the last day in $name timezone', ({tz}) => {
+        const event: any = {
+            dates: {
+                start: '2026-07-01T00:00:00+0000',
+                end: '2026-07-03T00:00:00+0000',
+                tz,
+                all_day: true,
+            },
+        };
+        const planning: any = {planning_date: '2026-07-01T00:00:00+0000'};
+
+        const result = getCoverageDueDate(planning, event);
+
+        expect(result?.format()).toBe(moment.tz('2026-07-03T20:00:00', tz).format());
     });
 
     it.each(timezones)('sets TBC event to 20:00 on the event day in $name timezone', ({tz}) => {
