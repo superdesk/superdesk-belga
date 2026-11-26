@@ -329,9 +329,9 @@ six==1.17.0
     #   python-dateutil
 superdesk-analytics @ git+https://github.com/superdesk/superdesk-analytics.git@5f9e82277243413c2d2cd6568d4fb9654c741d0e#egg=superdesk-analytics
     # via -r requirements.in
-superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@51d0e8bdcff111eb782d1236ed4a45a07ba37f9f#egg=superdesk-core
+superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@d980933008f5a4599c8de730f2890023bbb2def9#egg=superdesk-core
     # via -r requirements.in
-superdesk-planning @ git+https://github.com/superdesk/superdesk-planning.git@98829eb8665d767f15b8af258a2a8a9464819929#egg=superdesk-planning
+superdesk-planning @ git+https://github.com/superdesk/superdesk-planning.git@87b7500f5daee9429396c6598f5cc420d3bc1d11#egg=superdesk-planning
     # via -r requirements.in
 types-pytz==2026.5.0.20261006
     # via quart-babel
